@@ -2,7 +2,7 @@ solution "ElTravadoDeRayos"
 
 language "C++"
 location("./" .. _ACTION)  -- Where to put the project files.
-includedirs {"../include", "../src/**"}
+includedirs {"../include", "../include/glm", "../src/**"}
 libdirs {"../lib"}
 flags {"StaticRuntime"}
 
