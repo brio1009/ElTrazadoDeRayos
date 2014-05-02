@@ -1,4 +1,7 @@
 ElTrazadoDeRayos
 ================
 
-A simple ray tracer.
+This will be a simple RayTracer to render a Scene.
+
+The first binary RayTrace.
+![alt text][BinaryTrace]
