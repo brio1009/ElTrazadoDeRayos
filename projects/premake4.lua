@@ -1,4 +1,4 @@
-solution "ElTravadoDeRayos"
+solution "ElTrazadoDeRayos"
 
 language "C++"
 location("./" .. _ACTION)  -- Where to put the project files.
@@ -38,7 +38,7 @@ configuration "Debug"
   targetdir "../bin/debug"
 
 -- Projects.
-project "ElTravadoDeRayosLib"
+project "ElTrazadoDeRayosLib"
   files {"../src/RayTracerLib/**"}
   kind "StaticLib"
   -- This is nice to have so VS always uses the same uuids in its project files.

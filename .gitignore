@@ -24,3 +24,6 @@
 *.swp
 *.swo
 *~
+
+# Build folder
+bin
