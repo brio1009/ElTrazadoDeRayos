@@ -12,12 +12,16 @@ if (_ACTION == "gmake") then
 end
 
 -- Define which OS we use.
+-- The linter is currently not used, because it does not support python3.x
 if os.get() == "windows" then
   defines {"WINDOWS"}
+  --postbuildcommand { "python ./cpplint.py
 elseif os.get() == "linux" then 
   defines {"LINUX"}
+  --postbuildcommand { "python ./cpplint.py
 elseif os.get() == "macosx" then
   defines {"MACOSX"}
+  --postbuildcommand { "python ./cpplint.py
 end
 
 -- Configurations.
