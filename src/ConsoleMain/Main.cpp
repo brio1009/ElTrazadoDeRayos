@@ -1,4 +1,5 @@
 ﻿#include <cstdio>
+#include <cstdlib>
 
 // The main method.
 int main(int argc, char** argv) {

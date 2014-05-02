@@ -24,7 +24,8 @@ end
 configurations {"Release", "Debug"}
 
 -- Platforms
-platforms {"x32", "x64"}
+platforms { "native", "universal" }
+-- platforms {"x32", "x64"}
 
 configuration "Release"
   defines {"NDEBUG"}
