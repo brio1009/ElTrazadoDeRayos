@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #pragma once
-#ifndef _ELTRAZADODERAYOS_SRC_RAYTRACERLIB_SOLVER_H_
-#define _ELTRAZADODERAYOS_SRC_RAYTRACERLIB_SOLVER_H_
+#ifndef RAYTRACERLIB_SOLVER_H_
+#define RAYTRACERLIB_SOLVER_H_
 #include <math.h>
 
 const double EPSILON = 1e-5;
@@ -46,9 +46,9 @@ namespace solve {
       Result_t* result,
       double val1,
       double val0) {
-    if (isZero(val1))
+    if (isZero(val1)) {
       result->numResults = 0;
-    else {
+    } else {
       result->numResults = 1;
       result->roots[0] = isZero(val0) ? 0.0 : -val0 / val1;
     }
@@ -60,9 +60,9 @@ namespace solve {
       double val2,
       double val1,
       double val0) {
-    if (isZero(val2))
+    if (isZero(val2)) {
       solveLinearEquation(result, val1, val0);
-    else {
+    } else {
       // Mitternacht
       double determinante = val1 * val1 + 4 * val2 * val0;
       if (isZero(determinante)) {
@@ -73,11 +73,12 @@ namespace solve {
           result->numResults = 2;
           result->roots[0] = (-val1 - sqrt(determinante)) / (2 * val2);
           result->roots[1] = (-val1 + sqrt(determinante)) / (2 * val2);
-        } else
+        } else {
           result->numResults = 0;
+        }
       }
     }
   }
-}
-#endif  // _ELTRAZADODERAYOS_SRC_RAYTRACERLIB_SOLVER_H_
+}  // namespace solve
+#endif  // RAYTRACERLIB_SOLVER_H_
 

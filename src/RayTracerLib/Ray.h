@@ -22,10 +22,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "./Shape.h"
+#ifndef RAYTRACERLIB_RAY_H_
+#define RAYTRACERLIB_RAY_H_
 
 #include <glm/glm.hpp>
-// _____________________________________________________________________________
-void Shape::transform(const glm::mat4& matrix) {  //NOLINT misstaken for std::tr
-  _transformation *= matrix;
-}
+
+// TODO(bauschp): implement a real ray class
+struct Ray {
+  glm::vec4 pos;
+  glm::vec4 dir;
+};
+
+#endif  // RAYTRACERLIB_RAY_H_
+
+

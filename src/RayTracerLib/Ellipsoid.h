@@ -23,8 +23,8 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef _ELTRAZADODERAYOS_SRC_RAYTRACERLIB_SPHERE_H_
-#define _ELTRAZADODERAYOS_SRC_RAYTRACERLIB_SPHERE_H_
+#ifndef RAYTRACERLIB_ELLIPSOID_H_
+#define RAYTRACERLIB_ELLIPSOID_H_
 
 #include <glm/glm.hpp>
 
@@ -39,7 +39,14 @@ class Ellipsoid : public Shape {
   double rX;
   double rY;
   double rZ;
+  // Intersects the Ray with this Shape and returns the values for t
+  // rPos + rDir * t that intersect the surface of this Shape.
+  virtual std::vector<double> intersect(const Ray& ray) const;
+  // Returnes the appearence of the surface Point p
+  // if p isn't on the surface everything can happen.
+  // TODO(allofus): what should be returned here?
+  virtual void getAppearenceAt(const glm::vec4& p) const;
 };
 
-#endif  // _ELTRAZADODERAYOS_SRC_RAYTRACERLIB_SPHERE_H_
+#endif  // RAYTRACERLIB_ELLIPSOID_H_
 

@@ -23,8 +23,8 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef _ELTRAZADODERAYOS_SRC_RAYTRACERLIB_SHAPE_H_
-#define _ELTRAZADODERAYOS_SRC_RAYTRACERLIB_SHAPE_H_
+#ifndef RAYTRACERLIB_SHAPE_H_
+#define RAYTRACERLIB_SHAPE_H_
 
 // GlMath include.
 #include <glm/glm.hpp>
@@ -36,9 +36,9 @@ class Ray;
 // This abstract class is used to define essencial parts to render a "Shape"
 class Shape {
  public:
-  virtual ~Shape() { };
+  virtual ~Shape() { }
   // Multiplies the matrix with the current Transformation.
-  virtual void transform(const glm::mat4& matrix);
+  virtual void transform(const glm::mat4& matrix);  //NOLINT mistaken for std
   // Intersects the Ray with this Shape and returns the values for t
   // rPos + rDir * t that intersect the surface of this Shape.
   virtual std::vector<double> intersect(const Ray& ray) const = 0;
@@ -52,4 +52,4 @@ class Shape {
 };
 
 
-#endif  // _ELTRAZADODERAYOS_SRC_RAYTRACERLIB_SHAPE_H_
+#endif  // RAYTRACERLIB_SHAPE_H_

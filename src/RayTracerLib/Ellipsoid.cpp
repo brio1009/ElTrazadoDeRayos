@@ -23,10 +23,13 @@ SOFTWARE.
 */
 
 #include "./Ellipsoid.h"
-#include "./Ray.h"
+
 #include <glm/glm.hpp>
 
 #include <vector>
+
+#include "./Ray.h"
+#include "./Solver.h"
 
 using std::vector;
 
@@ -42,9 +45,9 @@ vector<double> Ellipsoid::intersect(const Ray& ray) const {
   glm::vec4 transDir = ray.dir * glm::inverse(_transformation);
 
   // TODO(allofus): Think about outsourcing.
-  double invRX = isZero(rX) ? 0.0 : 1.0 / rX;
-  double invRY = isZero(rY) ? 0.0 : 1.0 / rY;
-  double invRZ = isZero(rZ) ? 0.0 : 1.0 / rZ;
+  double invRX = solve::isZero(rX) ? 0.0 : 1.0 / rX;
+  double invRY = solve::isZero(rY) ? 0.0 : 1.0 / rY;
+  double invRZ = solve::isZero(rZ) ? 0.0 : 1.0 / rZ;
 
   // Create variables to use the solver helper.
   double c = (transPos[0] * transPos[0]) * invRX
@@ -66,6 +69,5 @@ vector<double> Ellipsoid::intersect(const Ray& ray) const {
   return out;
 }
 // _____________________________________________________________________________
-void Ellipsoid::getAppearenceAt(const glm::vec4& p) {
-  
+void Ellipsoid::getAppearenceAt(const glm::vec4& p) const{
 }

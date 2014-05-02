@@ -50,7 +50,8 @@ if os.get() == "windows" then
   --prebuildcommands { "py -v2 ./cpplint.py ../src/RayTracerLib/*" }
   --prebuildcommands { "py -v2 ./cpplint.py ../src/ConsoleMain/*" }
 elseif os.get() == "linux" then 
-  --prebuildcommands { "enter command here" }
+  prebuildcommands { "python ../cpplint.py --root=src ../../src/RayTracerLib/*" }
+  prebuildcommands { "python ../cpplint.py --root=src ../../src/ConsoleMain/*" }
 elseif os.get() == "macosx" then
   --prebuildcommands { "enter command here" }
 end
@@ -66,7 +67,7 @@ project "ElTrazadoDeRayosLib"
 project "ConsoleMain"
   files {"../src/ConsoleMain/**"}
   kind "ConsoleApp"
-  links {"ElTravadoDeRayosLib"}
+  links {"ElTrazadoDeRayosLib"}
   -- This is nice to have so VS always uses the same uuids in its project files.
   -- Generated via http://www.uuidgenerator.net
   uuid("865dfdb0-97ae-4dce-b70f-9d4a11413162")
