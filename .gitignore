@@ -21,5 +21,10 @@
 *.out
 *.app
 
+# Temporary Files
+*.swp
+*.swo
+*~
+
 # Build folder
 bin
