@@ -22,9 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "./Primitive.h"
-#include <glm/glm.hpp>
+#include "./Shape.h"
 
-bool Primitive::checkHit() {
-  return true;
+#include <glm/glm.hpp>
+// _____________________________________________________________________________
+void Shape::transform(const glm::mat4& matrix) {
+  _transformation *= matrix;
 }

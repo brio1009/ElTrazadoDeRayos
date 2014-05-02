@@ -23,19 +23,23 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef _ELTRAZADODERAYOS_SRC_RAYTRACERLIB_PRIMITIVE_H_
-#define _ELTRAZADODERAYOS_SRC_RAYTRACERLIB_PRIMITIVE_H_
+#ifndef _ELTRAZADODERAYOS_SRC_RAYTRACERLIB_SPHERE_H_
+#define _ELTRAZADODERAYOS_SRC_RAYTRACERLIB_SPHERE_H_
 
-// forward declaration
 #include <glm/glm.hpp>
 
-class Primitive {
- private:
-  glm::vec4 _position;
- public:
-  bool checkHit();
+#include "./Shape.h"
 
+// A Primitive is a Shape that is defined in its own.
+class Ellipsoid : public Shape {
+ public:
+  Ellipsoid(double x, double y, double z);
+  virtual ~Ellipsoid();
+ private:
+  double rX;
+  double rY;
+  double rZ;
 };
 
-#endif  // _ELTRAZADODERAYOS_SRC_RAYTRACERLIB_PRIMITIVE_H_
+#endif  // _ELTRAZADODERAYOS_SRC_RAYTRACERLIB_SPHERE_H_
 
