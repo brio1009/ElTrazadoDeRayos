@@ -27,6 +27,7 @@ SOFTWARE.
 #define RAYTRACERLIB_ELLIPSOID_H_
 
 #include <glm/glm.hpp>
+#include <vector>
 
 #include "./Shape.h"
 
@@ -34,11 +35,7 @@ SOFTWARE.
 class Ellipsoid : public Shape {
  public:
   Ellipsoid(double x, double y, double z);
-  virtual ~Ellipsoid();
- private:
-  double rX;
-  double rY;
-  double rZ;
+  virtual ~Ellipsoid() { }
   // Intersects the Ray with this Shape and returns the values for t
   // rPos + rDir * t that intersect the surface of this Shape.
   virtual std::vector<double> intersect(const Ray& ray) const;
@@ -46,6 +43,10 @@ class Ellipsoid : public Shape {
   // if p isn't on the surface everything can happen.
   // TODO(allofus): what should be returned here?
   virtual void getAppearenceAt(const glm::vec4& p) const;
+ private:
+  double rX;
+  double rY;
+  double rZ;
 };
 
 #endif  // RAYTRACERLIB_ELLIPSOID_H_

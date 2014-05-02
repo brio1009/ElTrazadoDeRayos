@@ -64,7 +64,7 @@ namespace solve {
       solveLinearEquation(result, val1, val0);
     } else {
       // Mitternacht
-      double determinante = val1 * val1 + 4 * val2 * val0;
+      double determinante = val1 * val1 - 4 * val2 * val0;
       if (isZero(determinante)) {
         result->numResults = 1;
         result->roots[0] = -val1 / (2 * val2);
