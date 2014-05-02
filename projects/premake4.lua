@@ -12,16 +12,12 @@ if (_ACTION == "gmake") then
 end
 
 -- Define which OS we use.
--- The linter is currently not used, because it does not support python3.x
 if os.get() == "windows" then
   defines {"WINDOWS"}
-  --postbuildcommand { "python ./cpplint.py
 elseif os.get() == "linux" then 
   defines {"LINUX"}
-  --postbuildcommand { "python ./cpplint.py
 elseif os.get() == "macosx" then
   defines {"MACOSX"}
-  --postbuildcommand { "python ./cpplint.py
 end
 
 -- Configurations.
@@ -40,6 +36,24 @@ configuration "Debug"
   defines {"DEBUG"}
   flags {"Symbols"}
   targetdir "../bin/debug"
+if os.get() == "windows" then
+  -- There is sadly no wildcard for subfolders in Windows, thus we need
+  -- to specify these manually.
+  -- TODO(cgissler, 05/02/2014): This should probably be in the respective
+  -- projects so only the project that is build is linted (and only when it's
+  -- debug-build).
+  -- prebuildcommands { "py ../cpplint.py ..\\..\\src\\RayTracerLib\\*.h" }
+  -- prebuildcommands { "py ../cpplint.py ..\\..\\src\\ConsoleMain\\*" }
+  -- prebuildcommands { "dir ..\\..\\src\\RayTracerLib" }
+  -- TODO(cgissler, 05/02/2014): Add back the -v2 when I sorted out the
+  -- install issues with python3 and python2 on my pc.
+  --prebuildcommands { "py -v2 ./cpplint.py ../src/RayTracerLib/*" }
+  --prebuildcommands { "py -v2 ./cpplint.py ../src/ConsoleMain/*" }
+elseif os.get() == "linux" then 
+  --prebuildcommands { "enter command here" }
+elseif os.get() == "macosx" then
+  --prebuildcommands { "enter command here" }
+end
 
 -- Projects.
 project "ElTrazadoDeRayosLib"
