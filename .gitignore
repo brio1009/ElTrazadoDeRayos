@@ -17,6 +17,7 @@
 
 # Executables
 *.exe
+!premake4b5_windows.exe
 *.out
 *.app
 
