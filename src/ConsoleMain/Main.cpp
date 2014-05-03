@@ -30,8 +30,9 @@ SOFTWARE.
 
 #include <glm/glm.hpp>
 #include <Ray.h>
+#include <Solver.h>
+#include <Ellipsoid.h>
 #include <Plane.h>
-
 void binaryTraceOrth() {
   Plane test(0, -0.25, -0.25);
   Ray r;
@@ -68,7 +69,7 @@ int main(int argc, char** argv) {
            "3 to define a direction the ray will shoot to.\n");
     exit(EXIT_FAILURE);
   }
-/*
+
   Ellipsoid testEllipsoid(atof(argv[1]), atof(argv[2]), atof(argv[3]));
 
   Ray r;
@@ -78,6 +79,6 @@ int main(int argc, char** argv) {
   std::vector<double> erg = testEllipsoid.intersect(r);
   for (int i = 0; i < erg.size(); ++i)
     printf("t_%d=%.2f\n", i, erg[i]);
-    */
+    
   exit(EXIT_FAILURE);
 }

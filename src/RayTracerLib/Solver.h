@@ -36,13 +36,13 @@ namespace solve {
     double roots[10];
   };
   // Checks if the given value is zero.
-  bool isZero(double val) {
+  inline bool isZero(double val) {
     return (val <= EPSILON) && (val >= -EPSILON);
   }
 
   // Returnes the roots of a linear equation:
   // val1 * x + val0 = 0
-  void solveLinearEquation(
+  inline void solveLinearEquation(
       Result_t* result,
       double val1,
       double val0) {
@@ -55,7 +55,7 @@ namespace solve {
   }
   // Returnes the real roots of a quadratic equation:
   // val2 * x * x + val 1 * x + val0 = 0
-  void solveQuadraticEquation(
+  inline void solveQuadraticEquation(
       Result_t* result,
       double val2,
       double val1,
