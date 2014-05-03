@@ -30,21 +30,24 @@ SOFTWARE.
 
 #include <glm/glm.hpp>
 #include <Ray.h>
-#include <Ellipsoid.h>
-
+#include <Plane.h>
 
 void binaryTraceOrth() {
-  Ellipsoid test(1, 1, 1);
+  Plane test(0, -0.25, -0.25);
   Ray r;
   r.pos[3] = -2;
   r.dir = glm::vec4(0, 0, 1, 0);
-  for (float x = -2.0f; x < 2.0f; x += 0.05f) {
-    r.pos[0] = x;
-    for (float y = -2.0f; y < 2.0f; y += 0.05f) {
-      r.pos[1] = y;
-      if (test.intersect(r).size() != 0) {
+  for (float y = -2.0f; y < 2.0f; y += 0.05f) {
+    r.pos[1] = y;
+    for (float x = -2.0f; x < 2.0f; x += 0.05f) {
+      r.pos[0] = x;
+      auto erg = test.intersect(r);
+      if (erg.size() !=  0) {
         // HIT
-        printf("o");
+        if (erg[0] < 0)
+          printf("-");
+        else
+          printf("o");
       } else {
         // MISS
         printf("#");
@@ -65,7 +68,7 @@ int main(int argc, char** argv) {
            "3 to define a direction the ray will shoot to.\n");
     exit(EXIT_FAILURE);
   }
-
+/*
   Ellipsoid testEllipsoid(atof(argv[1]), atof(argv[2]), atof(argv[3]));
 
   Ray r;
@@ -75,5 +78,6 @@ int main(int argc, char** argv) {
   std::vector<double> erg = testEllipsoid.intersect(r);
   for (int i = 0; i < erg.size(); ++i)
     printf("t_%d=%.2f\n", i, erg[i]);
+    */
   exit(EXIT_FAILURE);
 }

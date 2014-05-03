@@ -22,17 +22,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #pragma once
-#ifndef RAYTRACERLIB_RAY_H_
-#define RAYTRACERLIB_RAY_H_
+#ifndef RAYTRACERLIB_PLANE_H_
+#define RAYTRACERLIB_PLANE_H_
 
 #include <glm/glm.hpp>
 
-// TODO(bauschp): implement a real ray class
-struct Ray {
-  glm::vec4 pos;
-  glm::vec4 dir;
+#include <vector>
+
+#include "./Shape.h"
+
+class Plane : public Shape {
+ public:
+  // ___________________________________________________________________________
+  Plane(double nX, double nY, double nZ) : _nX(nX), _nY(nY), _nZ(nZ) { }
+  // ___________________________________________________________________________
+  virtual ~Plane() { }
+  // ___________________________________________________________________________
+  virtual std::vector<double> intersect(const Ray& ray) const;
+  // ___________________________________________________________________________
+  virtual void getAppearenceAt(const glm::vec4& p) const;
+ private:
+  double _nX;
+  double _nY;
+  double _nZ;
 };
 
-#endif  // RAYTRACERLIB_RAY_H_
 
+#endif  // RAYTRACERLIB_PLANE_H_
 

@@ -21,18 +21,40 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#pragma once
-#ifndef RAYTRACERLIB_RAY_H_
-#define RAYTRACERLIB_RAY_H_
+
+#include "./Plane.h"
 
 #include <glm/glm.hpp>
 
-// TODO(bauschp): implement a real ray class
-struct Ray {
-  glm::vec4 pos;
-  glm::vec4 dir;
-};
+#include <vector>
 
-#endif  // RAYTRACERLIB_RAY_H_
+#include "./Ray.h"
+#include "./Solver.h"
 
+using std::vector;
 
+// ___________________________________________________________________________
+vector<double> Plane::intersect(const Ray& ray) const {
+  // ax + by + cz + d = 0
+  // a * (px + uxt) + b (py + uyt) + c (pz + uzt) + d = 0
+  // apx + bpy + cpz + d + auxt + buyt + cuzt = 0;
+
+  // Bring vector to unit space.
+  glm::vec4 transPos = ray.pos * glm::inverse(_transformation);
+  glm::vec4 transDir = ray.dir * glm::inverse(_transformation);
+
+  double b = _nX * transPos[0] + _nY * transPos[1] + _nZ * transPos[2];
+  double a = _nX * transDir[0] + _nY * transDir[1] + _nZ * transDir[2];
+
+  // TODO(bauschp): put into own method and reuse.
+  solve::Result_t res;
+  solve::solveLinearEquation(&res, a, b);
+  vector<double> out;
+  for (int i = 0; i < res.numResults; ++i) {
+    out.push_back(res.roots[i]);
+  }
+  return out;
+}
+// ___________________________________________________________________________
+void Plane::getAppearenceAt(const glm::vec4& p) const {
+}

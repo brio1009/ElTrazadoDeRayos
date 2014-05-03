@@ -31,11 +31,9 @@ SOFTWARE.
 
 #include "./Ray.h"
 #include "./Solver.h"
-
 using std::vector;
 
 Ellipsoid::Ellipsoid(double x, double y, double z) : rX(x), rY(y), rZ(z) {
-  _transformation = glm::mat4();
 }
 
 // _____________________________________________________________________________
