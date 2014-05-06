@@ -28,7 +28,8 @@ SOFTWARE.
 #include <glm/glm.hpp>
 
 // TODO(bauschp): implement a real ray class
-struct Ray {
+class Ray {
+public:
   glm::vec4 pos;
   glm::vec4 dir;
 };
