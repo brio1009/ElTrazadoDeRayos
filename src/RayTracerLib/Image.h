@@ -59,6 +59,9 @@ public:
   //! Read and write access for a specific pixel.
   Pixel* operator()(const int x, const int y);
 
+  //! Const-getter for a pixel.
+  const Pixel& getPixel(const int x, const int y) const;
+
 private:
   //! Vector with pixels.
   std::vector<Pixel> _data;
