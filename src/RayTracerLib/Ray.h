@@ -31,7 +31,7 @@ SOFTWARE.
 
 // TODO(bauschp): implement a real ray class
 class Ray {
-public:
+ public:
   glm::vec4 pos;
   glm::vec4 dir;
   // Creates a Ray with no direction!!!

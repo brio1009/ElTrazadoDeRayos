@@ -34,19 +34,19 @@ class Scene;
 
 class Camera : public Object {
  public:
-  //! Constructor.
+  /// Constructor.
   Camera(const int width, const int height);
-  //! Renders the scene to the image.
+  /// Renders the scene to the image.
   virtual void render(const Scene& scene) = 0;
 
-  //! Returns the image.
+  /// Returns the image.
   const Image& getImage() const;
 
-  //! Sets the image size. Resets the image.
+  /// Sets the image size. Resets the image.
   virtual void setImageSize(const int width, const int height);
 
  protected:
-  //! Image where the scene is rendered to.
+  /// Image where the scene is rendered to.
   Image _image;
 };
 

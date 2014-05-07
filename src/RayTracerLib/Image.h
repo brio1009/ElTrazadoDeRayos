@@ -30,35 +30,35 @@ SOFTWARE.
 #include <vector>
 #include "./Color.h"
 
-//! This class provides an easy to use interface to write and read pixel
-//! values of an image.
+/// This class provides an easy to use interface to write and read pixel
+/// values of an image.
 class Image
 {
 public:
-  //! Constructor.
+  /// Constructor.
   Image(const int width, const int height);
 
-  //! Destructor.
+  /// Destructor.
   ~Image();
 
-  //! Saves the current image under the given name.
+  /// Saves the current image under the given name.
   void saveAsBMP(const std::string& filePath) const;
 
-  //! Read and write access for a specific pixel.
+  /// Read and write access for a specific pixel.
   Color* operator()(const int x, const int y);
 
-  //! Const-getter for a pixel.
+  /// Const-getter for a pixel.
   const Color& getPixel(const int x, const int y) const;
   
-  //! Setter for color.
+  /// Setter for color.
   void setPixel(const int x, const int y, const Color& color);
 
 private:
-  //! Vector with pixels.
+  /// Vector with pixels.
   std::vector<Color> _data;
-  //! Saves the height.
+  /// Saves the height.
   int _height;
-  //! Saves the width.
+  /// Saves the width.
   int _width;
 };
 

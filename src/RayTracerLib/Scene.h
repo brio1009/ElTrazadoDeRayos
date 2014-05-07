@@ -33,15 +33,15 @@ class Ray;
 class Shape;
 struct IntersectionInfo;
 
-//! Holds the scene objects.
+/// Holds the scene objects.
 class Scene {
  public:
-  //! Constructor.
+  /// Constructor.
   Scene();
-  //! Traces a ray through the scene.
+  /// Traces a ray through the scene.
   IntersectionInfo traceRay(const Ray& ray) const;
  private:
-  //! Holds the renderable objects.
+  /// Holds the renderable objects.
   std::vector<Shape*> _shapes;
 };
 

@@ -23,11 +23,10 @@ SOFTWARE.
 */
 
 #include "./Image.h"
-#include "./Color.h"
 #include <cassert>
 #include <fstream>
 #include <vector>
-
+#include "./Color.h"
 using std::ofstream;
 using std::vector;
 

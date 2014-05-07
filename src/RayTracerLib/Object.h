@@ -30,7 +30,7 @@ SOFTWARE.
 
 class Object {
  public:
-  //! Destructor.
+  /// Destructor.
   virtual ~Object() {}
   // Multiplies the matrix with the current Transformation.
   virtual void transform(const glm::mat4& matrix);  //NOLINT mistaken for std

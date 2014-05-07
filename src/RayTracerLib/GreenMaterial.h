@@ -30,7 +30,7 @@ SOFTWARE.
 #include "./Color.h"
 
 class GreenMaterial : public Material {
-public:
+ public:
   virtual Color getColor(const glm::vec4& position,
                          const glm::vec4& normal,
                          const Scene& scene) const {

@@ -26,12 +26,12 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_COLOR_H_
 #define RAYTRACERLIB_COLOR_H_
 
-//! Class that holds the pixel data.
+/// Class that holds the pixel data.
 class Color {
-public:
-  //! Default Constructor.
+ public:
+  /// Default Constructor.
   Color() : r(0), g(0), b(0), a(0) { }
-  //! Construcotr with colors.
+  /// Construcotr with colors.
   Color(const int r,
         const int g,
         const int b,

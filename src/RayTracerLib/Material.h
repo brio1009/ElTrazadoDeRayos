@@ -32,17 +32,16 @@ SOFTWARE.
 class Color;
 class Scene;
 
-//!
+///
 class Material {
  public:
-  //!
+  ///
   virtual ~Material() { }
 
-  //! Returns the color for the given positition and normal.
+  /// Returns the color for the given positition and normal.
   virtual Color getColor(const glm::vec4& position,
                          const glm::vec4& normal,
                          const Scene& scene) const = 0;
-
 };
 
 #endif  // RAYTRACERLIB_MATERIAL_H_
