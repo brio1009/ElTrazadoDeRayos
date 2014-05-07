@@ -26,11 +26,25 @@ SOFTWARE.
 #define RAYTRACERLIB_RAY_H_
 
 #include <glm/glm.hpp>
+#include <glm/gtx/fast_square_root.hpp>
+
 
 // TODO(bauschp): implement a real ray class
 struct Ray {
   glm::vec4 pos;
   glm::vec4 dir;
+  // Creates a Ray with no direction!!!
+  Ray() : pos(0, 0, 0, 1), dir(0, 0, 0, 0) { }
+  // Creates a Ray with given origin and direction.
+  Ray(const glm::vec4& pos, const glm::vec4& dir) {
+    this->pos = pos;
+    this->dir = dir;
+    if (this->pos[3] == 0)
+      this->pos[3] = 1;
+    if (this->dir[3] != 0)
+      this->dir[3] = 0;
+    this->dir = glm::fastNormalize(this->dir);
+  }
 };
 
 #endif  // RAYTRACERLIB_RAY_H_
