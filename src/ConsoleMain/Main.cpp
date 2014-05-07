@@ -96,7 +96,7 @@ int main(int argc, char** argv) {
   r.dir = glm::vec4(atof(argv[7]), atof(argv[8]), atof(argv[9]), 0);
   r.dir = glm::normalize(r.dir);
   std::vector<double> erg = testEllipsoid.intersect(r);
-  for (int i = 0; i < erg.size(); ++i)
+  for (int i = 0; i < static_cast<int>(erg.size()); ++i)
     printf("t_%d=%.2f\n", i, erg[i]);
     
   exit(EXIT_FAILURE);

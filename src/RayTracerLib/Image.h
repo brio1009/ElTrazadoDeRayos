@@ -21,33 +21,54 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
 #pragma once
-#ifndef RAYTRACERLIB_RAY_H_
-#define RAYTRACERLIB_RAY_H_
+#ifndef RAYTRACERLIB_IMAGE_H_
+#define RAYTRACERLIB_IMAGE_H_
 
-#include <glm/glm.hpp>
-#include <glm/gtx/fast_square_root.hpp>
+#include <string>
+#include <vector>
 
-
-// TODO(bauschp): implement a real ray class
-class Ray {
+//! Class that holds the pixel data.
+class Pixel
+{
 public:
-  glm::vec4 pos;
-  glm::vec4 dir;
-  // Creates a Ray with no direction!!!
-  Ray() : pos(0, 0, 0, 1), dir(0, 0, 0, 0) { }
-  // Creates a Ray with given origin and direction.
-  Ray(const glm::vec4& pos, const glm::vec4& dir) {
-    this->pos = pos;
-    this->dir = dir;
-    if (this->pos[3] == 0)
-      this->pos[3] = 1;
-    if (this->dir[3] != 0)
-      this->dir[3] = 0;
-    this->dir = glm::fastNormalize(this->dir);
-  }
+  //! Default Constructor.
+  Pixel() : r(0), g(0), b(0), a(0) {}
+  // Member.
+  int r;
+  int g;
+  int b;
+  int a;
 };
 
-#endif  // RAYTRACERLIB_RAY_H_
+//! This class provides an easy to use interface to write and read pixel
+//! values of an image.
+class Image
+{
+public:
+  //! Constructor.
+  Image(const int width, const int height);
 
+  //! Destructor.
+  ~Image();
 
+  //! Saves the current image under the given name.
+  void saveAsBMP(const std::string& filePath) const;
+
+  //! Read and write access for a specific pixel.
+  Pixel* operator()(const int x, const int y);
+
+  //! Const-getter for a pixel.
+  const Pixel& getPixel(const int x, const int y) const;
+
+private:
+  //! Vector with pixels.
+  std::vector<Pixel> _data;
+  //! Saves the height.
+  int _height;
+  //! Saves the width.
+  int _width;
+};
+
+#endif  // RAYTRACERLIB_IMAGE_H_
