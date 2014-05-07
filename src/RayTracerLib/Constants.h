@@ -21,35 +21,22 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
+// This header probvides all nessecery constants for the Tracer Lib.
 #pragma once
-#ifndef RAYTRACERLIB_PLANE_H_
-#define RAYTRACERLIB_PLANE_H_
+#ifndef RAYTRACERLIB_CONSTANTS_H_
+#define RAYTRACERLIB_CONSTANTS_H_
 
-#include <glm/glm.hpp>
+// TODO(bauschp): Create a Variable for floating point precision.
+//                Maybe use #define name double/float
 
-#include <vector>
+typedef double REAL;
 
-#include "./Constants.h"
-#include "./Shape.h"
-
-class Plane : public Shape {
- public:
-  // ___________________________________________________________________________
-  Plane(REAL nX, REAL nY, REAL nZ) : _nX(nX), _nY(nY), _nZ(nZ) {
-    _transformation = glm::mat4(1.0);
-  }
-  // ___________________________________________________________________________
-  virtual ~Plane() { }
-  // ___________________________________________________________________________
-  virtual std::vector<REAL> intersect(const Ray& ray) const;
-  // ___________________________________________________________________________
-  virtual void getAppearenceAt(const glm::vec4& p) const;
- private:
-  REAL _nX;
-  REAL _nY;
-  REAL _nZ;
-};
-
-
-#endif  // RAYTRACERLIB_PLANE_H_
-
+namespace constants {
+  // This defines how precise a floating point variable has to be to be
+  // approximatly the value.
+  // e.g. check for zero:
+  // bool isZero(float f) { return (f < EPSILON) && (f > -EPSILON); }
+  const double EPSILON = 1e-5;
+}  // namespace constants
+#endif  // RAYTRACERLIB_CONSTANTS_H_

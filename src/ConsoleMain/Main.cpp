@@ -35,7 +35,7 @@ SOFTWARE.
 #include <Ray.h>
 #include <Ellipsoid.h>
 #include <Plane.h>
-
+#include <Image.h>
 
 void binaryTraceOrth() {
   Ellipsoid test(2, 1, 1);
@@ -43,10 +43,16 @@ void binaryTraceOrth() {
   Ray r;
   testPlane.transform(glm::mat4(0,1,0,0,-1,0,0,0,0,0,1,0,0,0,0,1));
   testPlane.transform(glm::mat4(1,0,0,0,0,1,0,-1,0,0,1,0,0,0,0,1));
+  Image img(80,80);
   r.pos[2] = 0.9;
   r.dir[3] = 0;
   r.pos[3] = 1;
   r.dir = glm::vec4(0, 0, -1, 0);
+  for (size_t i = 0; i < 80; ++i)
+    for (size_t j = 0; j < 80; ++j)
+      img(i, j)->r = 255;
+  img.saveAsBMP("test.bmp");
+  return;
   for (float y = 2.0f; y > -2.0f; y -= 0.05f) {
     r.pos[1] = y;
     for (float x = -2.0f; x < 2.0f; x += 0.05f) {

@@ -31,6 +31,8 @@ SOFTWARE.
 
 #include <vector>
 
+#include "./Constants.h"
+
 class Ray;
 
 // This abstract class is used to define essencial parts to render a "Shape"
@@ -41,7 +43,7 @@ class Shape {
   virtual void transform(const glm::mat4& matrix);  //NOLINT mistaken for std
   // Intersects the Ray with this Shape and returns the values for t
   // rPos + rDir * t that intersect the surface of this Shape.
-  virtual std::vector<double> intersect(const Ray& ray) const = 0;
+  virtual std::vector<REAL> intersect(const Ray& ray) const = 0;
   // Returnes the appearence of the surface Point p
   // if p isn't on the surface everything can happen.
   // TODO(allofus): what should be returned here?

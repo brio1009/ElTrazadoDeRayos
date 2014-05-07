@@ -28,13 +28,14 @@ SOFTWARE.
 
 #include <vector>
 
+#include "./Constants.h"
 #include "./Ray.h"
 #include "./Solver.h"
 
 using std::vector;
 
 // ___________________________________________________________________________
-vector<double> Plane::intersect(const Ray& ray) const {
+vector<REAL> Plane::intersect(const Ray& ray) const {
   // ax + by + cz + d = 0
   // a * (px + uxt) + b (py + uyt) + c (pz + uzt) + d = 0
   // apx + bpy + cpz + d + auxt + buyt + cuzt = 0;
@@ -43,13 +44,13 @@ vector<double> Plane::intersect(const Ray& ray) const {
   glm::vec4 transPos = ray.pos * glm::inverse(_transformation);
   glm::vec4 transDir = ray.dir * glm::inverse(_transformation);
 
-  double b = _nX * transPos[0] + _nY * transPos[1] + _nZ * transPos[2];
-  double a = _nX * transDir[0] + _nY * transDir[1] + _nZ * transDir[2];
+  REAL b = _nX * transPos[0] + _nY * transPos[1] + _nZ * transPos[2];
+  REAL a = _nX * transDir[0] + _nY * transDir[1] + _nZ * transDir[2];
 
   // TODO(bauschp): put into own method and reuse.
   solve::Result_t res;
   solve::solveLinearEquation(&res, a, b);
-  vector<double> out;
+  vector<REAL> out;
   for (int i = 0; i < res.numResults; ++i) {
     out.push_back(res.roots[i]);
   }

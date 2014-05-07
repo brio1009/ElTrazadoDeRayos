@@ -29,21 +29,22 @@ SOFTWARE.
 #include <glm/glm.hpp>
 #include <vector>
 
+#include "./Constants.h"
 #include "./Shape.h"
 
 // A Primitive is a Shape that is defined in its own.
 class Ellipsoid : public Shape {
  public:
-  Ellipsoid(double x, double y, double z);
+  Ellipsoid(REAL x, REAL y, REAL z);
   virtual ~Ellipsoid() { }
   // ___________________________________________________________________________
-  virtual std::vector<double> intersect(const Ray& ray) const;
+  virtual std::vector<REAL> intersect(const Ray& ray) const;
   // ___________________________________________________________________________
   virtual void getAppearenceAt(const glm::vec4& p) const;
  private:
-  double rX;
-  double rY;
-  double rZ;
+  REAL rX;
+  REAL rY;
+  REAL rZ;
 };
 
 #endif  // RAYTRACERLIB_ELLIPSOID_H_
