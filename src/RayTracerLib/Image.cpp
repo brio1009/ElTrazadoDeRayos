@@ -32,8 +32,7 @@ using std::vector;
 
 // _____________________________________________________________________________
 Image::Image(const int width, const int height)
-  : _width(width), _height(height)
-{
+  : _width(width), _height(height) {
   // We need to be sure, that width and height are both > 0.
   assert(_width > 0);
   assert(_height > 0);
@@ -42,13 +41,11 @@ Image::Image(const int width, const int height)
 }
 
 // _____________________________________________________________________________
-Image::~Image()
-{
+Image::~Image() {
 }
 
 // _____________________________________________________________________________
-void Image::saveAsBMP(const std::string& filePath) const
-{
+void Image::saveAsBMP(const std::string& filePath) const {
   // Open the stream.
   ofstream stream(filePath, std::ofstream::out);
 
@@ -126,19 +123,17 @@ void Image::saveAsBMP(const std::string& filePath) const
 
           stream.write((char*)pixel, 3);
       }
-      stream.write((char*)pad, padSize);
+      stream.write(reinterpret_cast<char*>(pad), padSize);
   }
   stream.close();
 }
 
 // _____________________________________________________________________________
-Pixel* Image::operator()(const int x, const int y)
-{
+Pixel* Image::operator()(const int x, const int y) {
   return &(_data[x + _width * y]);
 }
 
 // _____________________________________________________________________________
-const Pixel& Image::getPixel(const int x, const int y) const
-{
+const Pixel& Image::getPixel(const int x, const int y) const {
   return _data.at(x + _width * y);
 }
