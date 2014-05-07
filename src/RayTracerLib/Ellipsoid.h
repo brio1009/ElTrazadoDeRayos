@@ -40,12 +40,11 @@ class Ellipsoid : public Shape {
   // ___________________________________________________________________________
   virtual std::vector<REAL> intersect(const Ray& ray) const;
   // ___________________________________________________________________________
-  virtual void getAppearenceAt(const glm::vec4& p) const;
+  virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
  private:
-  REAL rX;
-  REAL rY;
-  REAL rZ;
+  REAL _rX;
+  REAL _rY;
+  REAL _rZ;
 };
 
 #endif  // RAYTRACERLIB_ELLIPSOID_H_
-

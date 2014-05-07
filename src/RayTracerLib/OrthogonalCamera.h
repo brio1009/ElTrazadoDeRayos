@@ -26,11 +26,18 @@ SOFTWARE.
 #define RAYTRACERLIB_ORTHOGONALCAMERA_H_
 
 #include "./Camera.h"
+#include "./Constants.h"
 
 class OrthogonalCamera : public Camera {
+ private:
+  REAL _unitsPerPixel;
  public:
   //! Constructor.
-  OrthogonalCamera(const int width, const int height) : Camera(width, height) { }
+  OrthogonalCamera(const int width,
+      const int height,
+      const REAL unitsPerPixel = 1.0) : Camera(width, height) {
+    _unitsPerPixel = unitsPerPixel;
+  }
   // Defines Camrea::render().
   virtual void render(const Scene& scene);
 };

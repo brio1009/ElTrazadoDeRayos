@@ -53,6 +53,10 @@ public:
   /// Setter for color.
   void setPixel(const int x, const int y, const Color& color);
 
+  ///
+  int getWidth() const { return _width; }
+  int getHeight() const { return _height; }
+
 private:
   /// Vector with pixels.
   std::vector<Color> _data;

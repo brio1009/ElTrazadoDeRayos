@@ -31,19 +31,21 @@ SOFTWARE.
 // _____________________________________________________________________________
 void OrthogonalCamera::render(const Scene& scene) {
   // Get the size of the image.
-  size_t width = 80;
-  size_t height = 80;
-  glm::vec4 position(- width/2.0f, -height/2.0f, 0, 1);
-  glm::vec4 direction(0, 0, 1, 0);
-  direction = glm::inverse(_transformation)* direction;
+  REAL startX = _image.getWidth() * 0.5 * _unitsPerPixel;
+  REAL startY = _image.getHeight() * 0.5 * _unitsPerPixel;
 
-  glm::vec4 planeX(1, 0, 0, 0);
-  glm::vec4 planeY(0, 1, 0, 0);
-  planeX = glm::inverse(_transformation) * planeX;
-  planeY = glm::inverse(_transformation) * planeY;
+  glm::vec4 position(-startX + _unitsPerPixel * 0.5, -startY + _unitsPerPixel * 0.5, 0, 1);
+  position = _transformation * position;
+  glm::vec4 direction(0, 0, -1, 0);
+  direction = _transformation * direction;
+
+  glm::vec4 planeX(_unitsPerPixel, 0, 0, 0);
+  glm::vec4 planeY(0, _unitsPerPixel, 0, 0);
+  planeX = _transformation * planeX;
+  planeY = _transformation * planeY;
   // Send rays.
-  for (size_t x = 0; x < width; ++x) {
-    for (size_t y = 0; y < height; ++y) {
+  for (size_t x = 0; x < _image.getWidth(); ++x) {
+    for (size_t y = 0; y < _image.getHeight(); ++y) {
       Ray r(position
         + ((float)x * planeX) + ((float)y* planeY), direction);
       IntersectionInfo info = scene.traceRay(r);
@@ -51,6 +53,8 @@ void OrthogonalCamera::render(const Scene& scene) {
         // HIT
         Color tmpColor = info.materialPtr->getColor(info.hitPoint, info.normal, scene);
         _image.setPixel(x, y, tmpColor);
+      } else {
+        _image.setPixel(x, y, Color(0, 0, 0, 0));
       }
     }
   }

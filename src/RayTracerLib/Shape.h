@@ -45,7 +45,7 @@ class Shape : public Object {
   // Returnes the appearence of the surface Point p
   // if p isn't on the surface everything can happen.
   // TODO(allofus): what should be returned here?
-  virtual void getAppearenceAt(const glm::vec4& p) const = 0;
+  virtual glm::vec4 getNormalAt(const glm::vec4& p) const = 0;
 };
 
 

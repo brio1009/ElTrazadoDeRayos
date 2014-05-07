@@ -43,7 +43,7 @@ class Plane : public Shape {
   // ___________________________________________________________________________
   virtual std::vector<REAL> intersect(const Ray& ray) const;
   // ___________________________________________________________________________
-  virtual void getAppearenceAt(const glm::vec4& p) const;
+  virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
  private:
   REAL _nX;
   REAL _nY;

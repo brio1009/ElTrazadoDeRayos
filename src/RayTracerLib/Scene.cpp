@@ -58,8 +58,9 @@ IntersectionInfo Scene::traceRay(const Ray& ray) const {
     }
   }
   if (shapePtr) {
-    return IntersectionInfo(ray.pos + (float)smallestT * ray.dir,
-                            ray.dir,
+    glm::vec4 position = ray.pos + (float)smallestT * ray.dir;
+    return IntersectionInfo(position,
+                            shapePtr->getNormalAt(position),
                             new GreenMaterial());
   }
   return IntersectionInfo();

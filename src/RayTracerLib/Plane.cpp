@@ -57,5 +57,6 @@ vector<REAL> Plane::intersect(const Ray& ray) const {
   return out;
 }
 // ___________________________________________________________________________
-void Plane::getAppearenceAt(const glm::vec4& p) const {
+glm::vec4 Plane::getNormalAt(const glm::vec4& p) const {
+  return glm::vec4(_nX, _nY, _nZ, 0);
 }

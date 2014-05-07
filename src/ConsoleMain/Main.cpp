@@ -31,6 +31,8 @@ SOFTWARE.
 
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 // RayTracerLib
 #include <Ray.h>
 #include <Ellipsoid.h>
@@ -88,8 +90,22 @@ void binaryTraceOrth() {
 //
 void renderScene() {
   Scene scene;
-  OrthogonalCamera cam(80, 80);
-  cam.render(scene);
+  // REMEMBER VIM: use :r !date to insert current time.
+  // TODO(allofus, Wed May  7 21:13:19 CEST 2014): to scale a image transform
+  // the thrid param to match smaller change.
+  // e.g. when converting from 80x80 (first trace) to  512x512 divide 80 by 512
+  OrthogonalCamera cam(1024, 1024, 0.078125);
+  glm::mat4 camTrans = glm::translate(glm::mat4(1.0), glm::vec3(0, 0, 50));
+
+  // cam.transform(camTrans);
+  // cam.render(scene);
+  // TODO(bauschp, Wed May  7 21:57:12 CEST 2014): Remove this.
+  for (size_t i = 0; i < 20; ++i) {
+    glm::mat4 trans = glm::rotate(glm::mat4(1.0), 18.0f * i, glm::vec3(0, 1, 0));
+    cam.transform(glm::translate(trans, glm::vec3(0, 0, 30)));
+    cam.render(scene);
+    sleep(1);
+  }
 }
 
 // The main method.

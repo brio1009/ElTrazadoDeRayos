@@ -27,5 +27,5 @@ SOFTWARE.
 #include <glm/glm.hpp>
 // _____________________________________________________________________________
 void Object::transform(const glm::mat4& matrix) {  //NOLINT misstaken for std::tr
-  _transformation *= matrix;
+  _transformation = matrix;
 }

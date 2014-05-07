@@ -34,15 +34,15 @@ SOFTWARE.
 #include "./Solver.h"
 using std::vector;
 
-Ellipsoid::Ellipsoid(REAL x, REAL y, REAL z) : rX(x), rY(y), rZ(z) {
+Ellipsoid::Ellipsoid(REAL x, REAL y, REAL z) : _rX(x), _rY(y), _rZ(z) {
   _transformation = glm::mat4();
 }
 
 // _____________________________________________________________________________
 vector<REAL> Ellipsoid::intersect(const Ray& ray) const {
-  // (px^2 / rX^2) + (2 * px * ux * t) / rX^2 + (ux^2 + t^2) / rX^2
-  // + (py^2 / rY^2) + (2 * py * uy * t) / rY^2 + (uy^2 + t^2) / rY^2
-  // + (pz^2 / rZ^2) + (2 * pz * uz * t) / rZ^2 + (uz^2 + t^2) / rZ^2
+  // (px^2 / _rX^2) + (2 * px * ux * t) / _rX^2 + (ux^2 + t^2) / _rX^2
+  // + (py^2 / _rY^2) + (2 * py * uy * t) / _rY^2 + (uy^2 + t^2) / _rY^2
+  // + (pz^2 / _rZ^2) + (2 * pz * uz * t) / _rZ^2 + (uz^2 + t^2) / _rZ^2
   // - 1
 
   // Bring vector to unit space.
@@ -50,9 +50,9 @@ vector<REAL> Ellipsoid::intersect(const Ray& ray) const {
   glm::vec4 transDir = ray.dir * glm::inverse(_transformation);
 
   // TODO(allofus): Think about outsourcing.
-  REAL invRX = solve::isZero(rX) ? 0.0 : 1.0 / rX;
-  REAL invRY = solve::isZero(rY) ? 0.0 : 1.0 / rY;
-  REAL invRZ = solve::isZero(rZ) ? 0.0 : 1.0 / rZ;
+  REAL invRX = solve::isZero(_rX) ? 0.0 : 1.0 / _rX;
+  REAL invRY = solve::isZero(_rY) ? 0.0 : 1.0 / _rY;
+  REAL invRZ = solve::isZero(_rZ) ? 0.0 : 1.0 / _rZ;
   invRX *= invRX;
   invRY *= invRY;
   invRZ *= invRZ;
@@ -76,5 +76,10 @@ vector<REAL> Ellipsoid::intersect(const Ray& ray) const {
   return out;
 }
 // _____________________________________________________________________________
-void Ellipsoid::getAppearenceAt(const glm::vec4& p) const {
+glm::vec4 Ellipsoid::getNormalAt(const glm::vec4& p) const {
+  return glm::vec4(
+      (2 * p.x) / (_rX * _rX),
+      (2 * p.y) / (_rY * _rY),
+      (2 * p.z) / (_rZ * _rZ),
+      0);
 }
