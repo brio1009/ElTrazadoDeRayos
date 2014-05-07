@@ -22,44 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
-#ifndef RAYTRACERLIB_IMAGE_H_
-#define RAYTRACERLIB_IMAGE_H_
+#include "./Object.h"
 
-#include <string>
-#include <vector>
-#include "./Color.h"
-
-//! This class provides an easy to use interface to write and read pixel
-//! values of an image.
-class Image
-{
-public:
-  //! Constructor.
-  Image(const int width, const int height);
-
-  //! Destructor.
-  ~Image();
-
-  //! Saves the current image under the given name.
-  void saveAsBMP(const std::string& filePath) const;
-
-  //! Read and write access for a specific pixel.
-  Color* operator()(const int x, const int y);
-
-  //! Const-getter for a pixel.
-  const Color& getPixel(const int x, const int y) const;
-  
-  //! Setter for color.
-  void setPixel(const int x, const int y, const Color& color);
-
-private:
-  //! Vector with pixels.
-  std::vector<Color> _data;
-  //! Saves the height.
-  int _height;
-  //! Saves the width.
-  int _width;
-};
-
-#endif  // RAYTRACERLIB_IMAGE_H_
+#include <glm/glm.hpp>
+// _____________________________________________________________________________
+void Object::transform(const glm::mat4& matrix) {  //NOLINT misstaken for std::tr
+  _transformation *= matrix;
+}

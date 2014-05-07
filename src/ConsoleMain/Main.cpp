@@ -36,6 +36,9 @@ SOFTWARE.
 #include <Ellipsoid.h>
 #include <Plane.h>
 #include <Image.h>
+#include <Material.h>
+#include <Scene.h>
+#include <OrthogonalCamera.h>
 
 void binaryTraceOrth() {
   Ellipsoid test(2, 1, 1);
@@ -82,9 +85,17 @@ void binaryTraceOrth() {
   }
 }
 
+//
+void renderScene() {
+  Scene scene;
+  OrthogonalCamera cam(80, 80);
+  cam.render(scene);
+}
 
 // The main method.
 int main(int argc, char** argv) {
+  renderScene();
+  return 8;
   // Print usage.
   binaryTraceOrth();
   return 9;

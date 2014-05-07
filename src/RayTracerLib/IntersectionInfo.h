@@ -23,43 +23,24 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_IMAGE_H_
-#define RAYTRACERLIB_IMAGE_H_
+#ifndef RAYTRACERLIB_INTERSECTIONINFO_H_
+#define RAYTRACERLIB_INTERSECTIONINFO_H_
+#pragma fuckyou
 
-#include <string>
-#include <vector>
-#include "./Color.h"
+#include <glm/glm.hpp>
 
-//! This class provides an easy to use interface to write and read pixel
-//! values of an image.
-class Image
-{
-public:
-  //! Constructor.
-  Image(const int width, const int height);
+// Forward declaration.
+class Material;
 
-  //! Destructor.
-  ~Image();
-
-  //! Saves the current image under the given name.
-  void saveAsBMP(const std::string& filePath) const;
-
-  //! Read and write access for a specific pixel.
-  Color* operator()(const int x, const int y);
-
-  //! Const-getter for a pixel.
-  const Color& getPixel(const int x, const int y) const;
-  
-  //! Setter for color.
-  void setPixel(const int x, const int y, const Color& color);
-
-private:
-  //! Vector with pixels.
-  std::vector<Color> _data;
-  //! Saves the height.
-  int _height;
-  //! Saves the width.
-  int _width;
+struct IntersectionInfo {
+  glm::vec4 hitPoint;
+  glm::vec4 normal;
+  const Material* const materialPtr;
+  IntersectionInfo() : hitPoint(0), normal(0), materialPtr(nullptr) { }
+  IntersectionInfo(const glm::vec4& hitPoint,
+                   const glm::vec4& normal,
+                   const Material* const materialPtr)
+  : hitPoint(hitPoint), normal(normal), materialPtr(materialPtr) { }
 };
 
-#endif  // RAYTRACERLIB_IMAGE_H_
+#endif  // RAYTRACERLIB_INTERSECTIONINFO_H_

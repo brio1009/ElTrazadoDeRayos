@@ -21,32 +21,39 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
-#pragma once
-#ifndef RAYTRACERLIB_SHAPE_H_
-#define RAYTRACERLIB_SHAPE_H_
-
-// GlMath include.
 #include <glm/glm.hpp>
-
-#include <vector>
-
+#include "./OrthogonalCamera.h"
+#include "./IntersectionInfo.h"
 #include "./Constants.h"
-#include "./Object.h"
-class Ray;
+#include "./Scene.h"
+#include "./Ray.h"
+#include "./Material.h"
+// _____________________________________________________________________________
+void OrthogonalCamera::render(const Scene& scene) {
+  // Get the size of the image.
+  size_t width = 80;
+  size_t height = 80;
+  glm::vec4 position(- width/2.0f, -height/2.0f, 0, 1);
+  glm::vec4 direction(0, 0, 1, 0);
+  direction = glm::inverse(_transformation)* direction;
 
-// This abstract class is used to define essencial parts to render a "Shape"
-class Shape : public Object {
- public:
-  virtual ~Shape() { }
-  // Intersects the Ray with this Shape and returns the values for t
-  // rPos + rDir * t that intersect the surface of this Shape.
-  virtual std::vector<REAL> intersect(const Ray& ray) const = 0;
-  // Returnes the appearence of the surface Point p
-  // if p isn't on the surface everything can happen.
-  // TODO(allofus): what should be returned here?
-  virtual void getAppearenceAt(const glm::vec4& p) const = 0;
-};
-
-
-#endif  // RAYTRACERLIB_SHAPE_H_
+  glm::vec4 planeX(1, 0, 0, 0);
+  glm::vec4 planeY(0, 1, 0, 0);
+  planeX = glm::inverse(_transformation) * planeX;
+  planeY = glm::inverse(_transformation) * planeY;
+  // Send rays.
+  for (size_t x = 0; x < width; ++x) {
+    for (size_t y = 0; y < height; ++y) {
+      Ray r(position
+        + ((float)x * planeX) + ((float)y* planeY), direction);
+      IntersectionInfo info = scene.traceRay(r);
+      if (info.materialPtr) {
+        // HIT
+        Color tmpColor = info.materialPtr->getColor(info.hitPoint, info.normal, scene);
+        _image.setPixel(x, y, tmpColor);
+      }
+    }
+  }
+  // DONE!
+  _image.saveAsBMP("Ortho.bmp");
+}

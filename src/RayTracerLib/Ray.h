@@ -40,6 +40,7 @@ public:
   Ray(const glm::vec4& pos, const glm::vec4& dir) {
     this->pos = pos;
     this->dir = dir;
+    return;
     if (this->pos[3] == 0)
       this->pos[3] = 1;
     if (this->dir[3] != 0)

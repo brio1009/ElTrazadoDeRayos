@@ -23,6 +23,7 @@ SOFTWARE.
 */
 
 #include "./Image.h"
+#include "./Color.h"
 #include <cassert>
 #include <fstream>
 #include <vector>
@@ -37,7 +38,7 @@ Image::Image(const int width, const int height)
   assert(_width > 0);
   assert(_height > 0);
   // Resize the pixel vector and put only black pixels in it.
-  _data.assign(_width * _height, Pixel());
+  _data.assign(_width * _height, Color());
 }
 
 // _____________________________________________________________________________
@@ -115,7 +116,7 @@ void Image::saveAsBMP(const std::string& filePath) const {
   {
       for (int x = 0; x < w; ++x)
       {
-          const Pixel& tmpPixel = getPixel(x, y);
+          const Color& tmpPixel = getPixel(x, y);
           unsigned char pixel[3];
           pixel[0] = tmpPixel.r;
           pixel[1] = tmpPixel.g;
@@ -129,11 +130,19 @@ void Image::saveAsBMP(const std::string& filePath) const {
 }
 
 // _____________________________________________________________________________
-Pixel* Image::operator()(const int x, const int y) {
+Color* Image::operator()(const int x, const int y) {
   return &(_data[x + _width * y]);
 }
 
 // _____________________________________________________________________________
-const Pixel& Image::getPixel(const int x, const int y) const {
+const Color& Image::getPixel(const int x, const int y) const {
   return _data.at(x + _width * y);
+}
+
+// _____________________________________________________________________________
+void Image::setPixel(const int x, const int y, const Color& color) {
+  assert(x >= 0 && x < _width);
+  assert(y >= 0 && y < _height);
+
+  _data[x + _width * y] = color;
 }

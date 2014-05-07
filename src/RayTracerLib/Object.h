@@ -21,45 +21,22 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#ifndef RAYTRACERLIB_OBJECT_H_
+#define RAYTRACERLIB_OBJECT_H_
+// GlMath include.
+#include <glm/glm.hpp>
 
-#pragma once
-#ifndef RAYTRACERLIB_IMAGE_H_
-#define RAYTRACERLIB_IMAGE_H_
+#include "./Constants.h"
 
-#include <string>
-#include <vector>
-#include "./Color.h"
-
-//! This class provides an easy to use interface to write and read pixel
-//! values of an image.
-class Image
-{
-public:
-  //! Constructor.
-  Image(const int width, const int height);
-
+class Object {
+ public:
   //! Destructor.
-  ~Image();
-
-  //! Saves the current image under the given name.
-  void saveAsBMP(const std::string& filePath) const;
-
-  //! Read and write access for a specific pixel.
-  Color* operator()(const int x, const int y);
-
-  //! Const-getter for a pixel.
-  const Color& getPixel(const int x, const int y) const;
-  
-  //! Setter for color.
-  void setPixel(const int x, const int y, const Color& color);
-
-private:
-  //! Vector with pixels.
-  std::vector<Color> _data;
-  //! Saves the height.
-  int _height;
-  //! Saves the width.
-  int _width;
+  virtual ~Object() {}
+  // Multiplies the matrix with the current Transformation.
+  virtual void transform(const glm::mat4& matrix);  //NOLINT mistaken for std
+ protected:
+  // the transformation of this Shape
+  glm::mat4 _transformation;
 };
 
-#endif  // RAYTRACERLIB_IMAGE_H_
+#endif  // RAYTRACERLIB_OBJECT_H_

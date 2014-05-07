@@ -22,10 +22,25 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "./Shape.h"
+#pragma once
+#ifndef RAYTRACERLIB_COLOR_H_
+#define RAYTRACERLIB_COLOR_H_
 
-#include <glm/glm.hpp>
-// _____________________________________________________________________________
-void Shape::transform(const glm::mat4& matrix) {  //NOLINT misstaken for std::tr
-  _transformation *= matrix;
-}
+//! Class that holds the pixel data.
+class Color {
+public:
+  //! Default Constructor.
+  Color() : r(0), g(0), b(0), a(0) { }
+  //! Construcotr with colors.
+  Color(const int r,
+        const int g,
+        const int b,
+        const int a) : r(r), g(g), b(b), a(a) { }
+  // Member.
+  int r;
+  int g;
+  int b;
+  int a;
+};
+
+#endif  // RAYTRACERLIB_COLOR_H_

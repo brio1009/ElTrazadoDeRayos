@@ -50,8 +50,8 @@ if os.get() == "windows" then
   --prebuildcommands { "py -v2 ./cpplint.py ../src/RayTracerLib/*" }
   --prebuildcommands { "py -v2 ./cpplint.py ../src/ConsoleMain/*" }
 elseif os.get() == "linux" then 
-  prebuildcommands { "python ../cpplint.py --root=src ../../src/RayTracerLib/*" }
-  -- prebuildcommands { "python ../cpplint.py --root=src ../../src/ConsoleMain/*" }
+  postbuildcommands { "python ../cpplint.py --root=src ../../src/RayTracerLib/*" }
+  --prebuildcommands { "python ../cpplint.py --root=src ../../src/ConsoleMain/*" }
 elseif os.get() == "macosx" then
   --prebuildcommands { "enter command here" }
 end

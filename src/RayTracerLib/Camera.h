@@ -23,43 +23,31 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_IMAGE_H_
-#define RAYTRACERLIB_IMAGE_H_
+#ifndef RAYTRACERLIB_CAMERA_H_
+#define RAYTRACERLIB_CAMERA_H_
 
-#include <string>
-#include <vector>
-#include "./Color.h"
+#include "./Image.h"
+#include "./Object.h"
 
-//! This class provides an easy to use interface to write and read pixel
-//! values of an image.
-class Image
-{
-public:
+// Foward declaration.
+class Scene;
+
+class Camera : public Object {
+ public:
   //! Constructor.
-  Image(const int width, const int height);
+  Camera(const int width, const int height);
+  //! Renders the scene to the image.
+  virtual void render(const Scene& scene) = 0;
 
-  //! Destructor.
-  ~Image();
+  //! Returns the image.
+  const Image& getImage() const;
 
-  //! Saves the current image under the given name.
-  void saveAsBMP(const std::string& filePath) const;
+  //! Sets the image size. Resets the image.
+  virtual void setImageSize(const int width, const int height);
 
-  //! Read and write access for a specific pixel.
-  Color* operator()(const int x, const int y);
-
-  //! Const-getter for a pixel.
-  const Color& getPixel(const int x, const int y) const;
-  
-  //! Setter for color.
-  void setPixel(const int x, const int y, const Color& color);
-
-private:
-  //! Vector with pixels.
-  std::vector<Color> _data;
-  //! Saves the height.
-  int _height;
-  //! Saves the width.
-  int _width;
+ protected:
+  //! Image where the scene is rendered to.
+  Image _image;
 };
 
-#endif  // RAYTRACERLIB_IMAGE_H_
+#endif  // RAYTRACERLIB_CAMERA_H_

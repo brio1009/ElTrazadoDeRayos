@@ -23,43 +23,26 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_IMAGE_H_
-#define RAYTRACERLIB_IMAGE_H_
+#ifndef RAYTRACERLIB_MATERIAL_H_
+#define RAYTRACERLIB_MATERIAL_H_
 
-#include <string>
-#include <vector>
-#include "./Color.h"
+#include <glm/glm.hpp>
 
-//! This class provides an easy to use interface to write and read pixel
-//! values of an image.
-class Image
-{
-public:
-  //! Constructor.
-  Image(const int width, const int height);
+// Forward declaration.
+class Color;
+class Scene;
 
-  //! Destructor.
-  ~Image();
+//!
+class Material {
+ public:
+  //!
+  virtual ~Material() { }
 
-  //! Saves the current image under the given name.
-  void saveAsBMP(const std::string& filePath) const;
+  //! Returns the color for the given positition and normal.
+  virtual Color getColor(const glm::vec4& position,
+                         const glm::vec4& normal,
+                         const Scene& scene) const = 0;
 
-  //! Read and write access for a specific pixel.
-  Color* operator()(const int x, const int y);
-
-  //! Const-getter for a pixel.
-  const Color& getPixel(const int x, const int y) const;
-  
-  //! Setter for color.
-  void setPixel(const int x, const int y, const Color& color);
-
-private:
-  //! Vector with pixels.
-  std::vector<Color> _data;
-  //! Saves the height.
-  int _height;
-  //! Saves the width.
-  int _width;
 };
 
-#endif  // RAYTRACERLIB_IMAGE_H_
+#endif  // RAYTRACERLIB_MATERIAL_H_
