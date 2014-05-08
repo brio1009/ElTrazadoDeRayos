@@ -39,6 +39,9 @@ class Object {
   /// Get the position of the object.
   const glm::vec4& getPosition() const { return _transformation[3]; }
 
+  /// Set the position of the object.
+  void setPosition(const glm::vec4& position) { _transformation[3] = position; }
+
  protected:
   // the transformation of this Shape
   glm::mat4 _transformation;

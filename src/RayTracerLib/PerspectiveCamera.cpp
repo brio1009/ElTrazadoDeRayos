@@ -35,8 +35,10 @@ PerspectiveCamera::PerspectiveCamera(const int width,
   // TODO(bauschp): Insert right formula.
   _focalLength = width / fovAngleInRad;
 }
+
 // _____________________________________________________________________________
 PerspectiveCamera::~PerspectiveCamera() { }
+
 // _____________________________________________________________________________
 void PerspectiveCamera::render(const Scene& scene) {
   // Get the size of the image.
@@ -61,7 +63,10 @@ void PerspectiveCamera::render(const Scene& scene) {
       IntersectionInfo info = scene.traceRay(r);
       if (info.materialPtr) {
         // HIT
-        Color tmpColor = info.materialPtr->getColor(info.hitPoint, info.normal, -direction, scene);
+        Color tmpColor = info.materialPtr->getColor(info.hitPoint,
+                                                    info.normal,
+                                                    direction,
+                                                    scene);
         _image.setPixel(x, y, tmpColor);
       } else {
         _image.setPixel(x, y, Color(0, 0, 0, 0));
