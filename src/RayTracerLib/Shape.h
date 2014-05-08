@@ -49,6 +49,7 @@ class Shape : public Object {
     tmpColor.setR(rand() % 255);
     tmpColor.setG(rand() % 255);
     tmpColor.setB(rand() % 255);
+    tmpColor.setA(255);
     _materialPtr = new ColorMaterial(tmpColor);
   }
 

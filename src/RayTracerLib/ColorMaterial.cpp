@@ -25,19 +25,37 @@ SOFTWARE.
 #include <glm/glm.hpp>
 #include "./Color.h"
 #include "./ColorMaterial.h"
+#include "./Constants.h"
+#include "./IntersectionInfo.h"
+#include "./Ray.h"
+#include "./Scene.h"
 
 // _____________________________________________________________________________
 Color ColorMaterial::getColor(const glm::vec4& position,
                               const glm::vec4& normal,
                               const glm::vec4& incomingRayDir,
                               const Scene& scene) const {
-  glm::vec4 dir = glm::vec4(0, 0, 0, 1) - position;
-  REAL scale = glm::dot(glm::normalize(normal), glm::normalize(dir));
-  scale = (scale >= 0 ? scale : 0.1);
-  // REAL scaleTwo = glm::dot(glm::normalize(normal), glm::vec4(-1, 0, 0, 0));
-  // scaleTwo = (scaleTwo >= 0 ? scaleTwo : 0);
-  // REAL scaleThree = glm::dot(glm::normalize(normal), glm::normalize(glm::vec4(1, -1, -1, 0)));
-  // scaleThree = (scaleThree >= 0 ? scaleThree : 0);
-  // scale = 1.0;
-  return Color(scale * _color);
+  // Build the returncolor.
+  Color returnColor(_color);
+
+  // Check if we need to send another ray.
+  if (_color.a() < 255) {
+    // Build a new ray.
+    Ray newRay(position
+               + static_cast<float>(constants::EPSILON * 2.0) * incomingRayDir,
+               incomingRayDir);
+    // Trace the ray.
+    IntersectionInfo info = scene.traceRay(newRay);
+    Color addColor;
+    if (info.materialPtr) {
+      addColor = info.materialPtr->getColor(info.hitPoint,
+                                            info.normal,
+                                            newRay.dir,
+                                            scene);
+    }
+    returnColor = (static_cast<double>(_color.a()) / 255.0) * _color
+                  + (1.0 - static_cast<double>(_color.a()) / 255.0) * addColor;
+  }
+
+  return returnColor;
  }
