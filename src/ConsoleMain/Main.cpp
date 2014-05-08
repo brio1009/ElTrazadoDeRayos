@@ -23,12 +23,10 @@ SOFTWARE.
 */
 
 #include <algorithm>
-
+#include <ctime>
 #include <cstdio>
 #include <cstdlib>
-
 #include <vector>
-
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -113,6 +111,10 @@ void renderScene() {
 
 // The main method.
 int main(int argc, char** argv) {
+  // Initialize the rand function.
+  srand(time(NULL));
+
+  // Do other stuff.
   renderScene();
   return 8;
   // Print usage.
