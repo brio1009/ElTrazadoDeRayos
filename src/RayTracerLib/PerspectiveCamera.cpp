@@ -32,8 +32,8 @@ SOFTWARE.
 PerspectiveCamera::PerspectiveCamera(const int width,
       const int height,
       const REAL& fovAngleInRad) : Camera(width, height) {
-  _focalLength = 2 * tan(fovAngleInRad / 2.0) / width;
-  _focalLength = 10;
+  // TODO(bauschp): Insert right formula.
+  _focalLength = width / fovAngleInRad;
 }
 // _____________________________________________________________________________
 PerspectiveCamera::~PerspectiveCamera() { }
@@ -52,7 +52,7 @@ void PerspectiveCamera::render(const Scene& scene) {
       // Create new direction.
       glm::vec4 direction(-startX + x, -startY + y, -_focalLength, 0);
       direction = glm::normalize(direction);
-      // direction = _transformation * direction;
+      direction = _transformation * direction;
 
       Ray r(position, direction);
       // if (y == 0)
