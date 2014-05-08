@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#include <cstdio>
 #include <glm/glm.hpp>
 #include "./OrthogonalCamera.h"
 #include "./IntersectionInfo.h"
@@ -62,7 +63,11 @@ void OrthogonalCamera::render(const Scene& scene) {
   }
   // DONE!
   char buff[100];
+#ifdef WINDOWS
+  _snprintf(buff, 100, "Ortho%lu.bmp", img);
+#else
   snprintf(buff, 100, "Ortho%zu.bmp", img);
+#endif  // WINDOWS
   ++img;
   _image.saveAsBMP(buff);
 }
