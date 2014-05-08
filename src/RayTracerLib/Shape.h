@@ -26,19 +26,39 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_SHAPE_H_
 #define RAYTRACERLIB_SHAPE_H_
 
-// GlMath include.
 #include <glm/glm.hpp>
 
+#include <cstdlib>
 #include <vector>
 
 #include "./Constants.h"
+#include "./Color.h"
+#include "./ColorMaterial.h"
 #include "./Object.h"
+
+// Forward declaration.
 class Ray;
 
 // This abstract class is used to define essencial parts to render a "Shape"
 class Shape : public Object {
  public:
-  virtual ~Shape() { }
+  /// Constructor.
+  Shape() {
+    // Construct a random color.
+    Color tmpColor;
+    tmpColor.setR(rand() % 255);
+    tmpColor.setG(rand() % 255);
+    tmpColor.setB(rand() % 255);
+    _materialPtr = new ColorMaterial(tmpColor);
+  }
+
+  /// Destructor.
+  virtual ~Shape() {
+    if (_materialPtr) {
+      delete _materialPtr;
+    }
+  }
+
   // Intersects the Ray with this Shape and returns the values for t
   // rPos + rDir * t that intersect the surface of this Shape.
   virtual std::vector<REAL> intersect(const Ray& ray) const = 0;
@@ -46,6 +66,12 @@ class Shape : public Object {
   // if p isn't on the surface everything can happen.
   // TODO(allofus): what should be returned here?
   virtual glm::vec4 getNormalAt(const glm::vec4& p) const = 0;
+
+  /// Getter for the material pointer.
+  const Material* getMaterialPtr() const { return _materialPtr; }
+
+ private:
+  const Material* _materialPtr;
 };
 
 

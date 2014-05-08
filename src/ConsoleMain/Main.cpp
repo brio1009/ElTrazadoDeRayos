@@ -23,12 +23,10 @@ SOFTWARE.
 */
 
 #include <algorithm>
-
+#include <ctime>
 #include <cstdio>
 #include <cstdlib>
-
 #include <vector>
-
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -49,7 +47,7 @@ void binaryTraceOrth() {
   testPlane.transform(glm::mat4(0,1,0,0,-1,0,0,0,0,0,1,0,0,0,0,1));
   testPlane.transform(glm::mat4(1,0,0,0,0,1,0,-1,0,0,1,0,0,0,0,1));
   Image img(80,80);
-  r.pos[2] = 0.9;
+  r.pos[2] = 0.9f;
   r.dir[3] = 0;
   r.pos[3] = 1;
   r.dir = glm::vec4(0, 0, -1, 0);
@@ -113,6 +111,10 @@ void renderScene() {
 
 // The main method.
 int main(int argc, char** argv) {
+  // Initialize the rand function.
+  srand(static_cast<unsigned int>(time(NULL)));
+
+  // Do other stuff.
   renderScene();
   return 8;
   // Print usage.

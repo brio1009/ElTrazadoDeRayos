@@ -52,7 +52,6 @@ Scene::Scene() {
 IntersectionInfo Scene::traceRay(const Ray& ray) const {
   REAL smallestT = std::numeric_limits<REAL>::max();
   Shape* shapePtr = nullptr;
-  size_t objectIndex = 0;
   // TODO(cgissler, 05/07/2014): Add real normals and materials.
   // Loop over all objects.
   for (size_t i = 0; i < _shapes.size(); ++i) {
@@ -63,21 +62,15 @@ IntersectionInfo Scene::traceRay(const Ray& ray) const {
       if (hits.at(j) > 0 && hits.at(j) < smallestT) {
         smallestT = hits.at(j);
         shapePtr = _shapes[i];
-        objectIndex = i;
       }
     }
   }
   if (shapePtr) {
     glm::vec4 position = ray.pos + (float)smallestT * ray.dir;
-    if (objectIndex == 0) {
-      return IntersectionInfo(position,
-                              shapePtr->getNormalAt(position),
-                              new ColorMaterial(Color(0, 0, 255, 255)));
-    } else {
-      return IntersectionInfo(position,
-                              shapePtr->getNormalAt(position),
-                              new ColorMaterial(Color(255, 0, 0, 255)));
-    }
+    // Return the Intersectioninfo.
+    return IntersectionInfo(position,
+                            shapePtr->getNormalAt(position),
+                            shapePtr->getMaterialPtr());
   }
   return IntersectionInfo();
 }
