@@ -96,22 +96,22 @@ class Color {
   }
 
   /// R-getter.
-  int r() const { return _r; }
+  inline int r() const { return _r; }
   /// G-getter.
-  int g() const { return _g; }
+  inline int g() const { return _g; }
   /// B-getter.
-  int b() const { return _b; }
+  inline int b() const { return _b; }
   /// A-getter.
-  int a() const { return _a; }
+  inline int a() const { return _a; }
 
-  /// R-setter.
-  void setR(const int r) { _r = std::min(std::max(0, r), 255); }
-  /// G-setter.
-  void setG(const int g) { _g = std::min(std::max(0, g), 255);; }
-  /// B-setter.
-  void setB(const int b) { _b = std::min(std::max(0, b), 255);; }
-  /// A-setter.
-  void setA(const int a) { _a = std::min(std::max(0, a), 255);; }
+  /// R-setter. Returns false if it was clipped.
+  bool setR(const int r);
+  /// G-setter. Returns false if it was clipped.
+  bool setG(const int g);
+  /// B-setter. Returns false if it was clipped.
+  bool setB(const int b);
+  /// A-setter. Returns false if it was clipped.
+  bool setA(const int a);
 
  private:
   // Member.
