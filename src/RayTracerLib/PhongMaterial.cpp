@@ -27,7 +27,7 @@ SOFTWARE.
 #include "./Color.h"
 #include "./Constants.h"
 #include "./Light.h"
-#include "./DirectionalLight.h"
+#include "./PointLight.h"
 #include "./PhongMaterial.h"
 #include "./Ray.h"
 
@@ -37,13 +37,14 @@ Color PhongMaterial::getColor(const glm::vec4& position,
                               const glm::vec4& incomingRayDir,
                               const Scene& scene) const {
   // Generate a temp. light.
-  DirectionalLight light(glm::vec4(-1, -1, 0, 0));
+  PointLight light(glm::vec4(0, -40, 0, 1));
   light.setLightColor(Color(0, 255, 0, 255));
 
   // TODO(allofus, Thu May  8 15:27:52 CEST 2014): Add to constructor.
   float ka = 0.1f;
   float kd = 0.2f;
-  float ks = 0.7f;
+  float ks = 0.1f;
+  float radianceMulti = 0.1f;
 
   // Ambient Term.
   Color ambient(ka * _color);
@@ -54,17 +55,24 @@ Color PhongMaterial::getColor(const glm::vec4& position,
   Ray lightRay = light.getRay(position);
   const Color& lightDiff = light.getColor();
   const Color& lightSpec = light.getColor();
-  REAL scale = glm::dot(lightRay.dir, glm::normalize(normal));
-  scale = scale > 0 ? scale : 0;
-  glm::vec4 reflectionDir(
-      2 * scale * normal.x - lightRay.dir.x,
-      2 * scale * normal.y - lightRay.dir.y,
-      2 * scale * normal.z - lightRay.dir.z,
-      0);
-  REAL refl = glm::dot(incomingRayDir, reflectionDir);
-  //refl *= refl;
-  refl = pow(refl, 20.0f);
-  Color diff(kd * scale * lightDiff);
-  Color spec(ks * refl * lightSpec);
-  return Color(ambient + diff + spec);
+
+  // Add the ambientColor.
+  Color resultingColor(ambient);
+  // Add the diffuse color.
+  REAL reflectionDot = glm::dot(-lightRay.dir, glm::normalize(normal));
+  if (reflectionDot > 0.0) {
+    resultingColor += Color(kd * reflectionDot * radianceMulti * lightDiff);
+
+    // Add the specular color.
+    glm::vec4 reflectionDir(static_cast<float>(2 * reflectionDot) * normal
+                            - lightRay.dir);
+
+    REAL refl = glm::dot(glm::normalize(-incomingRayDir),
+                         glm::normalize(reflectionDir));
+    // if (refl < 0.0) {
+      refl = pow(refl, 4.0f);
+      resultingColor += Color(ks * refl * lightSpec);
+    // }
+  }
+  return resultingColor;
 }

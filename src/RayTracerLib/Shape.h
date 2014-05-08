@@ -33,7 +33,7 @@ SOFTWARE.
 
 #include "./Constants.h"
 #include "./Color.h"
-#include "./ColorMaterial.h"
+#include "./PhongMaterial.h"
 #include "./Object.h"
 
 // Forward declaration.
@@ -50,7 +50,7 @@ class Shape : public Object {
     tmpColor.setG(rand() % 255);
     tmpColor.setB(rand() % 255);
     tmpColor.setA(255);
-    _materialPtr = new ColorMaterial(tmpColor);
+    _materialPtr = new PhongMaterial(tmpColor);
   }
 
   /// Destructor.

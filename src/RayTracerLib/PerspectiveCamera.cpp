@@ -65,7 +65,8 @@ void PerspectiveCamera::render(const Scene& scene) {
         // HIT
         Color tmpColor = info.materialPtr->getColor(info.hitPoint,
                                                     info.normal,
-                                                    -direction, scene);
+                                                    direction,
+                                                    scene);
         _image.setPixel(x, y, tmpColor);
       } else {
         _image.setPixel(x, y, Color(0, 0, 0, 0));

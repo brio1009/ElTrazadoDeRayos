@@ -31,7 +31,7 @@ SOFTWARE.
 class PointLight : public Light {
  public:
   /// Constructor of a Directional Light.
-  PointLight(const glm::vec4& dir) { }
+  PointLight(const glm::vec4& position) { setPosition(position); }
   /// Destructor.
   virtual ~PointLight() { }
   /// Overrides.
