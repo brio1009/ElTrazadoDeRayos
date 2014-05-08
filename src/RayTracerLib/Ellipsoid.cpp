@@ -70,9 +70,9 @@ vector<REAL> Ellipsoid::intersect(const Ray& ray) const {
            + transDir[2] * transDir[2] * invRZ;
   solve::Result_t res;
   solve::solveQuadraticEquation(&res, a, b, c);
-  vector<REAL> out;
+  vector<REAL> out(res.numResults);
   for (int i = 0; i < res.numResults; ++i) {
-    out.push_back(res.roots[i]);
+    out[i] = res.roots[i];
   }
   return out;
 }
