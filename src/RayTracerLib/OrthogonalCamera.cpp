@@ -30,14 +30,16 @@ SOFTWARE.
 #include "./Ray.h"
 #include "./Material.h"
 
-size_t img = 0;
 // _____________________________________________________________________________
 void OrthogonalCamera::render(const Scene& scene) {
   // Get the size of the image.
   REAL startX = _image.getWidth() * 0.5 * _unitsPerPixel;
   REAL startY = _image.getHeight() * 0.5 * _unitsPerPixel;
 
-  glm::vec4 position(-startX + _unitsPerPixel * 0.5, -startY + _unitsPerPixel * 0.5, 0, 1);
+  glm::vec4 position(-startX + _unitsPerPixel * 0.5,
+                     -startY + _unitsPerPixel * 0.5,
+                     0,
+                     1);
   position = _transformation * position;
   glm::vec4 direction(0, 0, -1, 0);
   direction = _transformation * direction;
@@ -53,21 +55,15 @@ void OrthogonalCamera::render(const Scene& scene) {
         + ((float)x * planeX) + ((float)y* planeY), direction);
       IntersectionInfo info = scene.traceRay(r);
       if (info.materialPtr) {
-        // HIT
-        Color tmpColor = info.materialPtr->getColor(info.hitPoint, info.normal, -direction, scene);
+        // We hit the object.
+        Color tmpColor = info.materialPtr->getColor(info.hitPoint,
+                                                    info.normal,
+                                                    -direction,
+                                                    scene);
         _image.setPixel(x, y, tmpColor);
       } else {
         _image.setPixel(x, y, Color(0, 0, 0, 0));
       }
     }
   }
-  // DONE!
-  char buff[100];
-#ifdef WINDOWS
-  _snprintf(buff, 100, "Ortho%lu.bmp", img);
-#else
-  snprintf(buff, 100, "Ortho%zu.bmp", img);
-#endif  // WINDOWS
-  ++img;
-  _image.saveAsBMP(buff);
 }
