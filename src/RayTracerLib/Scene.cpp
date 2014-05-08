@@ -72,11 +72,11 @@ IntersectionInfo Scene::traceRay(const Ray& ray) const {
     if (objectIndex == 0) {
       return IntersectionInfo(position,
                               shapePtr->getNormalAt(position),
-                              new PhongMaterial(Color(0, 0, 255, 255)));
+                              new ColorMaterial(Color(0, 0, 255, 255)));
     } else {
       return IntersectionInfo(position,
                               shapePtr->getNormalAt(position),
-                              new PhongMaterial(Color(255, 0, 0, 255)));
+                              new ColorMaterial(Color(255, 0, 0, 255)));
     }
   }
   return IntersectionInfo();

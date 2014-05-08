@@ -38,26 +38,29 @@ Color PhongMaterial::getColor(const glm::vec4& position,
                               const Scene& scene) const {
   // Generate a temp. light.
   DirectionalLight light(glm::vec4(-1, -1, 0, 0));
+  light.setLightColor(Color(0, 255, 0, 255), Light::DIFFUSE);
+  light.setLightColor(Color(0, 255, 0, 255), Light::SPECULAR);
+
   // TODO(allofus, Thu May  8 15:27:52 CEST 2014): Add to constructor.
   float ka = 0.1f;
   float kd = 0.2f;
   float ks = 0.7f;
-  // Ambient Term
-  Color ambient(_color.r() * ka, _color.g() * ka, _color.b() * ka, 255);
+
+  // Ambient Term.
+  Color ambient(ka * _color);
+
   // Sum over Lights and get diffusal and specular components.
-  // TODO(allofus, Thu May  8 14:55:00 CEST 2014): loop!!
-  Ray shadowRay = light.getDirection(position);
-  shadowRay.dir *= -1.0;
-  light.setLightColor(Color(0, 255, 0, 255), Light::DIFFUSE);
-  light.setLightColor(Color(0, 255, 0, 255), Light::SPECULAR);
+  // TODO(allofus, Thu May  8 14:55:00 CEST 2014): Loop over all the real lights
+  // in the scene.
+  Ray lightRay = light.getRay(position);
   const Color& lightDiff = light.getColorComponent(Light::DIFFUSE);
   const Color& lightSpec = light.getColorComponent(Light::SPECULAR);
-  REAL scale = glm::dot(shadowRay.dir, glm::normalize(normal));
+  REAL scale = glm::dot(lightRay.dir, glm::normalize(normal));
   scale = scale > 0 ? scale : 0;
   glm::vec4 reflectionDir(
-      2 * scale * normal.x - shadowRay.dir.x,
-      2 * scale * normal.y - shadowRay.dir.y,
-      2 * scale * normal.z - shadowRay.dir.z,
+      2 * scale * normal.x - lightRay.dir.x,
+      2 * scale * normal.y - lightRay.dir.y,
+      2 * scale * normal.z - lightRay.dir.z,
       0);
   REAL refl = glm::dot(incomingRayDir, reflectionDir);
   //refl *= refl;

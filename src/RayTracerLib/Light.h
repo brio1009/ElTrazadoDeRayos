@@ -45,7 +45,7 @@ class Light : public Object {
   virtual ~Light() { };
 
   /// Returns the direction the light is shining to.
-  virtual Ray getDirection(const glm::vec4& pos) const = 0;
+  virtual Ray getRay(const glm::vec4& pos) const = 0;
 
   /// Returns the color for the given component.
   virtual const Color& getColorComponent(Component c) const {
