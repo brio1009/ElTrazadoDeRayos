@@ -46,6 +46,9 @@ Image::~Image() {
 
 // _____________________________________________________________________________
 void Image::saveAsBMP(const std::string& filePath) const {
+  // Code from
+  // http://stackoverflow.com/questions/2654480/writing-bmp-image-in-pure-c-c-without-other-libraries
+
   // Open file.
   FILE* f = fopen(filePath.c_str(), "wb");
   if (f == NULL) {
@@ -54,7 +57,7 @@ void Image::saveAsBMP(const std::string& filePath) const {
   }
 
   unsigned char* img = NULL;
-  int filesize = 54 + 3 * _width * _height;  //w is your image width, h is image height, both int
+  int filesize = 54 + 3 * _width * _height;
   if (img)
     free(img);
   img = (unsigned char*)malloc(3 * _width * _height);
