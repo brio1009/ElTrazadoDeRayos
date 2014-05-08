@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include "./Image.h"
 #include <cassert>
-#include <fstream>
+#include <cstring>
 #include <vector>
 #include "./Color.h"
 using std::ofstream;

@@ -22,34 +22,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
-#ifndef RAYTRACERLIB_CAMERA_H_
-#define RAYTRACERLIB_CAMERA_H_
-
-#include "./Image.h"
-#include "./Object.h"
-
-// Foward declaration.
-class Scene;
-
-class Camera : public Object {
+#ifndef RAYTRACERLIB_PERSPECTIVECAMERA_H_
+#define RAYTRACERLIB_PERSPECTIVECAMERA_H_
+#include "./Constants.h"
+#include "./Camera.h"
+class PerspectiveCamera : public Camera {
+ private:
+  /// Variables to store the field of view angle.
+  REAL _focalLength;
  public:
-  /// Constructor.
-  Camera(const int width, const int height);
-  /// Destructor.
-  ~Camera() { }
-  /// Renders the scene to the image.
-  virtual void render(const Scene& scene) = 0;
+  // Constructor.
+  PerspectiveCamera(const int width,
+      const int height,
+      const REAL& fovAngleInRad);
+  // Destructor.
+  virtual ~PerspectiveCamera(); 
+  // Renders the scene into the internal image storage.
+  virtual void render(const Scene& scene);
 
-  /// Returns the image.
-  const Image& getImage() const;
-
-  /// Sets the image size. Resets the image.
-  virtual void setImageSize(const int width, const int height);
-
- protected:
-  /// Image where the scene is rendered to.
-  Image _image;
 };
 
-#endif  // RAYTRACERLIB_CAMERA_H_
+#endif  // RAYTRACERLIB_PERSPECTIVECAMERA_H_
