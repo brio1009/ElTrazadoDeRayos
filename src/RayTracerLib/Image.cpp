@@ -117,9 +117,9 @@ void Image::saveAsBMP(const std::string& filePath) const {
       {
           const Color& tmpPixel = getPixel(x, y);
           unsigned char pixel[3];
-          pixel[0] = tmpPixel.b;
-          pixel[1] = tmpPixel.g;
-          pixel[2] = tmpPixel.r;
+          pixel[0] = tmpPixel.b();
+          pixel[1] = tmpPixel.g();
+          pixel[2] = tmpPixel.r();
 
           stream.write((char*)pixel, 3);
       }

@@ -32,10 +32,11 @@ class DirectionalLight : public Light {
  private:
   // The direction the Light is shining to.
   glm::vec4 _direction;
+
  public:
   /// Constructor of a Directional Light.
   DirectionalLight(const glm::vec4& dir) : _direction(dir) { }
-  /// Destructor
+  /// Destructor.
   virtual ~DirectionalLight() { }
   /// Overrides
   virtual Ray getDirection(const glm::vec4& pos) const;

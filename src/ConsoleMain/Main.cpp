@@ -55,7 +55,7 @@ void binaryTraceOrth() {
   r.dir = glm::vec4(0, 0, -1, 0);
   for (size_t i = 0; i < 80; ++i)
     for (size_t j = 0; j < 80; ++j)
-      img(i, j)->r = 255;
+      img(i, j)->setR(255);
   img.saveAsBMP("test.bmp");
   return;
   for (float y = 2.0f; y > -2.0f; y -= 0.05f) {

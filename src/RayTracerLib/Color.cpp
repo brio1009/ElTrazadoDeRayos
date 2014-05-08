@@ -22,10 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "./Object.h"
-#include <glm/glm.hpp>
+#include "./Color.h"
 
 // _____________________________________________________________________________
-void Object::transform(const glm::mat4& matrix) {  //NOLINT misstaken for std::tr
-  _transformation = matrix;
-}
+Color::Color(const Color& color) : _r(color.r()),
+                                   _g(color.g()),
+                                   _b(color.b()),
+                                   _a(color.a()) { }

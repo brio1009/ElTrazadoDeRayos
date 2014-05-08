@@ -26,21 +26,66 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_COLOR_H_
 #define RAYTRACERLIB_COLOR_H_
 
+#include <utility>
+
 /// Class that holds the pixel data.
 class Color {
  public:
   /// Default Constructor.
-  Color() : r(0), g(0), b(0), a(255) { }
-  /// Construcotr with colors.
+  Color() : _r(0), _g(0), _b(0), _a(255) { }
+
+  /// Constructor with given colors.
   Color(const int r,
         const int g,
         const int b,
-        const int a) : r(r), g(g), b(b), a(a) { }
+        const int a = 255) : _r(r), _g(g), _b(b), _a(a) { }
+
+  /// Copy constructor. Cant be explicit or else it does not compile.
+  Color(const Color& color);
+
+  /// Destructor.
+  virtual ~Color() { }
+
+  /// Swap operator.
+  friend void swap(Color& first, Color& second) {
+      std::swap(first._r, second._r); 
+      std::swap(first._g, second._g); 
+      std::swap(first._b, second._b); 
+      std::swap(first._a, second._a); 
+  }
+
+  /// Copy-assigment operator.
+  Color& operator=(const Color& otherColor) {
+      Color tmp(otherColor);
+      swap(*this, tmp);
+
+      return *this;
+  }
+
+  /// R-getter.
+  int r() const { return _r; }
+  /// G-getter.
+  int g() const { return _g; }
+  /// B-getter.
+  int b() const { return _b; }
+  /// A-getter.
+  int a() const { return _a; }
+
+  /// R-setter.
+  void setR(const int r) { _r = r; }
+  /// G-setter.
+  void setG(const int g) { _g = g; }
+  /// B-setter.
+  void setB(const int b) { _b = b; }
+  /// A-setter.
+  void setA(const int a) { _a = a; }
+
+ private:
   // Member.
-  int r;
-  int g;
-  int b;
-  int a;
+  int _r;
+  int _g;
+  int _b;
+  int _a;
 };
 
 #endif  // RAYTRACERLIB_COLOR_H_

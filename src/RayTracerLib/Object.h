@@ -23,6 +23,7 @@ SOFTWARE.
 */
 #ifndef RAYTRACERLIB_OBJECT_H_
 #define RAYTRACERLIB_OBJECT_H_
+
 // GlMath include.
 #include <glm/glm.hpp>
 

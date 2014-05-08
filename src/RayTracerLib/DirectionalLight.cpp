@@ -24,6 +24,8 @@ SOFTWARE.
 #include "./DirectionalLight.h"
 #include <glm/glm.hpp>
 #include "./Ray.h"
+
+// _____________________________________________________________________________
 Ray DirectionalLight::getDirection(const glm::vec4& pos) const {
-  return Ray(pos, glm::normalize(-_direction));
+  return Ray(pos, glm::normalize(_direction));
 }

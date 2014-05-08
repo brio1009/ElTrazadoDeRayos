@@ -29,41 +29,38 @@ SOFTWARE.
 #include "./Object.h"
 #include "./Color.h"
 
+// Forward declaration.
 class Ray;
 
 /// An abstract interface to interact with Lights.
 class Light : public Object {
  public:
-  /// A light holds a array of its diffuse and specular light color.
-  Color _colors[2];
- public:
+  /// Enum to specify which color component one wants.
   enum Component {
     DIFFUSE = 0,
     SPECULAR 
   };
+
   /// Destructor.
   virtual ~Light() { };
-  /// Creates a Ray from the given Point to this Light.
+
+  /// Returns the direction the light is shining to.
   virtual Ray getDirection(const glm::vec4& pos) const = 0;
 
+  /// Returns the color for the given component.
   virtual const Color& getColorComponent(Component c) const {
     return _colors[c];
   }
+
   // Returns the color of this light
   /// Sets the Lights Component color to given color. a is not used yet.
-  virtual void setLightColor(unsigned char r,
-      unsigned char g,
-      unsigned char b,
-      unsigned char a,
-      Component c) {
-    _colors[c].r = r;
-    _colors[c].g = g;
-    _colors[c].b = b;
-    _colors[c].a = a;
-  }
   virtual void setLightColor(const Color& color, Component c) {
-      setLightColor(color.r, color.g, color.b, color.a, c);
+    _colors[c] = color;
   }
+
+ private:
+  /// A light holds a array of its diffuse and specular light color.
+  Color _colors[2];
 };
 
 #endif  // RAYTRACERLIB_LIGHT_H_

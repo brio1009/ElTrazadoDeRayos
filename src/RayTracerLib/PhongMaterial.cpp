@@ -43,12 +43,12 @@ Color PhongMaterial::getColor(const glm::vec4& position,
   float kd = 0.2f;
   float ks = 0.7f;
   // Ambient Term
-  Color ambient(_color.r * ka, _color.g * ka, _color.b * ka, 255);
+  Color ambient(_color.r() * ka, _color.g() * ka, _color.b() * ka, 255);
   // Sum over Lights and get diffusal and specular components.
   // TODO(allofus, Thu May  8 14:55:00 CEST 2014): loop!!
   Ray shadowRay = light.getDirection(position);
-  light.setLightColor(0, 255, 0, 255, Light::DIFFUSE);
-  light.setLightColor(0, 255, 0, 255, Light::SPECULAR);
+  light.setLightColor(Color(0, 255, 0, 255), Light::DIFFUSE);
+  light.setLightColor(Color(0, 255, 0, 255), Light::SPECULAR);
   const Color& lightDiff = light.getColorComponent(Light::DIFFUSE);
   const Color& lightSpec = light.getColorComponent(Light::SPECULAR);
   REAL scale = glm::dot(shadowRay.dir, glm::normalize(normal));
@@ -62,18 +62,18 @@ Color PhongMaterial::getColor(const glm::vec4& position,
   //refl *= refl;
   refl = pow(refl, 20.0f);
   Color diff(
-      kd * scale * lightDiff.r,
-      kd * scale * lightDiff.g,
-      kd * scale * lightDiff.b,
+      kd * scale * lightDiff.r(),
+      kd * scale * lightDiff.g(),
+      kd * scale * lightDiff.b(),
       255);
   Color spec(
-      ks * refl * lightSpec.r,
-      ks * refl * lightSpec.g,
-      ks * refl * lightSpec.b,
+      ks * refl * lightSpec.r(),
+      ks * refl * lightSpec.g(),
+      ks * refl * lightSpec.b(),
       255);
   return Color(
-      ambient.r + diff.r + spec.r,
-      ambient.g + diff.g + spec.g,
-      ambient.b + diff.b + spec.b,
+      ambient.r() + diff.r() + spec.r(),
+      ambient.g() + diff.g() + spec.g(),
+      ambient.b() + diff.b ()+ spec.b(),
       255);
 }
