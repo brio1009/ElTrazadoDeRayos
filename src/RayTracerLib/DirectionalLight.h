@@ -38,7 +38,7 @@ class DirectionalLight : public Light {
   /// Destructor
   virtual ~DirectionalLight() { }
   /// Overrides
-  virtual Ray getShadowRay(const glm::vec4& pos) const;
+  virtual Ray getDirection(const glm::vec4& pos) const;
 };
 
 #endif  // RAYTRACERLIB_DIRECTIONALLIGHT_H_

@@ -44,7 +44,7 @@ class Light : public Object {
   /// Destructor.
   virtual ~Light() { };
   /// Creates a Ray from the given Point to this Light.
-  virtual Ray getShadowRay(const glm::vec4& pos) const = 0;
+  virtual Ray getDirection(const glm::vec4& pos) const = 0;
 
   virtual const Color& getColorComponent(Component c) const {
     return _colors[c];

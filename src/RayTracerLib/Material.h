@@ -41,7 +41,7 @@ class Material {
   /// Returns the color for the given positition and normal.
   virtual Color getColor(const glm::vec4& position,
                          const glm::vec4& normal,
-                         const glm::vec4& camDir,
+                         const glm::vec4& incomingRayDir,
                          const Scene& scene) const = 0;
 };
 
