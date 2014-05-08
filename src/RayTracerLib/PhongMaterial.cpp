@@ -47,6 +47,7 @@ Color PhongMaterial::getColor(const glm::vec4& position,
   // Sum over Lights and get diffusal and specular components.
   // TODO(allofus, Thu May  8 14:55:00 CEST 2014): loop!!
   Ray shadowRay = light.getDirection(position);
+  shadowRay.dir *= -1.0;
   light.setLightColor(Color(0, 255, 0, 255), Light::DIFFUSE);
   light.setLightColor(Color(0, 255, 0, 255), Light::SPECULAR);
   const Color& lightDiff = light.getColorComponent(Light::DIFFUSE);
@@ -61,19 +62,7 @@ Color PhongMaterial::getColor(const glm::vec4& position,
   REAL refl = glm::dot(incomingRayDir, reflectionDir);
   //refl *= refl;
   refl = pow(refl, 20.0f);
-  Color diff(
-      kd * scale * lightDiff.r(),
-      kd * scale * lightDiff.g(),
-      kd * scale * lightDiff.b(),
-      255);
-  Color spec(
-      ks * refl * lightSpec.r(),
-      ks * refl * lightSpec.g(),
-      ks * refl * lightSpec.b(),
-      255);
-  return Color(
-      ambient.r() + diff.r() + spec.r(),
-      ambient.g() + diff.g() + spec.g(),
-      ambient.b() + diff.b ()+ spec.b(),
-      255);
+  Color diff(kd * scale * lightDiff);
+  Color spec(ks * refl * lightSpec);
+  return Color(ambient + diff + spec);
 }

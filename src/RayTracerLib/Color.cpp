@@ -29,3 +29,55 @@ Color::Color(const Color& color) : _r(color.r()),
                                    _g(color.g()),
                                    _b(color.b()),
                                    _a(color.a()) { }
+
+
+// _____________________________________________________________________________
+Color& Color::operator+=(const Color& rhs) {
+  setR(_r + rhs.r());
+  setG(_g + rhs.g());
+  setB(_b + rhs.b());
+  // TODO(cgissler, 05/08/2014): Check if alpha should be multiplied.
+  // setA(_a + rhs.a());
+  return *this;
+}
+
+// _____________________________________________________________________________
+Color Color::operator+(const Color& rhs) {
+  Color newColor(*this);  // Copy constructed.
+  newColor += rhs;
+  return newColor;
+}
+
+// _____________________________________________________________________________
+Color& Color::operator*=(const float& rhs) {
+  setR(floor((rhs * _r) + 0.5f));
+  setG(floor((rhs * _g) + 0.5f));
+  setB(floor((rhs * _b) + 0.5f));
+  // TODO(cgissler, 05/08/2014): Check if alpha should be multiplied.
+  // setA(floor((rhs * _a) + 0.5f));
+  return *this;
+}
+
+// _____________________________________________________________________________
+Color Color::operator*(const float& rhs) {
+  Color newColor(*this);  // Copy constructed.
+  newColor *= rhs;
+  return newColor;
+}
+
+// _____________________________________________________________________________
+Color& Color::operator*=(const double& rhs) {
+  setR(floor((rhs * _r) + 0.5f));
+  setG(floor((rhs * _g) + 0.5f));
+  setB(floor((rhs * _b) + 0.5f));
+  // TODO(cgissler, 05/08/2014): Check if alpha should be multiplied.
+  // setA(floor((rhs * _a) + 0.5f));
+  return *this;
+}
+
+// _____________________________________________________________________________
+Color Color::operator*(const double& rhs) {
+  Color newColor(*this);  // Copy constructed.
+  newColor *= rhs;
+  return newColor;
+}

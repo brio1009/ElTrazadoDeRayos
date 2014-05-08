@@ -26,6 +26,8 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_COLOR_H_
 #define RAYTRACERLIB_COLOR_H_
 
+#include <algorithm>
+#include <cmath>
 #include <utility>
 
 /// Class that holds the pixel data.
@@ -43,6 +45,13 @@ class Color {
   /// Copy constructor. Cant be explicit or else it does not compile.
   Color(const Color& color);
 
+#ifdef LINUX
+  /// Move constructor. Needed for C++11.
+  Color(Color&& otherColor) : Color() {
+    swap(*this, otherColor);
+  }
+#endif  // LINUX
+
   /// Destructor.
   virtual ~Color() { }
 
@@ -58,8 +67,32 @@ class Color {
   Color& operator=(const Color& otherColor) {
       Color tmp(otherColor);
       swap(*this, tmp);
-
       return *this;
+  }
+
+  /// +=-operator.
+  Color& operator+=(const Color& rhs);
+  /// +-operator.
+  Color operator+(const Color& rhs);
+
+  /// *=-operator for floats.
+  Color& operator*=(const float& rhs);
+  /// *-operator for floats.
+  Color operator*(const float& rhs);
+  /// *-operator turned around for floats.
+  friend inline Color operator*(const float& lhs, Color rhs) {
+    rhs *= lhs;
+    return rhs;
+  }
+
+  /// *=-operator for doubles.
+  Color& operator*=(const double& rhs);
+  /// *-operator for doubles.
+  Color operator*(const double& rhs);
+  /// *-operator turned around for doubles.
+  friend inline Color operator*(const double& lhs, Color rhs) {
+    rhs *= lhs;
+    return rhs;
   }
 
   /// R-getter.
@@ -72,13 +105,13 @@ class Color {
   int a() const { return _a; }
 
   /// R-setter.
-  void setR(const int r) { _r = r; }
+  void setR(const int r) { _r = std::min(std::max(0, r), 255); }
   /// G-setter.
-  void setG(const int g) { _g = g; }
+  void setG(const int g) { _g = std::min(std::max(0, g), 255);; }
   /// B-setter.
-  void setB(const int b) { _b = b; }
+  void setB(const int b) { _b = std::min(std::max(0, b), 255);; }
   /// A-setter.
-  void setA(const int a) { _a = a; }
+  void setA(const int a) { _a = std::min(std::max(0, a), 255);; }
 
  private:
   // Member.
