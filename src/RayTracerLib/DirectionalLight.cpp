@@ -21,28 +21,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
-#pragma once
-#ifndef RAYTRACERLIB_MATERIAL_H_
-#define RAYTRACERLIB_MATERIAL_H_
-
+#include "./DirectionalLight.h"
 #include <glm/glm.hpp>
-
-// Forward declaration.
-class Color;
-class Scene;
-
-///
-class Material {
- public:
-  ///
-  virtual ~Material() { }
-
-  /// Returns the color for the given positition and normal.
-  virtual Color getColor(const glm::vec4& position,
-                         const glm::vec4& normal,
-                         const glm::vec4& camDir,
-                         const Scene& scene) const = 0;
-};
-
-#endif  // RAYTRACERLIB_MATERIAL_H_
+#include "./Ray.h"
+Ray DirectionalLight::getShadowRay(const glm::vec4& pos) const {
+  return Ray(pos, -_direction);
+}

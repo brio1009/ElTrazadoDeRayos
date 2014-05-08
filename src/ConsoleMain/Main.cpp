@@ -94,7 +94,7 @@ void renderScene() {
   // TODO(allofus, Wed May  7 21:13:19 CEST 2014): to scale a image transform
   // the thrid param to match smaller change.
   // e.g. when converting from 80x80 (first trace) to  512x512 divide 80 by 512
-  OrthogonalCamera cam(1024, 1024, 0.078125);
+  OrthogonalCamera cam(1024, 1024, 0.1);
   glm::mat4 camTrans = glm::translate(glm::mat4(1.0), glm::vec3(0, 0, 50));
 
   // cam.transform(camTrans);
@@ -102,7 +102,8 @@ void renderScene() {
   // TODO(bauschp, Wed May  7 21:57:12 CEST 2014): Remove this.
   for (size_t i = 0; i < 20; ++i) {
     glm::mat4 trans = glm::rotate(glm::mat4(1.0), 18.0f * i, glm::vec3(0, 1, 0));
-    cam.transform(glm::translate(trans, glm::vec3(0, 0, 30)));
+    trans = glm::rotate(trans, 5.0f, glm::vec3(1, 0, 0));
+    cam.transform(glm::translate(trans, glm::vec3(20, 0, 500)));
     cam.render(scene);
     sleep(1);
   }

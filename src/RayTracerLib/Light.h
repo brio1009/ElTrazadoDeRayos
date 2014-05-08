@@ -21,28 +21,49 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
 #pragma once
-#ifndef RAYTRACERLIB_MATERIAL_H_
-#define RAYTRACERLIB_MATERIAL_H_
+#ifndef RAYTRACERLIB_LIGHT_H_
+#define RAYTRACERLIB_LIGHT_H_
 
 #include <glm/glm.hpp>
+#include "./Object.h"
+#include "./Color.h"
 
-// Forward declaration.
-class Color;
-class Scene;
+class Ray;
 
-///
-class Material {
+/// An abstract interface to interact with Lights.
+class Light : public Object {
  public:
-  ///
-  virtual ~Material() { }
+  /// A light holds a array of its diffuse and specular light color.
+  Color _colors[2];
+ public:
+  enum Component {
+    DIFFUSE = 0,
+    SPECULAR 
+  };
+  /// Destructor.
+  virtual ~Light() { };
+  /// Creates a Ray from the given Point to this Light.
+  virtual Ray getShadowRay(const glm::vec4& pos) const = 0;
 
-  /// Returns the color for the given positition and normal.
-  virtual Color getColor(const glm::vec4& position,
-                         const glm::vec4& normal,
-                         const glm::vec4& camDir,
-                         const Scene& scene) const = 0;
+  virtual const Color& getColorComponent(Component c) const {
+    return _colors[c];
+  }
+  // Returns the color of this light
+  /// Sets the Lights Component color to given color. a is not used yet.
+  virtual void setLightColor(unsigned char r,
+      unsigned char g,
+      unsigned char b,
+      unsigned char a,
+      Component c) {
+    _colors[c].r = r;
+    _colors[c].g = g;
+    _colors[c].b = b;
+    _colors[c].a = a;
+  }
+  virtual void setLightColor(const Color& color, Component c) {
+      setLightColor(color.r, color.g, color.b, color.a, c);
+  }
 };
 
-#endif  // RAYTRACERLIB_MATERIAL_H_
+#endif  // RAYTRACERLIB_LIGHT_H_

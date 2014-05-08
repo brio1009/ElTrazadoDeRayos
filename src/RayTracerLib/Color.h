@@ -30,7 +30,7 @@ SOFTWARE.
 class Color {
  public:
   /// Default Constructor.
-  Color() : r(0), g(0), b(0), a(0) { }
+  Color() : r(0), g(0), b(0), a(255) { }
   /// Construcotr with colors.
   Color(const int r,
         const int g,

@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include <glm/gtc/matrix_transform.hpp>
 #include <limits>
 #include <vector>
 #include "./Constants.h"
@@ -29,21 +30,29 @@ SOFTWARE.
 #include "./Scene.h"
 #include "./Shape.h"
 #include "./Ray.h"
-#include "./GreenMaterial.h"
+#include "./Color.h"
+#include "./ColorMaterial.h"
 #include "./Ellipsoid.h"
+#include "./Plane.h"
+#include "./PhongMaterial.h"
 
 using std::vector;
 
 // _____________________________________________________________________________
 Scene::Scene() {
-  Ellipsoid* ell = new Ellipsoid(20, 40, 40);
+  Ellipsoid* ell = new Ellipsoid(20, 10, 20);
+  ell->transform(glm::translate(glm::mat4(1.0), glm::vec3(50, 10, 0)));
   _shapes.push_back(ell);
+  Ellipsoid* ell1 = new Ellipsoid(10, 30, 10);
+  ell1->transform(glm::translate(glm::mat4(1.0), glm::vec3(-30, -5, 0)));
+  _shapes.push_back(ell1);
 }
 
 // _____________________________________________________________________________
 IntersectionInfo Scene::traceRay(const Ray& ray) const {
-  REAL smallestT = 0;
+  REAL smallestT = std::numeric_limits<REAL>::max();
   Shape* shapePtr = nullptr;
+  size_t objectIndex = 0;
   // TODO(cgissler, 05/07/2014): Add real normals and materials.
   // Loop over all objects.
   for (size_t i = 0; i < _shapes.size(); ++i) {
@@ -51,17 +60,24 @@ IntersectionInfo Scene::traceRay(const Ray& ray) const {
     vector<REAL> hits = _shapes.at(i)->intersect(ray);
     // Loop over the p and choose the smallest that is bigger 0.
     for (size_t j = 0; j < hits.size(); ++j) {
-      if (hits.at(j) > 0 && hits.at(j) > smallestT) {
+      if (hits.at(j) > 0 && hits.at(j) < smallestT) {
         smallestT = hits.at(j);
         shapePtr = _shapes[i];
+        objectIndex = i;
       }
     }
   }
   if (shapePtr) {
     glm::vec4 position = ray.pos + (float)smallestT * ray.dir;
-    return IntersectionInfo(position,
-                            shapePtr->getNormalAt(position),
-                            new GreenMaterial());
+    if (objectIndex == 0) {
+      return IntersectionInfo(position,
+                              shapePtr->getNormalAt(position),
+                              new PhongMaterial(Color(0, 0, 255, 255)));
+    } else {
+      return IntersectionInfo(position,
+                              shapePtr->getNormalAt(position),
+                              new PhongMaterial(Color(255, 0, 0, 255)));
+    }
   }
   return IntersectionInfo();
 }

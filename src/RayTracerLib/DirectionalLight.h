@@ -21,28 +21,24 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
 #pragma once
-#ifndef RAYTRACERLIB_MATERIAL_H_
-#define RAYTRACERLIB_MATERIAL_H_
+#ifndef RAYTRACERLIB_DIRECTIONALLIGHT_H_
+#define RAYTRACERLIB_DIRECTIONALLIGHT_H_ 
 
 #include <glm/glm.hpp>
+#include "./Light.h"
 
-// Forward declaration.
-class Color;
-class Scene;
-
-///
-class Material {
+class DirectionalLight : public Light {
+ private:
+  // The direction the Light is shining to.
+  glm::vec4 _direction;
  public:
-  ///
-  virtual ~Material() { }
-
-  /// Returns the color for the given positition and normal.
-  virtual Color getColor(const glm::vec4& position,
-                         const glm::vec4& normal,
-                         const glm::vec4& camDir,
-                         const Scene& scene) const = 0;
+  /// Constructor of a Directional Light.
+  DirectionalLight(const glm::vec4& dir) : _direction(dir) { }
+  /// Destructor
+  virtual ~DirectionalLight() { }
+  /// Overrides
+  virtual Ray getShadowRay(const glm::vec4& pos) const;
 };
 
-#endif  // RAYTRACERLIB_MATERIAL_H_
+#endif  // RAYTRACERLIB_DIRECTIONALLIGHT_H_

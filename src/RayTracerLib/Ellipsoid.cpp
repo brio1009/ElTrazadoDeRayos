@@ -46,9 +46,10 @@ vector<REAL> Ellipsoid::intersect(const Ray& ray) const {
   // - 1
 
   // Bring vector to unit space.
-  glm::vec4 transPos = ray.pos * glm::inverse(_transformation);
-  glm::vec4 transDir = ray.dir * glm::inverse(_transformation);
-
+  glm::vec4 transPos = _transformation * ray.pos;
+  glm::vec4 transDir = _transformation * ray.dir;
+ // printf("RAY:(%.2f,%.2f,%.2f)(%.2f,%.2f,%.2f)", transPos.x, transPos.y, transPos.z, transDir.x, transDir.y, transDir.z);
+  //printf("%.2f, ", ray.pos[3]);
   // TODO(allofus): Think about outsourcing.
   REAL invRX = solve::isZero(_rX) ? 0.0 : 1.0 / _rX;
   REAL invRY = solve::isZero(_rY) ? 0.0 : 1.0 / _rY;
@@ -77,9 +78,10 @@ vector<REAL> Ellipsoid::intersect(const Ray& ray) const {
 }
 // _____________________________________________________________________________
 glm::vec4 Ellipsoid::getNormalAt(const glm::vec4& p) const {
+  glm::vec4 trans = _transformation * p;
   return glm::vec4(
-      (2 * p.x) / (_rX * _rX),
-      (2 * p.y) / (_rY * _rY),
-      (2 * p.z) / (_rZ * _rZ),
+      (2 * trans.x) / (_rX * _rX),
+      (2 * trans.y) / (_rY * _rY),
+      (2 * trans.z) / (_rZ * _rZ),
       0);
 }
