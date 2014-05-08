@@ -44,8 +44,8 @@ void OrthogonalCamera::render(const Scene& scene) {
   planeX = _transformation * planeX;
   planeY = _transformation * planeY;
   // Send rays.
-  for (size_t x = 0; x < _image.getWidth(); ++x) {
-    for (size_t y = 0; y < _image.getHeight(); ++y) {
+  for (int x = 0; x < _image.getWidth(); ++x) {
+    for (int y = 0; y < _image.getHeight(); ++y) {
       Ray r(position
         + ((float)x * planeX) + ((float)y* planeY), direction);
       IntersectionInfo info = scene.traceRay(r);

@@ -46,9 +46,9 @@ class PhongMaterial : public Material {
       const Scene& scene) const {
 
     // TODO(allofus, Thu May  8 15:27:52 CEST 2014): Add to constructor.
-    float ka = 0.1;
-    float kd = 0.2;
-    float ks = 0.7;
+    float ka = 0.1f;
+    float kd = 0.2f;
+    float ks = 0.7f;
     // Ambient Term
     Color ambient(_color.r * ka, _color.g * ka, _color.b * ka, 255);
     // Sum over Lights and get diffusal and specular components.

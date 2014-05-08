@@ -105,7 +105,9 @@ void renderScene() {
     trans = glm::rotate(trans, 35.0f, glm::vec3(1, 0, 0));
     cam.transform(glm::translate(trans, glm::vec3(20, 0, 500)));
     cam.render(scene);
+#ifdef LINUX
     sleep(1);
+#endif  // LINUX
   }
 }
 

@@ -25,7 +25,6 @@ SOFTWARE.
 #pragma once
 #ifndef RAYTRACERLIB_INTERSECTIONINFO_H_
 #define RAYTRACERLIB_INTERSECTIONINFO_H_
-#pragma fuckyou
 
 #include <glm/glm.hpp>
 
