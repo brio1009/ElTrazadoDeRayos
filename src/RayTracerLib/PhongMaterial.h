@@ -34,7 +34,7 @@ SOFTWARE.
 #include "./Light.h"
 #include "./DirectionalLight.h"
 
-DirectionalLight light(glm::vec4(0, -1, 0, 0));
+DirectionalLight light(glm::vec4(-1, -1, 0, 0));
 
 class PhongMaterial : public Material {
  public:
@@ -47,24 +47,24 @@ class PhongMaterial : public Material {
 
     // TODO(allofus, Thu May  8 15:27:52 CEST 2014): Add to constructor.
     float ka = 0.1;
-    float kd = 0.5;
-    float ks = 0.4;
+    float kd = 0.2;
+    float ks = 0.7;
     // Ambient Term
     Color ambient(_color.r * ka, _color.g * ka, _color.b * ka, 255);
     // Sum over Lights and get diffusal and specular components.
     // TODO(allofus, Thu May  8 14:55:00 CEST 2014): loop!!
     Ray shadowRay = light.getShadowRay(position);
     light.setLightColor(0, 255, 0, 255, Light::DIFFUSE);
-    light.setLightColor(255, 255, 255, 255, Light::SPECULAR);
+    light.setLightColor(0, 255, 0, 255, Light::SPECULAR);
     const Color& lightDiff = light.getColorComponent(Light::DIFFUSE);
     const Color& lightSpec = light.getColorComponent(Light::SPECULAR);
     REAL scale = glm::dot(shadowRay.dir, glm::normalize(normal));
+    scale = scale > 0 ? scale : 0;
     glm::vec4 reflectionDir(
         2 * scale * normal.x - shadowRay.dir.x,
         2 * scale * normal.y - shadowRay.dir.y,
         2 * scale * normal.z - shadowRay.dir.z,
         0);
-    scale = scale > 0 ? scale : 0;
     REAL refl = glm::dot(camDir, reflectionDir);
     //refl *= refl;
     refl = pow(refl, 20.0f);

@@ -102,7 +102,7 @@ void renderScene() {
   // TODO(bauschp, Wed May  7 21:57:12 CEST 2014): Remove this.
   for (size_t i = 0; i < 20; ++i) {
     glm::mat4 trans = glm::rotate(glm::mat4(1.0), 18.0f * i, glm::vec3(0, 1, 0));
-    trans = glm::rotate(trans, 5.0f, glm::vec3(1, 0, 0));
+    trans = glm::rotate(trans, 35.0f, glm::vec3(1, 0, 0));
     cam.transform(glm::translate(trans, glm::vec3(20, 0, 500)));
     cam.render(scene);
     sleep(1);
