@@ -28,6 +28,8 @@ SOFTWARE.
 #include "./Scene.h"
 #include "./Ray.h"
 #include "./Material.h"
+
+size_t img = 0;
 // _____________________________________________________________________________
 void OrthogonalCamera::render(const Scene& scene) {
   // Get the size of the image.
@@ -59,5 +61,8 @@ void OrthogonalCamera::render(const Scene& scene) {
     }
   }
   // DONE!
-  _image.saveAsBMP("Ortho.bmp");
+  char buff[100];
+  snprintf(buff, 100, "Ortho%zu.bmp", img);
+  ++img;
+  _image.saveAsBMP(buff);
 }

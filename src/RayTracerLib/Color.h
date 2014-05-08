@@ -45,12 +45,10 @@ class Color {
   /// Copy constructor. Cant be explicit or else it does not compile.
   Color(const Color& color);
 
-#ifdef LINUX
   /// Move constructor. Needed for C++11.
-  Color(Color&& otherColor) : Color() {
+  Color(Color&& otherColor) {
     swap(*this, otherColor);
   }
-#endif  // LINUX
 
   /// Destructor.
   virtual ~Color() { }
