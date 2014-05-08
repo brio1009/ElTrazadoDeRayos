@@ -22,38 +22,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #pragma once
-#ifndef RAYTRACERLIB_LIGHT_H_
-#define RAYTRACERLIB_LIGHT_H_
+#ifndef RAYTRACERLIB_POINTLIGHT_H_
+#define RAYTRACERLIB_POINTLIGHT_H_ 
 
 #include <glm/glm.hpp>
-#include "./Object.h"
-#include "./Color.h"
+#include "./Light.h"
 
-// Forward declaration.
-class Ray;
-
-/// An abstract interface to interact with Lights.
-class Light : public Object {
+class PointLight : public Light {
  public:
+  /// Constructor of a Directional Light.
+  PointLight(const glm::vec4& dir) { }
   /// Destructor.
-  virtual ~Light() { };
-
-  /// Returns the direction the light is shining to.
-  virtual Ray getRay(const glm::vec4& pos) const = 0;
-
-  /// Returns the color for the given component.
-  virtual const Color& getColor() const {
-    return _color;
-  }
-
-  // Returns the color of this light.
-  virtual void setLightColor(const Color& color) {
-    _color = color;
-  }
-
- private:
-  /// A light holds a array of its diffuse and specular light color.
-  Color _color;
+  virtual ~PointLight() { }
+  /// Overrides.
+  virtual Ray getRay(const glm::vec4& pos) const;
 };
 
-#endif  // RAYTRACERLIB_LIGHT_H_
+#endif  // RAYTRACERLIB_POINTLIGHT_H_

@@ -35,6 +35,10 @@ class Object {
   virtual ~Object() {}
   // Multiplies the matrix with the current Transformation.
   virtual void transform(const glm::mat4& matrix);  //NOLINT mistaken for std
+  
+  /// Get the position of the object.
+  const glm::vec4& getPosition() const { return _transformation[3]; }
+
  protected:
   // the transformation of this Shape
   glm::mat4 _transformation;

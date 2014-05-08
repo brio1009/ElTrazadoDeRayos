@@ -21,39 +21,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#pragma once
-#ifndef RAYTRACERLIB_LIGHT_H_
-#define RAYTRACERLIB_LIGHT_H_
-
+#include "./PointLight.h"
+#include "./Ray.h"
 #include <glm/glm.hpp>
-#include "./Object.h"
-#include "./Color.h"
 
-// Forward declaration.
-class Ray;
-
-/// An abstract interface to interact with Lights.
-class Light : public Object {
- public:
-  /// Destructor.
-  virtual ~Light() { };
-
-  /// Returns the direction the light is shining to.
-  virtual Ray getRay(const glm::vec4& pos) const = 0;
-
-  /// Returns the color for the given component.
-  virtual const Color& getColor() const {
-    return _color;
-  }
-
-  // Returns the color of this light.
-  virtual void setLightColor(const Color& color) {
-    _color = color;
-  }
-
- private:
-  /// A light holds a array of its diffuse and specular light color.
-  Color _color;
-};
-
-#endif  // RAYTRACERLIB_LIGHT_H_
+// _____________________________________________________________________________
+Ray PointLight::getRay(const glm::vec4& pos) const {
+  // Calculate the direction.
+  glm::vec4 dirToPos = pos - getPosition();
+  return Ray(getPosition(), dirToPos);
+}

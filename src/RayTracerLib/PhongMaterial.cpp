@@ -38,8 +38,7 @@ Color PhongMaterial::getColor(const glm::vec4& position,
                               const Scene& scene) const {
   // Generate a temp. light.
   DirectionalLight light(glm::vec4(-1, -1, 0, 0));
-  light.setLightColor(Color(0, 255, 0, 255), Light::DIFFUSE);
-  light.setLightColor(Color(0, 255, 0, 255), Light::SPECULAR);
+  light.setLightColor(Color(0, 255, 0, 255));
 
   // TODO(allofus, Thu May  8 15:27:52 CEST 2014): Add to constructor.
   float ka = 0.1f;
@@ -53,8 +52,8 @@ Color PhongMaterial::getColor(const glm::vec4& position,
   // TODO(allofus, Thu May  8 14:55:00 CEST 2014): Loop over all the real lights
   // in the scene.
   Ray lightRay = light.getRay(position);
-  const Color& lightDiff = light.getColorComponent(Light::DIFFUSE);
-  const Color& lightSpec = light.getColorComponent(Light::SPECULAR);
+  const Color& lightDiff = light.getColor();
+  const Color& lightSpec = light.getColor();
   REAL scale = glm::dot(lightRay.dir, glm::normalize(normal));
   scale = scale > 0 ? scale : 0;
   glm::vec4 reflectionDir(
