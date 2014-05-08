@@ -38,6 +38,6 @@ Color ColorMaterial::getColor(const glm::vec4& position,
   // scaleTwo = (scaleTwo >= 0 ? scaleTwo : 0);
   // REAL scaleThree = glm::dot(glm::normalize(normal), glm::normalize(glm::vec4(1, -1, -1, 0)));
   // scaleThree = (scaleThree >= 0 ? scaleThree : 0);
-  scale = 1.0;
+  // scale = 1.0;
   return Color(scale * _color);
  }
