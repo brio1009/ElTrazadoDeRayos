@@ -24,22 +24,26 @@ SOFTWARE.
 
 #ifndef RAYTRACERLIB_PERSPECTIVECAMERA_H_
 #define RAYTRACERLIB_PERSPECTIVECAMERA_H_
+
 #include "./Constants.h"
 #include "./Camera.h"
+
 class PerspectiveCamera : public Camera {
  private:
   /// Variables to store the field of view angle.
   REAL _focalLength;
+
  public:
   // Constructor.
   PerspectiveCamera(const int width,
       const int height,
       const REAL& fovAngleInRad);
+
   // Destructor.
   virtual ~PerspectiveCamera(); 
+
   // Renders the scene into the internal image storage.
   virtual void render(const Scene& scene);
-
 };
 
 #endif  // RAYTRACERLIB_PERSPECTIVECAMERA_H_

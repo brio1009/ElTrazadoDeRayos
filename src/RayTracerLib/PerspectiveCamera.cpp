@@ -33,10 +33,12 @@ PerspectiveCamera::PerspectiveCamera(const int width,
       const int height,
       const REAL& fovAngleInRad) : Camera(width, height) {
   _focalLength = 2 * tan(fovAngleInRad / 2.0) / width;
-  _focalLength = 10;
+  _focalLength = 150;
 }
+
 // _____________________________________________________________________________
 PerspectiveCamera::~PerspectiveCamera() { }
+
 // _____________________________________________________________________________
 void PerspectiveCamera::render(const Scene& scene) {
   // Get the size of the image.
@@ -52,7 +54,7 @@ void PerspectiveCamera::render(const Scene& scene) {
       // Create new direction.
       glm::vec4 direction(-startX + x, -startY + y, -_focalLength, 0);
       direction = glm::normalize(direction);
-      // direction = _transformation * direction;
+      direction = _transformation * direction;
 
       Ray r(position, direction);
       // if (y == 0)
@@ -61,7 +63,9 @@ void PerspectiveCamera::render(const Scene& scene) {
       IntersectionInfo info = scene.traceRay(r);
       if (info.materialPtr) {
         // HIT
-        Color tmpColor = info.materialPtr->getColor(info.hitPoint, info.normal, -direction, scene);
+        Color tmpColor = info.materialPtr->getColor(info.hitPoint,
+                                                    info.normal,
+                                                    -direction, scene);
         _image.setPixel(x, y, tmpColor);
       } else {
         _image.setPixel(x, y, Color(0, 0, 0, 0));
