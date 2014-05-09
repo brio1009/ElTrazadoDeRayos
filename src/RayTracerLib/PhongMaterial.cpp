@@ -42,9 +42,8 @@ Color PhongMaterial::getColor(const glm::vec4& position,
 
   // TODO(allofus, Thu May  8 15:27:52 CEST 2014): Add to constructor.
   float ka = 0.2f;
-  float kd = 0.5f;
-  float ks = 0.3f;
-  float radianceMulti = 0.1f;
+  float kd = 0.3f;
+  float ks = 0.5f;
 
   // Ambient Term.
   Color ambient(ka * _color);
@@ -72,7 +71,7 @@ Color PhongMaterial::getColor(const glm::vec4& position,
     float refl = glm::dot(glm::normalize(-incomingRayDir),
                          glm::normalize(reflectionDir));
     // if (refl < 0.0) {
-      refl = pow(refl, 4.0f);
+      refl = pow(refl, 16.0f);
 //      resultingColor += Color(ks * refl * lightColor);
         resultingColor += ks * refl * glm::vec3(r, g, b);
     // }
