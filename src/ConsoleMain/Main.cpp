@@ -59,14 +59,11 @@ void renderTestScene() {
     // Save the image under different names.
     char buff[100];
 #ifdef WINDOWS
-    _snprintf(buff, 100, "Ortho%lu.bmp", i);
+    _snprintf(buff, 100, "Ortho%03lu.bmp", i);
 #else
-    snprintf(buff, 100, "Ortho%zu.bmp", i);
+    snprintf(buff, 100, "Ortho%03zu.bmp", i);
 #endif  // WINDOWS
     cam.getImage().saveAsBMP(buff);
-#ifdef LINUX
-    sleep(1);
-#endif  // LINUX
   }
 }
 
