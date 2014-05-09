@@ -48,7 +48,6 @@ void PerspectiveCamera::render(const Scene& scene) {
   glm::vec4 position(0, 0, 0, 1);
   position = _transformation * position;
   // Send rays.
-  printf("Focal:%.5f\n", _focalLength);
   for (int x = 0; x < _image.getWidth(); ++x) {
     for (int y = 0; y < _image.getHeight(); ++y) {
       // Create new direction.

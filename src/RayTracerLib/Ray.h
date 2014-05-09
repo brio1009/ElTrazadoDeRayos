@@ -41,12 +41,6 @@ class Ray {
     this->pos = pos;
     this->dir = dir;
     this->pos[3] = 1;
-    this->dir[3] = 0;
-    return;
-    if (this->pos[3] == 0)
-      this->pos[3] = 1;
-    if (this->dir[3] != 0)
-      this->dir[3] = 0;
     this->dir = glm::fastNormalize(this->dir);
   }
 };

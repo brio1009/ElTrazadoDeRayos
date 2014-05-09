@@ -41,9 +41,9 @@ Color PhongMaterial::getColor(const glm::vec4& position,
   light.setLightColor(Color(0, 255, 0, 255));
 
   // TODO(allofus, Thu May  8 15:27:52 CEST 2014): Add to constructor.
-  float ka = 0.1f;
-  float kd = 0.2f;
-  float ks = 0.1f;
+  float ka = 0.2f;
+  float kd = 0.5f;
+  float ks = 0.3f;
   float radianceMulti = 0.1f;
 
   // Ambient Term.
@@ -53,26 +53,30 @@ Color PhongMaterial::getColor(const glm::vec4& position,
   // TODO(allofus, Thu May  8 14:55:00 CEST 2014): Loop over all the real lights
   // in the scene.
   Ray lightRay = light.getRay(position);
-  const Color& lightDiff = light.getColor();
-  const Color& lightSpec = light.getColor();
-
+  const Color& lightColor = light.getColor();
+  float r = lightColor.r();
+  float g = lightColor.g();
+  float b = lightColor.b();
   // Add the ambientColor.
-  Color resultingColor(ambient);
-  // Add the diffuse color.
-  REAL reflectionDot = glm::dot(-lightRay.dir, glm::normalize(normal));
+//  Color resultingColor(ambient);
+  glm::vec3 resultingColor( ambient.r(), ambient.g(), ambient.b());
+  // Add the diffuse color
+  float reflectionDot = glm::dot(-lightRay.dir, glm::normalize(normal));
   if (reflectionDot > 0.0) {
-    resultingColor += Color(kd * reflectionDot * radianceMulti * lightDiff);
-
+//    resultingColor += Color(kd * reflectionDot * radianceMulti * lightColor);
+    resultingColor += glm::vec3(r, g, b) * kd * reflectionDot;
     // Add the specular color.
     glm::vec4 reflectionDir(static_cast<float>(2 * reflectionDot) * normal
                             - lightRay.dir);
 
-    REAL refl = glm::dot(glm::normalize(-incomingRayDir),
+    float refl = glm::dot(glm::normalize(-incomingRayDir),
                          glm::normalize(reflectionDir));
     // if (refl < 0.0) {
       refl = pow(refl, 4.0f);
-      resultingColor += Color(ks * refl * lightSpec);
+//      resultingColor += Color(ks * refl * lightColor);
+        resultingColor += ks * refl * glm::vec3(r, g, b);
     // }
   }
-  return resultingColor;
+//  return resultingColor;
+  return Color(resultingColor.x, resultingColor.y, resultingColor.z, 255);
 }
