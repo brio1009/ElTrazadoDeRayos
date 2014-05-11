@@ -38,6 +38,8 @@ class Scene {
  public:
   /// Constructor.
   Scene();
+  /// Destructor.
+  ~Scene();
   /// Traces a ray through the scene.
   IntersectionInfo traceRay(const Ray& ray) const;
  private:

@@ -103,6 +103,7 @@ void Image::saveAsBMP(const std::string& filePath) const {
       fwrite(bmppad, 1, (4 - (_width * 3) % 4) % 4, f);
   }
   fclose(f);
+  free(img);
 }
 
 // _____________________________________________________________________________

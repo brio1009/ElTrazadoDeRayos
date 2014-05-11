@@ -49,6 +49,13 @@ Scene::Scene() {
 }
 
 // _____________________________________________________________________________
+Scene::~Scene() {
+  // TODO(allofus, Sun May 11 15:33:16 CEST 2014): Think of how to clean up here
+  for (auto it = _shapes.begin(); it != _shapes.end(); ++it)
+    delete *it;
+}
+
+// _____________________________________________________________________________
 IntersectionInfo Scene::traceRay(const Ray& ray) const {
   REAL smallestT = std::numeric_limits<REAL>::max();
   Shape* shapePtr = nullptr;
