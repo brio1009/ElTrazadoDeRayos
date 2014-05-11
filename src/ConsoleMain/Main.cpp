@@ -1,4 +1,4 @@
-﻿/*
+/*
 The MIT License (MIT)
 
 Copyright (c) 2014 CantTouchDis
@@ -22,15 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <algorithm>
-#include <ctime>
-#include <cstdio>
-#include <cstdlib>
-#include <vector>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
 // RayTracerLib
 #include <Ray.h>
 #include <Ellipsoid.h>
@@ -40,6 +31,16 @@ SOFTWARE.
 #include <Scene.h>
 #include <OrthogonalCamera.h>
 #include <PerspectiveCamera.h>
+// C Header
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+// C++ Header
+#include <algorithm>
+#include <ctime>
+#include <cstdio>
+#include <cstdlib>
+#include <vector>
+
 //
 void renderTestScene() {
   Scene scene;
@@ -52,16 +53,17 @@ void renderTestScene() {
   size_t imgCount = 50;
   // TODO(bauschp, Wed May  7 21:57:12 CEST 2014): Remove this.
   for (size_t i = 0; i < imgCount; ++i) {
-    glm::mat4 trans = glm::rotate(glm::mat4(1.0), 360.0f / imgCount * i, glm::vec3(0, 1, 0));
+    glm::mat4 trans = glm::rotate(glm::mat4(1.0),
+        360.0f / imgCount * i, glm::vec3(0, 1, 0));
     trans = glm::rotate(trans, 35.0f, glm::vec3(1, 0, 0));
     cam.transform(glm::translate(trans, glm::vec3(20, 0, 80)));
     cam.render(scene);
     // Save the image under different names.
     char buff[100];
 #ifdef WINDOWS
-    _snprintf(buff, 100, "Ortho%03lu.bmp", i);
+    _snprintf(buff, sizeof(buff), "Ortho%03lu.bmp", i);
 #else
-    snprintf(buff, 100, "Ortho%03zu.bmp", i);
+    snprintf(buff, sizeof(buff), "Ortho%03zu.bmp", i);
 #endif  // WINDOWS
     cam.getImage().saveAsBMP(buff);
   }
@@ -84,3 +86,4 @@ int main(int argc, char** argv) {
     exit(EXIT_FAILURE);
   }
 }
+
