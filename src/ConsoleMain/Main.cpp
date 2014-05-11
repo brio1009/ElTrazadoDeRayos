@@ -51,12 +51,12 @@ void renderTestScene() {
   // the thrid param to match smaller change.
   // e.g. when converting from 80x80 (first trace) to  512x512 divide 80 by 512
   // OrthogonalCamera cam(512, 512, 0.1);
-  PerspectiveCamera cam(1024, 1024, glm::radians(70.0f));
-  size_t imgCount = 10;
+  PerspectiveCamera cam(512, 512, glm::radians(70.0f));
+  size_t imgCount = 20;
   // TODO(bauschp, Wed May  7 21:57:12 CEST 2014): Remove this.
   for (size_t i = 0; i < imgCount; ++i) {
     glm::mat4 trans = glm::rotate(glm::mat4(1.0),
-        glm::pi<float>() / imgCount * i, glm::vec3(0, 1, 0));
+        2 * glm::pi<float>() / imgCount * i, glm::vec3(0, 1, 0));
     trans = glm::rotate(trans, glm::radians(35.0f), glm::vec3(1, 0, 0));
     cam.transform(glm::translate(trans, glm::vec3(20, 0, 80)));
     cam.render(scene);

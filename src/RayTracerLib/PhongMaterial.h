@@ -45,6 +45,19 @@ class PhongMaterial : public Material {
  private:
   /// Color member.
   Color _color;
+  /// Helper to compute the ambient color.
+  glm::vec3 ambientTerm(const glm::vec3& color, const float skalar) const;
+  /// Helper to compute the diffuse color.
+  glm::vec3 diffuseTerm(const glm::vec3& color,
+      const glm::vec4& lightDir,
+      const glm::vec4& normal,
+      const float skalar) const;
+  /// Helper to compute the specular color.
+  glm::vec3 specularTerm(const glm::vec3& color,
+      const glm::vec4& lightDir,
+      const glm::vec4& normal,
+      const glm::vec4& viewer,
+      const float skalar) const;
 };
 
 #endif  // RAYTRACERLIB_PHONGMATERIAL_H_
