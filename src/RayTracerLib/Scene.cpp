@@ -66,7 +66,7 @@ IntersectionInfo Scene::traceRay(const Ray& ray) const {
     }
   }
   if (shapePtr) {
-    glm::vec4 position = ray.pos + (float)smallestT * ray.dir;
+    glm::vec4 position = ray.pos + static_cast<float>(smallestT) * ray.dir;
     // Return the Intersectioninfo.
     return IntersectionInfo(position,
                             shapePtr->getNormalAt(position),

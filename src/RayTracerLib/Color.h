@@ -55,10 +55,10 @@ class Color {
 
   /// Swap operator.
   friend void swap(Color& first, Color& second) {
-      std::swap(first._r, second._r); 
-      std::swap(first._g, second._g); 
-      std::swap(first._b, second._b); 
-      std::swap(first._a, second._a); 
+      std::swap(first._r, second._r);
+      std::swap(first._g, second._g);
+      std::swap(first._b, second._b);
+      std::swap(first._a, second._a);
   }
 
   /// Copy-assigment operator.

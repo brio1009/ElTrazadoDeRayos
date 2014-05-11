@@ -25,6 +25,7 @@ SOFTWARE.
 #include "./Image.h"
 #include <cassert>
 #include <cstring>
+#include <string>
 #include <vector>
 #include "./Color.h"
 using std::ofstream;
@@ -75,8 +76,10 @@ void Image::saveAsBMP(const std::string& filePath) const {
     }
   }
 
-  unsigned char bmpfileheader[14] = {'B', 'M', 0, 0, 0, 0, 0, 0, 0,0, 54,0,0,0};
-  unsigned char bmpinfoheader[40] = {40, 0, 0, 0, 0, 0,0,0, 0,0,0,0, 1,0, 24,0};
+  unsigned char bmpfileheader[14] = {'B', 'M',
+      0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 0};
+  unsigned char bmpinfoheader[40] = {40, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 24, 0};
   unsigned char bmppad[3] = {0, 0, 0};
 
   bmpfileheader[2] = (unsigned char)(filesize);

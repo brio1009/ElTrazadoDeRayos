@@ -151,3 +151,4 @@ bool Color::setA(const int a) {
   _a = a;
   return true;
 }
+

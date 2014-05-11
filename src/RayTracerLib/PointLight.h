@@ -23,7 +23,7 @@ SOFTWARE.
 */
 #pragma once
 #ifndef RAYTRACERLIB_POINTLIGHT_H_
-#define RAYTRACERLIB_POINTLIGHT_H_ 
+#define RAYTRACERLIB_POINTLIGHT_H_
 
 #include <glm/glm.hpp>
 #include "./Light.h"
@@ -31,7 +31,7 @@ SOFTWARE.
 class PointLight : public Light {
  public:
   /// Constructor of a Directional Light.
-  PointLight(const glm::vec4& position) { setPosition(position); }
+  explicit PointLight(const glm::vec4& position) { setPosition(position); }
   /// Destructor.
   virtual ~PointLight() { }
   /// Overrides.

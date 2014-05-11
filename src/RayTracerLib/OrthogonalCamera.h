@@ -32,13 +32,13 @@ class OrthogonalCamera : public Camera {
  private:
   REAL _unitsPerPixel;
  public:
-  //! Constructor.
+  /// Constructor.
   OrthogonalCamera(const int width,
       const int height,
       const REAL unitsPerPixel = 1.0) : Camera(width, height) {
     _unitsPerPixel = unitsPerPixel;
   }
-  // Defines Camrea::render().
+  /// Defines Camrea::render().
   virtual void render(const Scene& scene);
 };
 

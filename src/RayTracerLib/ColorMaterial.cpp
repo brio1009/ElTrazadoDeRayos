@@ -58,4 +58,4 @@ Color ColorMaterial::getColor(const glm::vec4& position,
   }
 
   return returnColor;
- }
+}

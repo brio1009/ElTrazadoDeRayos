@@ -23,7 +23,7 @@ SOFTWARE.
 */
 #pragma once
 #ifndef RAYTRACERLIB_DIRECTIONALLIGHT_H_
-#define RAYTRACERLIB_DIRECTIONALLIGHT_H_ 
+#define RAYTRACERLIB_DIRECTIONALLIGHT_H_
 
 #include <glm/glm.hpp>
 #include "./Light.h"
@@ -35,7 +35,8 @@ class DirectionalLight : public Light {
 
  public:
   /// Constructor of a Directional Light.
-  DirectionalLight(const glm::vec4& dir) : _direction(glm::normalize(dir)) { }
+  explicit DirectionalLight(const glm::vec4& dir) :
+      _direction(glm::normalize(dir)) { }
   /// Destructor.
   virtual ~DirectionalLight() { }
   /// Overrides

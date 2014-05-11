@@ -36,7 +36,7 @@ class Ray;
 class Light : public Object {
  public:
   /// Destructor.
-  virtual ~Light() { };
+  virtual ~Light() { }
 
   /// Returns the direction the light is shining to.
   virtual Ray getRay(const glm::vec4& pos) const = 0;

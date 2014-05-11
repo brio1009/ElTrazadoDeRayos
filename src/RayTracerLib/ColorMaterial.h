@@ -35,7 +35,7 @@ SOFTWARE.
 class ColorMaterial : public Material {
  public:
   /// Constructor.
-  ColorMaterial(const Color& color) : _color(color) { }
+  explicit ColorMaterial(const Color& color) : _color(color) { }
 
   /// Returns the color for the given position, normal and ray direction.
   virtual Color getColor(const glm::vec4& position,

@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #include "./PointLight.h"
-#include "./Ray.h"
 #include <glm/glm.hpp>
+#include "./Ray.h"
 
 // _____________________________________________________________________________
 Ray PointLight::getRay(const glm::vec4& pos) const {

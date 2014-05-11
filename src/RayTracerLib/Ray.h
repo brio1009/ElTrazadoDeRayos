@@ -41,6 +41,7 @@ class Ray {
     this->pos = pos;
     this->dir = dir;
     this->pos[3] = 1;
+    this->dir[3] = 0;
     this->dir = glm::normalize(this->dir);
   }
 };

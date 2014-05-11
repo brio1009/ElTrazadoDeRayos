@@ -21,9 +21,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#include <cstdio>
-#include <glm/glm.hpp>
 #include "./OrthogonalCamera.h"
+#include <glm/glm.hpp>
+#include <cstdio>
 #include "./IntersectionInfo.h"
 #include "./Constants.h"
 #include "./Scene.h"
@@ -52,7 +52,8 @@ void OrthogonalCamera::render(const Scene& scene) {
   for (int x = 0; x < _image.getWidth(); ++x) {
     for (int y = 0; y < _image.getHeight(); ++y) {
       Ray r(position
-        + ((float)x * planeX) + ((float)y* planeY), direction);
+          + (static_cast<float>(x) * planeX) + (static_cast<float>(y)* planeY),
+          direction);
       IntersectionInfo info = scene.traceRay(r);
       if (info.materialPtr) {
         // We hit the object.

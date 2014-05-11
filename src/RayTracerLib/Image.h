@@ -32,9 +32,8 @@ SOFTWARE.
 
 /// This class provides an easy to use interface to write and read pixel
 /// values of an image.
-class Image
-{
-public:
+class Image {
+ public:
   /// Constructor.
   Image(const int width, const int height);
 
@@ -49,7 +48,7 @@ public:
 
   /// Const-getter for a pixel.
   const Color& getPixel(const int x, const int y) const;
-  
+
   /// Setter for color.
   void setPixel(const int x, const int y, const Color& color);
 
@@ -57,7 +56,7 @@ public:
   int getWidth() const { return _width; }
   int getHeight() const { return _height; }
 
-private:
+ private:
   /// Vector with pixels.
   std::vector<Color> _data;
   /// Saves the height.

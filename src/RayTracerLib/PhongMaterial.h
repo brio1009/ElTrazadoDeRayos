@@ -34,7 +34,7 @@ SOFTWARE.
 class PhongMaterial : public Material {
  public:
   /// Constructor.
-  PhongMaterial(const Color& color) : _color(color) { }
+  explicit PhongMaterial(const Color& color) : _color(color) { }
 
   /// Returns the color for the given position, normal and ray direction.
   virtual Color getColor(const glm::vec4& position,

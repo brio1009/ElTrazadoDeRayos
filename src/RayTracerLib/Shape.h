@@ -46,9 +46,10 @@ class Shape : public Object {
   Shape() {
     // Construct a random color.
     Color tmpColor;
-    tmpColor.setR(rand() % 255);
-    tmpColor.setG(rand() % 255);
-    tmpColor.setB(rand() % 255);
+    // TODO(allofus, Sun May 11 14:12:21 CEST 2014): change to threadsafe alt.
+    tmpColor.setR(rand() % 255);  //NOLINT
+    tmpColor.setG(rand() % 255);  //NOLINT
+    tmpColor.setB(rand() % 255);  //NOLINT
     tmpColor.setA(255);
     _materialPtr = new PhongMaterial(tmpColor);
   }

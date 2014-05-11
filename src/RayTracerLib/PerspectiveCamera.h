@@ -40,7 +40,7 @@ class PerspectiveCamera : public Camera {
       const REAL& fovAngleInRad);
 
   // Destructor.
-  virtual ~PerspectiveCamera(); 
+  virtual ~PerspectiveCamera();
 
   // Renders the scene into the internal image storage.
   virtual void render(const Scene& scene);
