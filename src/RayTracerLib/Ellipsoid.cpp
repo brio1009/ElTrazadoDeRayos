@@ -77,9 +77,10 @@ vector<REAL> Ellipsoid::intersect(const Ray& ray) const {
 // _____________________________________________________________________________
 glm::vec4 Ellipsoid::getNormalAt(const glm::vec4& p) const {
   glm::vec4 trans = _transformation * p;
-  return glm::vec4(
+  trans = glm::vec4(
       (2 * trans.x) / (_rX * _rX),
       (2 * trans.y) / (_rY * _rY),
       (2 * trans.z) / (_rZ * _rZ),
       0);
+  return glm::inverse(_transformation) * trans;
 }

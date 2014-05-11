@@ -21,14 +21,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#include "./PhongMaterial.h"
+#include <glm/glm.hpp>
 #include <cassert>
 #include <cmath>
-#include <glm/glm.hpp>
+#include <algorithm>
 #include "./Color.h"
 #include "./Constants.h"
-#include "./Light.h"
 #include "./PointLight.h"
-#include "./PhongMaterial.h"
+#include "./Light.h"
 #include "./Ray.h"
 
 // _____________________________________________________________________________
@@ -42,8 +43,8 @@ Color PhongMaterial::getColor(const glm::vec4& position,
 
   // TODO(allofus, Thu May  8 15:27:52 CEST 2014): Add to constructor.
   float ka = 0.1f;
-  float kd = 0.6f;
-  float ks = 0.8f;
+  float kd = 0.4f;
+  float ks = 0.5f;
 
 
   // TODO(allofus, Sun May 11 16:54:17 CEST 2014): change lightcolor to vec3
@@ -53,45 +54,18 @@ Color PhongMaterial::getColor(const glm::vec4& position,
       lightColor.g() / 255.0f,
       lightColor.b() / 255.0f);
   glm::vec3 sumIntensity(0, 0, 0);
+  // TODO(bauschp, Sun May 11 21:09:39 CEST 2014) norm if works.
+  glm::vec4 normNormal = glm::normalize(normal);
   Ray lightRay = light.getRay(position);
   sumIntensity += ambientTerm(intensity, ka);
-  sumIntensity += diffuseTerm(intensity, -lightRay.dir, normal, kd);
+  sumIntensity += diffuseTerm(intensity, -lightRay.dir, normNormal, kd);
   sumIntensity += specularTerm(intensity, -lightRay.dir,
-      normal, incomingRayDir, ks);
+      normNormal, -incomingRayDir, ks);
 
-  return Color(_color.r() * sumIntensity.x, _color.g() * sumIntensity.y, _color.b() * sumIntensity.z, 255);
-  // Ambient Term.
-  Color ambient(ka * _color);
-
-  // Sum over Lights and get diffusal and specular components.
-  // TODO(allofus, Thu May  8 14:55:00 CEST 2014): Loop over all the real lights
-  // in the scene.
-  // Ray lightRay = light.getRay(position);
-  float r = lightColor.r();
-  float g = lightColor.g();
-  float b = lightColor.b();
-  // Add the ambientColor.
-//  Color resultingColor(ambient);
-  glm::vec3 resultingColor( ambient.r(), ambient.g(), ambient.b());
-  // Add the diffuse color
-  float reflectionDot = glm::dot(-lightRay.dir, glm::normalize(normal));
-  if (reflectionDot > 0.0) {
-//    resultingColor += Color(kd * reflectionDot * radianceMulti * lightColor);
-    resultingColor += glm::vec3(r, g, b) * kd * reflectionDot;
-    // Add the specular color.
-    glm::vec4 reflectionDir(static_cast<float>(2 * reflectionDot) * normal
-                            - lightRay.dir);
-
-    float refl = glm::dot(glm::normalize(-incomingRayDir),
-                         glm::normalize(reflectionDir));
-    // if (refl < 0.0) {
-      refl = pow(refl, 4.0f);
-//      resultingColor += Color(ks * refl * lightColor);
-        resultingColor += ks * refl * glm::vec3(r, g, b);
-    // }
-  }
-//  return resultingColor;
-  return Color(resultingColor.x, resultingColor.y, resultingColor.z, 255);
+  return Color(_color.r() * sumIntensity.x,
+               _color.g() * sumIntensity.y,
+               _color.b() * sumIntensity.z,
+               255);
 }
 
 // _____________________________________________________________________________
@@ -105,8 +79,12 @@ glm::vec3 PhongMaterial::diffuseTerm(const glm::vec3& color,
     const glm::vec4& normal,
     const float skalar) const {
   // Assuming normal and lightDir are normalized.
-  assert(glm::length(lightDir) == 1);
-  assert(glm::length(normal) == 1);
+  assert(lightDir[3] == 0);
+  assert(glm::length(lightDir) > 1.0 - 1e-5
+      && glm::length(lightDir) < 1.0 + 1e-5);
+  assert(normal[3] == 0);
+  assert(glm::length(normal) > 1.0 - 1e-5
+      && glm::length(normal) < 1.0 + 1e-5);
   float dot = std::max(0.0f, glm::dot(lightDir, normal));
   return skalar * dot * color;
 }
@@ -117,11 +95,18 @@ glm::vec3 PhongMaterial::specularTerm(const glm::vec3& color,
     const glm::vec4& viewer,
     const float skalar) const {
   // Assuming normal and lightDir are normalized.
-  assert(glm::length(lightDir) == 1);
-  assert(glm::length(normal) == 1);
+  assert(lightDir[3] == 0);
+  assert(glm::length(lightDir) > 1.0 - 1e-5
+      && glm::length(lightDir) < 1.0 + 1e-5);
+  assert(normal[3] == 0);
+  assert(glm::length(normal) > 1.0 - 1e-5
+      && glm::length(normal) < 1.0 + 1e-5);
   float lXn = std::max(0.0f, glm::dot(lightDir, normal));
   glm::vec4 reflectionDir = 2.0f * lXn * normal - lightDir;
+  assert(reflectionDir[3] == 0);
+  assert(glm::length(reflectionDir) > 1.0 - 1e-5
+      && glm::length(reflectionDir) < 1.0 + 1e-5);
   float dot = std::max(0.0f, glm::dot(reflectionDir, viewer));
-  dot = pow(dot, 16.0);
+  dot = pow(dot, 5.0);
   return skalar * dot * color;
 }

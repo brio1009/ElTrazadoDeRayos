@@ -51,7 +51,7 @@ void PerspectiveCamera::render(const Scene& scene) {
   for (int x = 0; x < _image.getWidth(); ++x) {
     for (int y = 0; y < _image.getHeight(); ++y) {
       // Create new direction.
-      glm::vec4 direction(-startX + x, -startY + y, -_focalLength, 0);
+      glm::vec4 direction(-startX + x, startY - y, -_focalLength, 0);
       direction = glm::normalize(direction);
       direction = _transformation * direction;
 

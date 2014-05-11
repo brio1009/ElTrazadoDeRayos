@@ -44,7 +44,7 @@ Scene::Scene() {
   ell->transform(glm::translate(glm::mat4(1.0), glm::vec3(50, 10, 0)));
   _shapes.push_back(ell);
   Ellipsoid* ell1 = new Ellipsoid(10, 30, 10);
-  ell1->transform(glm::translate(glm::mat4(1.0), glm::vec3(-30, -5, 0)));
+  ell1->transform(glm::translate(glm::mat4(1.0), glm::vec3(-30, -20, 0)));
   _shapes.push_back(ell1);
   Ellipsoid* ell2 = new Ellipsoid(5, 5, 5);
   _shapes.push_back(ell2);
