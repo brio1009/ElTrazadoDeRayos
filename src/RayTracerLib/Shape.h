@@ -34,6 +34,7 @@ SOFTWARE.
 #include "./Constants.h"
 #include "./Color.h"
 #include "./PhongMaterial.h"
+#include "./ColorMaterial.h"
 #include "./Object.h"
 
 // Forward declaration.
