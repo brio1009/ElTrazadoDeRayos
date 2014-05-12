@@ -73,6 +73,7 @@ glm::vec3 PhongMaterial::ambientTerm(const glm::vec3& color,
     const float skalar) const {
   return skalar * color;
 }
+
 // _____________________________________________________________________________
 glm::vec3 PhongMaterial::diffuseTerm(const glm::vec3& color,
     const glm::vec4& lightDir,
@@ -88,6 +89,7 @@ glm::vec3 PhongMaterial::diffuseTerm(const glm::vec3& color,
   float dot = std::max(0.0f, glm::dot(lightDir, normal));
   return skalar * dot * color;
 }
+
 // _____________________________________________________________________________
 glm::vec3 PhongMaterial::specularTerm(const glm::vec3& color,
     const glm::vec4& lightDir,
@@ -101,11 +103,15 @@ glm::vec3 PhongMaterial::specularTerm(const glm::vec3& color,
   assert(normal[3] == 0);
   assert(glm::length(normal) > 1.0 - 1e-5
       && glm::length(normal) < 1.0 + 1e-5);
-  float lXn = std::max(0.0f, glm::dot(lightDir, normal));
+
+  
+  float lXn = glm::dot(lightDir, normal);
   glm::vec4 reflectionDir = 2.0f * lXn * normal - lightDir;
+
   assert(reflectionDir[3] == 0);
   assert(glm::length(reflectionDir) > 1.0 - 1e-5
       && glm::length(reflectionDir) < 1.0 + 1e-5);
+
   float dot = std::max(0.0f, glm::dot(reflectionDir, viewer));
   dot = pow(dot, 5.0);
   return skalar * dot * color;
