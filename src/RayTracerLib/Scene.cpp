@@ -46,8 +46,11 @@ Scene::Scene() {
   Ellipsoid* ell1 = new Ellipsoid(10, 30, 10);
   ell1->transform(glm::translate(glm::mat4(1.0), glm::vec3(-30, -0, 0)));
   _shapes.push_back(ell1);
-  Ellipsoid* ell2 = new Ellipsoid(5, 5, 5);
-  _shapes.push_back(ell2);
+  Ellipsoid* ell3 = new Ellipsoid(10, 30, 30);
+  ell3->transform(glm::translate(glm::mat4(1.0), glm::vec3(-50, -0, 20)));
+  _shapes.push_back(ell3);
+//  Ellipsoid* ell2 = new Ellipsoid(5, 5, 5);
+//  _shapes.push_back(ell2);
   Plane* plane0 = new Plane(0, 1, 0);
   plane0->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -30, 0)));
   _shapes.push_back(plane0);

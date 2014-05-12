@@ -33,6 +33,7 @@ SOFTWARE.
 
 #include "./Constants.h"
 #include "./Color.h"
+#include "./ShadowMaterial.h"
 #include "./PhongMaterial.h"
 #include "./ColorMaterial.h"
 #include "./Object.h"
@@ -52,7 +53,7 @@ class Shape : public Object {
     tmpColor.setG((rand() % 255) / 255.0f);  //NOLINT
     tmpColor.setB((rand() % 255) / 255.0f);  //NOLINT
     tmpColor.setA(1.0f);
-    _materialPtr = new PhongMaterial(tmpColor);
+    _materialPtr = new ShadowMaterial(tmpColor);
   }
 
   /// Destructor.
