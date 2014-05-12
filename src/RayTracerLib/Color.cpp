@@ -49,6 +49,21 @@ Color Color::operator+(const Color& rhs) {
 }
 
 // _____________________________________________________________________________
+Color& Color::operator*=(const Color& rhs) {
+  setR(rhs._r * _r);
+  setG(rhs._g * _g);
+  setB(rhs._b * _b);
+  return *this;
+}
+
+// _____________________________________________________________________________
+Color Color::operator*(const Color& rhs) {
+  Color newColor(*this);  // Copy constructed.
+  newColor *= rhs;
+  return newColor;
+}
+
+// _____________________________________________________________________________
 Color& Color::operator*=(const float& rhs) {
   setR(rhs * _r);
   setG(rhs * _g);

@@ -73,6 +73,16 @@ class Color {
   /// +-operator.
   Color operator+(const Color& rhs);
 
+  /// *=-operator for Color.
+  Color& operator*=(const Color& rhs);
+  /// *-operator for Color.
+  Color operator*(const Color& rhs);
+  /// *-operator turned around for Color.
+  friend inline Color operator*(const Color& lhs, Color rhs) {
+    rhs *= lhs;
+    return rhs;
+  }
+
   /// *=-operator for floats.
   Color& operator*=(const float& rhs);
   /// *-operator for floats.

@@ -39,7 +39,7 @@ Color PhongMaterial::getColor(const glm::vec4& position,
                               const Scene& scene) const {
   // Generate a temp. light.
   PointLight light(glm::vec4(0, 0, 0, 1));
-  light.setLightColor(Color(255, 255, 255, 255));
+  light.setLightColor(Color(1.0f, 1.0f, 1.0f, 1.0f));
 
   // TODO(allofus, Thu May  8 15:27:52 CEST 2014): Add to constructor.
   float ka = 0.1f;
@@ -50,32 +50,26 @@ Color PhongMaterial::getColor(const glm::vec4& position,
   // TODO(allofus, Sun May 11 16:54:17 CEST 2014): change lightcolor to vec3
   // cause it should be between 0 and 1.
   const Color& lightColor = light.getColor();
-  glm::vec3 intensity(lightColor.r() / 255.0f,
-      lightColor.g() / 255.0f,
-      lightColor.b() / 255.0f);
-  glm::vec3 sumIntensity(0, 0, 0);
+  Color sumIntensity(0, 0, 0);
   // TODO(bauschp, Sun May 11 21:09:39 CEST 2014) norm if works.
   glm::vec4 normNormal = glm::normalize(normal);
   Ray lightRay = light.getRay(position);
-  sumIntensity += ambientTerm(intensity, ka);
-  sumIntensity += diffuseTerm(intensity, -lightRay.dir, normNormal, kd);
-  sumIntensity += specularTerm(intensity, -lightRay.dir,
+  sumIntensity += ambientTerm(lightColor, ka);
+  sumIntensity += diffuseTerm(lightColor, -lightRay.dir, normNormal, kd);
+  sumIntensity += specularTerm(lightColor, -lightRay.dir,
       normNormal, -incomingRayDir, ks);
 
-  return Color(_color.r() * sumIntensity.x,
-               _color.g() * sumIntensity.y,
-               _color.b() * sumIntensity.z,
-               255);
+  return _color * sumIntensity;
 }
 
 // _____________________________________________________________________________
-glm::vec3 PhongMaterial::ambientTerm(const glm::vec3& color,
+Color PhongMaterial::ambientTerm(const Color& color,
     const float skalar) const {
   return skalar * color;
 }
 
 // _____________________________________________________________________________
-glm::vec3 PhongMaterial::diffuseTerm(const glm::vec3& color,
+Color PhongMaterial::diffuseTerm(const Color& color,
     const glm::vec4& lightDir,
     const glm::vec4& normal,
     const float skalar) const {
@@ -91,7 +85,7 @@ glm::vec3 PhongMaterial::diffuseTerm(const glm::vec3& color,
 }
 
 // _____________________________________________________________________________
-glm::vec3 PhongMaterial::specularTerm(const glm::vec3& color,
+Color PhongMaterial::specularTerm(const Color& color,
     const glm::vec4& lightDir,
     const glm::vec4& normal,
     const glm::vec4& viewer,

@@ -46,14 +46,14 @@ class PhongMaterial : public Material {
   /// Color member.
   Color _color;
   /// Helper to compute the ambient color.
-  glm::vec3 ambientTerm(const glm::vec3& color, const float skalar) const;
+  Color ambientTerm(const Color& color, const float skalar) const;
   /// Helper to compute the diffuse color.
-  glm::vec3 diffuseTerm(const glm::vec3& color,
+  Color diffuseTerm(const Color& color,
       const glm::vec4& lightDir,
       const glm::vec4& normal,
       const float skalar) const;
   /// Helper to compute the specular color.
-  glm::vec3 specularTerm(const glm::vec3& color,
+  Color specularTerm(const Color& color,
       const glm::vec4& lightDir,
       const glm::vec4& normal,
       const glm::vec4& viewer,
