@@ -23,43 +23,26 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_PHONGMATERIAL_H_
-#define RAYTRACERLIB_PHONGMATERIAL_H_
+#ifndef RAYTRACERLIB_SHADOWMATERIAL_H_
+#define RAYTRACERLIB_SHADOWMATERIAL_H_
 
 #include <glm/glm.hpp>
+#include "./PhongMaterial.h"
 #include "./Material.h"
 #include "./Color.h"
 
 /// Phong material that shades the object with the phong reflection model.
-class PhongMaterial : public Material {
+class ShadowMaterial : public PhongMaterial {
  public:
   /// Constructor.
-  explicit PhongMaterial(const Color& color) : _color(color) { }
+  explicit ShadowMaterial(const Color& color) : PhongMaterial(color) { }
 
   /// Returns the color for the given position, normal and ray direction.
   virtual Color getColor(const glm::vec4& position,
       const glm::vec4& normal,
       const glm::vec4& incomingRayDir,
       const Scene& scene) const;
-
- protected:
-  /// Color member.
-  Color _color;
-  /// Helper to compute the ambient color.
-  glm::vec3 ambientTerm(const glm::vec3& color, const float skalar) const;
-  /// Helper to compute the diffuse color.
-  glm::vec3 diffuseTerm(const glm::vec3& color,
-      const glm::vec4& lightDir,
-      const glm::vec4& normal,
-      const float skalar) const;
-  /// Helper to compute the specular color.
-  glm::vec3 specularTerm(const glm::vec3& color,
-      const glm::vec4& lightDir,
-      const glm::vec4& normal,
-      const glm::vec4& viewer,
-      const float skalar) const;
 };
 
-#endif  // RAYTRACERLIB_PHONGMATERIAL_H_
-
+#endif  // RAYTRACERLIB_SHADOWMATERIAL_H_
 
