@@ -39,7 +39,7 @@ Color ColorMaterial::getColor(const glm::vec4& position,
   Color returnColor(_color);
 
   // Check if we need to send another ray.
-  if (_color.a() < 255) {
+  if (_color.a() < 1.0f) {
     // Build a new ray.
     Ray newRay(position
                + static_cast<float>(constants::EPSILON * 2.0) * incomingRayDir,
@@ -53,8 +53,8 @@ Color ColorMaterial::getColor(const glm::vec4& position,
                                             newRay.dir,
                                             scene);
     }
-    returnColor = (static_cast<double>(_color.a()) / 255.0) * _color
-                  + (1.0 - static_cast<double>(_color.a()) / 255.0) * addColor;
+    returnColor = (static_cast<double>(_color.a())) * _color
+                  + (1.0 - static_cast<double>(_color.a())) * addColor;
   }
 
   return returnColor;

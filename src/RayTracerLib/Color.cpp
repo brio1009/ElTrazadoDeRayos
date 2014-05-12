@@ -24,6 +24,8 @@ SOFTWARE.
 
 #include "./Color.h"
 
+const Color Color::_outOfRangeColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
+
 // _____________________________________________________________________________
 Color::Color(const Color& color) : _r(color.r()),
                                    _g(color.g()),
@@ -33,17 +35,9 @@ Color::Color(const Color& color) : _r(color.r()),
 
 // _____________________________________________________________________________
 Color& Color::operator+=(const Color& rhs) {
-  // TODO(cgissler, 05/08/2014): Think about how to handle out of range colors.
-  if (!setR(_r + rhs.r())
-      || !setG(_g + rhs.g())
-      || !setB(_b + rhs.b())) {
-    // TODO(cgissler, 05/08/2014): Check if alpha should be multiplied.
-    // setA(_a + rhs.a());
-    // Make the color white.
-    setR(255);
-    setG(255);
-    setB(255);
-  }
+  setR(_r + rhs.r());
+  setG(_g + rhs.g());
+  setB(_b + rhs.b());
   return *this;
 }
 
@@ -56,17 +50,9 @@ Color Color::operator+(const Color& rhs) {
 
 // _____________________________________________________________________________
 Color& Color::operator*=(const float& rhs) {
-  // TODO(cgissler, 05/08/2014): Think about how to handle out of range colors.
-  if (!setR(floor((rhs * _r) + 0.5f))
-      || !setG(floor((rhs * _g) + 0.5f))
-      || !setB(floor((rhs * _b) + 0.5f))) {
-    // TODO(cgissler, 05/08/2014): Check if alpha should be multiplied.
-    // setA(floor((rhs * _a) + 0.5f));
-    // Make the color white.
-    setR(255);
-    setG(255);
-    setB(255);
-  }
+  setR(rhs * _r);
+  setG(rhs * _g);
+  setB(rhs * _b);
   return *this;
 }
 
@@ -79,17 +65,9 @@ Color Color::operator*(const float& rhs) {
 
 // _____________________________________________________________________________
 Color& Color::operator*=(const double& rhs) {
-  // TODO(cgissler, 05/08/2014): Think about how to handle out of range colors.
-  if (!setR(floor((rhs * _r) + 0.5f))
-      || !setG(floor((rhs * _g) + 0.5f))
-      || !setB(floor((rhs * _b) + 0.5f))) {
-    // TODO(cgissler, 05/08/2014): Check if alpha should be multiplied.
-    // setA(floor((rhs * _a) + 0.5f));
-    // Make the color white.
-    setR(255);
-    setG(255);
-    setB(255);
-  }
+  setR(static_cast<float>(rhs) * _r);
+  setG(static_cast<float>(rhs) * _g);
+  setB(static_cast<float>(rhs) * _b);
   return *this;
 }
 
@@ -101,54 +79,63 @@ Color Color::operator*(const double& rhs) {
 }
 
 // _____________________________________________________________________________
-bool Color::setR(const int r) {
-  if (r > 255) {
-    _r = 255;
-    return false;
-  } else if (r < 0) {
-    _r = 0;
-    return false;
-  }
+void Color::setR(const float r) {
   _r = r;
-  return true;
 }
 
 // _____________________________________________________________________________
-bool Color::setG(const int g) {
-  if (g > 255) {
-    _g = 255;
-    return false;
-  } else if (g < 0) {
-    _g = 0;
-    return false;
-  }
+void Color::setG(const float g) {
   _g = g;
-  return true;
 }
 
 // _____________________________________________________________________________
-bool Color::setB(const int b) {
-  if (b > 255) {
-    _b = 255;
-    return false;
-  } else if (b < 0) {
-    _b = 0;
-    return false;
-  }
+void Color::setB(const float b) {
   _b = b;
-  return true;
 }
 
 // _____________________________________________________________________________
-bool Color::setA(const int a) {
-  if (a > 255) {
-    _a = 255;
-    return false;
-  } else if (a < 0) {
-    _a = 0;
-    return false;
-  }
+void Color::setA(const float a) {
   _a = a;
-  return true;
 }
 
+// _____________________________________________________________________________
+int Color::getRAsInt() const {
+  if (isOutOfRange()) {
+    return floatToInt(_outOfRangeColor.r());
+  }
+  return floatToInt(_r);
+}
+
+// _____________________________________________________________________________
+int Color::getGAsInt() const {
+  if (isOutOfRange()) {
+    return floatToInt(_outOfRangeColor.g());
+  }
+  return floatToInt(_g);
+}
+
+// _____________________________________________________________________________
+int Color::getBAsInt() const {
+  if (isOutOfRange()) {
+    return floatToInt(_outOfRangeColor.b());
+  }
+  return floatToInt(_b);
+}
+
+// _____________________________________________________________________________
+int Color::getAAsInt() const {
+  if (isOutOfRange()) {
+    return floatToInt(_outOfRangeColor.a());
+  }
+  return floatToInt(_a);
+}
+
+// _____________________________________________________________________________
+bool Color::isOutOfRange() const {
+  return (_r > 1.0f || _g > 1.0f || _b > 1.0f || _a > 1.0f);
+}
+
+// _____________________________________________________________________________
+int Color::floatToInt(const float val) const {
+  return std::min(255, std::max(0, static_cast<int>(val * 255)));
+}

@@ -70,9 +70,12 @@ void Image::saveAsBMP(const std::string& filePath) const {
       // TODO(cgissler, 09/05/2014): Do we really want to flip the image?
       int y = j;
       const Color& tmpPixel = getPixel(x, y);
-      img[(x + y * _width) * 3 + 2] = static_cast<unsigned char>(tmpPixel.r());
-      img[(x + y * _width) * 3 + 1] = static_cast<unsigned char>(tmpPixel.g());
-      img[(x + y * _width) * 3 + 0] = static_cast<unsigned char>(tmpPixel.b());
+      img[(x + y * _width) * 3 + 2] =
+    static_cast<unsigned char>(tmpPixel.getRAsInt());
+      img[(x + y * _width) * 3 + 1] =
+    static_cast<unsigned char>(tmpPixel.getGAsInt());
+      img[(x + y * _width) * 3 + 0] =
+    static_cast<unsigned char>(tmpPixel.getBAsInt());
     }
   }
 

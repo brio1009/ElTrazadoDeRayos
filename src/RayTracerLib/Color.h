@@ -37,10 +37,10 @@ class Color {
   Color() : _r(0), _g(0), _b(0), _a(255) { }
 
   /// Constructor with given colors.
-  Color(const int r,
-        const int g,
-        const int b,
-        const int a = 255) : _r(r), _g(g), _b(b), _a(a) { }
+  Color(const float r,
+        const float g,
+        const float b,
+        const float a = 1.0f) : _r(r), _g(g), _b(b), _a(a) { }
 
   /// Copy constructor. Cant be explicit or else it does not compile.
   Color(const Color& color);
@@ -94,29 +94,47 @@ class Color {
   }
 
   /// R-getter.
-  inline int r() const { return _r; }
+  inline float r() const { return _r; }
   /// G-getter.
-  inline int g() const { return _g; }
+  inline float g() const { return _g; }
   /// B-getter.
-  inline int b() const { return _b; }
+  inline float b() const { return _b; }
   /// A-getter.
-  inline int a() const { return _a; }
+  inline float a() const { return _a; }
+
+  /// R-getter in range 0-255.
+  int getRAsInt() const;
+  /// G-getter in range 0-255.
+  int getGAsInt() const;
+  /// B-getter in range 0-255.
+  int getBAsInt() const;
+  /// A-getter in range 0-255.
+  int getAAsInt() const;
 
   /// R-setter. Returns false if it was clipped.
-  bool setR(const int r);
+  void setR(const float r);
   /// G-setter. Returns false if it was clipped.
-  bool setG(const int g);
+  void setG(const float g);
   /// B-setter. Returns false if it was clipped.
-  bool setB(const int b);
+  void setB(const float b);
   /// A-setter. Returns false if it was clipped.
-  bool setA(const int a);
+  void setA(const float a);
 
  private:
+  /// Check if this color is out of the displayable color range.
+  bool isOutOfRange() const;
+
+  /// Conversion from float to int colors.
+  int floatToInt(const float val) const;
+
+  /// Color that is returned when out of range.
+  static const Color _outOfRangeColor;
+
   // Member.
-  int _r;
-  int _g;
-  int _b;
-  int _a;
+  float _r;
+  float _g;
+  float _b;
+  float _a;
 };
 
 #endif  // RAYTRACERLIB_COLOR_H_
