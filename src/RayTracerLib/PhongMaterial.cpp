@@ -35,7 +35,7 @@ SOFTWARE.
 // _____________________________________________________________________________
 Color PhongMaterial::getColor(const glm::vec4& position,
                               const glm::vec4& normal,
-                              const glm::vec4& incomingRayDir,
+                              const Ray& incomingRay,
                               const Scene& scene) const {
   // Generate a temp. light.
   PointLight light(glm::vec4(0, 0, 0, 1));
@@ -57,7 +57,7 @@ Color PhongMaterial::getColor(const glm::vec4& position,
   sumIntensity += ambientTerm(lightColor, ka);
   sumIntensity += diffuseTerm(lightColor, -lightRay.dir, normNormal, kd);
   sumIntensity += specularTerm(lightColor, -lightRay.dir,
-      normNormal, -incomingRayDir, ks);
+      normNormal, -incomingRay.dir, ks);
 
   return _color * sumIntensity;
 }

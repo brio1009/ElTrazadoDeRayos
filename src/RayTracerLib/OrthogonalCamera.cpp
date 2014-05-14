@@ -59,7 +59,7 @@ void OrthogonalCamera::render(const Scene& scene) {
         // We hit the object.
         Color tmpColor = info.materialPtr->getColor(info.hitPoint,
                                                     info.normal,
-                                                    direction,
+                                                    r,
                                                     scene);
         _image.setPixel(x, y, tmpColor);
       } else {

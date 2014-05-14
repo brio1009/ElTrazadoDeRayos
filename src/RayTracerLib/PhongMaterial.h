@@ -39,7 +39,7 @@ class PhongMaterial : public Material {
   /// Returns the color for the given position, normal and ray direction.
   virtual Color getColor(const glm::vec4& position,
       const glm::vec4& normal,
-      const glm::vec4& incomingRayDir,
+      const Ray& incomingRay,
       const Scene& scene) const;
 
  protected:

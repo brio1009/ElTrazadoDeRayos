@@ -32,7 +32,7 @@ SOFTWARE.
 // _____________________________________________________________________________
 Color ColorMaterial::getColor(const glm::vec4& position,
                               const glm::vec4& normal,
-                              const glm::vec4& incomingRayDir,
+                              const Ray& incomingRay,
                               const Scene& scene) const {
   // Build the returncolor.
   Color returnColor(_color);
@@ -41,14 +41,14 @@ Color ColorMaterial::getColor(const glm::vec4& position,
   if (_color.a() < 1.0f) {
     // Build a new ray.
     Ray newRay(position,
-               incomingRayDir);
+               incomingRay.dir);
     // Trace the ray.
     IntersectionInfo info = scene.traceRay(newRay);
     Color addColor;
     if (info.materialPtr) {
       addColor = info.materialPtr->getColor(info.hitPoint,
                                             info.normal,
-                                            newRay.dir,
+                                            newRay,
                                             scene);
     }
     returnColor = (static_cast<double>(_color.a())) * _color

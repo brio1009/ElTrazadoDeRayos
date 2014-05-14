@@ -35,11 +35,11 @@ SOFTWARE.
 // _____________________________________________________________________________
 Color GlassMaterial::getColor(const glm::vec4& position,
                               const glm::vec4& normal,
-                              const glm::vec4& incomingRayDir,
+                              const Ray& incomingRay,
                               const Scene& scene) const {
   // First check if we leave or enter the material.
   // This can be done with the normal.
-  REAL dotProduct = glm::dot(normal, incomingRayDir);
+  REAL dotProduct = glm::dot(normal, incomingRay.dir);
   float n1(0), n2(0);
   if (dotProduct < 0) {
     // We leave the material.
@@ -55,19 +55,21 @@ Color GlassMaterial::getColor(const glm::vec4& position,
   // glm::angle(incomingRayDir, normal);
   REAL angle = acos(dotProduct);
   REAL newAngle = sin(angle) * (n1 / n2);
-  float angleChange = newAngle - angle;
-  glm::vec3 axis = glm::cross(glm::vec3(normal), glm::vec3(incomingRayDir));
+  REAL angleChange = newAngle - angle;
+  glm::vec3 axis = glm::cross(glm::vec3(normal), glm::vec3(incomingRay.dir));
   Ray newRay;
   newRay.pos = position;
-  newRay.dir = glm::rotate(incomingRayDir, angleChange, axis);
+  newRay.dir = glm::rotate(incomingRay.dir,
+                           static_cast<float>(angleChange),
+                           axis);
 
   IntersectionInfo info = scene.traceRay(newRay);
   Color addColor;
   if (info.materialPtr) {
     return info.materialPtr->getColor(info.hitPoint,
-                                          info.normal,
-                                          newRay.dir,
-                                          scene);
+                                      info.normal,
+                                      newRay,
+                                      scene);
   }
 
   // Build the returncolor.

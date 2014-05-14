@@ -37,7 +37,7 @@ SOFTWARE.
 // _____________________________________________________________________________
 Color ShadowMaterial::getColor(const glm::vec4& position,
       const glm::vec4& normal,
-      const glm::vec4& incomingRayDir,
+      const Ray& incomingRay,
       const Scene& scene) const {
   // Generate a temp. light.
   PointLight light(glm::vec4(0, 0, 0, 1));
@@ -60,7 +60,7 @@ Color ShadowMaterial::getColor(const glm::vec4& position,
   if (glm::length(position - hitInfo.hitPoint) < 1e-3) {
     sumIntensity += diffuseTerm(lightColor, -lightRay.dir, normNormal, kd);
     sumIntensity += specularTerm(lightColor, -lightRay.dir,
-        normNormal, -incomingRayDir, ks);
+        normNormal, -incomingRay.dir, ks);
   }
 
   return _color * sumIntensity;
