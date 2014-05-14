@@ -34,7 +34,7 @@ SOFTWARE.
 class Color {
  public:
   /// Default Constructor.
-  Color() : _r(0), _g(0), _b(0), _a(255) { }
+  Color() : _r(0), _g(0), _b(0), _a(1.0f) { }
 
   /// Constructor with given colors.
   Color(const float r,
