@@ -23,37 +23,54 @@ SOFTWARE.
 */
 
 #include <glm/glm.hpp>
+#include <glm/gtx/vector_angle.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 #include "./Color.h"
-#include "./ColorMaterial.h"
+#include "./Constants.h"
+#include "./GlassMaterial.h"
 #include "./IntersectionInfo.h"
 #include "./Ray.h"
 #include "./Scene.h"
 
 // _____________________________________________________________________________
-Color ColorMaterial::getColor(const glm::vec4& position,
+Color GlassMaterial::getColor(const glm::vec4& position,
                               const glm::vec4& normal,
                               const glm::vec4& incomingRayDir,
                               const Scene& scene) const {
-  // Build the returncolor.
-  Color returnColor(_color);
-
-  // Check if we need to send another ray.
-  if (_color.a() < 1.0f) {
-    // Build a new ray.
-    Ray newRay(position,
-               incomingRayDir);
-    // Trace the ray.
-    IntersectionInfo info = scene.traceRay(newRay);
-    Color addColor;
-    if (info.materialPtr) {
-      addColor = info.materialPtr->getColor(info.hitPoint,
-                                            info.normal,
-                                            newRay.dir,
-                                            scene);
-    }
-    returnColor = (static_cast<double>(_color.a())) * _color
-                  + (1.0 - static_cast<double>(_color.a())) * addColor;
+  // First check if we leave or enter the material.
+  // This can be done with the normal.
+  REAL dotProduct = glm::dot(normal, incomingRayDir);
+  float n1(0), n2(0);
+  if (dotProduct < 0) {
+    // We leave the material.
+    n1 = _refractiveIndex;
+    n2 = RefractiveIndex::air;
+  } else {
+    // We enter the material.
+    n1 = RefractiveIndex::air;
+    n2 = _refractiveIndex;
   }
 
+  // Calculate the angle of the new ray.
+  // glm::angle(incomingRayDir, normal);
+  REAL angle = acos(dotProduct);
+  REAL newAngle = sin(angle) * (n1 / n2);
+  float angleChange = newAngle - angle;
+  glm::vec3 axis = glm::cross(glm::vec3(normal), glm::vec3(incomingRayDir));
+  Ray newRay;
+  newRay.pos = position;
+  newRay.dir = glm::rotate(incomingRayDir, angleChange, axis);
+
+  IntersectionInfo info = scene.traceRay(newRay);
+  Color addColor;
+  if (info.materialPtr) {
+    return info.materialPtr->getColor(info.hitPoint,
+                                          info.normal,
+                                          newRay.dir,
+                                          scene);
+  }
+
+  // Build the returncolor.
+  Color returnColor(0, 0, 0);
   return returnColor;
 }

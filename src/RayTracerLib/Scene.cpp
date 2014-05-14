@@ -35,6 +35,7 @@ SOFTWARE.
 #include "./Ellipsoid.h"
 #include "./Plane.h"
 #include "./PhongMaterial.h"
+#include "./GlassMaterial.h"
 
 using std::vector;
 
@@ -45,6 +46,7 @@ Scene::Scene() {
   _shapes.push_back(ell);
   Ellipsoid* ell1 = new Ellipsoid(10, 30, 10);
   ell1->transform(glm::translate(glm::mat4(1.0), glm::vec3(-30, -0, 0)));
+  ell1->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
   _shapes.push_back(ell1);
   Ellipsoid* ell3 = new Ellipsoid(10, 30, 30);
   ell3->transform(glm::translate(glm::mat4(1.0), glm::vec3(-50, -0, 20)));
@@ -74,7 +76,7 @@ IntersectionInfo Scene::traceRay(const Ray& ray) const {
     vector<REAL> hits = _shapes.at(i)->intersect(ray);
     // Loop over the p and choose the smallest that is bigger 0.
     for (size_t j = 0; j < hits.size(); ++j) {
-      if (hits.at(j) > 0 && hits.at(j) < smallestT) {
+      if (hits.at(j) > constants::EPSILON && hits.at(j) < smallestT) {
         smallestT = hits.at(j);
         shapePtr = _shapes[i];
       }

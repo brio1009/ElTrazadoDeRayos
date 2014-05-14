@@ -23,22 +23,35 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_SOMENAMEMATERIAL_H_
-#define RAYTRACERLIB_SOMENAMEMATERIAL_H_
+#ifndef RAYTRACERLIB_GLASSMATERIAL_H_
+#define RAYTRACERLIB_GLASSMATERIAL_H_
 
-class SomeNameMaterial : public Material {
+#include "Material.h"
+
+/// Refraction indices we know.
+namespace RefractiveIndex {
+  static const float glass = 1.52f;
+  static const float water = 1.333f;
+  static const float air = 1.00293f;
+};
+
+/// GLass-like materials.
+class GlassMaterial : public Material {
+public:
   /// Constructor.
-  SomeNameMaterial() { }
+  GlassMaterial(const float refractiveIndex)
+    : _refractiveIndex(refractiveIndex) { }
 
   /// Returns the color for the given position, normal and ray direction.
   virtual Color getColor(const glm::vec4& position,
       const glm::vec4& normal,
       const glm::vec4& incomingRayDir,
       const Scene& scene) const;
+
  protected:
-  // defines the "Brechungskonstante"
-  float _nameOfField;
+  /// Defines the refractive index which we use to compute the ray directions.
+  float _refractiveIndex;
 };
 
-#endif  // RAYTRACERLIB_SOMENAMEMATERIAL_H_
+#endif  // RAYTRACERLIB_GLASSMATERIAL_H_
 

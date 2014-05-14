@@ -74,9 +74,13 @@ class Shape : public Object {
   /// Getter for the material pointer.
   const Material* getMaterialPtr() const { return _materialPtr; }
 
+  /// Setter for the material pointer.
+  void setMaterialPtr(const Material* materialPtr) {
+    _materialPtr = materialPtr;
+  } 
+
  private:
   const Material* _materialPtr;
 };
-
 
 #endif  // RAYTRACERLIB_SHAPE_H_
