@@ -74,7 +74,8 @@ class Shape : public Object {
   /// Getter for the material pointer.
   const Material* getMaterialPtr() const { return _materialPtr; }
 
-  /// Setter for the material pointer.
+  /// Setter for the material pointer. Be careful, the old material is not
+  /// automatically deleted!
   void setMaterialPtr(const Material* materialPtr) {
     _materialPtr = materialPtr;
   } 

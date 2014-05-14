@@ -34,6 +34,7 @@ namespace RefractiveIndex {
   static const float glass = 1.52f;
   static const float water = 1.333f;
   static const float air = 1.00293f;
+  static const float diamond = 2.42f;
 };
 
 /// GLass-like materials.
@@ -42,7 +43,7 @@ public:
   /// Constructor.
   GlassMaterial(const float refractiveIndex)
     : _refractiveIndex(refractiveIndex),
-      _transparencyFactor(0.05f),
+      _transparencyFactor(0.0f),
       _color(1.0, 0.0, 0.0) { }
 
   /// Returns the color for the given position, normal and ray direction.

@@ -67,7 +67,7 @@ void renderTestScene() {
 #ifdef WINDOWS
     printf("Image %03lu took %.2f sec to render.\n", i,
         static_cast<float>(end - start) / CLOCKS_PER_SEC);
-    _snprintf(buff, sizeof(buff), "Img%03lu.bmp", i);
+    _snprintf_s(buff, sizeof(buff), "Img%03lu.bmp", i);
 #else
     printf("Image %03zu took %.2f sec to render.\n", i,
         static_cast<float>(end - start) / CLOCKS_PER_SEC);
