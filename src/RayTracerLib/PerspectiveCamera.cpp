@@ -65,11 +65,11 @@ void PerspectiveCamera::render(const Scene& scene) {
       // if (y == 0)
       // printf("SENDING RAY:(%.2f,%.2f,%.2f|%.2f,%.2f,%.2f)\n", position.x,
       //       position.y, position.z, direction.x, direction.y, direction.z);
-      start = clock();
+      start = end;
       IntersectionInfo info = scene.traceRay(r);
       end = clock();
       overallSceneTrace += end - start;
-      start = clock();
+      start = end;
       if (info.materialPtr) {
         // HIT
         Color tmpColor = info.materialPtr->getColor(info.hitPoint,
@@ -84,8 +84,11 @@ void PerspectiveCamera::render(const Scene& scene) {
       overallGetColor += end - start;
     }
   }
-  printf("Ray creation took: %.2f sec.\n", static_cast<float>(overallRayCreation) / CLOCKS_PER_SEC);
-  printf("Trace took: %.2f sec.\n", static_cast<float>(overallSceneTrace) / CLOCKS_PER_SEC);
-  printf("GetColor took: %.2f sec.\n", static_cast<float>(overallGetColor) / CLOCKS_PER_SEC);
+  printf("\tRay creation took: %.2f sec.\n",
+      static_cast<float>(overallRayCreation) / CLOCKS_PER_SEC);
+  printf("\tTrace took: %.2f sec.\n",
+      static_cast<float>(overallSceneTrace) / CLOCKS_PER_SEC);
+  printf("\tGetColor took: %.2f sec.\n",
+      static_cast<float>(overallGetColor) / CLOCKS_PER_SEC);
 }
 
