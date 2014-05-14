@@ -41,8 +41,8 @@ vector<REAL> Plane::intersect(const Ray& ray) const {
   // apx + bpy + cpz + d + auxt + buyt + cuzt = 0;
 
   // Bring vector to unit space.
-  glm::vec4 transPos = glm::inverse(_transformation) * ray.pos;
-  glm::vec4 transDir = glm::inverse(_transformation) * ray.dir;
+  glm::vec4 transPos = _inverseTransform * ray.pos;
+  glm::vec4 transDir = _inverseTransform * ray.dir;
 
   REAL b = _nX * transPos[0] + _nY * transPos[1] + _nZ * transPos[2];
   REAL a = _nX * transDir[0] + _nY * transDir[1] + _nZ * transDir[2];

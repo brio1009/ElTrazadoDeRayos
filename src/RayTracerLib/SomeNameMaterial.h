@@ -21,31 +21,24 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#ifndef RAYTRACERLIB_OBJECT_H_
-#define RAYTRACERLIB_OBJECT_H_
 
-// GlMath include.
-#include <glm/glm.hpp>
+#pragma once
+#ifndef RAYTRACERLIB_SOMENAMEMATERIAL_H_
+#define RAYTRACERLIB_SOMENAMEMATERIAL_H_
 
-#include "./Constants.h"
+class SomeNameMaterial : public Material {
+  /// Constructor.
+  SomeNameMaterial() { }
 
-class Object {
- public:
-  /// Destructor.
-  virtual ~Object() {}
-  // Multiplies the matrix with the current Transformation.
-  virtual void transform(const glm::mat4& matrix);  //NOLINT mistaken for std
-
-  /// Get the position of the object.
-  const glm::vec4& getPosition() const { return _transformation[3]; }
-
-  /// Set the position of the object.
-  void setPosition(const glm::vec4& position) { _transformation[3] = position; }
-
+  /// Returns the color for the given position, normal and ray direction.
+  virtual Color getColor(const glm::vec4& position,
+      const glm::vec4& normal,
+      const glm::vec4& incomingRayDir,
+      const Scene& scene) const;
  protected:
-  // the transformation of this Shape
-  glm::mat4 _transformation;
-  glm::mat4 _inverseTransform;
+  // defines the "Brechungskonstante"
+  float _nameOfField;
 };
 
-#endif  // RAYTRACERLIB_OBJECT_H_
+#endif  // RAYTRACERLIB_SOMENAMEMATERIAL_H_
+

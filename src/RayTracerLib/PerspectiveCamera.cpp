@@ -48,18 +48,28 @@ void PerspectiveCamera::render(const Scene& scene) {
   glm::vec4 position(0, 0, 0, 1);
   position = _transformation * position;
   // Send rays.
+  size_t overallRayCreation = 0;
+  size_t overallSceneTrace = 0;
+  size_t overallGetColor = 0;
   for (int x = 0; x < _image.getWidth(); ++x) {
     for (int y = 0; y < _image.getHeight(); ++y) {
+      clock_t start = clock();
       // Create new direction.
       glm::vec4 direction(-startX + x, startY - y, -_focalLength, 0);
       direction = glm::normalize(direction);
       direction = _transformation * direction;
 
       Ray r(position, direction);
+      clock_t end = clock();
+      overallRayCreation += end - start;
       // if (y == 0)
       // printf("SENDING RAY:(%.2f,%.2f,%.2f|%.2f,%.2f,%.2f)\n", position.x,
       //       position.y, position.z, direction.x, direction.y, direction.z);
+      start = clock();
       IntersectionInfo info = scene.traceRay(r);
+      end = clock();
+      overallSceneTrace += end - start;
+      start = clock();
       if (info.materialPtr) {
         // HIT
         Color tmpColor = info.materialPtr->getColor(info.hitPoint,
@@ -70,7 +80,12 @@ void PerspectiveCamera::render(const Scene& scene) {
       } else {
         _image.setPixel(x, y, Color(0, 0, 0, 0));
       }
+      end = clock();
+      overallGetColor += end - start;
     }
   }
+  printf("Ray creation took: %.2f sec.\n", static_cast<float>(overallRayCreation) / CLOCKS_PER_SEC);
+  printf("Trace took: %.2f sec.\n", static_cast<float>(overallSceneTrace) / CLOCKS_PER_SEC);
+  printf("GetColor took: %.2f sec.\n", static_cast<float>(overallGetColor) / CLOCKS_PER_SEC);
 }
 

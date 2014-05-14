@@ -51,7 +51,7 @@ void renderTestScene() {
   // the thrid param to match smaller change.
   // e.g. when converting from 80x80 (first trace) to  512x512 divide 80 by 512
   // OrthogonalCamera cam(512, 512, 0.1);
-  PerspectiveCamera cam(512, 512, glm::radians(70.0f));
+  PerspectiveCamera cam(1024, 1024, glm::radians(70.0f));
   size_t imgCount = 30;
   // TODO(bauschp, Wed May  7 21:57:12 CEST 2014): Remove this.
   for (size_t i = 0; i < imgCount; ++i) {
@@ -59,13 +59,19 @@ void renderTestScene() {
         2 * glm::pi<float>() / imgCount * i, glm::vec3(0, 1, 0));
     // trans = glm::rotate(trans, glm::radians(35.0f), glm::vec3(1, 0, 0));
     cam.transform(glm::translate(trans, glm::vec3(0, 0, 80)));
+    clock_t start = clock();
     cam.render(scene);
+    clock_t end = clock();
     // Save the image under different names.
     char buff[100];
 #ifdef WINDOWS
-    _snprintf(buff, sizeof(buff), "Ortho%03lu.bmp", i);
+    printf("Image %03lu took %.2f sec to render.\n", i,
+        static_cast<float>(end - start) / CLOCKS_PER_SEC);
+    _snprintf(buff, sizeof(buff), "Img%03lu.bmp", i);
 #else
-    snprintf(buff, sizeof(buff), "Ortho%03zu.bmp", i);
+    printf("Image %03zu took %.2f sec to render.\n", i,
+        static_cast<float>(end - start) / CLOCKS_PER_SEC);
+    snprintf(buff, sizeof(buff), "Img%03zu.bmp", i);
 #endif  // WINDOWS
     cam.getImage().saveAsBMP(buff);
   }

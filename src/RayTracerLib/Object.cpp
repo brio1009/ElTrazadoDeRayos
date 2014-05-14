@@ -28,4 +28,5 @@ SOFTWARE.
 // _____________________________________________________________________________
 void Object::transform(const glm::mat4& matrix) {  //NOLINT misstaken for std::tr
   _transformation = matrix;
+  _inverseTransform = glm::inverse(_transformation);
 }
