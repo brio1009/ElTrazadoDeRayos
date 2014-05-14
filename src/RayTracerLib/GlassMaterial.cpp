@@ -37,14 +37,19 @@ Color GlassMaterial::getColor(const glm::vec4& position,
                               const glm::vec4& normal,
                               const Ray& incomingRay,
                               const Scene& scene) const {
+  Color materialColor(0, 0, 0);
   // First check if we leave or enter the material.
   // This can be done with the normal.
-  REAL dotProduct = glm::dot(normal, incomingRay.dir);
+  REAL dotProduct = glm::dot(normal, -incomingRay.dir);
   float n1(0), n2(0);
   if (dotProduct < 0) {
     // We leave the material.
     n1 = _refractiveIndex;
     n2 = RefractiveIndex::air;
+    // Calculate the distance we travelled inside the glass.
+    REAL distance = glm::length(incomingRay.pos - position);
+
+    materialColor += distance * _transparencyFactor * _color;
   } else {
     // We enter the material.
     n1 = RefractiveIndex::air;
@@ -64,15 +69,15 @@ Color GlassMaterial::getColor(const glm::vec4& position,
                            axis);
 
   IntersectionInfo info = scene.traceRay(newRay);
-  Color addColor;
+  Color returnColor;
   if (info.materialPtr) {
-    return info.materialPtr->getColor(info.hitPoint,
-                                      info.normal,
-                                      newRay,
-                                      scene);
+    returnColor += info.materialPtr->getColor(info.hitPoint,
+                                              info.normal,
+                                              newRay,
+                                              scene);
   }
 
   // Build the returncolor.
-  Color returnColor(0, 0, 0);
+  returnColor += materialColor;
   return returnColor;
 }
