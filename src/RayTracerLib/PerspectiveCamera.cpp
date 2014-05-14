@@ -23,11 +23,13 @@ SOFTWARE.
 */
 #include "./PerspectiveCamera.h"
 #include <cmath>
+#include <ctime>
 #include "./Constants.h"
 #include "./Ray.h"
 #include "./IntersectionInfo.h"
 #include "./Scene.h"
 #include "./Material.h"
+
 // _____________________________________________________________________________
 PerspectiveCamera::PerspectiveCamera(const int width,
       const int height,
