@@ -4,6 +4,9 @@ ElTrazadoDeRayos
 
 This will be a simple RayTracer to render a Scene.
 
+Thu May 15 18:05:16 CEST 2014 :
+-------------------------------
+![alt text](https://github.com/CantTouchDis/ElTrazadoDeRayos/raw/master/images/Anim.gif "Glass material in the middle.")
 
 Mon May 12 13:55:01 CEST 2014 :
 -------------------------------
