@@ -21,29 +21,53 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
 #pragma once
 #ifndef RAYTRACERLIB_RAY_H_
 #define RAYTRACERLIB_RAY_H_
 
 #include <glm/glm.hpp>
-#include <glm/gtx/fast_square_root.hpp>
 
-
-// TODO(bauschp): implement a real ray class
+/// Ray.
 class Ray {
  public:
-  glm::vec4 pos;
-  glm::vec4 dir;
-  // Creates a Ray with no direction!!!
-  Ray() : pos(0, 0, 0, 1), dir(0, 0, 0, 0) { }
-  // Creates a Ray with given origin and direction.
-  Ray(const glm::vec4& pos, const glm::vec4& dir) {
-    this->pos = pos;
-    this->dir = dir;
-    this->pos[3] = 1;
-    this->dir[3] = 0;
-    this->dir = glm::normalize(this->dir);
+  /// Constructor. Constructs ray with origin (0, 0, 0) and direction (1, 0, 0).
+  Ray() : _origin(0, 0, 0, 1), _direction(1, 0, 0, 0) { }
+  /// Constructor with given origin and direction.
+  Ray(const glm::vec4& origin, const glm::vec4& direction);
+  /// Setter for origin. Autmatically brings the 4th component to 1.
+  void setOrigin(const glm::vec4& origin);
+  /// Setter for direction. Normalizes the direction.
+  void setDirection(const glm::vec4& direction);
+
+  /// Getter for origin.
+  const glm::vec4& origin() const { return _origin; }
+  /// Getter for direction.
+  const glm::vec4& direction() const { return _direction; }
+
+  /// Getter for origin as vec3.
+  glm::vec3 originVec3() const { return glm::vec3(_origin); }
+  /// Getter for direction as vec3.
+  glm::vec3 directionVec3() const { return glm::vec3(_origin); }
+
+  /// *-operator turned around for Ray.
+  friend inline Ray operator*(const glm::mat4& lhs, const Ray& rhs) {
+    Ray returnRay;
+    returnRay.setDirection(lhs * rhs.direction());
+    returnRay.setOrigin(lhs * rhs.origin());
+    return returnRay;
   }
+  /// *-operator turned around for Ray.
+  friend inline Ray operator*(const Ray& lhs, const glm::mat4& rhs) {
+    Ray returnRay;
+    returnRay.setDirection(lhs.direction() * rhs);
+    returnRay.setOrigin(lhs.origin() * rhs);
+    return returnRay;
+  }
+
+ private:
+  glm::vec4 _origin;
+  glm::vec4 _direction;
 };
 
 #endif  // RAYTRACERLIB_RAY_H_

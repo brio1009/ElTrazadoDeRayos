@@ -40,14 +40,14 @@ Color GlassMaterial::getColor(const glm::vec4& position,
   Color materialColor(0, 0, 0);
   // First check if we leave or enter the material.
   // This can be done with the normal.
-  REAL dotProduct = glm::dot(normal, -incomingRay.dir);
+  REAL dotProduct = glm::dot(normal, -incomingRay.direction());
   float n1(0), n2(0);
   if (dotProduct < 0) {
     // We leave the material.
     n1 = _refractiveIndex;
     n2 = RefractiveIndex::air;
     // Calculate the distance we travelled inside the glass.
-    REAL distance = glm::length(incomingRay.pos - position);
+    REAL distance = glm::length(incomingRay.origin() - position);
 
     materialColor += distance * _transparencyFactor * _color;
   } else {
@@ -61,12 +61,13 @@ Color GlassMaterial::getColor(const glm::vec4& position,
   REAL angle = acos(dotProduct);
   REAL newAngle = sin(angle) * (n1 / n2);
   REAL angleChange = newAngle - angle;
-  glm::vec3 axis = glm::cross(glm::vec3(normal), glm::vec3(incomingRay.dir));
+  glm::vec3 axis = glm::cross(glm::vec3(normal),
+                              glm::vec3(incomingRay.direction()));
   Ray newRay;
-  newRay.pos = position;
-  newRay.dir = glm::rotate(incomingRay.dir,
-                           static_cast<float>(angleChange),
-                           axis);
+  newRay.setOrigin(position);
+  newRay.setDirection(glm::rotate(incomingRay.direction(),
+                                  static_cast<float>(angleChange),
+                                  axis));
 
   IntersectionInfo info = scene.traceRay(newRay);
   Color returnColor;

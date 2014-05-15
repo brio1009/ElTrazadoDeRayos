@@ -58,9 +58,12 @@ Color ShadowMaterial::getColor(const glm::vec4& position,
 
   sumIntensity += ambientTerm(lightColor, ka);
   if (glm::length(position - hitInfo.hitPoint) < 1e-3) {
-    sumIntensity += diffuseTerm(lightColor, -lightRay.dir, normNormal, kd);
-    sumIntensity += specularTerm(lightColor, -lightRay.dir,
-        normNormal, -incomingRay.dir, ks);
+    sumIntensity += diffuseTerm(lightColor,
+                                -lightRay.direction(),
+                                normNormal,
+                                kd);
+    sumIntensity += specularTerm(lightColor, -lightRay.direction(),
+        normNormal, -incomingRay.direction(), ks);
   }
 
   return _color * sumIntensity;

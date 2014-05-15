@@ -55,9 +55,11 @@ Color PhongMaterial::getColor(const glm::vec4& position,
   glm::vec4 normNormal = glm::normalize(normal);
   Ray lightRay = light.getRay(position);
   sumIntensity += ambientTerm(lightColor, ka);
-  sumIntensity += diffuseTerm(lightColor, -lightRay.dir, normNormal, kd);
-  sumIntensity += specularTerm(lightColor, -lightRay.dir,
-      normNormal, -incomingRay.dir, ks);
+  sumIntensity += diffuseTerm(lightColor,
+                              -lightRay.direction(),
+                              normNormal, kd);
+  sumIntensity += specularTerm(lightColor, -lightRay.direction(),
+      normNormal, -incomingRay.direction(), ks);
 
   return _color * sumIntensity;
 }

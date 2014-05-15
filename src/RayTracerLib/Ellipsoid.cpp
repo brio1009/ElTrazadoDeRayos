@@ -45,8 +45,9 @@ vector<REAL> Ellipsoid::intersect(const Ray& ray) const {
   // - 1
 
   // Bring vector to unit space.
-  glm::vec4 transPos = _inverseTransform * ray.pos;
-  glm::vec4 transDir = _inverseTransform * ray.dir;
+  Ray transRay = _inverseTransform * ray;
+  const glm::vec4& transPos = transRay.origin();
+  const glm::vec4& transDir = transRay.direction();
   // TODO(allofus): Think about outsourcing.
   REAL invRX = solve::isZero(_rX) ? 0.0 : 1.0 / _rX;
   REAL invRY = solve::isZero(_rY) ? 0.0 : 1.0 / _rY;

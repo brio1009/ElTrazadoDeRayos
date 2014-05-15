@@ -41,7 +41,7 @@ Color ColorMaterial::getColor(const glm::vec4& position,
   if (_color.a() < 1.0f) {
     // Build a new ray.
     Ray newRay(position,
-               incomingRay.dir);
+               incomingRay.direction());
     // Trace the ray.
     IntersectionInfo info = scene.traceRay(newRay);
     Color addColor;
