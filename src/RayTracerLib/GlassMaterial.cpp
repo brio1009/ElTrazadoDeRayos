@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtx/vector_angle.hpp>
 #include <glm/gtx/rotate_vector.hpp>
@@ -32,12 +33,77 @@ SOFTWARE.
 #include "./Ray.h"
 #include "./Scene.h"
 
+size_t depth = 0;
+// _____________________________________________________________________________
+Color GlassMaterial::reflectionColor(const glm::vec4& normal,
+    const glm::vec4& viewDir,
+    const float& angle,
+    const glm::vec4& position,
+    const Scene& scene) const {
+  // Calculate reflectivy
+  glm::vec3 axis = glm::cross(glm::vec3(normal),
+                              glm::vec3(viewDir));
+  // get reflected color
+  Ray newRay;
+  newRay.setDirection(glm::rotate(normal,
+                                  static_cast<float>(angle),
+                                  axis));
+  // the epsilon in scene doesnt seem to do its job.
+  newRay.setOrigin(position/* + newRay.direction()*/);
+  IntersectionInfo info = scene.traceRay(newRay);
+  if (info.materialPtr && depth < 10/* && info.materialPtr != this*/) {
+    return info.materialPtr->getColor(info.hitPoint,
+                                              info.normal,
+                                              newRay,
+                                              scene);
+  }
+  if (depth >= 10) {
+    return _color;
+  }
+  return Color(0, 0, 0);
+}
+
 // _____________________________________________________________________________
 Color GlassMaterial::getColor(const glm::vec4& position,
                               const glm::vec4& normal,
                               const Ray& incomingRay,
                               const Scene& scene) const {
+  depth++;
   Color materialColor(0, 0, 0);
+  // next ray placeholder
+  Ray nextRay;
+  glm::vec4 normNormal = glm::normalize(normal);
+  glm::vec4 normDir = glm::normalize(-incomingRay.direction());
+  float tau1 = glm::orientedAngle(glm::vec3(normNormal), glm::vec3(normDir), glm::cross(glm::vec3(normNormal), glm::vec3(normDir)));
+  // Refraction part of this material.
+  float n1(0), n2(0);
+  if (abs(tau1) > 3.1415 / 2) {
+    n1 = RefractiveIndex::glass;
+    n2 = RefractiveIndex::air;
+    normNormal = -normNormal;
+    tau1 -= 3.14159;
+  } else {
+    // We enter the material.
+    n1 = RefractiveIndex::air;
+    n2 = RefractiveIndex::glass;
+  }
+  // Snells law.
+  if (((n1 / n2) * sin(tau1)) > 1) {
+    // There is no refraction. can only happen from dense to less dense mat.
+    materialColor = reflectionColor(normNormal, normDir, -tau1, position, scene);
+  } else {
+    // outgoing angle (into material.)
+    float tau2 = asin((n1 / n2) * sin(tau1));
+    float refl = pow((n1 - n2) / (n1 + n2), 2.0);
+    materialColor += (1.0 - refl)
+        * reflectionColor(-normNormal, normDir, tau2, position, scene);
+    // Reflected part.
+    materialColor += refl
+        * reflectionColor(normNormal, normDir, -tau1, position, scene);
+  }
+  --depth;
+  return materialColor;
+  /*
   // First check if we leave or enter the material.
   // This can be done with the normal.
   REAL dotProduct = glm::dot(normal, -incomingRay.direction());
@@ -58,7 +124,6 @@ Color GlassMaterial::getColor(const glm::vec4& position,
 
   // Calculate the angle of the new ray.
   // glm::angle(incomingRayDir, normal);
-  REAL angle = acos(dotProduct);
   REAL newAngle = sin(angle) * (n1 / n2);
   REAL angleChange = newAngle - angle;
   glm::vec3 axis = glm::cross(glm::vec3(normal),
@@ -81,4 +146,5 @@ Color GlassMaterial::getColor(const glm::vec4& position,
   // Build the returncolor.
   returnColor += materialColor;
   return returnColor;
+  */
 }

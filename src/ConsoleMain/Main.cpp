@@ -58,7 +58,7 @@ void renderTestScene() {
     glm::mat4 trans = glm::rotate(glm::mat4(1.0),
         2 * glm::pi<float>() / imgCount * i, glm::vec3(0, 1, 0));
     // trans = glm::rotate(trans, glm::radians(35.0f), glm::vec3(1, 0, 0));
-    cam.transform(glm::translate(trans, glm::vec3(0, 0, 80)));
+    cam.transform(glm::translate(trans, glm::vec3(0, 0, 100)));
     clock_t start = clock();
     cam.render(scene);
     clock_t end = clock();

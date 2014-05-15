@@ -53,6 +53,13 @@ public:
       const Scene& scene) const;
 
  protected:
+  /// returns the color of the reflected part of this material.
+  Color reflectionColor(const glm::vec4& normal,
+      const glm::vec4& viewDir,
+      const float& angle,
+      const glm::vec4& position,
+      const Scene& scene) const;
+  
   /// Defines the refractive index which we use to compute the ray directions.
   float _refractiveIndex;
   /// Defines the material color. Together with the transparency factor this is
