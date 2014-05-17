@@ -82,5 +82,5 @@ glm::vec4 Ellipsoid::getNormalAt(const glm::vec4& p) const {
       (2 * trans.y) / (_rY * _rY),
       (2 * trans.z) / (_rZ * _rZ),
       0);
-  return _transformation * trans;
+  return glm::normalize(_transformation * trans);
 }

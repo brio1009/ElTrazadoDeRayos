@@ -32,6 +32,7 @@ SOFTWARE.
 #include "./Ray.h"
 #include "./Color.h"
 #include "./ColorMaterial.h"
+#include "./Box.h"
 #include "./Ellipsoid.h"
 #include "./Plane.h"
 #include "./PhongMaterial.h"
@@ -47,8 +48,8 @@ Scene::Scene() {
   Ellipsoid* ell1 = new Ellipsoid(10, 30, 10);
   ell1->transform(glm::translate(glm::mat4(1.0), glm::vec3(-30, -0, 0)));
   ell1->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
-  _shapes.push_back(ell1);
-  Ellipsoid* ell3 = new Ellipsoid(10, 30, 30);
+  //_shapes.push_back(ell1);
+  Box* ell3 = new Box(10, 30, 30);
   ell3->transform(glm::translate(glm::mat4(1.0), glm::vec3(-50, -0, 20)));
   _shapes.push_back(ell3);
 //  Ellipsoid* ell2 = new Ellipsoid(5, 5, 5);
