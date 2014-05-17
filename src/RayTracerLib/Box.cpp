@@ -34,7 +34,6 @@ SOFTWARE.
 
 #include "./Constants.h"
 #include "./Ray.h"
-#include "./Solver.h"
 
 using std::vector;
 
