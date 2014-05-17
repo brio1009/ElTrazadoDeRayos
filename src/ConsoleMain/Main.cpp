@@ -21,9 +21,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+// GLM-define, because degree-methods are deprected.
 #define GLM_FORCE_RADIANS
 
-// RayTracerLib
+// RayTracerLib.
 #include <Ray.h>
 #include <Ellipsoid.h>
 #include <Plane.h>
@@ -32,11 +33,11 @@ SOFTWARE.
 #include <Scene.h>
 #include <OrthogonalCamera.h>
 #include <PerspectiveCamera.h>
-// C Header
+// C Header.
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/constants.hpp>
-// C++ Header
+// C++ Header.
 #include <algorithm>
 #include <ctime>
 #include <cstdio>
@@ -79,19 +80,20 @@ void renderTestScene() {
 
 // The main method.
 int main(int argc, char** argv) {
+  // Print usage info.
+  if (argc > 2) {
+    printf("Usage: %s <optional: random seed>\n", argv[0]);
+    exit(EXIT_FAILURE);
+  }
   // Initialize the rand function.
-  srand(static_cast<unsigned int>(time(NULL)));
+  unsigned int seed = static_cast<unsigned int>(time(NULL));
+  if (argc == 2) {
+    seed = static_cast<unsigned int>(atoi(argv[1]));
+  }
+  printf("Random seed used: %u\n", seed);
+  srand(seed);
 
   // Render our test scene.
   renderTestScene();
-  return 8;
-
-  // Print usage info.
-  if (argc != 10) {
-    printf("9 arguments needed.\n3 values to define Ellipsoid.\n"
-           "3 to define a point to shoot a ray from.\n"
-           "3 to define a direction the ray will shoot to.\n");
-    exit(EXIT_FAILURE);
-  }
 }
 
