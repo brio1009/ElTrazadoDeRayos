@@ -90,7 +90,7 @@ int main(int argc, char** argv) {
   if (argc == 2) {
     seed = static_cast<unsigned int>(atoi(argv[1]));
   }
-  printf("Random seed used: %u\n", seed);
+  printf("Random seed used: %u\n\n", seed);
   srand(seed);
 
   // Render our test scene.

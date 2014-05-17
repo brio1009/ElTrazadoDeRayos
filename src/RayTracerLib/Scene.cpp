@@ -77,6 +77,7 @@ IntersectionInfo Scene::traceRay(const Ray& ray) const {
     vector<REAL> hits = _shapes.at(i)->intersect(ray);
     // Loop over the p and choose the smallest that is bigger 0.
     for (size_t j = 0; j < hits.size(); ++j) {
+      // TODO(all, 05/17/2014): Find the right epsilon.
       if (hits.at(j) > 10.0f * constants::EPSILON && hits.at(j) < smallestT) {
         smallestT = hits.at(j);
         shapePtr = _shapes[i];

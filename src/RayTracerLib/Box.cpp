@@ -80,17 +80,18 @@ glm::vec4 Box::getNormalAt(const glm::vec4& p) const {
   glm::vec4 pInObjectCoord = _inverseTransform * p;
 
   // We just have six cases (three real ones + the inverse).
-  if (_rX * abs(pInObjectCoord.x) < _rY * abs(pInObjectCoord.y)
-      && _rX * abs(pInObjectCoord.x) < _rZ * abs(pInObjectCoord.z)) {
+  // Just check where we are the closest.
+  glm::vec3 extent(_rX, _rY, _rZ);
+  glm::vec3 dis = extent - glm::abs(glm::vec3(pInObjectCoord));
+
+  if (dis.x < dis.y && dis.x < dis.z) {
     // Normal in x direction.
     if (pInObjectCoord.x <= 0) {
       return glm::vec4(-1, 0, 0, 0);
     }
     // Else.
     return glm::vec4(1, 0, 0, 0);
-  }
-  else if (_rY * abs(pInObjectCoord.y) < _rX * abs(pInObjectCoord.x)
-           && _rY * abs(pInObjectCoord.y) < _rZ * abs(pInObjectCoord.z)) {
+  } else if (dis.y < dis.x && dis.y < dis.z) {
     // Normal in y direction.
     if (pInObjectCoord.y <= 0) {
       return glm::vec4(0, -1, 0, 0);

@@ -36,7 +36,7 @@ class Scene;
 ///
 class Material {
  public:
-  ///
+  /// Destructor.
   virtual ~Material() { }
 
   /// Returns the color for the given positition and normal.
