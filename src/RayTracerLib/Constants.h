@@ -37,9 +37,9 @@ namespace constants {
   // approximatly the value.
   // e.g. check for zero:
   // bool isZero(float f) { return (f < EPSILON) && (f > -EPSILON); }
-  const double EPSILON = 1e-5;
+  const double EPSILON = 1e-8;
 
   /// Smallest T-epsilon.
-  const double TEPSILON = 1e-4;
+  const double TEPSILON = 1e-2;
 }  // namespace constants
 #endif  // RAYTRACERLIB_CONSTANTS_H_
