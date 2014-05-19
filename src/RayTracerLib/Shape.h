@@ -56,7 +56,7 @@ class Shape : public Object {
   /// TODO(all, 05/17/2014): Find the right epsilon.
   virtual IntersectionInfo getIntersectionInfo(const Ray& ray,
     const REAL minimumT = constants::TEPSILON,
-    const REAL maximumT = std::numeric_limits<REAL>::max());
+    const REAL maximumT = std::numeric_limits<REAL>::max()) const;
 
   /// Setter for the material pointer. Be careful, the old material is not
   /// automatically deleted!

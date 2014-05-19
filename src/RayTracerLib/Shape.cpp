@@ -50,7 +50,6 @@ Shape::Shape() {
   _materialPtr = new ShadowMaterial(tmpColor);
 }
 
-
 // _____________________________________________________________________________
 Shape::~Shape() {
   if (_materialPtr) {
@@ -61,7 +60,7 @@ Shape::~Shape() {
 // _____________________________________________________________________________
 IntersectionInfo Shape::getIntersectionInfo(const Ray& ray,
     const REAL minimumT,
-    const REAL maximumT) {
+    const REAL maximumT) const {
   REAL smallestT = std::numeric_limits<REAL>::max();
   // Test the object for a hit.
   vector<REAL> hits = intersect(ray);
@@ -87,40 +86,3 @@ IntersectionInfo Shape::getIntersectionInfo(const Ray& ray,
   // Else.
   return IntersectionInfo();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
