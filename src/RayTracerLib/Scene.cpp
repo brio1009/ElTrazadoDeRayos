@@ -39,6 +39,7 @@ SOFTWARE.
 #include "./Plane.h"
 #include "./PhongMaterial.h"
 #include "./GlassMaterial.h"
+#include "./CompoundShape.h"
 
 using std::vector;
 
@@ -48,15 +49,28 @@ Scene::Scene() {
   ell->transform(glm::translate(glm::mat4(1.0), glm::vec3(50, 20, 0)));
   _shapes.push_back(ell);
   Ellipsoid* ell1 = new Ellipsoid(10, 30, 30);
-  ell1->transform(glm::translate(glm::mat4(1.0), glm::vec3(-30, -0, 0)));
-  // ell1->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
+  glm::mat4 trans = glm::translate(glm::mat4(1.0), glm::vec3(-30, -0, 0));
+  trans = glm::rotate(trans, 3.141f/4, glm::vec3(0, 0, 1));
+  ell1->transform(trans);
+  ell1->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
   _shapes.push_back(ell1);
-  Box* ell3 = new Box(10, 30, 30);
-  ell3->transform(glm::translate(glm::mat4(1.0), glm::vec3(-50, -0, 20)));
-  //_shapes.push_back(ell3);
-  ell3->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
+  Ellipsoid* ell3 = new Ellipsoid(10, 10, 10);
+  ell3->transform(glm::translate(glm::mat4(1.0), glm::vec3(-30, -0, -50)));
+  _shapes.push_back(ell3);
+  // ell3->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
 //  Ellipsoid* ell2 = new Ellipsoid(5, 5, 5);
 //  _shapes.push_back(ell2);
+  // Compound test
+  Box* b1 = new Box(10, 10, 10);
+  Ellipsoid* e1 = new Ellipsoid(5, 20, 5);
+  CompoundShape* comp1 = new CompoundShape();
+  comp1->setLeftShapePtr(b1);
+  comp1->setRightShapePtr(e1);
+  _shapes.push_back(comp1);
+  comp1->setMaterialPtr(new GlassMaterial(5));
+  trans = glm::translate(glm::mat4(1.0), glm::vec3(0, 10, -30));
+  //trans = glm::rotate(trans, 3.14159f / 2, glm::vec3(0, 1, 0));
+  comp1->transform(trans);
   Plane* plane0 = new Plane(0, 1, 0);
   plane0->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -30, 0)));
   _shapes.push_back(plane0);

@@ -37,7 +37,7 @@ using std::vector;
 // _____________________________________________________________________________
 CompoundShape::CompoundShape()
   : _passTransformation(true),
-    _useChildMaterials(true),
+    _useChildMaterials(false),
     _operator(CompoundShape::Operator::unionOp) {
 }
 
@@ -75,7 +75,7 @@ IntersectionInfo CompoundShape::intersectUnion(const Ray& ray,
   IntersectionInfo leftInfo = _leftShapePtr->getIntersectionInfo(newRay,
                                                                  minimumT,
                                                                  maximumT);
-  IntersectionInfo rightInfo = _leftShapePtr->getIntersectionInfo(newRay,
+  IntersectionInfo rightInfo = _rightShapePtr->getIntersectionInfo(newRay,
                                                                   minimumT,
                                                                   maximumT);
   // Automatically returns a no-hit if both were not hit.

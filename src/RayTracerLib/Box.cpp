@@ -99,7 +99,7 @@ glm::vec4 Box::getNormalAt(const glm::vec4& p) const {
     }
   } else {
     // Normal in z direction.
-    if (pInObjectCoord.x <= 0) {
+    if (pInObjectCoord.z <= 0) {
       out = glm::vec4(0, 0, -1, 0);
     } else {
       out = glm::vec4(0, 0, 1, 0);
