@@ -35,12 +35,18 @@ SOFTWARE.
 // A Primitive is a Shape that is defined in its own.
 class Ellipsoid : public Shape {
  public:
+  /// Constructor with given radii in every axis-direction.
   Ellipsoid(REAL x, REAL y, REAL z);
+  /// Destructor.
   virtual ~Ellipsoid() { }
-  // ___________________________________________________________________________
+
+ protected:
+  ///
   virtual std::vector<REAL> intersect(const Ray& ray) const;
-  // ___________________________________________________________________________
+
+  ///
   virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
+
  private:
   REAL _rX;
   REAL _rY;

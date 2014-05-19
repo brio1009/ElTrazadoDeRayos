@@ -27,19 +27,27 @@ SOFTWARE.
 #define RAYTRACERLIB_INTERSECTIONINFO_H_
 
 #include <glm/glm.hpp>
+#include "./Constants.h"
 
 // Forward declaration.
 class Material;
 
 struct IntersectionInfo {
+  REAL t;
   glm::vec4 hitPoint;
   glm::vec4 normal;
-  const Material* const materialPtr;
-  IntersectionInfo() : hitPoint(0), normal(0), materialPtr(nullptr) { }
-  IntersectionInfo(const glm::vec4& hitPoint,
+  const Material* materialPtr;
+  IntersectionInfo() : t(0), hitPoint(0), normal(0), materialPtr(nullptr) { }
+  IntersectionInfo(const REAL t,
+                   const glm::vec4& hitPoint,
                    const glm::vec4& normal,
-                   const Material* const materialPtr)
-  : hitPoint(hitPoint), normal(normal), materialPtr(materialPtr) { }
+                   const Material* materialPtr)
+  : t(t), hitPoint(hitPoint), normal(normal), materialPtr(materialPtr) { }
+
+  /// Copy constructor.
+  IntersectionInfo(const IntersectionInfo& i)
+    : t(i.t), hitPoint(i.hitPoint), normal(i.normal), materialPtr(i.materialPtr)
+  { }
 };
 
 #endif  // RAYTRACERLIB_INTERSECTIONINFO_H_

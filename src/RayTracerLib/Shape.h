@@ -29,10 +29,12 @@ SOFTWARE.
 #include <glm/glm.hpp>
 
 #include <cstdlib>
+#include <limits>
 #include <vector>
 
 #include "./Constants.h"
 #include "./Color.h"
+#include "./IntersectionInfo.h"
 #include "./ShadowMaterial.h"
 #include "./PhongMaterial.h"
 #include "./ColorMaterial.h"
@@ -45,24 +47,24 @@ class Ray;
 class Shape : public Object {
  public:
   /// Constructor.
-  Shape() {
-    // Construct a random color.
-    Color tmpColor;
-    // TODO(allofus, Sun May 11 14:12:21 CEST 2014): change to threadsafe alt.
-    tmpColor.setR((rand() % 255) / 255.0f);  //NOLINT
-    tmpColor.setG((rand() % 255) / 255.0f);  //NOLINT
-    tmpColor.setB((rand() % 255) / 255.0f);  //NOLINT
-    tmpColor.setA(1.0f);
-    _materialPtr = new ShadowMaterial(tmpColor);
-  }
+  Shape();
 
   /// Destructor.
-  virtual ~Shape() {
-    if (_materialPtr) {
-      delete _materialPtr;
-    }
+  virtual ~Shape();
+  
+  ///
+  /// TODO(all, 05/17/2014): Find the right epsilon.
+  virtual IntersectionInfo getIntersectionInfo(const Ray& ray,
+    const REAL minimumT = constants::TEPSILON,
+    const REAL maximumT = std::numeric_limits<REAL>::max());
+
+  /// Setter for the material pointer. Be careful, the old material is not
+  /// automatically deleted!
+  void setMaterialPtr(const Material* materialPtr) {
+    _materialPtr = materialPtr;
   }
 
+protected:
   // Intersects the Ray with this Shape and returns the values for t
   // rPos + rDir * t that intersect the surface of this Shape.
   virtual std::vector<REAL> intersect(const Ray& ray) const = 0;
@@ -72,13 +74,7 @@ class Shape : public Object {
   virtual glm::vec4 getNormalAt(const glm::vec4& p) const = 0;
 
   /// Getter for the material pointer.
-  const Material* getMaterialPtr() const { return _materialPtr; }
-
-  /// Setter for the material pointer. Be careful, the old material is not
-  /// automatically deleted!
-  void setMaterialPtr(const Material* materialPtr) {
-    _materialPtr = materialPtr;
-  } 
+  const Material* getMaterialPtr() const { return _materialPtr; } 
 
  private:
   const Material* _materialPtr;

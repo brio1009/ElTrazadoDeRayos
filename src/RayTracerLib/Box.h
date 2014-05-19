@@ -38,7 +38,10 @@ class Box : public Shape {
   /// Constructor with given dimensions. Rotation must be done with
   /// a transformation.
   Box(REAL x, REAL y, REAL z);
+  /// Destructor.
   virtual ~Box() { }
+
+ protected:
   /// Intersection test.
   virtual std::vector<REAL> intersect(const Ray& ray) const;
   /// Return normal.
