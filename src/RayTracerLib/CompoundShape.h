@@ -31,6 +31,7 @@ SOFTWARE.
 #include <vector>
 
 #include "./Constants.h"
+#include "./IntersectionInfo.h"
 #include "./Shape.h"
 
 ///
@@ -47,34 +48,64 @@ class CompoundShape : public Shape {
   CompoundShape();
   /// Destructor.
   virtual ~CompoundShape() { }
-  /// Intersection test.
-  virtual std::vector<REAL> intersect(const Ray& ray) const;
-  /// Return normal.
-  virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
+
+  /// TODO(all, 05/17/2014): Find the right epsilon.
+  virtual IntersectionInfo getIntersectionInfo(const Ray& ray,
+    const REAL minimumT = constants::TEPSILON,
+    const REAL maximumT = std::numeric_limits<REAL>::max()) const;
 
   /// Setter for operator.
   void setOperator(const CompoundShape::Operator& op) {
     _operator = op;
   }
+
   /// Getter for operator.
   const CompoundShape::Operator& getOperator() const { return _operator; }
 
-  /// Multiplies the matrix with the current Transformation.
-  // TODO(all, 05/17/2014): Maybe we want to override this here so we can
-  // apply the transofrmation to the children as well.
-  // virtual void transform(const glm::mat4& matrix);  //NOLINT mistaken for std
+  /// Getter for _useChildMaterials.
+  const bool useChildMaterials() const { return _useChildMaterials; }
+
+  /// Getter for _passTransformation.
+  const bool passTransformation() const { return _passTransformation; }
+
+  /// Set the left object.
+  void setLeftShapePtr(const Shape* shapePtr) { _leftShapePtr = shapePtr; }
+
+  /// Set the right object.
+  void setRightShapePtr(const Shape* shapePtr) { _rightShapePtr = shapePtr; }
 
  protected:
-    
+  IntersectionInfo intersectUnion(const Ray& ray,
+    const REAL minimumT = constants::TEPSILON,
+    const REAL maximumT = std::numeric_limits<REAL>::max()) const;
+
+  IntersectionInfo intersectIntersect(const Ray& ray,
+    const REAL minimumT = constants::TEPSILON,
+    const REAL maximumT = std::numeric_limits<REAL>::max()) const;
+
+  IntersectionInfo intersectMinus(const Ray& ray,
+    const REAL minimumT = constants::TEPSILON,
+    const REAL maximumT = std::numeric_limits<REAL>::max()) const;
+
+  /// Intersection test. Not used here.
+  virtual std::vector<REAL> intersect(const Ray& ray) const;
+  /// Return normal. Not used here.
+  virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
 
  private:
+  /// Adapts the material pointer according to _useChildMaterials;
+  void adaptInstersectionInfo(IntersectionInfo* infoPtr) const;
+
   /// Pointer to the left(in the sense of the operator) shape.
-  Shape*  _leftShapePtr;
+  const Shape*  _leftShapePtr;
   /// Pointer to the right(in the sense of the operator) shape.
-  Shape* _rightShapePtr;
+  const Shape* _rightShapePtr;
   /// Boolean to define if the child shapes use their own material or if always
   /// the compound shapes material is used.
   bool _useChildMaterials;
+  /// Boolean to check if the children should inherit this shapes
+  /// transformation.
+  bool _passTransformation;
   /// Defines how the child shapes are combined.
   Operator _operator;
 };

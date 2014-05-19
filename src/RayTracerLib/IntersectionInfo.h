@@ -28,6 +28,7 @@ SOFTWARE.
 
 #include <glm/glm.hpp>
 #include "./Constants.h"
+#include <limits>
 
 // Forward declaration.
 class Material;
@@ -37,7 +38,8 @@ struct IntersectionInfo {
   glm::vec4 hitPoint;
   glm::vec4 normal;
   const Material* materialPtr;
-  IntersectionInfo() : t(0), hitPoint(0), normal(0), materialPtr(nullptr) { }
+  IntersectionInfo() : t(std::numeric_limits<REAL>::max()),
+                       hitPoint(0), normal(0), materialPtr(nullptr) { }
   IntersectionInfo(const REAL t,
                    const glm::vec4& hitPoint,
                    const glm::vec4& normal,

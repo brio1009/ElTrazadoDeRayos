@@ -29,12 +29,91 @@ SOFTWARE.
 #include <vector>
 
 #include "./Constants.h"
+#include "./IntersectionInfo.h"
 #include "./Ray.h"
 
 using std::vector;
 
 // _____________________________________________________________________________
-CompoundShape::CompoundShape() {
+CompoundShape::CompoundShape()
+  : _passTransformation(true),
+    _useChildMaterials(true),
+    _operator(CompoundShape::Operator::unionOp) {
+}
+
+// _____________________________________________________________________________
+IntersectionInfo CompoundShape::getIntersectionInfo(const Ray& ray,
+    const REAL minimumT,
+    const REAL maximumT) const {
+  switch (getOperator()) {
+    default:
+    case CompoundShape::Operator::unionOp:
+      return intersectUnion(ray, minimumT, maximumT);
+      break;
+    case CompoundShape::Operator::intersectionOp:
+      return intersectIntersect(ray, minimumT, maximumT);
+      break;
+    case CompoundShape::Operator::minusOp:
+      return intersectMinus(ray, minimumT, maximumT);
+      break;
+  }
+}
+
+// _____________________________________________________________________________
+IntersectionInfo CompoundShape::intersectUnion(const Ray& ray,
+                                               const REAL minimumT,
+                                               const REAL maximumT) const {
+  // Just get the closest intersection.
+  if (!_leftShapePtr || !_rightShapePtr) {
+    return IntersectionInfo();
+  }
+  Ray newRay = ray;
+  if (passTransformation()) {
+    newRay = _inverseTransform * ray;
+  }
+
+  IntersectionInfo leftInfo = _leftShapePtr->getIntersectionInfo(newRay,
+                                                                 minimumT,
+                                                                 maximumT);
+  IntersectionInfo rightInfo = _leftShapePtr->getIntersectionInfo(newRay,
+                                                                  minimumT,
+                                                                  maximumT);
+  // Automatically returns a no-hit if both were not hit.
+  if (leftInfo.t < rightInfo.t) {
+    adaptInstersectionInfo(&leftInfo);
+    return leftInfo;
+  }
+  // Else.
+  adaptInstersectionInfo(&rightInfo);
+  return rightInfo;  
+}
+
+// _____________________________________________________________________________
+IntersectionInfo CompoundShape::intersectIntersect(const Ray& ray,
+                                               const REAL minimumT,
+                                               const REAL maximumT) const {
+  return IntersectionInfo();
+}
+
+// _____________________________________________________________________________
+IntersectionInfo CompoundShape::intersectMinus(const Ray& ray,
+                                               const REAL minimumT,
+                                               const REAL maximumT) const {
+  return IntersectionInfo(); 
+}
+
+// _____________________________________________________________________________
+void CompoundShape::adaptInstersectionInfo(
+    IntersectionInfo* infoPtr) const {
+  // Adapt material ptr.
+  if (infoPtr->materialPtr && !useChildMaterials()) {
+    infoPtr->materialPtr = this->getMaterialPtr();
+  }
+  // Adapt normal.
+  if (passTransformation()) {
+    infoPtr->normal = glm::normalize(_transformation * infoPtr->normal);
+    infoPtr->hitPoint = _transformation * infoPtr->hitPoint;
+  }
 }
 
 // _____________________________________________________________________________
