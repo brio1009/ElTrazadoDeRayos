@@ -82,29 +82,30 @@ glm::vec4 Box::getNormalAt(const glm::vec4& p) const {
   // Just check where we are the closest.
   glm::vec3 extent(_rX, _rY, _rZ);
   glm::vec3 dis = extent - glm::abs(glm::vec3(pInObjectCoord));
-
+  glm::vec4 out;
   if (dis.x < dis.y && dis.x < dis.z) {
     // Normal in x direction.
     if (pInObjectCoord.x <= 0) {
-      return glm::vec4(-1, 0, 0, 0);
+      out = glm::vec4(-1, 0, 0, 0);
+    } else {
+      out = glm::vec4(1, 0, 0, 0);
     }
-    // Else.
-    return glm::vec4(1, 0, 0, 0);
   } else if (dis.y < dis.x && dis.y < dis.z) {
     // Normal in y direction.
     if (pInObjectCoord.y <= 0) {
-      return glm::vec4(0, -1, 0, 0);
+      out = glm::vec4(0, -1, 0, 0);
+    } else {
+      out = glm::vec4(0, 1, 0, 0);
     }
-    // Else.
-    return glm::vec4(0, 1, 0, 0);
+  } else {
+    // Normal in z direction.
+    if (pInObjectCoord.x <= 0) {
+      out = glm::vec4(0, 0, -1, 0);
+    } else {
+      out = glm::vec4(0, 0, 1, 0);
+    }
   }
-  // Else.
-  // Normal in z direction.
-  if (pInObjectCoord.x <= 0) {
-    return glm::vec4(0, 0, -1, 0);
-  }
-  // Else.
-  return glm::vec4(0, 0, 1, 0);
+  return glm::normalize(_transformation * out);
 }
 
 
