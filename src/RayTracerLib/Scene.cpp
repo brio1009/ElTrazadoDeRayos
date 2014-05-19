@@ -45,13 +45,14 @@ Scene::Scene() {
   Ellipsoid* ell = new Ellipsoid(20, 10, 20);
   ell->transform(glm::translate(glm::mat4(1.0), glm::vec3(50, 20, 0)));
   _shapes.push_back(ell);
-  Ellipsoid* ell1 = new Ellipsoid(10, 30, 10);
+  Ellipsoid* ell1 = new Ellipsoid(10, 30, 30);
   ell1->transform(glm::translate(glm::mat4(1.0), glm::vec3(-30, -0, 0)));
-  ell1->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
-  //_shapes.push_back(ell1);
+  // ell1->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
+  _shapes.push_back(ell1);
   Box* ell3 = new Box(10, 30, 30);
   ell3->transform(glm::translate(glm::mat4(1.0), glm::vec3(-50, -0, 20)));
-  _shapes.push_back(ell3);
+  //_shapes.push_back(ell3);
+  ell3->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
 //  Ellipsoid* ell2 = new Ellipsoid(5, 5, 5);
 //  _shapes.push_back(ell2);
   Plane* plane0 = new Plane(0, 1, 0);

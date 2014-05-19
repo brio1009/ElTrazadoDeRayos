@@ -54,10 +54,14 @@ Color ShadowMaterial::getColor(const glm::vec4& position,
   // TODO(bauschp, Sun May 11 21:09:39 CEST 2014) norm if works.
   glm::vec4 normNormal = glm::normalize(normal);
   Ray lightRay = light.getRay(position);
-  IntersectionInfo hitInfo = scene.traceRay(lightRay);
-
+  Ray shadowRay(position, -lightRay.direction());
+  IntersectionInfo hitInfo = scene.traceRay(shadowRay);
+  glm::vec4 diff = position - lightRay.origin();
+  float distanceToLight = glm::dot(diff, diff);
+  diff = position - hitInfo.hitPoint;
+  float distanceToHit = glm::dot(diff, diff);
   sumIntensity += ambientTerm(lightColor, ka);
-  if (glm::length(position - hitInfo.hitPoint) < 1e-3) {
+  if (!hitInfo.materialPtr || distanceToLight < distanceToHit) {
     sumIntensity += diffuseTerm(lightColor,
                                 -lightRay.direction(),
                                 normNormal,
