@@ -22,6 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#define GLM_FORCE_RADIANS
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <limits>
 #include <vector>
@@ -69,28 +71,14 @@ Scene::~Scene() {
 // _____________________________________________________________________________
 IntersectionInfo Scene::traceRay(const Ray& ray) const {
   REAL smallestT = std::numeric_limits<REAL>::max();
-  Shape* shapePtr = nullptr;
-  // TODO(cgissler, 05/07/2014): Add real normals and materials.
+  IntersectionInfo info;
   // Loop over all objects.
   for (size_t i = 0; i < _shapes.size(); ++i) {
-    // Test the object for a hit.
-    vector<REAL> hits = _shapes.at(i)->intersect(ray);
-    // Loop over the p and choose the smallest that is bigger 0.
-    for (size_t j = 0; j < hits.size(); ++j) {
-      // TODO(all, 05/17/2014): Find the right epsilon.
-      if (hits.at(j) > 10.0f * constants::EPSILON && hits.at(j) < smallestT) {
-        smallestT = hits.at(j);
-        shapePtr = _shapes[i];
-      }
+    IntersectionInfo tmpInfo = _shapes.at(i)->getIntersectionInfo(ray);
+    if (tmpInfo.materialPtr && tmpInfo.t < smallestT) {
+      smallestT = tmpInfo.t;
+      info = tmpInfo;
     }
   }
-  if (shapePtr) {
-    glm::vec4 position = ray.origin()
-                         + static_cast<float>(smallestT) * ray.direction();
-    // Return the Intersectioninfo.
-    return IntersectionInfo(position,
-                            shapePtr->getNormalAt(position),
-                            shapePtr->getMaterialPtr());
-  }
-  return IntersectionInfo();
+  return info;
 }
