@@ -100,7 +100,6 @@ Color PhongMaterial::specularTerm(const Color& color,
   assert(glm::length(normal) > 1.0 - 1e-5
       && glm::length(normal) < 1.0 + 1e-5);
 
-  
   float lXn = glm::dot(lightDir, normal);
   glm::vec4 reflectionDir = 2.0f * lXn * normal - lightDir;
 

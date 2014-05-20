@@ -85,7 +85,7 @@ IntersectionInfo CompoundShape::intersectUnion(const Ray& ray,
   }
   // Else.
   adaptInstersectionInfo(&rightInfo);
-  return rightInfo;  
+  return rightInfo;
 }
 
 // _____________________________________________________________________________
@@ -99,7 +99,7 @@ IntersectionInfo CompoundShape::intersectIntersect(const Ray& ray,
 IntersectionInfo CompoundShape::intersectMinus(const Ray& ray,
                                                const REAL minimumT,
                                                const REAL maximumT) const {
-  return IntersectionInfo(); 
+  return IntersectionInfo();
 }
 
 // _____________________________________________________________________________

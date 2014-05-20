@@ -48,7 +48,7 @@ Scene::Scene() {
   Ellipsoid* ell = new Ellipsoid(20, 10, 20);
   ell->transform(glm::translate(glm::mat4(1.0), glm::vec3(50, 20, 0)));
   _shapes.push_back(ell);
-  Ellipsoid* ell1 = new Ellipsoid(30, 30, 30);
+  Ellipsoid* ell1 = new Ellipsoid(10, 30, 30);
   glm::mat4 trans = glm::translate(glm::mat4(1.0), glm::vec3(0, 0, 31));
   trans = glm::rotate(trans, 3.141f/2, glm::vec3(0, 1, 0));
   ell1->transform(trans);
@@ -69,7 +69,7 @@ Scene::Scene() {
   _shapes.push_back(comp1);
   // comp1->setMaterialPtr(new GlassMaterial(5));
   trans = glm::translate(glm::mat4(1.0), glm::vec3(0, 10, -30));
-  //trans = glm::rotate(trans, 3.14159f / 2, glm::vec3(0, 1, 0));
+  // trans = glm::rotate(trans, 3.14159f / 2, glm::vec3(0, 1, 0));
   comp1->transform(trans);
   Plane* plane0 = new Plane(0, 1, 0);
   plane0->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -30, 0)));

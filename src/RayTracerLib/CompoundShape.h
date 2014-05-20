@@ -28,8 +28,8 @@ SOFTWARE.
 
 #include <glm/glm.hpp>
 
+#include <limits>
 #include <vector>
-
 #include "./Constants.h"
 #include "./IntersectionInfo.h"
 #include "./Shape.h"

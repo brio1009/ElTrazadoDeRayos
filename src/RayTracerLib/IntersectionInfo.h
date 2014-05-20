@@ -27,8 +27,8 @@ SOFTWARE.
 #define RAYTRACERLIB_INTERSECTIONINFO_H_
 
 #include <glm/glm.hpp>
-#include "./Constants.h"
 #include <limits>
+#include "./Constants.h"
 
 // Forward declaration.
 class Material;

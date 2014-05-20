@@ -38,7 +38,7 @@ void Ray::setOrigin(const glm::vec4& origin) {
     _origin[3] = 1.0;
     return;
   }
-  _origin /= _origin[3];  
+  _origin /= _origin[3];
 }
 
 // _____________________________________________________________________________

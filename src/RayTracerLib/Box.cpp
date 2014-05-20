@@ -67,10 +67,10 @@ vector<REAL> Box::intersect(const Ray& ray) const {
 
   hits[0] = std::max(tMin.x, std::max(tMin.y, tMin.z));
   hits[1] = std::min(tMax.x, std::min(tMax.y, tMax.z));
- 
+
   if (hits[1] >= hits[0])
     return hits;
-  
+
   // Else.
   return vector<REAL>();
 }

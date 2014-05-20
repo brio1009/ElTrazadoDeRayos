@@ -47,7 +47,7 @@ class Box : public Shape {
   /// Return normal.
   virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
 
-protected:
+ protected:
   /// Returns the min. position.
   glm::vec4 getMinPosition() const;
   /// Returns the max. position.

@@ -71,7 +71,6 @@ Color GlassMaterial::getColor(const glm::vec4& position,
   glm::vec4 normNormal = glm::normalize(normal);
   glm::vec4 normView = glm::normalize(-incomingRay.direction());
   glm::vec3 axis = glm::cross(glm::vec3(normNormal), glm::vec3(normView));
-  // printf("Axis: (%.2f|%.2f|%.2f)|%.2f|\n", normView[0], normView[1], normView[2], glm::length(normView));
   float tau1 = glm::angle(normNormal, normView);
   float n1, n2, tau2;
   // calculate tau1 and tau2 in respect to the normal.
@@ -90,14 +89,15 @@ Color GlassMaterial::getColor(const glm::vec4& position,
   float refl = pow((n1 - n2) / (n1 + n2), 2.0);
   // SNELLS LAW
   if (((n1 / n2) * sin(tau1)) < 1) {
-    materialColor = (1 - refl) * reflectionColor(normNormal, axis, tau2, position, scene);
+    materialColor = (1 - refl)
+        * reflectionColor(normNormal, axis, tau2, position, scene);
   } else {
     refl = 1.0f;
   }
-  materialColor += refl * reflectionColor(normNormal, axis, -tau1, position, scene);
+  materialColor += refl
+      * reflectionColor(normNormal, axis, -tau1, position, scene);
   depth--;
   return materialColor;
-
 }
 /*
 // _____________________________________________________________________________

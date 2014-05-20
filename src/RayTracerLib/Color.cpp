@@ -24,6 +24,9 @@ SOFTWARE.
 
 #include "./Color.h"
 
+#include <algorithm>
+#include <limits>
+
 const Color Color::_outOfRangeColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
 
 // _____________________________________________________________________________

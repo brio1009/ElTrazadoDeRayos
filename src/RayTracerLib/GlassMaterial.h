@@ -26,8 +26,8 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_GLASSMATERIAL_H_
 #define RAYTRACERLIB_GLASSMATERIAL_H_
 
-#include "Material.h"
-#include "Constants.h"
+#include "./Material.h"
+#include "./Constants.h"
 
 /// Refraction indices we know.
 namespace RefractiveIndex {
@@ -39,9 +39,9 @@ namespace RefractiveIndex {
 
 /// GLass-like materials.
 class GlassMaterial : public Material {
-public:
+ public:
   /// Constructor.
-  GlassMaterial(const float refractiveIndex)
+  explicit GlassMaterial(const float refractiveIndex)
     : _refractiveIndex(refractiveIndex),
       _transparencyFactor(0.0f),
       _color(1.0, 0.0, 0.0) { }
@@ -59,7 +59,7 @@ public:
       const float& angle,
       const glm::vec4& position,
       const Scene& scene) const;
-  
+
   /// Defines the refractive index which we use to compute the ray directions.
   float _refractiveIndex;
   /// Defines the material color. Together with the transparency factor this is

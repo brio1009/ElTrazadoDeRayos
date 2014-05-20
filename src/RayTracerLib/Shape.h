@@ -51,7 +51,7 @@ class Shape : public Object {
 
   /// Destructor.
   virtual ~Shape();
-  
+
   ///
   /// TODO(all, 05/17/2014): Find the right epsilon.
   virtual IntersectionInfo getIntersectionInfo(const Ray& ray,
@@ -64,7 +64,7 @@ class Shape : public Object {
     _materialPtr = materialPtr;
   }
 
-protected:
+ protected:
   // Intersects the Ray with this Shape and returns the values for t
   // rPos + rDir * t that intersect the surface of this Shape.
   virtual std::vector<REAL> intersect(const Ray& ray) const = 0;
@@ -74,7 +74,7 @@ protected:
   virtual glm::vec4 getNormalAt(const glm::vec4& p) const = 0;
 
   /// Getter for the material pointer.
-  const Material* getMaterialPtr() const { return _materialPtr; } 
+  const Material* getMaterialPtr() const { return _materialPtr; }
 
  private:
   const Material* _materialPtr;
