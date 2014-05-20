@@ -36,6 +36,8 @@ SOFTWARE.
 // C Header.
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/vector_angle.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtc/constants.hpp>
 // C++ Header.
 #include <algorithm>
@@ -52,12 +54,12 @@ void renderTestScene() {
   // the thrid param to match smaller change.
   // e.g. when converting from 80x80 (first trace) to  512x512 divide 80 by 512
   // OrthogonalCamera cam(512, 512, 0.1);
-  PerspectiveCamera cam(1024, 1024, glm::radians(70.0f));
+  PerspectiveCamera cam(512, 512, glm::radians(70.0f));
   size_t imgCount = 30;
-  // TODO(bauschp, Wed May  7 21:57:12 CEST 2014): Remove this.
+  float angle = glm::pi<float>() * 0.25f;
   for (size_t i = 0; i < imgCount; ++i) {
     glm::mat4 trans = glm::rotate(glm::mat4(1.0),
-        2 * glm::pi<float>() / imgCount * i, glm::vec3(0, 1, 0));
+        (angle / imgCount) * i, glm::vec3(0, 1, 0));
     // trans = glm::rotate(trans, glm::radians(35.0f), glm::vec3(1, 0, 0));
     cam.transform(glm::translate(trans, glm::vec3(0, 0, 100)));
     clock_t start = clock();

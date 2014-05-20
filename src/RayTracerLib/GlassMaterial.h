@@ -55,7 +55,7 @@ public:
  protected:
   /// returns the color of the reflected part of this material.
   Color reflectionColor(const glm::vec4& normal,
-      const glm::vec4& viewDir,
+      const glm::vec3& axis,
       const float& angle,
       const glm::vec4& position,
       const Scene& scene) const;

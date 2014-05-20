@@ -80,7 +80,7 @@ void PerspectiveCamera::render(const Scene& scene) {
                                                     scene);
         _image.setPixel(x, y, tmpColor);
       } else {
-        _image.setPixel(x, y, Color(0, 0, 0, 0));
+        _image.setPixel(x, y, Color(1, 1, 1, 1));
       }
       end = clock();
       overallGetColor += end - start;
