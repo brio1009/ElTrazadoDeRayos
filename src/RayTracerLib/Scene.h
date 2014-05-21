@@ -32,6 +32,7 @@ SOFTWARE.
 // Forward declaration.
 class Ray;
 class Shape;
+class Light;
 struct IntersectionInfo;
 
 /// Holds the scene objects.
@@ -45,10 +46,15 @@ class Scene {
   IntersectionInfo traceRay(const Ray& ray) const;
   /// Returns a color for the scene background.
   Color backgroundColor(const Ray& ray) const { return Color(0.7, 0.8, 0.92); }
-
+  /// Returnes a reference to all the lights in the scene.
+  const std::vector<Light*>& lights() const { return _lights; }
  private:
+  /// Initializes the default scene.
+  void defaultScene();
   /// Holds the renderable objects.
   std::vector<Shape*> _shapes;
+  /// Holds the lights in a scene.
+  std::vector<Light*> _lights;
 };
 
 #endif  // RAYTRACERLIB_SCENE_H_

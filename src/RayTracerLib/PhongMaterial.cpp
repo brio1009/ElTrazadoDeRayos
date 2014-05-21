@@ -27,10 +27,11 @@ SOFTWARE.
 #include <cstdlib>
 #include <cmath>
 #include <algorithm>
+#include <vector>
 #include "./Color.h"
 #include "./Constants.h"
 #include "./IntersectionInfo.h"
-#include "./PointLight.h"
+#include "./Scene.h"
 #include "./Light.h"
 #include "./Ray.h"
 
@@ -48,30 +49,26 @@ PhongMaterial::PhongMaterial() {
 Color PhongMaterial::getColor(const IntersectionInfo& intersectionInfo,
                               const Ray& incomingRay,
                               const Scene& scene) const {
-  // Generate a temp. light.
-  PointLight light(glm::vec4(0, 0, 0, 1));
-  light.setLightColor(Color(1.0f, 1.0f, 1.0f, 1.0f));
-
   // TODO(allofus, Thu May  8 15:27:52 CEST 2014): Add to constructor.
   float ka = 0.1f;
   float kd = 0.4f;
   float ks = 0.5f;
 
-
-  // TODO(allofus, Sun May 11 16:54:17 CEST 2014): change lightcolor to vec3
   // cause it should be between 0 and 1.
-  const Color& lightColor = light.getColor();
   Color sumIntensity(0, 0, 0);
-  // TODO(bauschp, Sun May 11 21:09:39 CEST 2014) norm if works.
-  glm::vec4 normNormal = glm::normalize(intersectionInfo.normal);
-  Ray lightRay = light.getRay(intersectionInfo.hitPoint);
-  sumIntensity += ambientTerm(lightColor, ka);
-  sumIntensity += diffuseTerm(lightColor,
-                              -lightRay.direction(),
-                              normNormal, kd);
-  sumIntensity += specularTerm(lightColor, -lightRay.direction(),
-      normNormal, -incomingRay.direction(), ks);
-
+  sumIntensity += ambientTerm(Color(1, 1, 1), ka);
+  const std::vector<Light*> lights = scene.lights();
+  for (size_t i = 0; i < lights.size(); ++i) {
+    const Color& lightColor = lights.at(i)->getColor();
+    // TODO(bauschp, Sun May 11 21:09:39 CEST 2014) norm if works.
+    glm::vec4 normNormal = glm::normalize(intersectionInfo.normal);
+    Ray lightRay = lights.at(i)->getRay(intersectionInfo.hitPoint);
+    sumIntensity += diffuseTerm(lightColor,
+                                -lightRay.direction(),
+                                normNormal, kd);
+    sumIntensity += specularTerm(lightColor, -lightRay.direction(),
+        normNormal, -incomingRay.direction(), ks);
+  }
   return color() * sumIntensity;
 }
 
@@ -102,7 +99,8 @@ Color PhongMaterial::specularTerm(const Color& color,
     const glm::vec4& lightDir,
     const glm::vec4& normal,
     const glm::vec4& viewer,
-    const float skalar) const {
+    const float skalar,
+    const float shininess) const {
   // Assuming normal and lightDir are normalized.
   assert(lightDir[3] == 0);
   assert(glm::length(lightDir) > 1.0 - 1e-5
@@ -119,6 +117,6 @@ Color PhongMaterial::specularTerm(const Color& color,
       && glm::length(reflectionDir) < 1.0 + 1e-5);
 
   float dot = std::max(0.0f, glm::dot(reflectionDir, viewer));
-  dot = pow(dot, 5.0);
+  dot = pow(dot, shininess);
   return skalar * dot * color;
 }

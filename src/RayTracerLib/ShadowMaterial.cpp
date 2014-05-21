@@ -38,35 +38,33 @@ SOFTWARE.
 Color ShadowMaterial::getColor(const IntersectionInfo& intersectionInfo,
                                const Ray& incomingRay,
                                const Scene& scene) const {
-  // Generate a temp. light.
-  PointLight light(glm::vec4(0, 0, 0, 1));
-  light.setLightColor(Color(1.0f, 1.0f, 1.0f, 1.0f));
-
   // TODO(allofus, Thu May  8 15:27:52 CEST 2014): Add to constructor.
   float ka = 0.1f;
   float kd = 0.4f;
   float ks = 0.5f;
 
-
-  const Color& lightColor = light.getColor();
   Color sumIntensity(0, 0, 0);
-  // TODO(bauschp, Sun May 11 21:09:39 CEST 2014) norm if works.
-  glm::vec4 normNormal = glm::normalize(intersectionInfo.normal);
-  Ray lightRay = light.getRay(intersectionInfo.hitPoint);
-  Ray shadowRay(intersectionInfo.hitPoint, -lightRay.direction());
-  IntersectionInfo hitInfo = scene.traceRay(shadowRay);
-  glm::vec4 diff = intersectionInfo.hitPoint - lightRay.origin();
-  float distanceToLight = glm::dot(diff, diff);
-  diff = intersectionInfo.hitPoint - hitInfo.hitPoint;
-  float distanceToHit = glm::dot(diff, diff);
-  sumIntensity += ambientTerm(lightColor, ka);
-  if (!hitInfo.materialPtr || distanceToLight < distanceToHit) {
-    sumIntensity += diffuseTerm(lightColor,
-                                -lightRay.direction(),
-                                normNormal,
-                                kd);
-    sumIntensity += specularTerm(lightColor, -lightRay.direction(),
-        normNormal, -incomingRay.direction(), ks);
+  sumIntensity += ambientTerm(Color(1, 1, 1), ka);
+  const std::vector<Light*> lights = scene.lights();
+  for (size_t i = 0; i < lights.size(); ++i) {
+    const Color& lightColor = lights.at(i)->getColor();
+    // TODO(bauschp, Sun May 11 21:09:39 CEST 2014) norm if works.
+    glm::vec4 normNormal = glm::normalize(intersectionInfo.normal);
+    Ray lightRay = lights.at(i)->getRay(intersectionInfo.hitPoint);
+    Ray shadowRay(intersectionInfo.hitPoint, -lightRay.direction());
+    IntersectionInfo hitInfo = scene.traceRay(shadowRay);
+    glm::vec4 diff = intersectionInfo.hitPoint - lightRay.origin();
+    float distanceToLight = glm::dot(diff, diff);
+    diff = intersectionInfo.hitPoint - hitInfo.hitPoint;
+    float distanceToHit = glm::dot(diff, diff);
+    if (!hitInfo.materialPtr || distanceToLight < distanceToHit) {
+      sumIntensity += diffuseTerm(lightColor,
+                                  -lightRay.direction(),
+                                  normNormal,
+                                  kd);
+      sumIntensity += specularTerm(lightColor, -lightRay.direction(),
+          normNormal, -incomingRay.direction(), ks);
+    }
   }
 
   return color() * sumIntensity;

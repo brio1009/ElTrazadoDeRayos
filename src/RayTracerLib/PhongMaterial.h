@@ -62,7 +62,8 @@ class PhongMaterial : public Material {
       const glm::vec4& lightDir,
       const glm::vec4& normal,
       const glm::vec4& viewer,
-      const float skalar) const;
+      const float skalar,
+      const float shininess = 5.0f) const;
  private:
   /// Color member.
   Color _color;

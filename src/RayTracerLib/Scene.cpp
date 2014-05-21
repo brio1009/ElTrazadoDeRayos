@@ -43,11 +43,12 @@ SOFTWARE.
 #include "./CheckerboardMaterial.h"
 #include "./GlassMaterial.h"
 #include "./CompoundShape.h"
+#include "./PointLight.h"
 
 using std::vector;
 
-// _____________________________________________________________________________
-Scene::Scene() {
+// TODO(allofus, Wed May 21 17:12:00 CEST 2014): Remove if we have a scene load.
+void Scene::defaultScene() {
   Ellipsoid* ell = new Ellipsoid(20, 10, 20);
   ell->transform(glm::translate(glm::mat4(1.0), glm::vec3(50, 20, 0)));
   _shapes.push_back(ell);
@@ -89,12 +90,34 @@ Scene::Scene() {
   plane0->setMaterialPtr(new CheckerboardMaterial(new ShadowMaterial(),
                                   new ShadowMaterial(Color(1, 1, 1)), 10, 10));
   _shapes.push_back(plane0);
+
+  // Generate Lights for the scene.
+  // Light 1
+  // TODO(bauschp): fix mem leaks.
+  // Light* light = new PointLight(glm::vec4(0, 0, -39, 1));
+  // light->setLightColor(Color(1.0f, 1.0f, 1.0f, 1.0f));
+  // _lights.push_back(light);
+  for (size_t i = 0; i < 10; ++i) {
+    Light* light = new PointLight(glm::vec4(0, 10, -39 + static_cast<float>(i) * 3, 1));
+    light->setLightColor(Color(0.1f, 0.1f, 0.1f, 1.0f));
+    _lights.push_back(light); 
+  }
+  // Light 2
+  // light = new PointLight(glm::vec4(0, 20, 0, 1));
+  // light->setLightColor(Color(0.0f, 1.0f, 0.0f, 1.0f));
+  // _lights.push_back(light);
+}
+// _____________________________________________________________________________
+Scene::Scene() {
+  defaultScene();
 }
 
 // _____________________________________________________________________________
 Scene::~Scene() {
   // TODO(allofus, Sun May 11 15:33:16 CEST 2014): Think of how to clean up here
   for (auto it = _shapes.begin(); it != _shapes.end(); ++it)
+    delete *it;
+  for (auto it = _lights.begin(); it != _lights.end(); ++it)
     delete *it;
 }
 
