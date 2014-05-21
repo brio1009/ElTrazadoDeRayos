@@ -4,6 +4,10 @@ ElTrazadoDeRayos
 
 This will be a simple RayTracer to render a Scene.
 
+Wed May 21 18:14:52 CEST 2014 :
+-------------------------------
+![alt text](https://github.com/CantTouchDis/ElTrazadoDeRayos/raw/master/images/SimulatedSmoothShadow.gif "Newest Image.")
+
 Thu May 15 18:05:16 CEST 2014 :
 -------------------------------
 ![alt text](https://github.com/CantTouchDis/ElTrazadoDeRayos/raw/master/images/Anim.gif "Glass material in the middle.")
