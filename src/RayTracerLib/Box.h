@@ -41,9 +41,10 @@ class Box : public Shape {
   /// Destructor.
   virtual ~Box() { }
 
- protected:
   /// Intersection test.
   virtual std::vector<REAL> intersect(const Ray& ray) const;
+
+ protected:
   /// Return normal.
   virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
 

@@ -31,6 +31,9 @@ SOFTWARE.
 #include "./Material.h"
 #include "./Color.h"
 
+// Forward declaration.
+class IntersectionInfo;
+
 /// Phong material that shades the object with the phong reflection model.
 class ShadowMaterial : public PhongMaterial {
  public:
@@ -38,10 +41,9 @@ class ShadowMaterial : public PhongMaterial {
   explicit ShadowMaterial(const Color& color) : PhongMaterial(color) { }
 
   /// Returns the color for the given position, normal and ray direction.
-  virtual Color getColor(const glm::vec4& position,
-      const glm::vec4& normal,
-      const Ray& incomingRay,
-      const Scene& scene) const;
+  virtual Color getColor(const IntersectionInfo& intersectionInfo,
+                         const Ray& incomingRay,
+                         const Scene& scene) const;
 };
 
 #endif  // RAYTRACERLIB_SHADOWMATERIAL_H_

@@ -2,6 +2,7 @@
 The MIT License (MIT)
 
 Copyright (c) 2014 CantTouchDis
+Copyright (c) 2014 brio1009 <christoph1009@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,48 +24,48 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_PHONGMATERIAL_H_
-#define RAYTRACERLIB_PHONGMATERIAL_H_
+#ifndef RAYTRACERLIB_CHECKERBOARDMATERIAL_H_
+#define RAYTRACERLIB_CHECKERBOARDMATERIAL_H_
 
 #include <glm/glm.hpp>
 #include "./Material.h"
 #include "./Color.h"
+#include "./Constants.h"
+
+// Forward declaration.
+class IntersectionInfo;
 
 /// Phong material that shades the object with the phong reflection model.
-class PhongMaterial : public Material {
+class CheckerboardMaterial : public Material {
  public:
   /// Constructor.
-  explicit PhongMaterial(const Color& color) : _color(color) { }
+  CheckerboardMaterial(const Material* mat1,
+                       const Material* mat2,
+                       const REAL uSize,
+                       const REAL vSize)
+    : Material(),
+  _material1Ptr(mat1),
+  _material2Ptr(mat2),
+  _uSize(uSize),
+  _vSize(vSize)
+  { }
 
-  /// Returns the color for the given position, normal and ray direction.
   virtual Color getColor(const IntersectionInfo& intersectionInfo,
                          const Ray& incomingRay,
                          const Scene& scene) const;
 
  protected:
-  /// Getter for the color.
-  virtual const Color& color(const glm::vec2& uv = glm::vec2()) const {
-    return _color;
-  }
+  /// Bool.
+  bool expandingSquares(const glm::vec2& coords) const;
+  bool checkerBoard(const glm::vec2& coords) const;
+  bool dotBoard(const glm::vec2& coords) const;
 
-  /// Helper to compute the ambient color.
-  Color ambientTerm(const Color& color, const float skalar) const;
-  /// Helper to compute the diffuse color.
-  Color diffuseTerm(const Color& color,
-      const glm::vec4& lightDir,
-      const glm::vec4& normal,
-      const float skalar) const;
-  /// Helper to compute the specular color.
-  Color specularTerm(const Color& color,
-      const glm::vec4& lightDir,
-      const glm::vec4& normal,
-      const glm::vec4& viewer,
-      const float skalar) const;
- private:
-  /// Color member.
-  Color _color;
+  /// Member.
+  const Material* _material1Ptr;
+  const Material* _material2Ptr;
+  REAL _uSize;
+  REAL _vSize;
 };
 
-#endif  // RAYTRACERLIB_PHONGMATERIAL_H_
-
+#endif  // RAYTRACERLIB_CHECKERBOARDMATERIAL_H_
 

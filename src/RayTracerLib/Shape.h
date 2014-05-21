@@ -58,6 +58,10 @@ class Shape : public Object {
     const REAL minimumT = constants::TEPSILON,
     const REAL maximumT = std::numeric_limits<REAL>::max()) const;
 
+  // Intersects the Ray with this Shape and returns the values for t
+  // rPos + rDir * t that intersect the surface of this Shape.
+  virtual std::vector<REAL> intersect(const Ray& ray) const = 0;
+
   /// Setter for the material pointer. Be careful, the old material is not
   /// automatically deleted!
   void setMaterialPtr(const Material* materialPtr) {
@@ -65,13 +69,13 @@ class Shape : public Object {
   }
 
  protected:
-  // Intersects the Ray with this Shape and returns the values for t
-  // rPos + rDir * t that intersect the surface of this Shape.
-  virtual std::vector<REAL> intersect(const Ray& ray) const = 0;
   // Returnes the appearence of the surface Point p
   // if p isn't on the surface everything can happen.
   // TODO(allofus): what should be returned here?
   virtual glm::vec4 getNormalAt(const glm::vec4& p) const = 0;
+
+  /// Uv coordinates.
+  virtual glm::vec2 getTextureCoord(const glm::vec4& p) const;
 
   /// Getter for the material pointer.
   const Material* getMaterialPtr() const { return _materialPtr; }

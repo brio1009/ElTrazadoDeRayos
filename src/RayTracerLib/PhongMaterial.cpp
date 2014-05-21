@@ -28,13 +28,13 @@ SOFTWARE.
 #include <algorithm>
 #include "./Color.h"
 #include "./Constants.h"
+#include "./IntersectionInfo.h"
 #include "./PointLight.h"
 #include "./Light.h"
 #include "./Ray.h"
 
 // _____________________________________________________________________________
-Color PhongMaterial::getColor(const glm::vec4& position,
-                              const glm::vec4& normal,
+Color PhongMaterial::getColor(const IntersectionInfo& intersectionInfo,
                               const Ray& incomingRay,
                               const Scene& scene) const {
   // Generate a temp. light.
@@ -52,8 +52,8 @@ Color PhongMaterial::getColor(const glm::vec4& position,
   const Color& lightColor = light.getColor();
   Color sumIntensity(0, 0, 0);
   // TODO(bauschp, Sun May 11 21:09:39 CEST 2014) norm if works.
-  glm::vec4 normNormal = glm::normalize(normal);
-  Ray lightRay = light.getRay(position);
+  glm::vec4 normNormal = glm::normalize(intersectionInfo.normal);
+  Ray lightRay = light.getRay(intersectionInfo.hitPoint);
   sumIntensity += ambientTerm(lightColor, ka);
   sumIntensity += diffuseTerm(lightColor,
                               -lightRay.direction(),
@@ -61,7 +61,7 @@ Color PhongMaterial::getColor(const glm::vec4& position,
   sumIntensity += specularTerm(lightColor, -lightRay.direction(),
       normNormal, -incomingRay.direction(), ks);
 
-  return _color * sumIntensity;
+  return color() * sumIntensity;
 }
 
 // _____________________________________________________________________________

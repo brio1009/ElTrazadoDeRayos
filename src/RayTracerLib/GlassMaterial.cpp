@@ -49,10 +49,9 @@ Color GlassMaterial::reflectionColor(const glm::vec4& normal,
   newRay.setOrigin(position);
   IntersectionInfo info = scene.traceRay(newRay);
   if (info.materialPtr && depth < 10/* && info.materialPtr != this*/) {
-    return info.materialPtr->getColor(info.hitPoint,
-                                              info.normal,
-                                              newRay,
-                                              scene);
+    return info.materialPtr->getColor(info,
+                                      newRay,
+                                      scene);
   }
   if (depth >= 10) {
     return Color(1, 1, 1);
@@ -61,14 +60,13 @@ Color GlassMaterial::reflectionColor(const glm::vec4& normal,
 }
 
 // _____________________________________________________________________________
-Color GlassMaterial::getColor(const glm::vec4& position,
-                              const glm::vec4& normal,
+Color GlassMaterial::getColor(const IntersectionInfo& intersectionInfo,
                               const Ray& incomingRay,
                               const Scene& scene) const {
   depth++;
   Color materialColor;
   // The axis to rotate around.
-  glm::vec4 normNormal = glm::normalize(normal);
+  glm::vec4 normNormal = glm::normalize(intersectionInfo.normal);
   glm::vec4 normView = glm::normalize(-incomingRay.direction());
   glm::vec3 axis = glm::cross(glm::vec3(normNormal), glm::vec3(normView));
   float tau1 = glm::angle(normNormal, normView);
@@ -76,12 +74,12 @@ Color GlassMaterial::getColor(const glm::vec4& position,
   // calculate tau1 and tau2 in respect to the normal.
   if (tau1 < glm::pi<float>() / 2) {
     n1 = RefractiveIndex::air;
-    n2 = RefractiveIndex::glass;
+    n2 = _refractiveIndex;
     tau2 = glm::pi<float>() + asin((n1 / n2) * sin(tau1));
   } else {
     // angle was bigger then 90 degrees.
     n2 = RefractiveIndex::air;
-    n1 = RefractiveIndex::glass;
+    n1 = _refractiveIndex;
     tau2 = -asin((n1 / n2) * sin(glm::pi<float>() - tau1));
   }
   // TODO(bauschp, Tue May 20 14:08:52 CEST 2014): maybe change to map lookup.
@@ -90,12 +88,14 @@ Color GlassMaterial::getColor(const glm::vec4& position,
   // SNELLS LAW
   if (((n1 / n2) * sin(tau1)) < 1) {
     materialColor = (1 - refl)
-        * reflectionColor(normNormal, axis, tau2, position, scene);
+        * reflectionColor(normNormal, axis, tau2, intersectionInfo.hitPoint, 
+                          scene);
   } else {
     refl = 1.0f;
   }
   materialColor += refl
-      * reflectionColor(normNormal, axis, -tau1, position, scene);
+      * reflectionColor(normNormal, axis, -tau1, intersectionInfo.hitPoint,
+                        scene);
   depth--;
   return materialColor;
 }

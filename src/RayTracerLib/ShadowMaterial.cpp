@@ -35,10 +35,9 @@ SOFTWARE.
 #include "./Ray.h"
 
 // _____________________________________________________________________________
-Color ShadowMaterial::getColor(const glm::vec4& position,
-      const glm::vec4& normal,
-      const Ray& incomingRay,
-      const Scene& scene) const {
+Color ShadowMaterial::getColor(const IntersectionInfo& intersectionInfo,
+                               const Ray& incomingRay,
+                               const Scene& scene) const {
   // Generate a temp. light.
   PointLight light(glm::vec4(0, 0, 0, 1));
   light.setLightColor(Color(1.0f, 1.0f, 1.0f, 1.0f));
@@ -52,13 +51,13 @@ Color ShadowMaterial::getColor(const glm::vec4& position,
   const Color& lightColor = light.getColor();
   Color sumIntensity(0, 0, 0);
   // TODO(bauschp, Sun May 11 21:09:39 CEST 2014) norm if works.
-  glm::vec4 normNormal = glm::normalize(normal);
-  Ray lightRay = light.getRay(position);
-  Ray shadowRay(position, -lightRay.direction());
+  glm::vec4 normNormal = glm::normalize(intersectionInfo.normal);
+  Ray lightRay = light.getRay(intersectionInfo.hitPoint);
+  Ray shadowRay(intersectionInfo.hitPoint, -lightRay.direction());
   IntersectionInfo hitInfo = scene.traceRay(shadowRay);
-  glm::vec4 diff = position - lightRay.origin();
+  glm::vec4 diff = intersectionInfo.hitPoint - lightRay.origin();
   float distanceToLight = glm::dot(diff, diff);
-  diff = position - hitInfo.hitPoint;
+  diff = intersectionInfo.hitPoint - hitInfo.hitPoint;
   float distanceToHit = glm::dot(diff, diff);
   sumIntensity += ambientTerm(lightColor, ka);
   if (!hitInfo.materialPtr || distanceToLight < distanceToHit) {
@@ -70,5 +69,5 @@ Color ShadowMaterial::getColor(const glm::vec4& position,
         normNormal, -incomingRay.direction(), ks);
   }
 
-  return _color * sumIntensity;
+  return color() * sumIntensity;
 }

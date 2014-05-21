@@ -40,9 +40,10 @@ class Ellipsoid : public Shape {
   /// Destructor.
   virtual ~Ellipsoid() { }
 
- protected:
   ///
   virtual std::vector<REAL> intersect(const Ray& ray) const;
+
+ protected:
 
   ///
   virtual glm::vec4 getNormalAt(const glm::vec4& p) const;

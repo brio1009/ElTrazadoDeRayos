@@ -37,8 +37,8 @@ using std::vector;
 // _____________________________________________________________________________
 CompoundShape::CompoundShape()
   : _passTransformation(true),
-    _useChildMaterials(false),
-    _operator(CompoundShape::Operator::unionOp) {
+    _useChildMaterials(true),
+    _operator(CompoundShape::Operator::minusOp) {
 }
 
 // _____________________________________________________________________________
@@ -99,6 +99,80 @@ IntersectionInfo CompoundShape::intersectIntersect(const Ray& ray,
 IntersectionInfo CompoundShape::intersectMinus(const Ray& ray,
                                                const REAL minimumT,
                                                const REAL maximumT) const {
+  // Transform the ray if needed.
+  Ray newRay = ray;
+  if (passTransformation()) {
+    newRay = _inverseTransform * ray;
+  }
+
+  // Consider the intersection of the right shape only inside the left
+  // shape.
+  vector<REAL> intersectionsLeft = _leftShapePtr->intersect(newRay);
+  vector<REAL> intersectionsRight = _rightShapePtr->intersect(newRay);
+
+  // Just get all the hits with the right object that fir the range.
+  size_t startIndex(0);
+  size_t endIndex(intersectionsRight.size());
+  for (size_t i = 0; i < intersectionsRight.size(); ++i) {
+    REAL t = intersectionsRight.at(i);
+    if (t < minimumT) {
+      startIndex = i;
+    }
+    if (t > maximumT) {
+      endIndex = i;
+      break;
+    }
+  }
+  ++startIndex;
+
+  REAL rightT(0), leftT(0);
+  bool hitLeft(false), hitRight(false);
+  size_t rightIndex(startIndex);
+  for (size_t i = 0; i < intersectionsLeft.size(); ++i) {
+    REAL myT = intersectionsLeft.at(i);
+    while (rightIndex < endIndex && intersectionsRight.at(rightIndex) < myT) {
+      ++rightIndex;
+      if (rightIndex >= endIndex) {
+        hitLeft = true;
+        leftT = intersectionsLeft.at(i);
+        break;
+      }
+    }
+    if (rightIndex % 2 == 0) {
+      // i is inside of right
+      if (rightIndex + 1 >= intersectionsRight.size()
+          || i + 1 >= intersectionsLeft.size()) {
+        break;
+      }
+      if (intersectionsRight.at(rightIndex + 1) < intersectionsLeft.at(i + 1)) {
+        // Draw the Right shape
+        hitRight = true;
+        rightT = intersectionsRight.at(rightIndex + 1);
+        break;
+      }
+    } else {
+      hitLeft = true;
+      leftT = intersectionsLeft.at(i);
+      break;
+    }    
+  }
+
+  // Check if we hit something.
+  if (hitRight) {
+    IntersectionInfo info = _rightShapePtr->getIntersectionInfo(newRay,
+                                            rightT - 2.0 * constants::TEPSILON,
+                                            rightT + 2.0 * constants::TEPSILON);
+    adaptInstersectionInfo(&info);
+    return info;
+  }
+  if (hitLeft) {
+    IntersectionInfo info = _leftShapePtr->getIntersectionInfo(newRay,
+                                             leftT - 2.0 * constants::TEPSILON,
+                                             leftT + 2.0 * constants::TEPSILON);
+    adaptInstersectionInfo(&info);
+    return info;
+  }
+  // Else.
   return IntersectionInfo();
 }
 
