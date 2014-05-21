@@ -30,6 +30,7 @@ SOFTWARE.
 
 // Forward declaration.
 class Color;
+class IntersectionInfo;
 class Ray;
 class Scene;
 
@@ -40,8 +41,7 @@ class Material {
   virtual ~Material() { }
 
   /// Returns the color for the given positition and normal.
-  virtual Color getColor(const glm::vec4& position,
-                         const glm::vec4& normal,
+  virtual Color getColor(const IntersectionInfo& intersectionInfo,
                          const Ray& incomingRay,
                          const Scene& scene) const = 0;
 };

@@ -28,6 +28,7 @@ SOFTWARE.
 
 #include "./Material.h"
 #include "./Constants.h"
+#include <limits>
 
 /// Refraction indices we know.
 namespace RefractiveIndex {
@@ -35,6 +36,7 @@ namespace RefractiveIndex {
   static const float water = 1.333f;
   static const float air = 1.00293f;
   static const float diamond = 2.42f;
+  static const float mirror = std::numeric_limits<float>::max();
 };
 
 /// GLass-like materials.
@@ -47,10 +49,9 @@ class GlassMaterial : public Material {
       _color(1.0, 0.0, 0.0) { }
 
   /// Returns the color for the given position, normal and ray direction.
-  virtual Color getColor(const glm::vec4& position,
-      const glm::vec4& normal,
-      const Ray& incomingRay,
-      const Scene& scene) const;
+  virtual Color getColor(const IntersectionInfo& intersectionInfo,
+                         const Ray& incomingRay,
+                         const Scene& scene) const;
 
  protected:
   /// returns the color of the reflected part of this material.

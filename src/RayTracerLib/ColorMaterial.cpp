@@ -30,8 +30,7 @@ SOFTWARE.
 #include "./Scene.h"
 
 // _____________________________________________________________________________
-Color ColorMaterial::getColor(const glm::vec4& position,
-                              const glm::vec4& normal,
+Color ColorMaterial::getColor(const IntersectionInfo& intersectionInfo,
                               const Ray& incomingRay,
                               const Scene& scene) const {
   // Build the returncolor.
@@ -40,14 +39,13 @@ Color ColorMaterial::getColor(const glm::vec4& position,
   // Check if we need to send another ray.
   if (_color.a() < 1.0f) {
     // Build a new ray.
-    Ray newRay(position,
+    Ray newRay(intersectionInfo.hitPoint,
                incomingRay.direction());
     // Trace the ray.
     IntersectionInfo info = scene.traceRay(newRay);
     Color addColor;
     if (info.materialPtr) {
-      addColor = info.materialPtr->getColor(info.hitPoint,
-                                            info.normal,
+      addColor = info.materialPtr->getColor(info,
                                             newRay,
                                             scene);
     }

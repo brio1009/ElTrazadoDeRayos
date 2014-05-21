@@ -57,8 +57,7 @@ void OrthogonalCamera::render(const Scene& scene) {
       IntersectionInfo info = scene.traceRay(r);
       if (info.materialPtr) {
         // We hit the object.
-        Color tmpColor = info.materialPtr->getColor(info.hitPoint,
-                                                    info.normal,
+        Color tmpColor = info.materialPtr->getColor(info,
                                                     r,
                                                     scene);
         _image.setPixel(x, y, tmpColor);

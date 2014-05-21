@@ -32,14 +32,17 @@ SOFTWARE.
 #include "./Color.h"
 #include "./Constants.h"
 
+// Forward declaration.
+class IntersectionInfo;
+
+///
 class ColorMaterial : public Material {
  public:
   /// Constructor.
   explicit ColorMaterial(const Color& color) : _color(color) { }
 
   /// Returns the color for the given position, normal and ray direction.
-  virtual Color getColor(const glm::vec4& position,
-                         const glm::vec4& normal,
+  virtual Color getColor(const IntersectionInfo& intersectionInfo,
                          const Ray& incomingRay,
                          const Scene& scene) const;
 

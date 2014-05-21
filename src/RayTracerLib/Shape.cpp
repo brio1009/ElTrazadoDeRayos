@@ -81,8 +81,15 @@ IntersectionInfo Shape::getIntersectionInfo(const Ray& ray,
     return IntersectionInfo(smallestT,
                             position,
                             getNormalAt(position),
-                            getMaterialPtr());
+                            getMaterialPtr(),
+                            getTextureCoord(position));
   }
   // Else.
   return IntersectionInfo();
+}
+
+// _____________________________________________________________________________
+glm::vec2 Shape::getTextureCoord(const glm::vec4& p) const {
+  glm::vec4 trans = _inverseTransform * p;
+  return (glm::vec2(trans.x, trans.z));
 }

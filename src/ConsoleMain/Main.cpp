@@ -56,7 +56,7 @@ void renderTestScene() {
   // OrthogonalCamera cam(512, 512, 0.1);
   PerspectiveCamera cam(512, 512, glm::radians(70.0f));
   size_t imgCount = 30;
-  float angle = glm::pi<float>() * 0.25f;
+  float angle = glm::pi<float>() * 2.0;
   for (size_t i = 0; i < imgCount; ++i) {
     glm::mat4 trans = glm::rotate(glm::mat4(1.0),
         (angle / imgCount) * i, glm::vec3(0, 1, 0));
