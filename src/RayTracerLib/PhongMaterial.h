@@ -33,6 +33,9 @@ SOFTWARE.
 /// Phong material that shades the object with the phong reflection model.
 class PhongMaterial : public Material {
  public:
+  /// Constructor. Randoms a color.
+  PhongMaterial();
+
   /// Constructor.
   explicit PhongMaterial(const Color& color) : _color(color) { }
 

@@ -54,7 +54,7 @@ void renderTestScene() {
   // the thrid param to match smaller change.
   // e.g. when converting from 80x80 (first trace) to  512x512 divide 80 by 512
   // OrthogonalCamera cam(512, 512, 0.1);
-  PerspectiveCamera cam(512, 512, glm::radians(70.0f));
+  PerspectiveCamera cam(1024, 1024, glm::radians(70.0f));
   size_t imgCount = 30;
   float angle = glm::pi<float>() * 2.0;
   for (size_t i = 0; i < imgCount; ++i) {
