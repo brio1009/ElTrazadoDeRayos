@@ -55,7 +55,7 @@ Scene::Scene() {
   glm::mat4 trans = glm::translate(glm::mat4(1.0), glm::vec3(0, 0, 31));
   trans = glm::rotate(trans, 3.141f/2, glm::vec3(0, 1, 0));
   ell1->transform(trans);
-  ell1->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
+  ell1->setMaterialPtr(new GlassMaterial(RefractiveIndex::mirror));
   _shapes.push_back(ell1);
   Box* ell3 = new Box(20, 20, 20);
   ell3->transform(glm::translate(glm::mat4(1.0), glm::vec3(-30, -0, -50)));
@@ -66,17 +66,28 @@ Scene::Scene() {
   // Compound test
   Box* b1 = new Box(10, 10, 10);
   Ellipsoid* e1 = new Ellipsoid(5, 20, 5);
+
+  // Glass ball.
+  Ellipsoid* ball = new Ellipsoid(10, 10, 10);
+  trans = glm::translate(glm::mat4(1.0), glm::vec3(0, -20, -11));
+  ball->transform(trans);
+  ball->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
+  _shapes.push_back(ball);
+
+  /*
   CompoundShape* comp1 = new CompoundShape();
   comp1->setLeftShapePtr(e1);
   comp1->setRightShapePtr(b1);
-  //_shapes.push_back(comp1);
-  // comp1->setMaterialPtr(new GlassMaterial(5));
   trans = glm::translate(glm::mat4(1.0), glm::vec3(0, 10, -30));
-  // trans = glm::rotate(trans, 3.14159f / 2, glm::vec3(0, 1, 0));
   comp1->transform(trans);
+  _shapes.push_back(comp1);
+  */
+
+  // Ground plane.
   Plane* plane0 = new Plane(0, 1, 0);
   plane0->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -30, 0)));
-  plane0->setMaterialPtr(new CheckerboardMaterial(new ShadowMaterial(Color(0, 1, 0)), new GlassMaterial(RefractiveIndex::mirror), 10, 10));
+  plane0->setMaterialPtr(new CheckerboardMaterial(new ShadowMaterial(),
+                                  new ShadowMaterial(Color(1, 1, 1)), 10, 10));
   _shapes.push_back(plane0);
 }
 

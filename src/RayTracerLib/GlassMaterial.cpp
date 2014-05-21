@@ -53,10 +53,11 @@ Color GlassMaterial::reflectionColor(const glm::vec4& normal,
                                       newRay,
                                       scene);
   }
+  // TODO(all, 05/21/14): Fix depth saving, what color should be returned?
   if (depth >= 10) {
-    return Color(1, 1, 1);
+    return scene.backgroundColor(newRay);
   }
-  return Color(1, 1, 1);
+  return scene.backgroundColor(newRay);
 }
 
 // _____________________________________________________________________________

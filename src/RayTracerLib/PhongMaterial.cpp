@@ -24,6 +24,7 @@ SOFTWARE.
 #include "./PhongMaterial.h"
 #include <glm/glm.hpp>
 #include <cassert>
+#include <cstdlib>
 #include <cmath>
 #include <algorithm>
 #include "./Color.h"
@@ -32,6 +33,16 @@ SOFTWARE.
 #include "./PointLight.h"
 #include "./Light.h"
 #include "./Ray.h"
+
+// _____________________________________________________________________________
+PhongMaterial::PhongMaterial() {
+  // Construct a random color.
+  // TODO(allofus, Sun May 11 14:12:21 CEST 2014): change to threadsafe alt.
+  _color.setR((rand() % 255) / 255.0f);  //NOLINT
+  _color.setG((rand() % 255) / 255.0f);  //NOLINT
+  _color.setB((rand() % 255) / 255.0f);  //NOLINT
+  _color.setA(1.0f);
+}
 
 // _____________________________________________________________________________
 Color PhongMaterial::getColor(const IntersectionInfo& intersectionInfo,

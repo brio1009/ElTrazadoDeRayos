@@ -37,6 +37,9 @@ class IntersectionInfo;
 /// Phong material that shades the object with the phong reflection model.
 class ShadowMaterial : public PhongMaterial {
  public:
+  /// Constructor. Randoms a color.
+  ShadowMaterial() : PhongMaterial() { }
+
   /// Constructor.
   explicit ShadowMaterial(const Color& color) : PhongMaterial(color) { }
 

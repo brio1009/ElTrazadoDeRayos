@@ -62,7 +62,7 @@ void OrthogonalCamera::render(const Scene& scene) {
                                                     scene);
         _image.setPixel(x, y, tmpColor);
       } else {
-        _image.setPixel(x, y, Color(0, 0, 0, 0));
+        _image.setPixel(x, y, scene.backgroundColor(r));
       }
     }
   }

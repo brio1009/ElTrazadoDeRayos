@@ -27,6 +27,7 @@ SOFTWARE.
 #define RAYTRACERLIB_SCENE_H_
 
 #include <vector>
+#include "./Color.h"
 
 // Forward declaration.
 class Ray;
@@ -42,6 +43,9 @@ class Scene {
   ~Scene();
   /// Traces a ray through the scene.
   IntersectionInfo traceRay(const Ray& ray) const;
+  /// Returns a color for the scene background.
+  Color backgroundColor(const Ray& ray) const { return Color(0.7, 0.8, 0.92); }
+
  private:
   /// Holds the renderable objects.
   std::vector<Shape*> _shapes;

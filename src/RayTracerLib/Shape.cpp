@@ -40,14 +40,7 @@ using std::vector;
 
 // _____________________________________________________________________________
 Shape::Shape() {
-  // Construct a random color.
-  Color tmpColor;
-  // TODO(allofus, Sun May 11 14:12:21 CEST 2014): change to threadsafe alt.
-  tmpColor.setR((rand() % 255) / 255.0f);  //NOLINT
-  tmpColor.setG((rand() % 255) / 255.0f);  //NOLINT
-  tmpColor.setB((rand() % 255) / 255.0f);  //NOLINT
-  tmpColor.setA(1.0f);
-  _materialPtr = new ShadowMaterial(tmpColor);
+  _materialPtr = new ShadowMaterial();
 }
 
 // _____________________________________________________________________________
