@@ -56,8 +56,8 @@ void Image::saveAsPPM(const std::string& filePath) const {
   }
   fprintf(f, "P6 \n");
   fprintf(f, "%ld %ld \n255\n", _width, _height);
-  for (int j = 0; j < _width; ++j) {
-    for (int i = 0; i < _height; ++i) {
+  for (int j = 0; j < _height; ++j) {
+    for (int i = 0; i < _width; ++i) {
 
       const Color& tmpPixel = getPixel(i, j);
       unsigned char color = static_cast<unsigned char>(tmpPixel.getRAsInt());
