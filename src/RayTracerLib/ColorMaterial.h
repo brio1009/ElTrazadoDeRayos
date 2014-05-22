@@ -33,7 +33,7 @@ SOFTWARE.
 #include "./Constants.h"
 
 // Forward declaration.
-class IntersectionInfo;
+struct IntersectionInfo;
 
 ///
 class ColorMaterial : public Material {

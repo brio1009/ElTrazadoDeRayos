@@ -30,7 +30,7 @@ SOFTWARE.
 
 // Forward declaration.
 class Color;
-class IntersectionInfo;
+struct IntersectionInfo;
 class Ray;
 class Scene;
 

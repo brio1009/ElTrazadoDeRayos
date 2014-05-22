@@ -54,8 +54,8 @@ bool CheckerboardMaterial::expandingSquares(const glm::vec2& coords) const {
 
 // _____________________________________________________________________________
 bool CheckerboardMaterial::checkerBoard(const glm::vec2& coords) const {
-  return static_cast<int>(abs(coords.x) / _uSize + 0.5) % 2 == 0
-         xor static_cast<int>(abs(coords.y) / _vSize + 0.5) % 2 == 0;
+  return !(static_cast<int>(abs(coords.x) / _uSize + 0.5) % 2 == 0)
+         != !(static_cast<int>(abs(coords.y) / _vSize + 0.5) % 2 == 0);
 }
 
 // _____________________________________________________________________________

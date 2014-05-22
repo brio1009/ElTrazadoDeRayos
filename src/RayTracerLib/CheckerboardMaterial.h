@@ -33,7 +33,7 @@ SOFTWARE.
 #include "./Constants.h"
 
 // Forward declaration.
-class IntersectionInfo;
+struct IntersectionInfo;
 
 /// Phong material that shades the object with the phong reflection model.
 class CheckerboardMaterial : public Material {
