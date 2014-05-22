@@ -28,6 +28,7 @@ SOFTWARE.
 #include <string>
 #include <vector>
 #include "./Color.h"
+
 using std::ofstream;
 using std::vector;
 
@@ -43,6 +44,31 @@ Image::Image(const int width, const int height)
 
 // _____________________________________________________________________________
 Image::~Image() {
+}
+
+// _____________________________________________________________________________
+void Image::saveAsPPM(const std::string& filePath) const {
+  // Open file.
+  FILE* f = fopen(filePath.c_str(), "wb");
+  if (f == NULL) {
+    // Could not open file.
+    return;
+  }
+  fprintf(f, "P6 \n");
+  fprintf(f, "%ld %ld \n255\n", _width, _height);
+  for (int j = 0; j < _width; ++j) {
+    for (int i = 0; i < _height; ++i) {
+
+      const Color& tmpPixel = getPixel(i, j);
+      unsigned char color = static_cast<unsigned char>(tmpPixel.getRAsInt());
+      fwrite(&color, sizeof(unsigned char(0)), 1, f);
+      color = static_cast<unsigned char>(tmpPixel.getGAsInt());
+      fwrite(&color, sizeof(unsigned char(0)), 1, f);
+      color = static_cast<unsigned char>(tmpPixel.getBAsInt());
+      fwrite(&color, sizeof(unsigned char(0)), 1, f);
+    }
+  }
+  fclose(f);
 }
 
 // _____________________________________________________________________________

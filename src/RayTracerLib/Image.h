@@ -40,8 +40,10 @@ class Image {
   /// Destructor.
   ~Image();
 
-  /// Saves the current image under the given name.
+  /// Saves the current image under the given name in the bmp format.
   void saveAsBMP(const std::string& filePath) const;
+  /// Saves the current image under the given name in the ascii ppm format.
+  void saveAsPPM(const std::string& filePath) const;
 
   /// Read and write access for a specific pixel.
   Color* operator()(const int x, const int y);
