@@ -34,28 +34,30 @@ SOFTWARE.
 #include "./Ray.h"
 #include "./Scene.h"
 
-size_t depth = 0;
 // _____________________________________________________________________________
 Color GlassMaterial::reflectionColor(const glm::vec4& normal,
     const glm::vec3& axis,
     const float& angle,
     const glm::vec4& position,
+    unsigned char currentDepth,
     const Scene& scene) const {
-  // get reflected color
+  // If the depth is too high we just return some color.
+  // TODO(all, Mon May 26 13:49:04 CEST 2014): What color to return?
+  if (currentDepth >= constants::maxDepth) {
+    return Color(0, 0, 0);
+  }
+  // Get reflected color.
   Ray newRay;
   newRay.setDirection(glm::rotate(normal,
                                   static_cast<float>(angle),
                                   axis));
   newRay.setOrigin(position);
+  newRay.rayInfo().depth = currentDepth + 1;
   IntersectionInfo info = scene.traceRay(newRay);
-  if (info.materialPtr && depth < 10/* && info.materialPtr != this*/) {
+  if (info.materialPtr) {
     return info.materialPtr->getColor(info,
                                       newRay,
                                       scene);
-  }
-  // TODO(all, 05/21/14): Fix depth saving, what color should be returned?
-  if (depth >= 10) {
-    return scene.backgroundColor(newRay);
   }
   return scene.backgroundColor(newRay);
 }
@@ -64,7 +66,6 @@ Color GlassMaterial::reflectionColor(const glm::vec4& normal,
 Color GlassMaterial::getColor(const IntersectionInfo& intersectionInfo,
                               const Ray& incomingRay,
                               const Scene& scene) const {
-  depth++;
   Color materialColor;
   // The axis to rotate around.
   glm::vec4 normNormal = glm::normalize(intersectionInfo.normal);
@@ -89,14 +90,21 @@ Color GlassMaterial::getColor(const IntersectionInfo& intersectionInfo,
   // SNELLS LAW
   if (((n1 / n2) * sin(tau1)) < 1) {
     materialColor = (1 - refl)
-        * reflectionColor(normNormal, axis, tau2, intersectionInfo.hitPoint, 
+        * reflectionColor(normNormal,
+                          axis,
+                          tau2,
+                          intersectionInfo.hitPoint, 
+                          incomingRay.rayInfo().depth,
                           scene);
   } else {
     refl = 1.0f;
   }
   materialColor += refl
-      * reflectionColor(normNormal, axis, -tau1, intersectionInfo.hitPoint,
+      * reflectionColor(normNormal,
+                        axis,
+                        -tau1,
+                        intersectionInfo.hitPoint,
+                        incomingRay.rayInfo().depth,
                         scene);
-  depth--;
   return materialColor;
 }

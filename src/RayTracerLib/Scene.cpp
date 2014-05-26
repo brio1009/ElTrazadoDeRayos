@@ -97,10 +97,14 @@ void Scene::defaultScene() {
   // Light* light = new PointLight(glm::vec4(0, 0, -39, 1));
   // light->setLightColor(Color(1.0f, 1.0f, 1.0f, 1.0f));
   // _lights.push_back(light);
-  for (size_t i = 0; i < 10; ++i) {
-    Light* light = new PointLight(glm::vec4(0, 10, -39 + static_cast<float>(i) * 3, 1));
-    light->setLightColor(Color(0.1f, 0.1f, 0.1f, 1.0f));
-    _lights.push_back(light); 
+  size_t numLights = 16;
+  size_t lightsPerDimension = sqrt(numLights);
+  for (size_t x = 0; x < lightsPerDimension; ++x) {
+    for (size_t z = 0; z < lightsPerDimension; ++z) {
+      Light* light = new PointLight(glm::vec4(static_cast<float>(x), 10, -39 + static_cast<float>(z) * 3, 1));
+      light->setLightColor(Color(1.0f / numLights, 1.0f / numLights, 1.0f / numLights, 1.0f / numLights));
+      _lights.push_back(light); 
+    }
   }
   // Light 2
   // light = new PointLight(glm::vec4(0, 20, 0, 1));

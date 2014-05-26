@@ -2,6 +2,7 @@
 The MIT License (MIT)
 
 Copyright (c) 2014 CantTouchDis
+Copyright (c) 2014 brio1009 <christoph1009@gmail.com> 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,37 +23,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-// This header probvides all nessecery constants for the Tracer Lib.
-#pragma once
-#ifndef RAYTRACERLIB_CONSTANTS_H_
-#define RAYTRACERLIB_CONSTANTS_H_
+#ifndef RAYTRACERLIB_RAYINFO_H_
+#define RAYTRACERLIB_RAYINFO_H_
 
-#include <limits>
+#include "./Constants.h"
 
-// TODO(bauschp): Create a Variable for floating point precision.
-//                Maybe use #define name double/float
-
-typedef double REAL;
-
-/// Refraction indices we know.
-namespace RefractiveIndex {
-  static const float glass = 1.52f;
-  static const float water = 1.333f;
-  static const float air = 1.00293f;
-  static const float diamond = 2.42f;
-  static const float mirror = std::numeric_limits<float>::max();
+/// This truct holds additional data for the ray.
+struct RayInfo {
+  /// The number of the ray since the camera. This helps us to prevent
+  /// too long recursive ray traversal. The first ray has therefore depth
+  /// 0.
+  unsigned char depth;
+  /// The refractive index at the origin of the ray.
+  // TODO(all, 26.05.2014): Make a stack out of this.
+  float refractiveIndex;
+  
+  /// Constructor.
+  RayInfo() : depth(0), refractiveIndex(RefractiveIndex::air) { }
 };
 
-namespace constants {
-  // This defines how precise a floating point variable has to be to be
-  // approximatly the value.
-  // e.g. check for zero:
-  // bool isZero(float f) { return (f < EPSILON) && (f > -EPSILON); }
-  const double EPSILON = 1e-8;
+#endif  // RAYTRACERLIB_RAYINFO_H_
 
-  /// Smallest T-epsilon.
-  const double TEPSILON = 1e-2;
-  /// Maximal depth a ray can travel.
-  const unsigned char maxDepth = 10;
-}  // namespace constants
-#endif  // RAYTRACERLIB_CONSTANTS_H_

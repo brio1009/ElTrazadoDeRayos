@@ -28,16 +28,6 @@ SOFTWARE.
 
 #include "./Material.h"
 #include "./Constants.h"
-#include <limits>
-
-/// Refraction indices we know.
-namespace RefractiveIndex {
-  static const float glass = 1.52f;
-  static const float water = 1.333f;
-  static const float air = 1.00293f;
-  static const float diamond = 2.42f;
-  static const float mirror = std::numeric_limits<float>::max();
-};
 
 /// GLass-like materials.
 class GlassMaterial : public Material {
@@ -59,6 +49,7 @@ class GlassMaterial : public Material {
       const glm::vec3& axis,
       const float& angle,
       const glm::vec4& position,
+      const unsigned char currentDepth,
       const Scene& scene) const;
 
   /// Defines the refractive index which we use to compute the ray directions.

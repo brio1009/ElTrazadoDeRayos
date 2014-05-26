@@ -2,6 +2,7 @@
 The MIT License (MIT)
 
 Copyright (c) 2014 CantTouchDis
+Copyright (c) 2014 brio1009 <christoph1009@gmail.com> 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +28,7 @@ SOFTWARE.
 #define RAYTRACERLIB_RAY_H_
 
 #include <glm/glm.hpp>
+#include "./RayInfo.h"
 
 /// Ray.
 class Ray {
@@ -65,8 +67,16 @@ class Ray {
     return returnRay;
   }
 
+  /// Returns the ray info.
+  RayInfo& rayInfo() { return _rayInfo; }
+  const RayInfo& rayInfo() const { return _rayInfo; }
+
  private:
+  /// This saves additional data, e.g. ray depth, refractive index.
+  RayInfo _rayInfo;
+  /// Origin of the ray.
   glm::vec4 _origin;
+  /// Direction of the ray.
   glm::vec4 _direction;
 };
 
