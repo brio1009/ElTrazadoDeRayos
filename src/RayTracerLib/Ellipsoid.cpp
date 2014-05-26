@@ -38,7 +38,7 @@ Ellipsoid::Ellipsoid(REAL x, REAL y, REAL z) : _rX(x), _rY(y), _rZ(z) {
 }
 
 // _____________________________________________________________________________
-vector<REAL> Ellipsoid::intersect(const Ray& ray) const {
+void Ellipsoid::intersect(const Ray& ray, vector<REAL>* out) const {
   // (px^2 / _rX^2) + (2 * px * ux * t) / _rX^2 + (ux^2 + t^2) / _rX^2
   // + (py^2 / _rY^2) + (2 * py * uy * t) / _rY^2 + (uy^2 + t^2) / _rY^2
   // + (pz^2 / _rZ^2) + (2 * pz * uz * t) / _rZ^2 + (uz^2 + t^2) / _rZ^2
@@ -66,13 +66,7 @@ vector<REAL> Ellipsoid::intersect(const Ray& ray) const {
   REAL a = transDir[0] * transDir[0] * invRX
            + transDir[1] * transDir[1] * invRY
            + transDir[2] * transDir[2] * invRZ;
-  solve::Result_t res;
-  solve::solveQuadraticEquation(&res, a, b, c);
-  vector<REAL> out(res.numResults);
-  for (int i = 0; i < res.numResults; ++i) {
-    out[i] = res.roots[i];
-  }
-  return out;
+  solve::solveQuadraticEquation(out, a, b, c);
 }
 // _____________________________________________________________________________
 glm::vec4 Ellipsoid::getNormalAt(const glm::vec4& p) const {

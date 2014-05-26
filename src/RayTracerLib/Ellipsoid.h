@@ -41,7 +41,7 @@ class Ellipsoid : public Shape {
   virtual ~Ellipsoid() { }
 
   ///
-  virtual std::vector<REAL> intersect(const Ray& ray) const;
+  virtual void intersect(const Ray& ray, std::vector<REAL>* out) const;
 
  protected:
 

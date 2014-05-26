@@ -42,7 +42,7 @@ class Box : public Shape {
   virtual ~Box() { }
 
   /// Intersection test.
-  virtual std::vector<REAL> intersect(const Ray& ray) const;
+  virtual void intersect(const Ray& ray, std::vector<REAL>* out) const;
 
  protected:
   /// Return normal.
