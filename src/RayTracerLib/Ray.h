@@ -53,17 +53,26 @@ class Ray {
   glm::vec3 directionVec3() const { return glm::vec3(_origin); }
 
   /// *-operator turned around for Ray.
-  friend inline Ray operator*(const glm::mat4& lhs, const Ray& rhs) {
+  template<class T>
+  friend inline Ray operator*(const T& lhs, const Ray& rhs) {
     Ray returnRay;
     returnRay.setDirection(lhs * rhs.direction());
     returnRay.setOrigin(lhs * rhs.origin());
     return returnRay;
   }
   /// *-operator turned around for Ray.
-  friend inline Ray operator*(const Ray& lhs, const glm::mat4& rhs) {
+  template<class T>
+  friend inline Ray operator*(const Ray& lhs, const T& rhs) {
     Ray returnRay;
     returnRay.setDirection(lhs.direction() * rhs);
     returnRay.setOrigin(lhs.origin() * rhs);
+    return returnRay;
+  }
+  /// +-operator turned around for Ray.
+  friend inline Ray operator+(const Ray& lhs, const Ray& rhs) {
+    Ray returnRay;
+    returnRay.setDirection(lhs.direction() + rhs.direction());
+    returnRay.setOrigin(lhs.origin() + rhs.origin());
     return returnRay;
   }
 

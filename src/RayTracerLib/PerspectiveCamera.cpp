@@ -29,6 +29,7 @@ SOFTWARE.
 #include "./IntersectionInfo.h"
 #include "./Scene.h"
 #include "./Material.h"
+#include "./RegularSampler.h"
 
 // _____________________________________________________________________________
 PerspectiveCamera::PerspectiveCamera(const int width,
@@ -53,34 +54,49 @@ void PerspectiveCamera::render(const Scene& scene) {
   size_t overallRayCreation = 0;
   size_t overallSceneTrace = 0;
   size_t overallGetColor = 0;
+  // TODO(bauschp, Tue May 27 16:07:08 CEST 2014): remove constants to
+  // generalize the sampling.
+  RegularSampler sampler(2);
+  glm::vec4 directions[4];
   for (int x = 0; x < _image.getWidth(); ++x) {
     for (int y = 0; y < _image.getHeight(); ++y) {
       clock_t start = clock();
-      // Create new direction.
-      glm::vec4 direction(-startX + x, startY - y, -_focalLength, 0);
-      direction = glm::normalize(direction);
-      direction = _transformation * direction;
-
-      Ray r(position, direction);
+      // Create new directions.
+      directions[0] = glm::vec4(-startX + x, startY - y, -_focalLength, 0);
+      directions[0] = _transformation * directions[0];
+      directions[1] = glm::vec4(-startX + x + 1, startY - y, -_focalLength, 0);
+      directions[1] = _transformation * directions[1];
+      directions[2] = glm::vec4(-startX + x, startY - y + 1, -_focalLength, 0);
+      directions[2] = _transformation * directions[2];
+      directions[3] = glm::vec4(-startX + x + 1, startY - y + 1, -_focalLength, 0);
+      directions[3] = _transformation * directions[3];
+      // Set the sampler borders
+      sampler.setPixelArea(Ray(position, directions[0]),
+          Ray(position, directions[1]),
+          Ray(position, directions[2]),
+          Ray(position, directions[3]));
       clock_t end = clock();
       overallRayCreation += end - start;
       // if (y == 0)
       // printf("SENDING RAY:(%.2f,%.2f,%.2f|%.2f,%.2f,%.2f)\n", position.x,
       //       position.y, position.z, direction.x, direction.y, direction.z);
       start = end;
-      IntersectionInfo info = scene.traceRay(r);
-      end = clock();
-      overallSceneTrace += end - start;
-      start = end;
-      if (info.materialPtr) {
-        // HIT
-        Color tmpColor = info.materialPtr->getColor(info,
-                                                    r,
-                                                    scene);
-        _image.setPixel(x, y, tmpColor);
-      } else {
-        _image.setPixel(x, y, scene.backgroundColor(r));
+      std::vector<Color> colors;
+      for (char i = 0; i < 4; ++i) {
+        const Ray& r(sampler.nextSample());
+        IntersectionInfo info = scene.traceRay(r);
+        end = clock();
+        overallSceneTrace += end - start;
+        start = end;
+        colors.push_back(scene.backgroundColor(r));
+        if (info.materialPtr) {
+          // HIT
+          colors[i] = info.materialPtr->getColor(info,
+                                    r,
+                                    scene);
+        }
       }
+      _image.setPixel(x, y, sampler.reconstructColor(colors));
       end = clock();
       overallGetColor += end - start;
     }

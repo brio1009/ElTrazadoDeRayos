@@ -25,6 +25,7 @@
 *.swp
 *.swo
 *~
+*.bak
 
 # Build folder
 bin
