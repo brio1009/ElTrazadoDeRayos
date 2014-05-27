@@ -24,6 +24,7 @@ SOFTWARE.
 #include "./PerspectiveCamera.h"
 #include <cmath>
 #include <ctime>
+#include <vector>
 #include "./Constants.h"
 #include "./Ray.h"
 #include "./IntersectionInfo.h"
@@ -68,7 +69,8 @@ void PerspectiveCamera::render(const Scene& scene) {
       directions[1] = _transformation * directions[1];
       directions[2] = glm::vec4(-startX + x, startY - y + 1, -_focalLength, 0);
       directions[2] = _transformation * directions[2];
-      directions[3] = glm::vec4(-startX + x + 1, startY - y + 1, -_focalLength, 0);
+      directions[3] = glm::vec4(-startX + x + 1, startY - y + 1,
+            -_focalLength, 0);
       directions[3] = _transformation * directions[3];
       // Set the sampler borders
       sampler.setPixelArea(Ray(position, directions[0]),
@@ -80,9 +82,9 @@ void PerspectiveCamera::render(const Scene& scene) {
       // if (y == 0)
       // printf("SENDING RAY:(%.2f,%.2f,%.2f|%.2f,%.2f,%.2f)\n", position.x,
       //       position.y, position.z, direction.x, direction.y, direction.z);
-      start = end;
       std::vector<Color> colors;
       for (char i = 0; i < 4; ++i) {
+        start = end;
         const Ray& r(sampler.nextSample());
         IntersectionInfo info = scene.traceRay(r);
         end = clock();
@@ -95,10 +97,10 @@ void PerspectiveCamera::render(const Scene& scene) {
                                     r,
                                     scene);
         }
+        end = clock();
+        overallGetColor += end - start;
       }
       _image.setPixel(x, y, sampler.reconstructColor(colors));
-      end = clock();
-      overallGetColor += end - start;
     }
   }
   printf("\tRay creation took: %.2f sec.\n",

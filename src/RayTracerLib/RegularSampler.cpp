@@ -25,7 +25,7 @@ SOFTWARE.
 #include <glm/glm.hpp>
 #include "./RegularSampler.h"
 #include "./Sampler.h"
-#include "./Ray.h" 
+#include "./Ray.h"
 
 // _____________________________________________________________________________
 Ray RegularSampler::getSample(const size_t& index) {
@@ -40,7 +40,7 @@ Ray RegularSampler::getSample(const size_t& index) {
       + _offsetLambda;
   float lambda2 = static_cast<float>(y) / _samplesPerImageDimension
       + _offsetLambda;
-  // Interpolate between origin and the other 
+  // Interpolate between origin and the other
   glm::vec4 nextSampleDir =
       _bottomLeft.direction() * (1.0f - lambda1) * (1.0f - lambda2)
       + _bottomRight.direction() * lambda1 * (1.0f - lambda2)

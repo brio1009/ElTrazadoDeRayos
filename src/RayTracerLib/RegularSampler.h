@@ -34,11 +34,11 @@ SOFTWARE.
 class RegularSampler : public Sampler {
  public:
   /// Creates a new Regular sampler with given sample size per dimension.
-  RegularSampler(const size_t& samplesPerImageDimension)
+  explicit RegularSampler(const size_t& samplesPerImageDimension)
       : _samplesPerImageDimension(samplesPerImageDimension) {
     _offsetLambda = 0.5f / _samplesPerImageDimension;
   }
-  virtual void nextSampleConfiguration(); 
+  virtual void nextSampleConfiguration();
  private:
   /// overrides Sampler.h's declaration
   virtual Ray getSample(const size_t& index);

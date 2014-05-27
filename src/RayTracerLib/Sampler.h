@@ -58,7 +58,7 @@ class Sampler {
       perror("SampleSize doesn`t correspond to given colors.");
       return Color(1, 0, 0, 0);
     }
-    Color out(0, 0, 0); 
+    Color out(0, 0, 0);
     // Just average them by defualt.
     for (auto it = colors.begin(); it != colors.end(); ++it) {
       // Order of operations is of importence!!!!
@@ -74,17 +74,18 @@ class Sampler {
     _sampleRays.push_back(getSample(_sampleRays.size()));
     return _sampleRays.back();
   }
+
  protected:
   /// Returnes the Sample Ray for given Index. Different indices should
-  // provide different sample Rays. This throws an exception if index is too
-  // large for a sampler. 
+  /// provide different sample Rays. This throws an exception if index is too
+  /// large for a sampler.
   virtual Ray getSample(const size_t& index) = 0;
   /// a vector that stores all Samples until nextSampleConfiguration is called.
   std::vector<Ray> _sampleRays;
   /// The Bottom Left corner of the sample area.
   Ray _bottomLeft;
   /// The Bottom Right corner of the sample area.
-  Ray _bottomRight; 
+  Ray _bottomRight;
   /// The Top Left corner of the sample area.
   Ray _topLeft;
   /// The Top Right corner of the sample area.
