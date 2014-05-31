@@ -66,12 +66,8 @@ vector<REAL> Ellipsoid::intersect(const Ray& ray) const {
   REAL a = transDir[0] * transDir[0] * invRX
            + transDir[1] * transDir[1] * invRY
            + transDir[2] * transDir[2] * invRZ;
-  solve::Result_t res;
-  solve::solveQuadraticEquation(&res, a, b, c);
-  vector<REAL> out(res.numResults);
-  for (int i = 0; i < res.numResults; ++i) {
-    out[i] = res.roots[i];
-  }
+  vector<REAL> out;
+  solve::solveQuadraticEquation(&out, a, b, c);
   return out;
 }
 // _____________________________________________________________________________

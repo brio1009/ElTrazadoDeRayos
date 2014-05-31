@@ -26,15 +26,11 @@ SOFTWARE.
 #define RAYTRACERLIB_SOLVER_H_
 #include <math.h>
 #include <stdio.h>
+#include <vector>
 #include "./Constants.h"
 
 // Helper functions to solve equations of polynoms of a certain degree.
 namespace solve {
-  // Stores up to 10 roots.
-  struct Result_t {
-    int numResults;
-    REAL roots[10];
-  };
   // Checks if the given value is zero.
   inline bool isZero(REAL val) {
     return (val <= constants::EPSILON) && (val >= -constants::EPSILON);
@@ -43,38 +39,33 @@ namespace solve {
   // Returnes the roots of a linear equation:
   // val1 * x + val0 = 0
   inline void solveLinearEquation(
-      Result_t* result,
+      std::vector<REAL>* result,
       REAL val1,
       REAL val0) {
-    if (isZero(val1)) {
-      result->numResults = 0;
-    } else {
-      result->numResults = 1;
-      result->roots[0] = isZero(val0) ? 0.0 : -val0 / val1;
+    result->resize(0);
+    if (!isZero(val1)) {
+      result->push_back(isZero(val0) ? 0.0 : -val0 / val1);
     }
   }
   // Returnes the real roots of a quadratic equation:
   // val2 * x * x + val 1 * x + val0 = 0
   inline void solveQuadraticEquation(
-      Result_t* result,
+      std::vector<REAL>* result,
       REAL val2,
       REAL val1,
       REAL val0) {
     if (isZero(val2)) {
       solveLinearEquation(result, val1, val0);
     } else {
+      result->resize(0);
       // Mitternacht
       REAL determinante = val1 * val1 - 4 * val2 * val0;
       if (isZero(determinante)) {
-        result->numResults = 1;
-        result->roots[0] = -val1 / (2 * val2);
+        result->push_back(-val1 / (2 * val2));
       } else {
         if (determinante > 0) {
-          result->numResults = 2;
-          result->roots[0] = (-val1 - sqrt(determinante)) / (2 * val2);
-          result->roots[1] = (-val1 + sqrt(determinante)) / (2 * val2);
-        } else {
-          result->numResults = 0;
+          result->push_back((-val1 - sqrt(determinante)) / (2 * val2));
+          result->push_back((-val1 + sqrt(determinante)) / (2 * val2));
         }
       }
     }
@@ -82,7 +73,7 @@ namespace solve {
   // Returnes the real roots of a qubic equation:
   // val3 * x * x * x + val2 * x * x + val 1 * x + val0 = 0
   inline void solveQubicEquation(
-      Result_t* result,
+      std::vector<REAL>* result,
       REAL val3,
       REAL val2,
       REAL val1,

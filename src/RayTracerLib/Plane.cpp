@@ -49,12 +49,8 @@ vector<REAL> Plane::intersect(const Ray& ray) const {
   REAL a = _nX * transDir[0] + _nY * transDir[1] + _nZ * transDir[2];
 
   // TODO(bauschp): put into own method and reuse.
-  solve::Result_t res;
-  solve::solveLinearEquation(&res, a, b);
   vector<REAL> out;
-  for (int i = 0; i < res.numResults; ++i) {
-    out.push_back(res.roots[i]);
-  }
+  solve::solveLinearEquation(&out, a, b);
   return out;
 }
 // ___________________________________________________________________________
