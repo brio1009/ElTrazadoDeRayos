@@ -86,7 +86,7 @@ Color GlassMaterial::getColor(const IntersectionInfo& intersectionInfo,
   }
   // TODO(bauschp, Tue May 20 14:08:52 CEST 2014): maybe change to map lookup.
   // Should safe a lot of power calculations.
-  float refl = pow((n1 - n2) / (n1 + n2), 2.0);
+  float refl = pow((n1 - n2) / (n1 + n2), 2.0f);
   // SNELLS LAW
   if (((n1 / n2) * sin(tau1)) < 1) {
     materialColor = (1 - refl)

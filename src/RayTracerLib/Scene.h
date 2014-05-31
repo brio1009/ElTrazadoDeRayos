@@ -45,7 +45,9 @@ class Scene {
   /// Traces a ray through the scene.
   IntersectionInfo traceRay(const Ray& ray) const;
   /// Returns a color for the scene background.
-  Color backgroundColor(const Ray& ray) const { return Color(0.7, 0.8, 0.92); }
+  Color backgroundColor(const Ray& ray) const { return Color(0.7f,
+                                                             0.8f,
+                                                             0.92f); }
   /// Returnes a reference to all the lights in the scene.
   const std::vector<Light*>& lights() const { return _lights; }
  private:

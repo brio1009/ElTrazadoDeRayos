@@ -49,8 +49,13 @@ Image::~Image() {
 // _____________________________________________________________________________
 void Image::saveAsPPM(const std::string& filePath) const {
   // Open file.
+#ifdef WINDOWS
+  FILE* f;
+  fopen_s(&f, filePath.c_str(), "wb");
+#else
   FILE* f = fopen(filePath.c_str(), "wb");
-  if (f == NULL) {
+#endif  // WINDOWS
+  if (!f) {
     // Could not open file.
     return;
   }
@@ -77,8 +82,13 @@ void Image::saveAsBMP(const std::string& filePath) const {
   // http://stackoverflow.com/questions/2654480/writing-bmp-image-in-pure-c-c-without-other-libraries
 
   // Open file.
+#ifdef WINDOWS
+  FILE* f;
+  fopen_s(&f, filePath.c_str(), "wb");
+#else
   FILE* f = fopen(filePath.c_str(), "wb");
-  if (f == NULL) {
+#endif  // WINDOWS
+  if (!f) {
     // Could not open file.
     return;
   }

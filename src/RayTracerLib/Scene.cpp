@@ -26,6 +26,7 @@ SOFTWARE.
 #define GLM_FORCE_RADIANS
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <ctime>
 #include <limits>
 #include <vector>
 #include "./Constants.h"
@@ -97,11 +98,11 @@ void Scene::defaultScene() {
   // Light* light = new PointLight(glm::vec4(0, 0, -39, 1));
   // light->setLightColor(Color(1.0f, 1.0f, 1.0f, 1.0f));
   // _lights.push_back(light);
-  size_t numLights = 16;
-  size_t lightsPerDimension = sqrt(numLights);
-  for (size_t x = 0; x < lightsPerDimension; ++x) {
-    for (size_t z = 0; z < lightsPerDimension; ++z) {
-      Light* light = new PointLight(glm::vec4(static_cast<float>(x), 10, -39 + static_cast<float>(z) * 3, 1));
+  int numLights = 16;
+  int lightsPerDimension = static_cast<int>(sqrt(numLights));
+  for (int x = 0; x < lightsPerDimension; ++x) {
+    for (int z = 0; z < lightsPerDimension; ++z) {
+      Light* light = new PointLight(glm::vec4((-lightsPerDimension  + static_cast<float>(x)) * 3, 10, -39 + static_cast<float>(z) * 3, 1));
       light->setLightColor(Color(1.0f / numLights, 1.0f / numLights, 1.0f / numLights, 1.0f / numLights));
       _lights.push_back(light); 
     }
