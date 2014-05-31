@@ -110,65 +110,72 @@ IntersectionInfo CompoundShape::intersectMinus(const Ray& ray,
   vector<REAL> intersectionsLeft = _leftShapePtr->intersect(newRay);
   vector<REAL> intersectionsRight = _rightShapePtr->intersect(newRay);
 
-  // Just get all the hits with the right object that fir the range.
-  size_t startIndex(0);
-  size_t endIndex(intersectionsRight.size());
+  // We first filter the right hits. This is only hit inside the left one.
+  vector<REAL> rightHits;
   for (size_t i = 0; i < intersectionsRight.size(); ++i) {
-    REAL t = intersectionsRight.at(i);
-    if (t < minimumT) {
-      startIndex = i;
+    REAL currentT = intersectionsRight.at(i);
+    // Get the t from the left intersections that is smaller and check if it
+    // has an uneven index.
+    size_t leftIndex(0);
+    for (size_t j = 0; j < intersectionsLeft.size(); ++j) {
+      if (intersectionsLeft.at(j) > currentT) {
+        break;
+      }
+      ++leftIndex;
     }
-    if (t > maximumT) {
-      endIndex = i;
-      break;
+    if (leftIndex % 2 != 0) {
+      rightHits.push_back(currentT);
     }
   }
-  ++startIndex;
 
-  REAL rightT(0), leftT(0);
-  bool hitLeft(false), hitRight(false);
-  size_t rightIndex(startIndex);
+  // Do the same thing for the left hits.
+  vector<REAL> leftHits;
   for (size_t i = 0; i < intersectionsLeft.size(); ++i) {
-    REAL myT = intersectionsLeft.at(i);
-    while (rightIndex < endIndex && intersectionsRight.at(rightIndex) < myT) {
-      ++rightIndex;
-      if (rightIndex >= endIndex) {
-        hitLeft = true;
-        leftT = intersectionsLeft.at(i);
+    // We do not hit inside the right object, so check that.
+    REAL currentT = intersectionsLeft.at(i);
+    size_t rightIndex(0);
+    for (size_t j = 0; j < intersectionsRight.size(); ++j) {
+      if (intersectionsRight.at(j) > currentT) {
         break;
       }
+      ++rightIndex;
     }
     if (rightIndex % 2 == 0) {
-      // i is inside of right
-      if (rightIndex + 1 >= intersectionsRight.size()
-          || i + 1 >= intersectionsLeft.size()) {
-        break;
-      }
-      if (intersectionsRight.at(rightIndex + 1) < intersectionsLeft.at(i + 1)) {
-        // Draw the Right shape
-        hitRight = true;
-        rightT = intersectionsRight.at(rightIndex + 1);
-        break;
-      }
-    } else {
+      leftHits.push_back(currentT);
+    }
+  }
+
+  bool hitRight(false);
+  bool hitLeft(false);
+
+  // Find the smallest T in both vectors.
+  REAL smallestT = std::numeric_limits<REAL>::max();
+  for (size_t i = 0; i < rightHits.size(); ++i) {
+    if (rightHits.at(i) <= smallestT) {
+      smallestT = rightHits.at(i);
+      hitRight = true;
+    }
+  }
+  for (size_t i = 0; i < leftHits.size(); ++i) {
+    if (leftHits.at(i) <= smallestT) {
+      smallestT = leftHits.at(i);
+      hitRight = false;
       hitLeft = true;
-      leftT = intersectionsLeft.at(i);
-      break;
-    }    
+    }
   }
 
   // Check if we hit something.
   if (hitRight) {
     IntersectionInfo info = _rightShapePtr->getIntersectionInfo(newRay,
-                                            rightT - 2.0 * constants::TEPSILON,
-                                            rightT + 2.0 * constants::TEPSILON);
+                                            smallestT - 2.0 * constants::TEPSILON,
+                                            smallestT + 2.0 * constants::TEPSILON);
     adaptInstersectionInfo(&info);
     return info;
   }
   if (hitLeft) {
     IntersectionInfo info = _leftShapePtr->getIntersectionInfo(newRay,
-                                             leftT - 2.0 * constants::TEPSILON,
-                                             leftT + 2.0 * constants::TEPSILON);
+                                             smallestT - 2.0 * constants::TEPSILON,
+                                             smallestT + 2.0 * constants::TEPSILON);
     adaptInstersectionInfo(&info);
     return info;
   }

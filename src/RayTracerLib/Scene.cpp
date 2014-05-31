@@ -48,6 +48,40 @@ SOFTWARE.
 
 using std::vector;
 
+void Scene::compoundTestScene() {
+  // Compound shape.
+  Box* box = new Box(20, 20, 20);
+
+  Ellipsoid* ellipsoid = new Ellipsoid(10, 10, 10);
+  glm::mat4 trans = glm::translate(glm::mat4(1.0), glm::vec3(10, 10, 10));
+  ellipsoid->transform(trans);
+
+  CompoundShape* cmpdShape = new CompoundShape();
+  cmpdShape->setLeftShapePtr(box);
+  cmpdShape->setRightShapePtr(ellipsoid);
+  trans = glm::translate(glm::mat4(1.0), glm::vec3(0, 0, 15));
+  cmpdShape->transform(trans);
+  _shapes.push_back(cmpdShape);
+
+  // Ground plane.
+  Plane* plane0 = new Plane(0, 1, 0);
+  plane0->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -30, 0)));
+  plane0->setMaterialPtr(new CheckerboardMaterial(new ShadowMaterial(),
+                                  new ShadowMaterial(Color(1, 1, 1)), 10, 10));
+  _shapes.push_back(plane0);
+
+  // Lights.
+  int numLights = 1;
+  int lightsPerDimension = static_cast<int>(sqrt(numLights));
+  for (int x = 0; x < lightsPerDimension; ++x) {
+    for (int z = 0; z < lightsPerDimension; ++z) {
+      Light* light = new PointLight(glm::vec4((-lightsPerDimension  + static_cast<float>(x)) * 3, 10, -39 + static_cast<float>(z) * 3, 1));
+      light->setLightColor(Color(1.0f / numLights, 1.0f / numLights, 1.0f / numLights, 1.0f / numLights));
+      _lights.push_back(light); 
+    }
+  }
+}
+
 // TODO(allofus, Wed May 21 17:12:00 CEST 2014): Remove if we have a scene load.
 void Scene::defaultScene() {
   Ellipsoid* ell = new Ellipsoid(20, 10, 20);
@@ -114,7 +148,7 @@ void Scene::defaultScene() {
 }
 // _____________________________________________________________________________
 Scene::Scene() {
-  defaultScene();
+  compoundTestScene();
 }
 
 // _____________________________________________________________________________

@@ -53,6 +53,9 @@ class Scene {
  private:
   /// Initializes the default scene.
   void defaultScene();
+
+  /// Initializes a test scene for compound shapes.
+  void compoundTestScene();
   /// Holds the renderable objects.
   std::vector<Shape*> _shapes;
   /// Holds the lights in a scene.
