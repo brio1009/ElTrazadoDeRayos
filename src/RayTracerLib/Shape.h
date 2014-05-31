@@ -60,7 +60,7 @@ class Shape : public Object {
 
   // Intersects the Ray with this Shape and returns the values for t
   // rPos + rDir * t that intersect the surface of this Shape.
-  virtual void intersect(const Ray& ray, std::vector<REAL>* out) const = 0;
+  virtual std::vector<REAL> intersect(const Ray& ray) const = 0;
 
   /// Setter for the material pointer. Be careful, the old material is not
   /// automatically deleted!
@@ -69,8 +69,6 @@ class Shape : public Object {
   }
 
  protected:
-  // TODO(bauschp, Mon May 26 18:11:17 CEST 2014): remove this.
-  static std::vector<REAL> buffer;
   // Returnes the appearence of the surface Point p
   // if p isn't on the surface everything can happen.
   // TODO(allofus): what should be returned here?

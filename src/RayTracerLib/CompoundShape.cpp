@@ -107,10 +107,8 @@ IntersectionInfo CompoundShape::intersectMinus(const Ray& ray,
 
   // Consider the intersection of the right shape only inside the left
   // shape.
-  vector<REAL> intersectionsLeft;
-  _leftShapePtr->intersect(newRay, &intersectionsLeft);
-  vector<REAL> intersectionsRight;
-  _rightShapePtr->intersect(newRay, &intersectionsRight);
+  vector<REAL> intersectionsLeft = _leftShapePtr->intersect(newRay);
+  vector<REAL> intersectionsRight = _rightShapePtr->intersect(newRay);
 
   // Just get all the hits with the right object that fir the range.
   size_t startIndex(0);

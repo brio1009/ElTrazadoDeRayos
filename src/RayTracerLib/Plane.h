@@ -41,7 +41,7 @@ class Plane : public Shape {
   // ___________________________________________________________________________
   virtual ~Plane() { }
   // ___________________________________________________________________________
-  virtual void intersect(const Ray& ray, std::vector<REAL>* out) const;
+  virtual std::vector<REAL> intersect(const Ray& ray) const;
   // ___________________________________________________________________________
   virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
  private:

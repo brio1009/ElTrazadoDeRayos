@@ -42,7 +42,7 @@ Box::Box(REAL x, REAL y, REAL z) : _rX(x), _rY(y), _rZ(z) {
 }
 
 // _____________________________________________________________________________
-void Box::intersect(const Ray& ray, vector<REAL>* out) const {
+vector<REAL> Box::intersect(const Ray& ray) const {
   // Bring vector to unit space.
   Ray transRay = _inverseTransform * ray;
   // This is the slab method.
@@ -63,13 +63,16 @@ void Box::intersect(const Ray& ray, vector<REAL>* out) const {
   glm::vec4 tMin = glm::min(t1, t2);
   glm::vec4 tMax = glm::max(t1, t2);
 
-  out->resize(2);
-  (*out)[0] = std::max(tMin.x, std::max(tMin.y, tMin.z));
-  (*out)[1] = std::min(tMax.x, std::min(tMax.y, tMax.z));
+  vector<REAL> hits(2);
 
-  // Test if we even hit.
-  if ((*out)[1] < (*out)[0])
-    out->resize(0);
+  hits[0] = std::max(tMin.x, std::max(tMin.y, tMin.z));
+  hits[1] = std::min(tMax.x, std::min(tMax.y, tMax.z));
+
+  if (hits[1] >= hits[0])
+    return hits;
+
+  // Else.
+  return vector<REAL>();
 }
 // _____________________________________________________________________________
 glm::vec4 Box::getNormalAt(const glm::vec4& p) const {

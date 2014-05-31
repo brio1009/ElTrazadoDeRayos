@@ -37,7 +37,7 @@ SOFTWARE.
 #include "./ShadowMaterial.h"
 
 using std::vector;
-vector<REAL> Shape::buffer;
+
 // _____________________________________________________________________________
 Shape::Shape() {
   _materialPtr = new ShadowMaterial();
@@ -56,14 +56,14 @@ IntersectionInfo Shape::getIntersectionInfo(const Ray& ray,
     const REAL maximumT) const {
   REAL smallestT = std::numeric_limits<REAL>::max();
   // Test the object for a hit.
-  intersect(ray, &buffer);
+  vector<REAL> hits = intersect(ray);
   bool hit(false);
   // Loop over
-  for (size_t j = 0; j < buffer.size(); ++j) {
-    if (buffer.at(j) >= minimumT
-        && buffer.at(j) < smallestT
-        && buffer.at(j) <= maximumT) {
-      smallestT = buffer.at(j);
+  for (size_t j = 0; j < hits.size(); ++j) {
+    if (hits.at(j) >= minimumT
+        && hits.at(j) < smallestT
+        && hits.at(j) <= maximumT) {
+      smallestT = hits.at(j);
       hit = true;
     }
   }
