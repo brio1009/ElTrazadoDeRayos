@@ -51,15 +51,18 @@ using std::vector;
 void Scene::compoundTestScene() {
   // Compound shape.
   Box* box = new Box(20, 20, 20);
+  glm::mat4 trans = glm::translate(glm::mat4(1.0), glm::vec3(-30, -20, -15));
+  box->transform(trans);
 
   Ellipsoid* ellipsoid = new Ellipsoid(10, 10, 10);
-  glm::mat4 trans = glm::translate(glm::mat4(1.0), glm::vec3(10, 10, 10));
+  // trans = glm::translate(glm::mat4(1.0), glm::vec3(10, 10, 10));
+  trans = glm::translate(glm::mat4(1.0), glm::vec3(-20, -10, -5));
   ellipsoid->transform(trans);
 
   CompoundShape* cmpdShape = new CompoundShape();
   cmpdShape->setLeftShapePtr(box);
   cmpdShape->setRightShapePtr(ellipsoid);
-  trans = glm::translate(glm::mat4(1.0), glm::vec3(0, 0, 15));
+  trans = glm::translate(glm::mat4(1.0), glm::vec3(-30, -20, -15));
   cmpdShape->transform(trans);
   _shapes.push_back(cmpdShape);
 

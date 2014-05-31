@@ -31,14 +31,15 @@ SOFTWARE.
 #include "./Constants.h"
 #include "./IntersectionInfo.h"
 #include "./Ray.h"
+#include "./Solver.h"
 
 using std::vector;
 
 // _____________________________________________________________________________
 CompoundShape::CompoundShape()
-  : _passTransformation(true),
+  : _passTransformation(false),
     _useChildMaterials(true),
-    _operator(CompoundShape::Operator::minusOp) {
+    _operator(CompoundShape::Operator::intersectionOp) {
 }
 
 // _____________________________________________________________________________
@@ -92,6 +93,87 @@ IntersectionInfo CompoundShape::intersectUnion(const Ray& ray,
 IntersectionInfo CompoundShape::intersectIntersect(const Ray& ray,
                                                const REAL minimumT,
                                                const REAL maximumT) const {
+  // Transform the ray if needed.
+  Ray newRay = ray;
+  if (passTransformation()) {
+    newRay = _inverseTransform * ray;
+  }
+
+  // Consider the intersection of the right shape only inside the left
+  // shape.
+  vector<REAL> intersectionsLeft = _leftShapePtr->intersect(newRay);
+  vector<REAL> intersectionsRight = _rightShapePtr->intersect(newRay);
+
+  // We first filter the right hits. This is only hit inside the left one.
+  vector<REAL> rightHits;
+  for (size_t i = 0; i < intersectionsRight.size(); ++i) {
+    REAL currentT = intersectionsRight.at(i);
+    // Get the t from the left intersections that is smaller and check if it
+    // has an uneven index.
+    size_t leftIndex(0);
+    for (size_t j = 0; j < intersectionsLeft.size(); ++j) {
+      if (intersectionsLeft.at(j) > currentT) {
+        break;
+      }
+      ++leftIndex;
+    }
+    if (leftIndex % 2 != 0) {
+      rightHits.push_back(currentT);
+    }
+  }
+
+  // Do the same thing for the left hits.
+  vector<REAL> leftHits;
+  for (size_t i = 0; i < intersectionsLeft.size(); ++i) {
+    // We do not hit inside the right object, so check that.
+    REAL currentT = intersectionsLeft.at(i);
+    size_t rightIndex(0);
+    for (size_t j = 0; j < intersectionsRight.size(); ++j) {
+      if (intersectionsRight.at(j) > currentT) {
+        break;
+      }
+      ++rightIndex;
+    }
+    if (rightIndex % 2 != 0) {
+      leftHits.push_back(currentT);
+    }
+  }
+
+  bool hitRight(false);
+  bool hitLeft(false);
+
+  // Find the smallest T in both vectors.
+  REAL smallestT = std::numeric_limits<REAL>::max();
+  for (size_t i = 0; i < rightHits.size(); ++i) {
+    if (rightHits.at(i) <= smallestT) {
+      smallestT = rightHits.at(i);
+      hitRight = true;
+    }
+  }
+  for (size_t i = 0; i < leftHits.size(); ++i) {
+    if (leftHits.at(i) <= smallestT) {
+      smallestT = leftHits.at(i);
+      hitRight = false;
+      hitLeft = true;
+    }
+  }
+
+  // Check if we hit something.
+  if (hitRight) {
+    IntersectionInfo info = _rightShapePtr->getIntersectionInfo(newRay,
+                                            smallestT - 2.0 * constants::TEPSILON,
+                                            smallestT + 2.0 * constants::TEPSILON);
+    adaptInstersectionInfo(&info);
+    return info;
+  }
+  if (hitLeft) {
+    IntersectionInfo info = _leftShapePtr->getIntersectionInfo(newRay,
+                                             smallestT - 2.0 * constants::TEPSILON,
+                                             smallestT + 2.0 * constants::TEPSILON);
+    adaptInstersectionInfo(&info);
+    return info;
+  }
+  // Else.
   return IntersectionInfo();
 }
 
@@ -170,6 +252,7 @@ IntersectionInfo CompoundShape::intersectMinus(const Ray& ray,
                                             smallestT - 2.0 * constants::TEPSILON,
                                             smallestT + 2.0 * constants::TEPSILON);
     adaptInstersectionInfo(&info);
+    info.normal = -info.normal;
     return info;
   }
   if (hitLeft) {
@@ -194,6 +277,12 @@ void CompoundShape::adaptInstersectionInfo(
   if (passTransformation()) {
     infoPtr->normal = glm::normalize(_transformation * infoPtr->normal);
     infoPtr->hitPoint = _transformation * infoPtr->hitPoint;
+    if (solve::isZero(infoPtr->hitPoint[3]))
+    {
+      infoPtr->hitPoint[3] = 0.0;
+      return;
+    }
+    infoPtr->hitPoint /= infoPtr->hitPoint[3];
   }
 }
 
