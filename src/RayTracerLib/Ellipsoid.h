@@ -40,15 +40,18 @@ class Ellipsoid : public Shape {
   /// Destructor.
   virtual ~Ellipsoid() { }
 
-  ///
+  /// Returns intersections.
   virtual std::vector<REAL> intersect(const Ray& ray) const;
 
  protected:
-
-  ///
+  /// Override.
   virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
 
+  /// Override.
+  virtual glm::vec2 getTextureCoord(const glm::vec4& p) const;
+
  private:
+  // Radii.
   REAL _rX;
   REAL _rY;
   REAL _rZ;

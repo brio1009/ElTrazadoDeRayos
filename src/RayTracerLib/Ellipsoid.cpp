@@ -80,3 +80,9 @@ glm::vec4 Ellipsoid::getNormalAt(const glm::vec4& p) const {
       0);
   return glm::normalize(_transformation * trans);
 }
+
+// _____________________________________________________________________________
+glm::vec2 Ellipsoid::getTextureCoord(const glm::vec4& p) const {
+  glm::vec4 trans = _inverseTransform * p;
+  return textureProjectionSphere(trans);
+}

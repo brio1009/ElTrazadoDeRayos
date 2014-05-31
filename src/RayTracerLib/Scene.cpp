@@ -113,15 +113,6 @@ void Scene::defaultScene() {
   ball->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
   _shapes.push_back(ball);
 
-  /*
-  CompoundShape* comp1 = new CompoundShape();
-  comp1->setLeftShapePtr(e1);
-  comp1->setRightShapePtr(b1);
-  trans = glm::translate(glm::mat4(1.0), glm::vec3(0, 10, -30));
-  comp1->transform(trans);
-  _shapes.push_back(comp1);
-  */
-
   // Ground plane.
   Plane* plane0 = new Plane(0, 1, 0);
   plane0->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -30, 0)));
@@ -130,11 +121,6 @@ void Scene::defaultScene() {
   _shapes.push_back(plane0);
 
   // Generate Lights for the scene.
-  // Light 1
-  // TODO(bauschp): fix mem leaks.
-  // Light* light = new PointLight(glm::vec4(0, 0, -39, 1));
-  // light->setLightColor(Color(1.0f, 1.0f, 1.0f, 1.0f));
-  // _lights.push_back(light);
   int numLights = 16;
   int lightsPerDimension = static_cast<int>(sqrt(numLights));
   for (int x = 0; x < lightsPerDimension; ++x) {
@@ -144,14 +130,12 @@ void Scene::defaultScene() {
       _lights.push_back(light); 
     }
   }
-  // Light 2
-  // light = new PointLight(glm::vec4(0, 20, 0, 1));
-  // light->setLightColor(Color(0.0f, 1.0f, 0.0f, 1.0f));
-  // _lights.push_back(light);
 }
+
 // _____________________________________________________________________________
 Scene::Scene() {
-  compoundTestScene();
+  // compoundTestScene();
+  defaultScene();
 }
 
 // _____________________________________________________________________________

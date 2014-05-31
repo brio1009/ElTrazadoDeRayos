@@ -80,6 +80,11 @@ class Shape : public Object {
   /// Getter for the material pointer.
   const Material* getMaterialPtr() const { return _materialPtr; }
 
+  /// Texture coords projection function plane.
+  glm::vec2 textureProjectionPlaneXZ(const glm::vec4& localPoint) const;
+  /// Texture coords projection function sphere.
+  glm::vec2 textureProjectionSphere(const glm::vec4& localPoint) const;
+
  private:
   const Material* _materialPtr;
 };
