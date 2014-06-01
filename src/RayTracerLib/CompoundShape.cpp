@@ -38,8 +38,8 @@ using std::vector;
 // _____________________________________________________________________________
 CompoundShape::CompoundShape()
   : _passTransformation(true),
-    _useChildMaterials(false),
-    _operator(CompoundShape::Operator::intersectionOp) {
+    _useChildMaterials(true),
+    _operator(CompoundShape::Operator::minusOp) {
 }
 
 // _____________________________________________________________________________
@@ -145,20 +145,20 @@ IntersectionInfo CompoundShape::intersectIntersect(const Ray& ray,
   // Find the smallest T in both vectors.
   REAL smallestT = std::numeric_limits<REAL>::max();
   for (size_t i = 0; i < rightHits.size(); ++i) {
-    if (rightHits.at(i) <= smallestT) {
+    if (rightHits.at(i) <= smallestT
+        && rightHits.at(i) >= constants::TEPSILON) {
       smallestT = rightHits.at(i);
       hitRight = true;
     }
   }
   for (size_t i = 0; i < leftHits.size(); ++i) {
-    if (leftHits.at(i) <= smallestT) {
+    if (leftHits.at(i) <= smallestT
+        && leftHits.at(i) >= constants::TEPSILON) {
       smallestT = leftHits.at(i);
       hitRight = false;
       hitLeft = true;
     }
   }
-  if (smallestT < 0.0f)
-    return IntersectionInfo();
 
   // Check if we hit something.
   if (hitRight) {
@@ -235,13 +235,15 @@ IntersectionInfo CompoundShape::intersectMinus(const Ray& ray,
   // Find the smallest T in both vectors.
   REAL smallestT = std::numeric_limits<REAL>::max();
   for (size_t i = 0; i < rightHits.size(); ++i) {
-    if (rightHits.at(i) <= smallestT) {
+    if (rightHits.at(i) <= smallestT
+        && rightHits.at(i) >= constants::TEPSILON) {
       smallestT = rightHits.at(i);
       hitRight = true;
     }
   }
   for (size_t i = 0; i < leftHits.size(); ++i) {
-    if (leftHits.at(i) <= smallestT) {
+    if (leftHits.at(i) <= smallestT
+        && leftHits.at(i) >= constants::TEPSILON) {
       smallestT = leftHits.at(i);
       hitRight = false;
       hitLeft = true;

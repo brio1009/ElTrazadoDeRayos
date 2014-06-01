@@ -49,14 +49,14 @@ SOFTWARE.
 using std::vector;
 
 void Scene::compoundTestScene() {
-  // Compound shape.
+  // Compound shape 1.
   Box* box = new Box(20, 20, 20);
   glm::mat4 trans = glm::translate(glm::mat4(1.0), glm::vec3(-30, -20, -15));
-  box->transform(trans);
+  // box->transform(trans);
 
-  Ellipsoid* ellipsoid = new Ellipsoid(10, 10, 10);
-  // trans = glm::translate(glm::mat4(1.0), glm::vec3(10, 10, 10));
-  trans = glm::translate(glm::mat4(1.0), glm::vec3(-20, -10, -5));
+  Ellipsoid* ellipsoid = new Ellipsoid(15, 15, 15);
+  trans = glm::translate(glm::mat4(1.0), glm::vec3(10, 10, 10));
+  // trans = glm::translate(glm::mat4(1.0), glm::vec3(-20, -10, -5));
   ellipsoid->transform(trans);
 
   CompoundShape* cmpdShape = new CompoundShape();
@@ -65,6 +65,24 @@ void Scene::compoundTestScene() {
   trans = glm::translate(glm::mat4(1.0), glm::vec3(-30, -20, -15));
   cmpdShape->transform(trans);
   _shapes.push_back(cmpdShape);
+
+  // Compound shape 2.
+  Box* box2 = new Box(20, 20, 20);
+  // trans = glm::translate(glm::mat4(1.0), glm::vec3(-30, -20, -15));
+  // box->transform(trans);
+
+  Ellipsoid* ellipsoid2 = new Ellipsoid(15, 15, 15);
+  trans = glm::translate(glm::mat4(1.0), glm::vec3(10, 10, 10));
+  // trans = glm::translate(glm::mat4(1.0), glm::vec3(-20, -10, -5));
+  ellipsoid2->transform(trans);
+
+  CompoundShape* cmpdShape2 = new CompoundShape();
+  cmpdShape2->setOperator(CompoundShape::Operator::intersectionOp);
+  cmpdShape2->setLeftShapePtr(box2);
+  cmpdShape2->setRightShapePtr(ellipsoid2);
+  trans = glm::translate(glm::mat4(1.0), glm::vec3(-15, -5, 0));
+  cmpdShape2->transform(trans);
+  _shapes.push_back(cmpdShape2);
 
   // Ground plane.
   Plane* plane0 = new Plane(0, 1, 0);
@@ -90,15 +108,20 @@ void Scene::defaultScene() {
   Ellipsoid* ell = new Ellipsoid(20, 10, 20);
   ell->transform(glm::translate(glm::mat4(1.0), glm::vec3(50, 20, 0)));
   _shapes.push_back(ell);
+
   Ellipsoid* ell1 = new Ellipsoid(10, 30, 30);
   glm::mat4 trans = glm::translate(glm::mat4(1.0), glm::vec3(0, 0, 31));
   trans = glm::rotate(trans, 3.141f/2, glm::vec3(0, 1, 0));
   ell1->transform(trans);
-  ell1->setMaterialPtr(new GlassMaterial(RefractiveIndex::mirror));
+  // ell1->setMaterialPtr(new GlassMaterial(RefractiveIndex::mirror));
+  ell1->setMaterialPtr(new CheckerboardMaterial(new ShadowMaterial(),
+                                  new ShadowMaterial(Color(1, 1, 1)), 10, 10));
   _shapes.push_back(ell1);
+
   Box* ell3 = new Box(20, 20, 20);
   ell3->transform(glm::translate(glm::mat4(1.0), glm::vec3(-30, -0, -50)));
   _shapes.push_back(ell3);
+
   // ell3->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
 //  Ellipsoid* ell2 = new Ellipsoid(5, 5, 5);
 //  _shapes.push_back(ell2);
@@ -110,7 +133,9 @@ void Scene::defaultScene() {
   Ellipsoid* ball = new Ellipsoid(10, 10, 10);
   trans = glm::translate(glm::mat4(1.0), glm::vec3(0, -20, -11));
   ball->transform(trans);
-  ball->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
+  // ball->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
+  ball->setMaterialPtr(new CheckerboardMaterial(new ShadowMaterial(),
+                                  new ShadowMaterial(), 0.1, 0.1));
   _shapes.push_back(ball);
 
   // Ground plane.
@@ -134,8 +159,8 @@ void Scene::defaultScene() {
 
 // _____________________________________________________________________________
 Scene::Scene() {
-  // compoundTestScene();
-  defaultScene();
+  compoundTestScene();
+  // defaultScene();
 }
 
 // _____________________________________________________________________________

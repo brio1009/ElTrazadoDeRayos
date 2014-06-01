@@ -38,7 +38,7 @@ SOFTWARE.
 class CompoundShape : public Shape {
  public:
   /// Enum to define how the child shapes are combined.
-  enum Operator {
+  enum class Operator {
     unionOp,
     intersectionOp,
     minusOp
@@ -65,8 +65,14 @@ class CompoundShape : public Shape {
   /// Getter for _useChildMaterials.
   const bool useChildMaterials() const { return _useChildMaterials; }
 
+  /// Setter for _useChildMaterials.
+  void useChildMaterials(bool val) { _useChildMaterials = val; }
+
   /// Getter for _passTransformation.
   const bool passTransformation() const { return _passTransformation; }
+
+  /// Setter for _passTransformation.
+  void setPassTransformation(bool val) { _passTransformation = val; }
 
   /// Set the left object.
   void setLeftShapePtr(const Shape* shapePtr) { _leftShapePtr = shapePtr; }
