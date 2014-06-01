@@ -37,8 +37,8 @@ using std::vector;
 
 // _____________________________________________________________________________
 CompoundShape::CompoundShape()
-  : _passTransformation(false),
-    _useChildMaterials(true),
+  : _passTransformation(true),
+    _useChildMaterials(false),
     _operator(CompoundShape::Operator::intersectionOp) {
 }
 
@@ -157,6 +157,8 @@ IntersectionInfo CompoundShape::intersectIntersect(const Ray& ray,
       hitLeft = true;
     }
   }
+  if (smallestT < 0.0f)
+    return IntersectionInfo();
 
   // Check if we hit something.
   if (hitRight) {
