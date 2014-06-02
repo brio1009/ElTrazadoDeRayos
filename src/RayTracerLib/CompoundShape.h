@@ -2,6 +2,7 @@
 The MIT License (MIT)
 
 Copyright (c) 2014 CantTouchDis
+Copyright (c) 2014 brio1009 <christoph1009@gmail.com> 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +35,9 @@ SOFTWARE.
 #include "./IntersectionInfo.h"
 #include "./Shape.h"
 
+// Forward declaration.
+class Ray;
+
 ///
 class CompoundShape : public Shape {
  public:
@@ -46,6 +50,10 @@ class CompoundShape : public Shape {
 
   /// Constructor.
   CompoundShape();
+
+  /// Constructor.
+  CompoundShape(Shape* leftShapePtr, Shape* rightShapePtr);
+
   /// Destructor.
   virtual ~CompoundShape() { }
 
@@ -66,7 +74,7 @@ class CompoundShape : public Shape {
   const bool useChildMaterials() const { return _useChildMaterials; }
 
   /// Setter for _useChildMaterials.
-  void useChildMaterials(bool val) { _useChildMaterials = val; }
+  void setUseChildMaterials(bool val) { _useChildMaterials = val; }
 
   /// Getter for _passTransformation.
   const bool passTransformation() const { return _passTransformation; }
@@ -81,18 +89,10 @@ class CompoundShape : public Shape {
   void setRightShapePtr(const Shape* shapePtr) { _rightShapePtr = shapePtr; }
 
  protected:
-  IntersectionInfo intersectUnion(const Ray& ray,
-    const REAL minimumT = constants::TEPSILON,
-    const REAL maximumT = std::numeric_limits<REAL>::max()) const;
-
-  IntersectionInfo intersectIntersect(const Ray& ray,
-    const REAL minimumT = constants::TEPSILON,
-    const REAL maximumT = std::numeric_limits<REAL>::max()) const;
-
-  IntersectionInfo intersectMinus(const Ray& ray,
-    const REAL minimumT = constants::TEPSILON,
-    const REAL maximumT = std::numeric_limits<REAL>::max()) const;
-
+  ///
+  void getIntersects(const Ray& ray,
+                     std::vector<REAL>* leftHits,
+                     std::vector<REAL>* rightHits) const;
   /// Intersection test. Not used here.
   virtual std::vector<REAL> intersect(const Ray& ray) const;
   /// Return normal. Not used here.

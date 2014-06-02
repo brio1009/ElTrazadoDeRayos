@@ -48,6 +48,73 @@ SOFTWARE.
 
 using std::vector;
 
+void Scene::cgCube() {
+  // Main cube.
+  Box* box = new Box(40, 40, 40);
+  box->setMaterialPtr(new ShadowMaterial(Color(1, 0.60, 0.75)));
+
+  // Sphere.
+  Ellipsoid* ellipsoid = new Ellipsoid(26, 26, 26);
+  ellipsoid->setMaterialPtr(new ShadowMaterial(Color(0.1, 0.1, 0.9)));
+
+  // Compound Shape of them.
+  CompoundShape* roundedBox = new CompoundShape(box, ellipsoid);
+  roundedBox->setOperator(CompoundShape::Operator::intersectionOp);
+
+  // Two tubes.
+  Ellipsoid* tube1 = new Ellipsoid(10000, 12, 12);
+  Ellipsoid* tube2 = new Ellipsoid(12, 10000, 12);
+  // Compound shape of them.
+  CompoundShape* twoTubes = new CompoundShape(tube1, tube2);
+  twoTubes->setOperator(CompoundShape::Operator::unionOp);
+  // Third tube.
+  Ellipsoid* tube3 = new Ellipsoid(12, 12, 10000);
+  // Compound shape of them.
+  CompoundShape* threeTubes = new CompoundShape(twoTubes, tube3);
+  threeTubes->setOperator(CompoundShape::Operator::unionOp);
+  threeTubes->setMaterialPtr(new ShadowMaterial(Color(0, 1, 0)));
+  // threeTubes->setMaterialPtr(new GlassMaterial(RefractiveIndex::mirror));
+  threeTubes->setUseChildMaterials(false);
+
+  // Main compound shape.
+  CompoundShape* mainObject = new CompoundShape(roundedBox, threeTubes);
+  mainObject->setOperator(CompoundShape::Operator::minusOp);
+
+  _shapes.push_back(mainObject);
+
+  // Ground plane.
+  Plane* plane0 = new Plane(0, 1, 0);
+  plane0->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -40, 0)));
+  plane0->setMaterialPtr(new CheckerboardMaterial(new ShadowMaterial(),
+                                  new ShadowMaterial(Color(1, 1, 1)), 10, 10));
+  _shapes.push_back(plane0);
+
+  // Lights.
+  int numLights = 2;
+  int lightsPerDimension = static_cast<int>(sqrt(numLights / 2.0));
+  for (int x = 0; x < lightsPerDimension; ++x) {
+    for (int z = 0; z < lightsPerDimension; ++z) {
+      Light* light = new PointLight(glm::vec4((-lightsPerDimension + static_cast<float>(x)) * 3,
+                                              20,
+                                              50 + static_cast<float>(z) * 3,
+                                              1));
+      light->setLightColor(Color(1.0f / numLights, 1.0f / numLights, 1.0f / numLights, 1.0f / numLights));
+      _lights.push_back(light); 
+    }
+  }
+
+  for (int x = 0; x < lightsPerDimension; ++x) {
+    for (int z = 0; z < lightsPerDimension; ++z) {
+      Light* light = new PointLight(glm::vec4((static_cast<float>(x)),
+                                              0,
+                                              static_cast<float>(z),
+                                              1));
+      light->setLightColor(Color(1.0f / numLights, 1.0f / numLights, 1.0f / numLights, 1.0f / numLights));
+      _lights.push_back(light); 
+    }
+  }
+}
+
 void Scene::compoundTestScene() {
   // Compound shape 1.
   Box* box = new Box(20, 20, 20);
@@ -96,7 +163,7 @@ void Scene::compoundTestScene() {
   int lightsPerDimension = static_cast<int>(sqrt(numLights));
   for (int x = 0; x < lightsPerDimension; ++x) {
     for (int z = 0; z < lightsPerDimension; ++z) {
-      Light* light = new PointLight(glm::vec4((-lightsPerDimension  + static_cast<float>(x)) * 3, 10, -39 + static_cast<float>(z) * 3, 1));
+      Light* light = new PointLight(glm::vec4((-lightsPerDimension + static_cast<float>(x)) * 3, 10, -39 + static_cast<float>(z) * 3, 1));
       light->setLightColor(Color(1.0f / numLights, 1.0f / numLights, 1.0f / numLights, 1.0f / numLights));
       _lights.push_back(light); 
     }
@@ -150,7 +217,7 @@ void Scene::defaultScene() {
   int lightsPerDimension = static_cast<int>(sqrt(numLights));
   for (int x = 0; x < lightsPerDimension; ++x) {
     for (int z = 0; z < lightsPerDimension; ++z) {
-      Light* light = new PointLight(glm::vec4((-lightsPerDimension  + static_cast<float>(x)) * 3, 10, -39 + static_cast<float>(z) * 3, 1));
+      Light* light = new PointLight(glm::vec4((-lightsPerDimension + static_cast<float>(x)) * 3, 10, -39 + static_cast<float>(z) * 3, 1));
       light->setLightColor(Color(1.0f / numLights, 1.0f / numLights, 1.0f / numLights, 1.0f / numLights));
       _lights.push_back(light); 
     }
@@ -159,8 +226,9 @@ void Scene::defaultScene() {
 
 // _____________________________________________________________________________
 Scene::Scene() {
-  compoundTestScene();
+  // compoundTestScene();
   // defaultScene();
+  cgCube();
 }
 
 // _____________________________________________________________________________
