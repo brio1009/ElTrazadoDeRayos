@@ -29,6 +29,7 @@ SOFTWARE.
 
 #include "./Singleton.h"
 #include <unordered_map>
+#include <string>
 
 /// Simple struct that holds all the necessary data for one property.
 struct Property {

@@ -69,6 +69,9 @@ class Shape : public Object {
     _materialPtr = materialPtr;
   }
 
+  /// Getter for the material pointer.
+  const Material* getMaterialPtr() const { return _materialPtr; }
+
  protected:
   // Returnes the appearence of the surface Point p
   // if p isn't on the surface everything can happen.
@@ -77,9 +80,6 @@ class Shape : public Object {
 
   /// Uv coordinates.
   virtual glm::vec2 getTextureCoord(const glm::vec4& p) const;
-
-  /// Getter for the material pointer.
-  const Material* getMaterialPtr() const { return _materialPtr; }
 
   /// Texture coords projection function plane.
   glm::vec2 textureProjectionPlaneXZ(const glm::vec4& localPoint) const;
