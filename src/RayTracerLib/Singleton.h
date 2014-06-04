@@ -23,28 +23,38 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
-#ifndef RAYTRACERLIB_MATERIAL_H_
-#define RAYTRACERLIB_MATERIAL_H_
-
-#include <glm/glm.hpp>
-
-// Forward declaration.
-class Color;
-struct IntersectionInfo;
-class Ray;
-class Scene;
-
-///
-class Material {
+/// Simple singleton template class, that provides a singleton interface
+/// to every class that inherits from it.
+/// Be aware: The inheriting class should friend class this Singleton and only
+/// have private constructors.
+template <class T>
+class Singleton {
  public:
-  /// Destructor.
-  virtual ~Material() { }
+  /// Get the instance of this singleton.
+  static T* Instance() {
+    if (!_TPtr)
+      _TPtr = new T();
+    return _TPtr;
+  }
 
-  /// Returns the color for the given positition and normal.
-  virtual Color getColor(const IntersectionInfo& intersectionInfo,
-                         const Ray& incomingRay,
-                         const Scene& scene) const = 0;
+ protected:
+  /// Default constructor.
+  Singleton() {
+    _TPtr = nullptr;
+  }
+
+  /// Default destructor.
+  virtual ~Singleton() {
+    delete _TPtr;
+  }
+
+ private:
+  /// The static pointer to the singleton object.
+  static T* _TPtr;
+
+  /// Private copy constructor to prevent copy construction.
+  Singleton(const Singleton&);
+
+  /// Private assignment operator to prevent assignment.
+  Singleton& operator=(const Singleton&);
 };
-
-#endif  // RAYTRACERLIB_MATERIAL_H_

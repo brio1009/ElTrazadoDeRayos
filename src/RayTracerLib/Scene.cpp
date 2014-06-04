@@ -226,6 +226,11 @@ void Scene::defaultScene() {
 
 // _____________________________________________________________________________
 Scene::Scene() {
+  /*
+  PROPERTYCLASS(CompoundShape);
+  printf("map value: %s\n", typeid(*(PropertyManager::classProperties["CompoundShape"])).name());
+  // testMap.emplace("asd", 1);
+  */
   // compoundTestScene();
   // defaultScene();
   cgCube();

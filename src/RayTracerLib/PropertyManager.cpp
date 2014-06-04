@@ -23,28 +23,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
-#ifndef RAYTRACERLIB_MATERIAL_H_
-#define RAYTRACERLIB_MATERIAL_H_
+#include "./PropertyManager.h"
 
-#include <glm/glm.hpp>
-
-// Forward declaration.
-class Color;
-struct IntersectionInfo;
-class Ray;
-class Scene;
-
-///
-class Material {
- public:
-  /// Destructor.
-  virtual ~Material() { }
-
-  /// Returns the color for the given positition and normal.
-  virtual Color getColor(const IntersectionInfo& intersectionInfo,
-                         const Ray& incomingRay,
-                         const Scene& scene) const = 0;
-};
-
-#endif  // RAYTRACERLIB_MATERIAL_H_
+std::unordered_map<std::string, BasicClassProperties*> PropertyManager::classProperties = std::unordered_map<std::string, BasicClassProperties*>();
