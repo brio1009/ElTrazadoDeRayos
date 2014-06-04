@@ -4,6 +4,10 @@ ElTrazadoDeRayos
 
 This will be a simple RayTracer to render a Scene.
 
+Wed June 02 14:02:22 CEST 2014 :
+-------------------------------
+![alt text](https://github.com/CantTouchDis/ElTrazadoDeRayos/raw/master/images/CSG_anim.gif "CSG: :cool: stuff")
+
 Wed May 21 18:14:52 CEST 2014 :
 -------------------------------
 ![alt text](https://github.com/CantTouchDis/ElTrazadoDeRayos/raw/master/images/SimulatedSmoothShadow.gif "Newest Image.")

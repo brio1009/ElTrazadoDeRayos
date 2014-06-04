@@ -1,7 +1,8 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2014 CantTouchDis
+Copyright (c) 2014 CantTouchDis <bauschp@informatik.uni-freiburg.de>
+Copyright (c) 2014 brio1009 <christoph1009@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +22,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
 #include "./ShadowMaterial.h"
+
 #include <glm/glm.hpp>
 #include <cassert>
 #include <cmath>
@@ -39,9 +42,9 @@ Color ShadowMaterial::getColor(const IntersectionInfo& intersectionInfo,
                                const Ray& incomingRay,
                                const Scene& scene) const {
   // TODO(allofus, Thu May  8 15:27:52 CEST 2014): Add to constructor.
-  float ka = 0.1f;
-  float kd = 0.4f;
-  float ks = 0.5f;
+  float ka = 0.15f;
+  float kd = 0.55f;
+  float ks = 0.3f;
 
   Color sumIntensity(0, 0, 0);
   sumIntensity += ambientTerm(Color(1, 1, 1), ka);
@@ -63,7 +66,7 @@ Color ShadowMaterial::getColor(const IntersectionInfo& intersectionInfo,
                                   normNormal,
                                   kd);
       sumIntensity += specularTerm(lightColor, -lightRay.direction(),
-          normNormal, -incomingRay.direction(), ks);
+          normNormal, -incomingRay.direction(), ks, 10);
     }
   }
 

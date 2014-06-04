@@ -54,6 +54,9 @@ class Scene {
   /// Initializes the default scene.
   void defaultScene();
 
+  //
+  void cgCube();
+
   /// Initializes a test scene for compound shapes.
   void compoundTestScene();
   /// Holds the renderable objects.
