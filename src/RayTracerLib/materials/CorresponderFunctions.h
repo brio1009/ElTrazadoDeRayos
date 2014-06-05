@@ -24,38 +24,18 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_ELLIPSOID_H_
-#define RAYTRACERLIB_ELLIPSOID_H_
+#ifndef RAYTRACERLIB_MATERIALS_CORRESPONDERFUNCTIONS_H
+#define RAYTRACERLIB_MATERIALS_CORRESPONDERFUNCTIONS_H
 
 #include <glm/glm.hpp>
-#include <vector>
 
-#include "./Constants.h"
-#include "./Shape.h"
+/// These are some simple corresponder functions for texture coordinates
+/// like clamp, mirror etc.
+namespace CorresponderFunctions {
+  /// Just clamps the fiven values in the 0, 1 range.
+  inline glm::vec2 clamp(const glm::vec2& uv) {
+    return glm::clamp(uv, glm::vec2(0, 0), glm::vec2(1, 1));
+  }
+}
 
-// A Primitive is a Shape that is defined in its own.
-class Ellipsoid : public Shape {
- public:
-  /// Constructor with given radii in every axis-direction.
-  Ellipsoid(REAL x, REAL y, REAL z);
-  /// Destructor.
-  virtual ~Ellipsoid() { }
-
-  /// Returns intersections.
-  virtual std::vector<REAL> intersect(const Ray& ray) const;
-
- protected:
-  /// Override.
-  virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
-
-  /// Override.
-  virtual glm::vec2 getTextureCoord(const glm::vec4& p) const;
-
- private:
-  // Radii.
-  REAL _rX;
-  REAL _rY;
-  REAL _rZ;
-};
-
-#endif  // RAYTRACERLIB_ELLIPSOID_H_
+#endif  // RAYTRACERLIB_MATERIALS_CORRESPONDERFUNCTIONS_H

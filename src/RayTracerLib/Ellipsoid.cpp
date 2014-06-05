@@ -1,7 +1,8 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2014 CantTouchDis
+Copyright (c) 2014 CantTouchDis <bauschp@informatik.uni-freiburg.de>
+Copyright (c) 2014 brio1009 <christoph1009@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -32,8 +33,11 @@ SOFTWARE.
 #include "./Constants.h"
 #include "./Ray.h"
 #include "./Solver.h"
+#include "./shapes/ProjectorFunctions.h"
+
 using std::vector;
 
+// _____________________________________________________________________________
 Ellipsoid::Ellipsoid(REAL x, REAL y, REAL z) : _rX(x), _rY(y), _rZ(z) {
 }
 
@@ -84,5 +88,5 @@ glm::vec4 Ellipsoid::getNormalAt(const glm::vec4& p) const {
 // _____________________________________________________________________________
 glm::vec2 Ellipsoid::getTextureCoord(const glm::vec4& p) const {
   glm::vec4 trans = _inverseTransform * p;
-  return textureProjectionSphere(trans);
+  return ProjectorFunctions::textureProjectionSphere(trans);
 }

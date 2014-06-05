@@ -81,11 +81,6 @@ class Shape : public Object {
   /// Uv coordinates.
   virtual glm::vec2 getTextureCoord(const glm::vec4& p) const;
 
-  /// Texture coords projection function plane.
-  glm::vec2 textureProjectionPlaneXZ(const glm::vec4& localPoint) const;
-  /// Texture coords projection function sphere.
-  glm::vec2 textureProjectionSphere(const glm::vec4& localPoint) const;
-
  private:
   const Material* _materialPtr;
 };

@@ -24,38 +24,28 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_ELLIPSOID_H_
-#define RAYTRACERLIB_ELLIPSOID_H_
+#ifndef RAYTRACERLIB_SHAPES_PROJECTORFUNCTIONS_H
+#define RAYTRACERLIB_SHAPES_PROJECTORFUNCTIONS_H
 
 #include <glm/glm.hpp>
-#include <vector>
+#include "../Constants.h"
 
-#include "./Constants.h"
-#include "./Shape.h"
+/// These are some basic projector functions to map a point to a texture
+/// coordinate.
+namespace ProjectorFunctions {
+  /// Texture coords projection function plane.
+  inline glm::vec2 textureProjectionPlaneXZ(const glm::vec4& localPoint) {
+    return glm::vec2(localPoint.x, localPoint.z);
+  }
 
-// A Primitive is a Shape that is defined in its own.
-class Ellipsoid : public Shape {
- public:
-  /// Constructor with given radii in every axis-direction.
-  Ellipsoid(REAL x, REAL y, REAL z);
-  /// Destructor.
-  virtual ~Ellipsoid() { }
+  /// Texture coords projection function sphere.
+  inline glm::vec2 textureProjectionSphere(const glm::vec4& localPoint) {
+    // Get the unit vector to the position.
+    glm::vec3 d(-localPoint);
+    glm::normalize(d);
+    return glm::vec2(0.5 + (atan2(d.z, d.x) / (2.0 * constants::PI)),
+                      0.5 - (asin(d.y) / constants::PI));
+  }
+}
 
-  /// Returns intersections.
-  virtual std::vector<REAL> intersect(const Ray& ray) const;
-
- protected:
-  /// Override.
-  virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
-
-  /// Override.
-  virtual glm::vec2 getTextureCoord(const glm::vec4& p) const;
-
- private:
-  // Radii.
-  REAL _rX;
-  REAL _rY;
-  REAL _rZ;
-};
-
-#endif  // RAYTRACERLIB_ELLIPSOID_H_
+#endif  // RAYTRACERLIB_SHAPES_PROJECTORFUNCTIONS_H
