@@ -27,7 +27,7 @@ SOFTWARE.
 #include "./JitteredSampler.h"
 #include "./Sampler.h"
 #include "./Ray.h"
-
+/*
 // _____________________________________________________________________________
 Ray JitteredSampler::getSample(const size_t& index) {
   // Compute random values in the area.
@@ -53,6 +53,7 @@ Ray JitteredSampler::getSample(const size_t& index) {
 void JitteredSampler::nextSampleConfiguration() {
   Sampler::nextSampleConfiguration();
 }
+*/
 // _____________________________________________________________________________
 /* Color JitteredSampler::reconstructColor(const std::vector<Color>& colors) {
   if (colors.size() != _sampleRays.size()) {

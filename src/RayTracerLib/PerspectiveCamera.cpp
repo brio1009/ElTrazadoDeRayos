@@ -30,8 +30,8 @@ SOFTWARE.
 #include "./IntersectionInfo.h"
 #include "./Scene.h"
 #include "./Material.h"
-#include "./RegularSampler.h"
 
+using std::vector;
 // _____________________________________________________________________________
 PerspectiveCamera::PerspectiveCamera(const int width,
       const int height,
@@ -55,59 +55,42 @@ void PerspectiveCamera::render(const Scene& scene) {
   size_t overallRayCreation = 0;
   size_t overallSceneTrace = 0;
   size_t overallGetColor = 0;
-  // TODO(bauschp, Tue May 27 16:07:08 CEST 2014): remove constants to
-  // generalize the sampling.
-  RegularSampler sampler(2);
-  glm::vec4 directions[4];
+#pragma omp parallel for
   for (int x = 0; x < _image.getWidth(); ++x) {
     for (int y = 0; y < _image.getHeight(); ++y) {
-      clock_t start = clock();
-      // Create new directions.
-      directions[0] = glm::vec4(-startX + x, startY - y, -_focalLength, 0);
-      directions[0] = _transformation * directions[0];
-      directions[1] = glm::vec4(-startX + x + 1, startY - y, -_focalLength, 0);
-      directions[1] = _transformation * directions[1];
-      directions[2] = glm::vec4(-startX + x, startY - y + 1, -_focalLength, 0);
-      directions[2] = _transformation * directions[2];
-      directions[3] = glm::vec4(-startX + x + 1, startY - y + 1,
-            -_focalLength, 0);
-      directions[3] = _transformation * directions[3];
-      // Set the sampler borders
-      sampler.setPixelArea(Ray(position, directions[0]),
-          Ray(position, directions[1]),
-          Ray(position, directions[2]),
-          Ray(position, directions[3]));
-      clock_t end = clock();
-      overallRayCreation += end - start;
-      // if (y == 0)
+      // Create new direction.
+      glm::vec4 direction(-startX + x, startY - y, -_focalLength, 0);
+      direction = glm::normalize(direction);
+      direction = _transformation * direction;
+
+      Ray r(position, direction);
       // printf("SENDING RAY:(%.2f,%.2f,%.2f|%.2f,%.2f,%.2f)\n", position.x,
       //       position.y, position.z, direction.x, direction.y, direction.z);
-      std::vector<Color> colors;
-      for (char i = 0; i < 4; ++i) {
-        start = end;
-        const Ray& r(sampler.nextSample());
-        IntersectionInfo info = scene.traceRay(r);
-        end = clock();
-        overallSceneTrace += end - start;
-        start = end;
-        colors.push_back(scene.backgroundColor(r));
+      // IntersectionInfo info = scene.traceRay(r);
+      vector<Ray> corners;
+      corners.resize(4);
+      corners[0] = Ray(position, glm::vec4(-startX + x - 0.5f, startY -y + 0.5f, -_focalLength, 0));
+      corners[1] = Ray(position, glm::vec4(-startX + x + 0.5f, startY -y + 0.5f, -_focalLength, 0));
+      corners[2] = Ray(position, glm::vec4(-startX + x - 0.5f, startY -y - 0.5f, -_focalLength, 0));
+      corners[3] = Ray(position, glm::vec4(-startX + x + 0.5f, startY -y - 0.5f, -_focalLength, 0));
+      for (size_t i = 0 ; i < 4; ++i)
+        corners[i].setDirection(_transformation * corners[i].direction());
+      vector<Ray*> samples;
+      vector<Color> colors;
+      for (size_t i=0; i < 4; ++i) {
+        samples.push_back(_sampler->getSample(i, corners));
+        IntersectionInfo info = scene.traceRay(*samples.back());
         if (info.materialPtr) {
           // HIT
-          colors[i] = info.materialPtr->getColor(info,
-                                    r,
-                                    scene);
+          colors.push_back(info.materialPtr->getColor(info,
+                                                      r,
+                                                      scene));
+        } else {
+          colors.push_back(scene.backgroundColor(r));
         }
-        end = clock();
-        overallGetColor += end - start;
       }
-      _image.setPixel(x, y, sampler.reconstructColor(colors));
+      _image.setPixel(x, y, _sampler->reconstructColor(&samples, colors));
     }
   }
-  printf("\tRay creation took: %.2f sec.\n",
-      static_cast<float>(overallRayCreation) / CLOCKS_PER_SEC);
-  printf("\tTrace took: %.2f sec.\n",
-      static_cast<float>(overallSceneTrace) / CLOCKS_PER_SEC);
-  printf("\tGetColor took: %.2f sec.\n",
-      static_cast<float>(overallGetColor) / CLOCKS_PER_SEC);
 }
 

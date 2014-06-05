@@ -28,8 +28,55 @@ SOFTWARE.
 #define RAYTRACERLIB_SAMPLER_H_
 
 #include <vector>
+#include <utility>
+#include <unordered_map>
+#include <map>
+#include <mutex>
 #include "./Ray.h"
 #include "./Color.h"
+/// This pure class is used to define all sampling approaches.
+/// A Sampler is used to return Sample Rays for a given Ray/Position/everything.
+/// For example a hemisphere sampler should take a ray and sample the hemisphere
+/// in direction of the Ray.
+class Sampler {
+ public:
+  /// Returnes a const reference to a sample constructed by the inherited class
+  /// (e.g. Hemisphere/Bilinear Interpolation) with given vector of rays.
+  /// This can throw an exception depending on inherited class when index is too
+  /// large.
+  virtual Ray* const getSample(
+      const size_t& index,
+      const std::vector<Ray>& rays) const;
+  /// Reconstructs the overall color for given Rays and colors.
+  /// TODO(bauschp, Thu Jun  5 14:15:16 CEST 2014): this should be easy to exch.
+  /// This invalidates the given vector of Rays (clears it). And removes them
+  /// from the internal rayLambda storage.
+  virtual Color reconstructColor(
+      std::vector<Ray*>* rays,
+      const std::vector<Color>& colors) const;
+  /// virtual Destructor.
+  virtual ~Sampler() {
+    auto last = _rayLambdas.end();
+    for (auto it = _rayLambdas.begin(); it != last; ++it) {
+      delete it->first;
+    }
+  }
+ protected:
+  /// This method creates the Sample with given lambda values.
+  /// This could be a a bilinear interpolation.
+  virtual Ray* createSample(
+      const std::vector<Ray>& rays,
+      const std::pair<float, float>& lambda) const = 0;
+  /// Returnes the lambda values needed to create a sample.
+  virtual std::pair<float, float> getNextLambda(
+      const size_t& index) const = 0;
+ private:
+  /// This map holds the lambdas that produced the sample
+  mutable std::unordered_map<Ray*, std::pair<float, float>> _rayLambdas;
+  /// The mutex to enable threadsafe writing to the map.
+  mutable std::mutex _rayLambdasMutex;
+};
+/*
 /// Samples a area between four Rays into the scene.
 // TODO(bauschp, Tue May 27 10:05:09 CEST 2014): better doc
 class Sampler {
@@ -92,4 +139,5 @@ class Sampler {
   Ray _topRight;
 };
 
+*/
 #endif  // RAYTRACERLIB_SAMPLER_H_

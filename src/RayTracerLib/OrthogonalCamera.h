@@ -40,6 +40,8 @@ class OrthogonalCamera : public Camera {
   }
   /// Defines Camrea::render().
   virtual void render(const Scene& scene);
+  /// Destructor
+  virtual ~OrthogonalCamera() { }
 };
 
 #endif  // RAYTRACERLIB_ORTHOGONALCAMERA_H_

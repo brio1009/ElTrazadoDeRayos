@@ -30,32 +30,31 @@ SOFTWARE.
 #include "./Ray.h"
 
 // _____________________________________________________________________________
-Ray RegularSampler::getSample(const size_t& index) {
-  if (index >= _samplesPerImageDimension * _samplesPerImageDimension)
-    throw "OutOfBounds";
-  size_t x = index % _samplesPerImageDimension;
-  // not sure if -x is needed because we have integer division.
-  size_t y = (index - x) / _samplesPerImageDimension;
-  // Calculate the two lambda values needed for interpolation.
-  // UNIT SQUARE!!!!
-  float lambda1 = static_cast<float>(x) / _samplesPerImageDimension
-      + _offsetLambda;
-  float lambda2 = static_cast<float>(y) / _samplesPerImageDimension
-      + _offsetLambda;
+Ray* RegularSampler::createSample(
+    const std::vector<Ray>& rays,
+    const std::pair<float, float>& lambda) const {
   // Interpolate between origin and the other
   glm::vec4 nextSampleDir =
-      _bottomLeft.direction() * (1.0f - lambda1) * (1.0f - lambda2)
-      + _bottomRight.direction() * lambda1 * (1.0f - lambda2)
-      + _topLeft.direction() * (1.0f - lambda1) * lambda2
-      + _topRight.direction() * lambda1 * lambda2;
+      rays.at(0).direction() * (1.0f - lambda.first) * (1.0f - lambda.second)
+      + rays.at(1).direction() * lambda.first * (1.0f - lambda.second)
+      + rays.at(2).direction() * (1.0f - lambda.first) * lambda.second
+      + rays.at(3).direction() * lambda.first * lambda.second;
   glm::vec4 nextSamplePos =
-      _bottomLeft.origin() * (1.0f - lambda1) * (1.0f - lambda2)
-      + _bottomRight.origin() * lambda1 * (1.0f - lambda2)
-      + _topLeft.origin() * (1.0f - lambda1) * lambda2
-      + _topRight.origin() * lambda1 * lambda2;
-  return Ray(nextSamplePos, nextSampleDir);
+      rays.at(0).origin() * (1.0f - lambda.first) * (1.0f - lambda.second)
+      + rays.at(1).origin() * lambda.first * (1.0f - lambda.second)
+      + rays.at(2).origin() * (1.0f - lambda.first) * lambda.second
+      + rays.at(3).origin() * lambda.first * lambda.second;
+  return new Ray(nextSamplePos, nextSampleDir);
 }
 // _____________________________________________________________________________
-void RegularSampler::nextSampleConfiguration() {
-  Sampler::nextSampleConfiguration();
+std::pair<float, float> RegularSampler::getNextLambda(
+    const size_t& index) const {
+  if (index >= _samplesPerImageDimension * _samplesPerImageDimension)
+    throw "RegularSampler was called with to large index.\n";
+  size_t x = index % _samplesPerImageDimension;
+  size_t y = (index - x) / _samplesPerImageDimension;
+
+  return std::pair<float, float>(
+      static_cast<float>(x) / _samplesPerImageDimension + _offsetLambda,
+      static_cast<float>(y) / _samplesPerImageDimension + _offsetLambda);
 }

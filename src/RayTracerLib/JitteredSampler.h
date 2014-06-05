@@ -32,6 +32,7 @@ SOFTWARE.
 /// Samples a area between three Rays into the scene.
 // TODO(bauschp, Tue May 27 10:05:09 CEST 2014): better doc
 class JitteredSampler : public Sampler {
+  /*
  public:
   /// Creates a new Jittered sampler with given sample size per dimension.
   explicit JitteredSampler(float area)
@@ -46,6 +47,7 @@ class JitteredSampler : public Sampler {
   /// should be between 0 (for centerpoint sampling) and 1 for whole area
   /// sampling.
   float _area;
+  */
 };
 #endif  // RAYTRACERLIB_JITTEREDSAMPLER_H_
 

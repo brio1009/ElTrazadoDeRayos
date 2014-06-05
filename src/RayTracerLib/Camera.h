@@ -28,6 +28,8 @@ SOFTWARE.
 
 #include "./Image.h"
 #include "./Object.h"
+#include "./Sampler.h"
+#include "./RegularSampler.h"
 
 // Foward declaration.
 class Scene;
@@ -36,19 +38,23 @@ class Camera : public Object {
  public:
   /// Constructor.
   Camera(const int width, const int height);
-  /// Destructor.
-  ~Camera() { }
   /// Renders the scene to the image.
-  virtual void render(const Scene& scene) = 0;
+  virtual void render(
+      const Scene& scene) = 0;
 
   /// Returns the image.
   const Image& getImage() const;
 
   /// Sets the image size. Resets the image.
   virtual void setImageSize(const int width, const int height);
+  /// virtual destructor;
+  virtual ~Camera() {
+    delete _sampler;
+  }
 
  protected:
   /// Image where the scene is rendered to.
+  Sampler* _sampler;
   Image _image;
 };
 

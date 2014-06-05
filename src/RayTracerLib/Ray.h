@@ -89,6 +89,16 @@ class Ray {
   glm::vec4 _direction;
 };
 
+struct RayComp {
+  size_t operator()(const Ray& a, const Ray& b) const {
+    return &a == &b;
+  }
+};
+struct RayHasher {
+  size_t operator()(const Ray& k) const {
+    return reinterpret_cast<size_t>(&k);
+  }
+};
 #endif  // RAYTRACERLIB_RAY_H_
 
 

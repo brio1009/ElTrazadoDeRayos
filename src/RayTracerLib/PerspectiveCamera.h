@@ -43,7 +43,8 @@ class PerspectiveCamera : public Camera {
   virtual ~PerspectiveCamera();
 
   // Renders the scene into the internal image storage.
-  virtual void render(const Scene& scene);
+  virtual void render(
+      const Scene& scene);
 };
 
 #endif  // RAYTRACERLIB_PERSPECTIVECAMERA_H_

@@ -27,21 +27,29 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_REGULARSAMPLER_H_
 #define RAYTRACERLIB_REGULARSAMPLER_H_
 
+#include <vector>
+#include <utility>
+
 #include "./Ray.h"
 #include "./Sampler.h"
 /// Samples a area between three Rays into the scene.
 // TODO(bauschp, Tue May 27 10:05:09 CEST 2014): better doc
 class RegularSampler : public Sampler {
  public:
-  /// Creates a new Regular sampler with given sample size per dimension.
-  explicit RegularSampler(const size_t& samplesPerImageDimension)
-      : _samplesPerImageDimension(samplesPerImageDimension) {
-    _offsetLambda = 0.5f / _samplesPerImageDimension;
-  }
-  virtual void nextSampleConfiguration();
+  RegularSampler(const size_t& samplesPerDimension)
+      : _samplesPerImageDimension(samplesPerDimension),
+        _offsetLambda(0.5f / samplesPerDimension) { }
+  virtual ~RegularSampler() { }
+ protected:
+  /// This method creates the Sample with given lambda values.
+  /// This could be a a bilinear interpolation.
+  virtual Ray* createSample(
+      const std::vector<Ray>& rays,
+      const std::pair<float, float>& lambda) const;
+  /// Returnes the lambda values needed to create a sample.
+  virtual std::pair<float, float> getNextLambda(
+      const size_t& index) const;
  private:
-  /// overrides Sampler.h's declaration
-  virtual Ray getSample(const size_t& index);
   /// The ammount of samples in a dimension of the image plane.
   const size_t _samplesPerImageDimension;
   /// The distance messured in  samples are offset by IN UNIT SPACE. [0;1)
