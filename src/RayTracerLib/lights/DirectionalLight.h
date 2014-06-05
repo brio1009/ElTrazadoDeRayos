@@ -1,7 +1,8 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2014 CantTouchDis
+Copyright (c) 2014 CantTouchDis <bauschp@informatik.uni-freiburg.de>
+Copyright (c) 2014 brio1009 <christoph1009@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,21 +22,27 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
 #pragma once
-#ifndef RAYTRACERLIB_POINTLIGHT_H_
-#define RAYTRACERLIB_POINTLIGHT_H_
+#ifndef RAYTRACERLIB_LIGHTS_DIRECTIONALLIGHT_H_
+#define RAYTRACERLIB_LIGHTS_DIRECTIONALLIGHT_H_
 
 #include <glm/glm.hpp>
 #include "./Light.h"
 
-class PointLight : public Light {
+class DirectionalLight : public Light {
+ private:
+  // The direction the Light is shining to.
+  glm::vec4 _direction;
+
  public:
   /// Constructor of a Directional Light.
-  explicit PointLight(const glm::vec4& position) { setPosition(position); }
+  explicit DirectionalLight(const glm::vec4& dir) :
+      _direction(glm::normalize(dir)) { }
   /// Destructor.
-  virtual ~PointLight() { }
-  /// Overrides.
+  virtual ~DirectionalLight() { }
+  /// Overrides
   virtual Ray getRay(const glm::vec4& pos) const;
 };
 
-#endif  // RAYTRACERLIB_POINTLIGHT_H_
+#endif  // RAYTRACERLIB_LIGHTS_DIRECTIONALLIGHT_H_

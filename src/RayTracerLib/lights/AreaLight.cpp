@@ -1,7 +1,8 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2014 CantTouchDis
+Copyright (c) 2014 CantTouchDis <bauschp@informatik.uni-freiburg.de>
+Copyright (c) 2014 brio1009 <christoph1009@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,11 +22,17 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#include "./DirectionalLight.h"
+
+#include "./AreaLight.h"
+
 #include <glm/glm.hpp>
-#include "./Ray.h"
+#include <glm/gtc/random.hpp>
+#include "../Ray.h"
 
 // _____________________________________________________________________________
-Ray DirectionalLight::getRay(const glm::vec4& pos) const {
-  return Ray(_transformation[3], _direction);
+Ray AreaLight::getRay(const glm::vec4& pos) const {
+  // Calculate the direction.
+  glm::vec4 lightPos = glm::vec4(glm::ballRand(m_SphereRadius), 1.0)
+                       + getPosition();
+  return Ray(lightPos, pos - lightPos);
 }

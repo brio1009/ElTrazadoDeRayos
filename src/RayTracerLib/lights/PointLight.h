@@ -23,14 +23,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "./PointLight.h"
+#pragma once
+#ifndef RAYTRACERLIB_LIGHTS_POINTLIGHT_H_
+#define RAYTRACERLIB_LIGHTS_POINTLIGHT_H_
 
 #include <glm/glm.hpp>
-#include "./Ray.h"
+#include "./Light.h"
 
-// _____________________________________________________________________________
-Ray PointLight::getRay(const glm::vec4& pos) const {
-  // Calculate the direction.
-  glm::vec4 dirToPos = pos - getPosition();
-  return Ray(getPosition(), dirToPos);
-}
+/// A simple point light.
+class PointLight : public Light {
+ public:
+  /// Constructor of a Directional Light.
+  explicit PointLight(const glm::vec4& position) { setPosition(position); }
+  /// Destructor.
+  virtual ~PointLight() { }
+  /// Overrides.
+  virtual Ray getRay(const glm::vec4& pos) const;
+};
+
+#endif  // RAYTRACERLIB_LIGHTS_POINTLIGHT_H_

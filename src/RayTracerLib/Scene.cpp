@@ -45,6 +45,7 @@ SOFTWARE.
 #include "./GlassMaterial.h"
 #include "./CompoundShape.h"
 #include "./PointLight.h"
+#include "./lights/AreaLight.h"
 
 using std::vector;
 
@@ -159,15 +160,9 @@ void Scene::compoundTestScene() {
   _shapes.push_back(plane0);
 
   // Lights.
-  int numLights = 1;
-  int lightsPerDimension = static_cast<int>(sqrt(numLights));
-  for (int x = 0; x < lightsPerDimension; ++x) {
-    for (int z = 0; z < lightsPerDimension; ++z) {
-      Light* light = new PointLight(glm::vec4((-lightsPerDimension + static_cast<float>(x)) * 3, 10, -39 + static_cast<float>(z) * 3, 1));
-      light->setLightColor(Color(1.0f / numLights, 1.0f / numLights, 1.0f / numLights, 1.0f / numLights));
-      _lights.push_back(light); 
-    }
-  }
+  Light* light = new AreaLight(glm::vec4(0, 10, -39, 1), 3.0);
+  light->setLightColor(Color(1, 1, 1));
+  _lights.push_back(light); 
 }
 
 // TODO(allofus, Wed May 21 17:12:00 CEST 2014): Remove if we have a scene load.
@@ -231,9 +226,9 @@ Scene::Scene() {
   printf("map value: %s\n", typeid(*(PropertyManager::classProperties["CompoundShape"])).name());
   // testMap.emplace("asd", 1);
   */
-  // compoundTestScene();
+  compoundTestScene();
   // defaultScene();
-  cgCube();
+  // cgCube();
 }
 
 // _____________________________________________________________________________
