@@ -23,39 +23,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
-#ifndef RAYTRACERLIB_ELLIPSOID_H_
-#define RAYTRACERLIB_ELLIPSOID_H_
-
+#include "./DirectionalLight.h"
 #include <glm/glm.hpp>
-#include <vector>
+#include "../Ray.h"
 
-#include "./Constants.h"
-#include "./Shape.h"
-
-// A Primitive is a Shape that is defined in its own.
-class Ellipsoid : public Shape {
- public:
-  /// Constructor with given radii in every axis-direction.
-  Ellipsoid(REAL x, REAL y, REAL z);
-  /// Destructor.
-  virtual ~Ellipsoid() { }
-
-  /// Returns intersections.
-  virtual std::vector<REAL> intersect(const Ray& ray) const;
-
- protected:
-  /// Override.
-  virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
-
-  /// Override.
-  virtual glm::vec2 getTextureCoord(const glm::vec4& p) const;
-
- private:
-  // Radii.
-  REAL _rX;
-  REAL _rY;
-  REAL _rZ;
-};
-
-#endif  // RAYTRACERLIB_ELLIPSOID_H_
+// _____________________________________________________________________________
+Ray DirectionalLight::getRay(const glm::vec4& pos) const {
+  return Ray(_transformation[3], _direction);
+}

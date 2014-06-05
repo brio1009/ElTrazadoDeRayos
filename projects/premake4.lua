@@ -67,6 +67,10 @@ elseif os.get() == "macosx" then
   --prebuildcommands { "enter command here" }
 end
 
+-- Enable openmp for visual studio project files.
+configuration { "vs*",  "release" }
+  buildoptions { "/openmp" }
+
 -- Projects.
 project "ElTrazadoDeRayosLib"
   files {"../src/RayTracerLib/**"}

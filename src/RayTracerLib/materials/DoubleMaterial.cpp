@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2014 CantTouchDis
+Copyright (c) 2014 CantTouchDis <bauschp@informatik.uni-freiburg.de>
 Copyright (c) 2014 brio1009 <christoph1009@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,21 +22,18 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#include "./CheckerboardMaterial.h"
+
+#include "./DoubleMaterial.h"
+
 #include <glm/glm.hpp>
-#include <cassert>
 #include <cmath>
-#include <algorithm>
 #include "./Color.h"
-#include "./Constants.h"
 #include "./IntersectionInfo.h"
 #include "./Scene.h"
-#include "./PointLight.h"
-#include "./Light.h"
 #include "./Ray.h"
 
 // _____________________________________________________________________________
-Color CheckerboardMaterial::getColor(const IntersectionInfo& intersectionInfo,
+Color DoubleMaterial::getColor(const IntersectionInfo& intersectionInfo,
                                      const Ray& incomingRay,
                                      const Scene& scene) const {
   if (checkerBoard(intersectionInfo.texCoord)) {
@@ -47,19 +44,19 @@ Color CheckerboardMaterial::getColor(const IntersectionInfo& intersectionInfo,
 }
 
 // _____________________________________________________________________________
-bool CheckerboardMaterial::expandingSquares(const glm::vec2& coords) const {
+bool DoubleMaterial::expandingSquares(const glm::vec2& coords) const {
   return static_cast<int>(abs(coords.x) / _uSize
                        + abs(coords.y) / _vSize + 0.5) % 2 == 0;
 }
 
 // _____________________________________________________________________________
-bool CheckerboardMaterial::checkerBoard(const glm::vec2& coords) const {
+bool DoubleMaterial::checkerBoard(const glm::vec2& coords) const {
   return !(static_cast<int>(abs(coords.x) / _uSize + 0.5) % 2 == 0)
          != !(static_cast<int>(abs(coords.y) / _vSize + 0.5) % 2 == 0);
 }
 
 // _____________________________________________________________________________
-bool CheckerboardMaterial::dotBoard(const glm::vec2& coords) const {
+bool DoubleMaterial::dotBoard(const glm::vec2& coords) const {
   return static_cast<int>(abs(coords.x) / _uSize + 0.5) % 2 == 0
           && static_cast<int>(abs(coords.y) / _vSize + 0.5) % 2 == 0;
 }

@@ -23,14 +23,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "./PointLight.h"
+#pragma once
+#ifndef RAYTRACERLIB_MATERIALS_CORRESPONDERFUNCTIONS_H
+#define RAYTRACERLIB_MATERIALS_CORRESPONDERFUNCTIONS_H
 
 #include <glm/glm.hpp>
-#include "./Ray.h"
 
-// _____________________________________________________________________________
-Ray PointLight::getRay(const glm::vec4& pos) const {
-  // Calculate the direction.
-  glm::vec4 dirToPos = pos - getPosition();
-  return Ray(getPosition(), dirToPos);
+/// These are some simple corresponder functions for texture coordinates
+/// like clamp, mirror etc.
+namespace CorresponderFunctions {
+  /// Just clamps the fiven values in the 0, 1 range.
+  inline glm::vec2 clamp(const glm::vec2& uv) {
+    return glm::clamp(uv, glm::vec2(0, 0), glm::vec2(1, 1));
+  }
 }
+
+#endif  // RAYTRACERLIB_MATERIALS_CORRESPONDERFUNCTIONS_H

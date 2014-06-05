@@ -36,6 +36,7 @@ SOFTWARE.
 #include "./IntersectionInfo.h"
 #include "./Ray.h"
 #include "./ShadowMaterial.h"
+#include "./shapes/ProjectorFunctions.h"
 
 using std::vector;
 
@@ -85,19 +86,5 @@ IntersectionInfo Shape::getIntersectionInfo(const Ray& ray,
 // _____________________________________________________________________________
 glm::vec2 Shape::getTextureCoord(const glm::vec4& p) const {
   glm::vec4 trans = _inverseTransform * p;
-  return textureProjectionPlaneXZ(trans);
-}
-
-// _____________________________________________________________________________
-glm::vec2 Shape::textureProjectionPlaneXZ(const glm::vec4& localPoint) const {
-  return glm::vec2(localPoint.x, localPoint.z);
-}
-
-// _____________________________________________________________________________
-glm::vec2 Shape::textureProjectionSphere(const glm::vec4& localPoint) const {
-  // Get the unit vector to the position.
-  glm::vec3 d(-localPoint);
-  glm::normalize(d);
-  return glm::vec2(0.5 + (atan2(d.z, d.x) / (2.0 * constants::PI)),
-                   0.5 - (asin(d.y) / constants::PI));
+  return ProjectorFunctions::textureProjectionPlaneXZ(trans);
 }

@@ -48,25 +48,31 @@ Color ShadowMaterial::getColor(const IntersectionInfo& intersectionInfo,
 
   Color sumIntensity(0, 0, 0);
   sumIntensity += ambientTerm(Color(1, 1, 1), ka);
-  const std::vector<Light*> lights = scene.lights();
+
+  // Iterate over the lights.
+  const std::vector<Light*>& lights = scene.lights();
   for (size_t i = 0; i < lights.size(); ++i) {
-    const Color& lightColor = lights.at(i)->getColor();
-    // TODO(bauschp, Sun May 11 21:09:39 CEST 2014) norm if works.
-    glm::vec4 normNormal = glm::normalize(intersectionInfo.normal);
-    Ray lightRay = lights.at(i)->getRay(intersectionInfo.hitPoint);
-    Ray shadowRay(intersectionInfo.hitPoint, -lightRay.direction());
-    IntersectionInfo hitInfo = scene.traceRay(shadowRay);
-    glm::vec4 diff = intersectionInfo.hitPoint - lightRay.origin();
-    float distanceToLight = glm::dot(diff, diff);
-    diff = intersectionInfo.hitPoint - hitInfo.hitPoint;
-    float distanceToHit = glm::dot(diff, diff);
-    if (!hitInfo.materialPtr || distanceToLight < distanceToHit) {
-      sumIntensity += diffuseTerm(lightColor,
-                                  -lightRay.direction(),
-                                  normNormal,
-                                  kd);
-      sumIntensity += specularTerm(lightColor, -lightRay.direction(),
-          normNormal, -incomingRay.direction(), ks, 10);
+    const Light* const lightPtr = lights.at(i);
+    const Color& lightColor = lightPtr->getColor();
+    // Iterate over the number of samples of this light.
+    for (size_t j = 0; j < lightPtr->numberOfSamples(); ++j) {
+      // TODO(bauschp, Sun May 11 21:09:39 CEST 2014) norm if works.
+      glm::vec4 normNormal = glm::normalize(intersectionInfo.normal);
+      Ray lightRay = lightPtr->getRay(intersectionInfo.hitPoint);
+      Ray shadowRay(intersectionInfo.hitPoint, -lightRay.direction());
+      IntersectionInfo hitInfo = scene.traceRay(shadowRay);
+      glm::vec4 diff = intersectionInfo.hitPoint - lightRay.origin();
+      float distanceToLight = glm::dot(diff, diff);
+      diff = intersectionInfo.hitPoint - hitInfo.hitPoint;
+      float distanceToHit = glm::dot(diff, diff);
+      if (!hitInfo.materialPtr || distanceToLight < distanceToHit) {
+        sumIntensity += diffuseTerm(lightColor,
+                                    -lightRay.direction(),
+                                    normNormal,
+                                    kd);
+        sumIntensity += specularTerm(lightColor, -lightRay.direction(),
+            normNormal, -incomingRay.direction(), ks, 10);
+      }
     }
   }
 

@@ -41,21 +41,22 @@ SOFTWARE.
 #include "./Plane.h"
 #include "./PhongMaterial.h"
 #include "./ShadowMaterial.h"
-#include "./CheckerboardMaterial.h"
+#include "./materials/DoubleMaterial.h"
 #include "./GlassMaterial.h"
 #include "./CompoundShape.h"
 #include "./PointLight.h"
+#include "./lights/AreaLight.h"
 
 using std::vector;
 
 void Scene::cgCube() {
   // Main cube.
   Box* box = new Box(40, 40, 40);
-  box->setMaterialPtr(new ShadowMaterial(Color(1, 0.60, 0.75)));
+  box->setMaterialPtr(new ShadowMaterial(Color(1.0f, 0.6f, 0.75f)));
 
   // Sphere.
   Ellipsoid* ellipsoid = new Ellipsoid(26, 26, 26);
-  ellipsoid->setMaterialPtr(new ShadowMaterial(Color(0.1, 0.1, 0.9)));
+  ellipsoid->setMaterialPtr(new ShadowMaterial(Color(0.1f, 0.1f, 0.9f)));
 
   // Compound Shape of them.
   CompoundShape* roundedBox = new CompoundShape(box, ellipsoid);
@@ -85,7 +86,7 @@ void Scene::cgCube() {
   // Ground plane.
   Plane* plane0 = new Plane(0, 1, 0);
   plane0->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -40, 0)));
-  plane0->setMaterialPtr(new CheckerboardMaterial(new ShadowMaterial(),
+  plane0->setMaterialPtr(new DoubleMaterial(new ShadowMaterial(),
                                   new ShadowMaterial(Color(1, 1, 1)), 10, 10));
   _shapes.push_back(plane0);
 
@@ -154,20 +155,14 @@ void Scene::compoundTestScene() {
   // Ground plane.
   Plane* plane0 = new Plane(0, 1, 0);
   plane0->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -30, 0)));
-  plane0->setMaterialPtr(new CheckerboardMaterial(new ShadowMaterial(),
+  plane0->setMaterialPtr(new DoubleMaterial(new ShadowMaterial(),
                                   new ShadowMaterial(Color(1, 1, 1)), 10, 10));
   _shapes.push_back(plane0);
 
   // Lights.
-  int numLights = 1;
-  int lightsPerDimension = static_cast<int>(sqrt(numLights));
-  for (int x = 0; x < lightsPerDimension; ++x) {
-    for (int z = 0; z < lightsPerDimension; ++z) {
-      Light* light = new PointLight(glm::vec4((-lightsPerDimension + static_cast<float>(x)) * 3, 10, -39 + static_cast<float>(z) * 3, 1));
-      light->setLightColor(Color(1.0f / numLights, 1.0f / numLights, 1.0f / numLights, 1.0f / numLights));
-      _lights.push_back(light); 
-    }
-  }
+  Light* light = new AreaLight(glm::vec4(0, 10, -39, 1), 3.0);
+  light->setLightColor(Color(1, 1, 1));
+  _lights.push_back(light); 
 }
 
 // TODO(allofus, Wed May 21 17:12:00 CEST 2014): Remove if we have a scene load.
@@ -181,7 +176,7 @@ void Scene::defaultScene() {
   trans = glm::rotate(trans, 3.141f/2, glm::vec3(0, 1, 0));
   ell1->transform(trans);
   // ell1->setMaterialPtr(new GlassMaterial(RefractiveIndex::mirror));
-  ell1->setMaterialPtr(new CheckerboardMaterial(new ShadowMaterial(),
+  ell1->setMaterialPtr(new DoubleMaterial(new ShadowMaterial(),
                                   new ShadowMaterial(Color(1, 1, 1)), 10, 10));
   _shapes.push_back(ell1);
 
@@ -201,14 +196,14 @@ void Scene::defaultScene() {
   trans = glm::translate(glm::mat4(1.0), glm::vec3(0, -20, -11));
   ball->transform(trans);
   // ball->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
-  ball->setMaterialPtr(new CheckerboardMaterial(new ShadowMaterial(),
+  ball->setMaterialPtr(new DoubleMaterial(new ShadowMaterial(),
                                   new ShadowMaterial(), 0.1, 0.1));
   _shapes.push_back(ball);
 
   // Ground plane.
   Plane* plane0 = new Plane(0, 1, 0);
   plane0->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -30, 0)));
-  plane0->setMaterialPtr(new CheckerboardMaterial(new ShadowMaterial(),
+  plane0->setMaterialPtr(new DoubleMaterial(new ShadowMaterial(),
                                   new ShadowMaterial(Color(1, 1, 1)), 10, 10));
   _shapes.push_back(plane0);
 
@@ -231,9 +226,9 @@ Scene::Scene() {
   printf("map value: %s\n", typeid(*(PropertyManager::classProperties["CompoundShape"])).name());
   // testMap.emplace("asd", 1);
   */
-  // compoundTestScene();
+  compoundTestScene();
   // defaultScene();
-  cgCube();
+  // cgCube();
 }
 
 // _____________________________________________________________________________
