@@ -21,21 +21,32 @@ elseif os.get() == "macosx" then
 end
 
 -- Configurations.
-configurations {"Release", "Debug"}
+configurations {"Release", "Debug", "Profile"}
 
 -- Platforms
 platforms { "native", "universal" }
 -- platforms {"x32", "x64"}
 
 configuration "Release"
-  defines {"NDEBUG"}
+  defines {"NDEBUG", "PASTEL_ENABLE_OMP" }
   flags {"Optimize"}
   targetdir "../bin/release"
+
+configuration { "gmake",  "release" }
+    buildoptions { "-fopenmp" }
+    links { "gomp" }
 
 configuration "Debug"
   defines {"DEBUG"}
   flags {"Symbols"}
   targetdir "../bin/debug"
+
+configuration "Profile"
+  defines {"PROF"}
+  flags {"Symbols", "Optimize"}
+  buildoptions( "-pg" )
+  linkoptions( "-pg" )
+  targetdir "../bin/prof"
 if os.get() == "windows" then
   -- There is sadly no wildcard for subfolders in Windows, thus we need
   -- to specify these manually.
@@ -51,7 +62,7 @@ if os.get() == "windows" then
   --prebuildcommands { "py -v2 ./cpplint.py ../src/ConsoleMain/*" }
 elseif os.get() == "linux" then 
   --postbuildcommands { 'python ../cpplint.py --root=src %{cfg.buildtarget.abspath}' }
-  --prebuildcommands { "python ../cpplint.py --root=src ../../src/ConsoleMain/* &2>1" }
+  --prebuildcommands { "python ../cpplint.py --root=src ../../src/ConsoleMain/* 2>&1" }
 elseif os.get() == "macosx" then
   --prebuildcommands { "enter command here" }
 end
@@ -61,7 +72,7 @@ project "ElTrazadoDeRayosLib"
   files {"../src/RayTracerLib/**"}
   kind "StaticLib"
   if os.get() == "linux" then 
-    postbuildcommands { "python ../cpplint.py --root=src ../../src/RayTracerLib/** &2>1" }
+    postbuildcommands { "-python ../cpplint.py --root=src ../../src/RayTracerLib/** 2>&1" }
   end
 
   -- This is nice to have so VS always uses the same uuids in its project files.
@@ -73,7 +84,7 @@ project "ConsoleMain"
   kind "ConsoleApp"
   links {"ElTrazadoDeRayosLib"}
   if os.get() == "linux" then 
-    postbuildcommands { "python ../cpplint.py --root=src ../../src/ConsoleMain/** &2>1" }
+    postbuildcommands { "-python ../cpplint.py --root=src ../../src/ConsoleMain/** 2>&1" }
   end
   -- This is nice to have so VS always uses the same uuids in its project files.
   -- Generated via http://www.uuidgenerator.net
