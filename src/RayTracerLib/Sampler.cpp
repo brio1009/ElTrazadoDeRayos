@@ -25,58 +25,84 @@ SOFTWARE.
 
 #include "./Sampler.h"
 
-#include <glm/gtc/constants.hpp>
-#include <unordered_map>
+#include <glm/glm.hpp>
 #include <vector>
-#include <mutex>
-#include <utility>
 
-// Wow a lot of stl usings.
+#include "./Ray.h"
+#include "./Scene.h"
+#include "./IntersectionInfo.h"
+#include "./Material.h"
+
 using std::vector;
-using std::unordered_map;
-using std::mutex;
-using std::lock_guard;
-using std::pair;
 
 // _____________________________________________________________________________
-Ray* const Sampler::getSample(
-    const size_t& index,
-    const vector<Ray>& rays) const {
-  pair<float, float> lambda = getNextLambda(index);
-  lock_guard<mutex> lock(_rayLambdasMutex);
-  auto iterator = _rayLambdas.emplace(
-        createSample(rays, lambda), lambda);
-  // if this assertion fails an Ray didn`t get inserted.
-  // This should never happen.
-  assert(iterator.second);
-  return iterator.first->first;
-  // The lock will be released automaticly if we leave scope.
+Color Sampler::getSampledColor(
+      const std::vector<Ray>& borders,
+      const Scene& scene) const {
+ vector<float> lambdas; 
+ vector<Color> colors;
+ size_t startLambda = lambdas.size();
+ while(addNextLambdasToList(&lambdas)) {
+   size_t endLambda = lambdas.size();
+   // Calculate the Ray for given lambdas
+   Ray sample = createRayByLambdas(lambdas, startLambda, endLambda, borders);
+   // Get the color for given sample Ray.
+   IntersectionInfo info = scene.traceRay(sample);
+   if (info.materialPtr) {
+     colors.push_back(info.materialPtr->getColor(info,
+       sample,
+       scene));
+   } else {
+     colors.push_back(scene.backgroundColor(sample));
+   }
+ }
+ return reconstructColor(colors, lambdas);
 }
 // _____________________________________________________________________________
-Color Sampler::reconstructColor(
-    vector<Ray*>* rays,
-    const vector<Color>& colors) const {
-  // Assert if the ammount of rays given is equal to the size of colors.
-  assert(rays->size() == colors.size());
-  // TODO(bauschp, Thu Jun  5 14:51:35 CEST 2014): calculate it.
-  size_t rayCount = rays->size();
-  Color out(0, 0, 0);
-  float twoStandardDeviationSquared = 1.0f;
-  lock_guard<mutex> lock(_rayLambdasMutex);
-  for (size_t i = 0; i < rayCount; ++i) {
-    pair<float, float> lambdas = _rayLambdas.at(rays->at(i));
-    float x = lambdas.first - 0.5f;
-    float y = lambdas.second - 0.5f;
-    float scale = 1.0f / (glm::pi<float>() * twoStandardDeviationSquared);
-    scale *= exp((x * x + y * y) / twoStandardDeviationSquared);
-    out += scale * colors.at(i);
+bool Sampler::addNextLambdasToList(
+      std::vector<float>* lambdas) const {
+  // This creation only works for 4 borders.
+  assert(lambdas->size() % 4 == 0);
+  size_t nextSampleIndex = lambdas->size() / 4;
+  // Get the next lambdas.
+  try {
+    vector<float> nextLambdas = getLambdasForSample(nextSampleIndex);
+    // Append the lambdas to the list
+    lambdas->insert(lambdas->end(), nextLambdas.begin(), nextLambdas.end());
+    return true;
+  } catch ( ... ) {
+    // Whenever an exception occures we couldnt produce a new sample.
+    return false;
   }
-  for (size_t i = 0; i < rayCount; ++i) {
-    _rayLambdas.erase(rays->at(i));
-    delete rays->at(i);
-  }
-  // The references are now invalid so clear the vector to prevent mistakes.
-  rays->clear();
-  return out;
-  // The lock will be released automaticly if we leave scope.
+}
+// _____________________________________________________________________________
+Ray Sampler::createRayByLambdas(
+      const std::vector<float>& lambdas,
+      const size_t& start,
+      const size_t& end,
+      const std::vector<Ray>& borders) const {
+  assert(borders.size() == 4);
+  assert(end - start == 2);
+  assert(lambdas.size() > end);
+  // Interpolate between origin and the other
+  // TODO(bauschp, Tue Jun 10 20:46:33 CEST 2014): This is fugly.
+  glm::vec4 nextSampleDir =
+      borders.at(0).direction()
+        * (1.0f - lambdas.at(start)) * (1.0f - lambdas.at(end))
+      + borders.at(1).direction()
+        * lambdas.at(start) * (1.0f - lambdas.at(end))
+      + borders.at(2).direction()
+        * (1.0f - lambdas.at(start)) * lambdas.at(end)
+      + borders.at(3).direction()
+        * lambdas.at(start) * lambdas.at(end);
+  glm::vec4 nextSamplePos =
+      borders.at(0).origin()
+        * (1.0f - lambdas.at(start)) * (1.0f - lambdas.at(end))
+      + borders.at(1).origin()
+        * lambdas.at(start) * (1.0f - lambdas.at(end))
+      + borders.at(2).origin()
+        * (1.0f - lambdas.at(start)) * lambdas.at(end)
+      + borders.at(3).origin()
+        * lambdas.at(start) * lambdas.at(end);
+  return Ray(nextSamplePos, nextSampleDir);
 }

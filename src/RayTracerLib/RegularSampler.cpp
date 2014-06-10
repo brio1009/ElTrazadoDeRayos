@@ -22,39 +22,39 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
 #include "./RegularSampler.h"
 
-#include <glm/glm.hpp>
-#include "./Sampler.h"
-#include "./Ray.h"
+#include <vector>
 
+#include "./Color.h"
+#include "./Ray.h"
+using std::vector;
 // _____________________________________________________________________________
-Ray* RegularSampler::createSample(
-    const std::vector<Ray>& rays,
-    const std::pair<float, float>& lambda) const {
-  // Interpolate between origin and the other
-  glm::vec4 nextSampleDir =
-      rays.at(0).direction() * (1.0f - lambda.first) * (1.0f - lambda.second)
-      + rays.at(1).direction() * lambda.first * (1.0f - lambda.second)
-      + rays.at(2).direction() * (1.0f - lambda.first) * lambda.second
-      + rays.at(3).direction() * lambda.first * lambda.second;
-  glm::vec4 nextSamplePos =
-      rays.at(0).origin() * (1.0f - lambda.first) * (1.0f - lambda.second)
-      + rays.at(1).origin() * lambda.first * (1.0f - lambda.second)
-      + rays.at(2).origin() * (1.0f - lambda.first) * lambda.second
-      + rays.at(3).origin() * lambda.first * lambda.second;
-  return new Ray(nextSamplePos, nextSampleDir);
+std::vector<float> RegularSampler::getLambdasForSample(
+    const size_t& index) const throw(int) {
+  if (index > _samplesPerDimension * _samplesPerDimension)
+    throw 0;
+  size_t x = index % _samplesPerDimension;
+  size_t y = (index - x) / _samplesPerDimension;
+  vector<float> lambdas;
+  lambdas.resize(2);
+  lambdas.push_back(
+      static_cast<float>(x) / _samplesPerDimension + _offset);
+  lambdas.push_back(
+      static_cast<float>(y) / _samplesPerDimension + _offset);
+  return lambdas;
 }
 // _____________________________________________________________________________
-std::pair<float, float> RegularSampler::getNextLambda(
-    const size_t& index) const {
-  if (index >= _samplesPerImageDimension * _samplesPerImageDimension)
-    throw "RegularSampler was called with to large index.\n";
-  size_t x = index % _samplesPerImageDimension;
-  size_t y = (index - x) / _samplesPerImageDimension;
-
-  return std::pair<float, float>(
-      static_cast<float>(x) / _samplesPerImageDimension + _offsetLambda,
-      static_cast<float>(y) / _samplesPerImageDimension + _offsetLambda);
+Color RegularSampler::reconstructColor(
+    const std::vector<Color>& colors,
+    const std::vector<float>& lambdas) const {
+  assert(colors.size() == _samplesPerDimension * _samplesPerDimension);
+  // calculate how much a colors weight is. (RegularSampler = same for all)
+  float scale = 1.0f / _samplesPerDimension;
+  scale /= _samplesPerDimension;
+  Color out(0, 0, 0);
+  auto end = colors.end();
+  for (auto it = colors.begin(); it != end; ++it)
+    out += scale * *it;
+  return out;
 }

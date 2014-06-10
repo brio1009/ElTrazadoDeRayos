@@ -28,32 +28,33 @@ SOFTWARE.
 #define RAYTRACERLIB_REGULARSAMPLER_H_
 
 #include <vector>
-#include <utility>
 
+#include "./Color.h"
 #include "./Ray.h"
 #include "./Sampler.h"
-/// Samples a area between three Rays into the scene.
-// TODO(bauschp, Tue May 27 10:05:09 CEST 2014): better doc
+class Scene;
+/// This class is used to define a sampling based on a regular grid.
+/// Corresponding Samples are in the rectanglular defined area.
 class RegularSampler : public Sampler {
  public:
+  /// Creates a new RegularSampler with given sample ammount per dimension
   RegularSampler(const size_t& samplesPerDimension)
-      : _samplesPerImageDimension(samplesPerDimension),
-        _offsetLambda(0.5f / samplesPerDimension) { }
+      : _samplesPerDimension(samplesPerDimension),
+      _offset(0.5f / samplesPerDimension) { }
+  /// Virtual destructor. (Override).
   virtual ~RegularSampler() { }
  protected:
-  /// This method creates the Sample with given lambda values.
-  /// This could be a a bilinear interpolation.
-  virtual Ray* createSample(
-      const std::vector<Ray>& rays,
-      const std::pair<float, float>& lambda) const;
-  /// Returnes the lambda values needed to create a sample.
-  virtual std::pair<float, float> getNextLambda(
-      const size_t& index) const;
+  /// (Override)
+  /// Throws an exception if size > _samplesPerDimension^2
+  virtual std::vector<float> getLambdasForSample(
+      const size_t& size) const throw(int);
+  /// (Override)
+  virtual Color reconstructColor(
+      const std::vector<Color>& colors,
+      const std::vector<float>& lambdas) const;
  private:
-  /// The ammount of samples in a dimension of the image plane.
-  const size_t _samplesPerImageDimension;
-  /// The distance messured in  samples are offset by IN UNIT SPACE. [0;1)
-  float _offsetLambda;
+  const size_t _samplesPerDimension;
+  const float _offset;
 };
 #endif  // RAYTRACERLIB_REGULARSAMPLER_H_
 

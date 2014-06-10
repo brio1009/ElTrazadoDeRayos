@@ -77,7 +77,7 @@ void PerspectiveCamera::render(const Scene& scene) {
         corners[i].setDirection(_transformation * corners[i].direction());
       vector<Ray*> samples;
       vector<Color> colors;
-      for (size_t i=0; i < 4; ++i) {
+/*      for (size_t i=0; i < 4; ++i) {
         samples.push_back(_sampler->getSample(i, corners));
         IntersectionInfo info = scene.traceRay(*samples.back());
         if (info.materialPtr) {
@@ -88,9 +88,20 @@ void PerspectiveCamera::render(const Scene& scene) {
         } else {
           colors.push_back(scene.backgroundColor(r));
         }
+      } */
+      Color col(0, 0, 0);
+      IntersectionInfo info = scene.traceRay(r);
+      if (info.materialPtr) {
+        // HIT
+        col = info.materialPtr->getColor(info,
+                                                    r,
+                                                    scene);
+      } else {
+        col = scene.backgroundColor(r);
       }
-      _image.setPixel(x, y, _sampler->reconstructColor(&samples, colors));
+      _image.setPixel(x, y, col);
     }
+    
   }
 }
 
