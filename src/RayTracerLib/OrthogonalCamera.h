@@ -1,7 +1,8 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2014 CantTouchDis
+Copyright (c) 2014 CantTouchDis <bauschp@informatik.uni-freiburg.de>
+Copyright (c) 2014 brio1009 <christoph1009@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,12 +26,18 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_ORTHOGONALCAMERA_H_
 #define RAYTRACERLIB_ORTHOGONALCAMERA_H_
 
+#include <glm/glm.hpp>
+
 #include "./Camera.h"
 #include "./Constants.h"
 
 class OrthogonalCamera : public Camera {
  private:
   REAL _unitsPerPixel;
+  glm::vec4 _imagePlaneX;
+  glm::vec4 _imagePlaneY;
+  glm::vec4 _imagePlaneTopLeftCorner;
+  glm::vec4 _viewingDirection;
  public:
   /// Constructor.
   OrthogonalCamera(const int width,
@@ -38,8 +45,12 @@ class OrthogonalCamera : public Camera {
       const REAL unitsPerPixel = 1.0) : Camera(width, height) {
     _unitsPerPixel = unitsPerPixel;
   }
-  /// Defines Camrea::render().
-  virtual void render(const Scene& scene);
+  /// This overrides Object::transform(...)
+  virtual void transform(const glm::mat4& matrix);  //NOLINT mistaken for std
+  /// This defines Camera::create...
+  virtual Ray createPixelCornerRay(
+      const size_t& px,
+      const size_t& py) const;
   /// Destructor
   virtual ~OrthogonalCamera() { }
 };

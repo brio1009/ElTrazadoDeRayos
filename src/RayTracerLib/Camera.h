@@ -1,7 +1,8 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2014 CantTouchDis
+Copyright (c) 2014 CantTouchDis <bauschp@informatik.uni-freiburg.de>
+Copyright (c) 2014 brio1009 <christoph1009@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -40,8 +41,12 @@ class Camera : public Object {
   Camera(const int width, const int height);
   /// Renders the scene to the image.
   virtual void render(
-      const Scene& scene) = 0;
+      const Scene& scene);
 
+  /// This method creates a Ray for given px and py. (TopLeft most)
+  virtual Ray createPixelCornerRay(
+      const size_t& px,
+      const size_t& py) const = 0;
   /// Returns the image.
   const Image& getImage() const;
 

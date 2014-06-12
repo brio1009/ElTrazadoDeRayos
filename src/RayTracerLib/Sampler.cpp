@@ -43,7 +43,7 @@ Color Sampler::getSampledColor(
  vector<Color> colors;
  size_t startLambda = lambdas.size();
  while(addNextLambdasToList(&lambdas)) {
-   size_t endLambda = lambdas.size();
+   size_t endLambda = lambdas.size() - 1;
    // Calculate the Ray for given lambdas
    Ray sample = createRayByLambdas(lambdas, startLambda, endLambda, borders);
    // Get the color for given sample Ray.
@@ -55,24 +55,27 @@ Color Sampler::getSampledColor(
    } else {
      colors.push_back(scene.backgroundColor(sample));
    }
+   startLambda = lambdas.size();
  }
  return reconstructColor(colors, lambdas);
 }
 // _____________________________________________________________________________
 bool Sampler::addNextLambdasToList(
       std::vector<float>* lambdas) const {
-  // This creation only works for 4 borders.
-  assert(lambdas->size() % 4 == 0);
-  size_t nextSampleIndex = lambdas->size() / 4;
+  // This creation only works for two lambdas.
+  assert(lambdas->size() % 2 == 0);
+  size_t nextSampleIndex = lambdas->size() / 2;
   // Get the next lambdas.
   try {
     vector<float> nextLambdas = getLambdasForSample(nextSampleIndex);
     // Append the lambdas to the list
     lambdas->insert(lambdas->end(), nextLambdas.begin(), nextLambdas.end());
     return true;
-  } catch ( ... ) {
+  } catch (int) {
     // Whenever an exception occures we couldnt produce a new sample.
     return false;
+  } catch ( ... ) {
+    throw;
   }
 }
 // _____________________________________________________________________________
@@ -82,7 +85,7 @@ Ray Sampler::createRayByLambdas(
       const size_t& end,
       const std::vector<Ray>& borders) const {
   assert(borders.size() == 4);
-  assert(end - start == 2);
+  assert(end - start == 1);
   assert(lambdas.size() > end);
   // Interpolate between origin and the other
   // TODO(bauschp, Tue Jun 10 20:46:33 CEST 2014): This is fugly.

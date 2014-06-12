@@ -1,7 +1,8 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2014 CantTouchDis
+Copyright (c) 2014 CantTouchDis <bauschp@informatik.uni-freiburg.de>
+Copyright (c) 2014 brio1009 <christoph1009@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,39 +32,31 @@ SOFTWARE.
 #include "./Material.h"
 
 // _____________________________________________________________________________
-void OrthogonalCamera::render(const Scene& scene) {
-  // Get the size of the image.
+Ray OrthogonalCamera::createPixelCornerRay(
+    const size_t& px,
+    const size_t& py) const {
+ return Ray(_imagePlaneTopLeftCorner
+      + static_cast<float>(px) * _imagePlaneX
+      + static_cast<float>(py) * _imagePlaneY,
+      _viewingDirection);
+}
+// _____________________________________________________________________________
+void OrthogonalCamera::transform(const glm::mat4& matrix) {
+  // transform as Object does.
+  Object::transform(matrix);
+  // recalculate the Image plane directions.
+  _imagePlaneX = glm::vec4(_unitsPerPixel, 0, 0, 0);
+  _imagePlaneY = glm::vec4(0, -_unitsPerPixel, 0, 0);
+  _imagePlaneX = _transformation * _imagePlaneX;
+  _imagePlaneY = _transformation * _imagePlaneY;
+  // recalculate the viewing direction and Image position.
+  // TODO(bauschp, Thu Jun 12 15:59:26 CEST 2014): check if centered.
   REAL startX = _image.getWidth() * 0.5 * _unitsPerPixel;
   REAL startY = _image.getHeight() * 0.5 * _unitsPerPixel;
-
-  glm::vec4 position(-startX + _unitsPerPixel * 0.5,
-                     -startY + _unitsPerPixel * 0.5,
+  _imagePlaneTopLeftCorner = glm::vec4(-startX + _unitsPerPixel * 0.5,
+                     startY + _unitsPerPixel * 0.5,
                      0,
                      1);
-  position = _transformation * position;
-  glm::vec4 direction(0, 0, -1, 0);
-  direction = _transformation * direction;
-
-  glm::vec4 planeX(_unitsPerPixel, 0, 0, 0);
-  glm::vec4 planeY(0, _unitsPerPixel, 0, 0);
-  planeX = _transformation * planeX;
-  planeY = _transformation * planeY;
-  // Send rays.
-  for (int x = 0; x < _image.getWidth(); ++x) {
-    for (int y = 0; y < _image.getHeight(); ++y) {
-      Ray r(position
-          + (static_cast<float>(x) * planeX) + (static_cast<float>(y)* planeY),
-          direction);
-      IntersectionInfo info = scene.traceRay(r);
-      if (info.materialPtr) {
-        // We hit the object.
-        Color tmpColor = info.materialPtr->getColor(info,
-                                                    r,
-                                                    scene);
-        _image.setPixel(x, y, tmpColor);
-      } else {
-        _image.setPixel(x, y, scene.backgroundColor(r));
-      }
-    }
-  }
+  _imagePlaneTopLeftCorner = _transformation * _imagePlaneTopLeftCorner;
+  _viewingDirection = _transformation * glm::vec4(0, 0, -1, 0);
 }

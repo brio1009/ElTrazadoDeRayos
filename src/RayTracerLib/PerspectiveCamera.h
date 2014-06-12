@@ -1,7 +1,8 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2014 CantTouchDis
+Copyright (c) 2014 CantTouchDis <bauschp@informatik.uni-freiburg.de>
+Copyright (c) 2014 brio1009 <christoph1009@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -39,12 +40,16 @@ class PerspectiveCamera : public Camera {
       const int height,
       const REAL& fovAngleInRad);
 
+  /// This overrides Object::transform(...)
+  virtual void transform(const glm::mat4& matrix);  //NOLINT mistaken for std
+  /// This defines Camera::create...
+  virtual Ray createPixelCornerRay(
+      const size_t& px,
+      const size_t& py) const;
+
   // Destructor.
   virtual ~PerspectiveCamera();
 
-  // Renders the scene into the internal image storage.
-  virtual void render(
-      const Scene& scene);
 };
 
 #endif  // RAYTRACERLIB_PERSPECTIVECAMERA_H_

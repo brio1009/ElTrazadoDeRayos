@@ -58,7 +58,9 @@ class Sampler {
   /// This should Return a Ray that is created by given lambdas and borders.
   /// In most cases this should be a linear/multilinear interpolation.
   /// Therefor the default is a bilinear interpolation for two lambda values and
-  /// between four Rays. Start and end are used to identify the right lambdas.
+  /// between four Rays. Start and end are used to identify the borders of the
+  /// used lambdas. With start being the first index and end being the last
+  /// index (points to the last lambda) used to create the Ray.
   virtual Ray createRayByLambdas(
       const std::vector<float>& lambdas,
       const size_t& start,

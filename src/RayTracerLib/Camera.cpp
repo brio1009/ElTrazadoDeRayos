@@ -1,7 +1,8 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2014 CantTouchDis
+Copyright (c) 2014 CantTouchDis <bauschp@informatik.uni-freiburg.de>
+Copyright (c) 2014 brio1009 <christoph1009@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +23,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #include "./Camera.h"
-#include "./RegularSampler.h"
+
 #include <vector>
+
+#include "./Constants.h"
+#include "./IntersectionInfo.h"
+#include "./Material.h"
+#include "./Ray.h"
+#include "./Scene.h"
+using std::vector;
 // _____________________________________________________________________________
 Camera::Camera(const int width, const int height) : _image(width, height) {
   _sampler = new RegularSampler(2);
@@ -35,4 +43,20 @@ const Image& Camera::getImage() const {
 // _____________________________________________________________________________
 void Camera::setImageSize(const int width, const int height) {
   _image(width, height);
+}
+// _____________________________________________________________________________
+void Camera::render(const Scene& scene) {
+  // Send rays.
+  for (int x = 0; x < _image.getWidth(); ++x) {
+    for (int y = 0; y < _image.getHeight(); ++y) {
+      // TODO(bauschp, Thu Jun 12 16:33:05 CEST 2014): remove overhead.
+      vector<Ray> borders;
+      borders.reserve(4);
+      for (unsigned char piy = 0; piy <= 1; ++piy)
+        for (unsigned char pix = 0; pix <= 1; ++pix)
+          borders.push_back(createPixelCornerRay(x + pix, y + piy));
+      _image.setPixel(x, y,
+            _sampler->getSampledColor(borders, scene));
+    }
+  }
 }

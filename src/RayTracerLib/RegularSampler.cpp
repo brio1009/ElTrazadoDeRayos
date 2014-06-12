@@ -28,16 +28,18 @@ SOFTWARE.
 
 #include "./Color.h"
 #include "./Ray.h"
+
 using std::vector;
+
 // _____________________________________________________________________________
 std::vector<float> RegularSampler::getLambdasForSample(
     const size_t& index) const throw(int) {
-  if (index > _samplesPerDimension * _samplesPerDimension)
+  if (index >= _samplesPerDimension * _samplesPerDimension)
     throw 0;
   size_t x = index % _samplesPerDimension;
   size_t y = (index - x) / _samplesPerDimension;
   vector<float> lambdas;
-  lambdas.resize(2);
+  lambdas.reserve(2);
   lambdas.push_back(
       static_cast<float>(x) / _samplesPerDimension + _offset);
   lambdas.push_back(
@@ -52,6 +54,8 @@ Color RegularSampler::reconstructColor(
   // calculate how much a colors weight is. (RegularSampler = same for all)
   float scale = 1.0f / _samplesPerDimension;
   scale /= _samplesPerDimension;
+  // printf("Scale: %.2f\r", scale);
+  // printf("SizeColors: %zu\r", colors.size());
   Color out(0, 0, 0);
   auto end = colors.end();
   for (auto it = colors.begin(); it != end; ++it)
