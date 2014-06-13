@@ -38,7 +38,7 @@ class Scene;
 class RegularSampler : public Sampler {
  public:
   /// Creates a new RegularSampler with given sample ammount per dimension
-  RegularSampler(const size_t& samplesPerDimension)
+  explicit RegularSampler(const size_t& samplesPerDimension)
       : _samplesPerDimension(samplesPerDimension),
       _offset(0.5f / samplesPerDimension) { }
   /// Virtual destructor. (Override).
@@ -47,7 +47,7 @@ class RegularSampler : public Sampler {
   /// (Override)
   /// Throws an exception if size > _samplesPerDimension^2
   virtual std::vector<float> getLambdasForSample(
-      const size_t& size) const throw(int);
+      const size_t& size) const throw(int); // NOLINT we are not google
   /// (Override)
   virtual Color reconstructColor(
       const std::vector<Color>& colors,

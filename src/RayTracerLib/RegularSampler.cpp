@@ -33,7 +33,7 @@ using std::vector;
 
 // _____________________________________________________________________________
 std::vector<float> RegularSampler::getLambdasForSample(
-    const size_t& index) const throw(int) {
+      const size_t& index) const throw(int) { // NOLINT we are not google
   if (index >= _samplesPerDimension * _samplesPerDimension)
     throw 0;
   size_t x = index % _samplesPerDimension;
@@ -48,8 +48,8 @@ std::vector<float> RegularSampler::getLambdasForSample(
 }
 // _____________________________________________________________________________
 Color RegularSampler::reconstructColor(
-    const std::vector<Color>& colors,
-    const std::vector<float>& lambdas) const {
+      const std::vector<Color>& colors,
+      const std::vector<float>& lambdas) const {
   assert(colors.size() == _samplesPerDimension * _samplesPerDimension);
   // calculate how much a colors weight is. (RegularSampler = same for all)
   float scale = 1.0f / _samplesPerDimension;

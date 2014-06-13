@@ -49,7 +49,6 @@ class PerspectiveCamera : public Camera {
 
   // Destructor.
   virtual ~PerspectiveCamera();
-
 };
 
 #endif  // RAYTRACERLIB_PERSPECTIVECAMERA_H_

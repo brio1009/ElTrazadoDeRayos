@@ -24,12 +24,12 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_PROPERTYMANAGER_H
-#define RAYTRACERLIB_PROPERTYMANAGER_H
+#ifndef RAYTRACERLIB_PROPERTYMANAGER_H_
+#define RAYTRACERLIB_PROPERTYMANAGER_H_
 
-#include "./Singleton.h"
 #include <unordered_map>
 #include <string>
+#include "./Singleton.h"
 
 /// Simple struct that holds all the necessary data for one property.
 struct Property {
@@ -78,7 +78,9 @@ class PropertyManager : public Singleton<PropertyManager> {
   static std::unordered_map<std::string, BasicClassProperties*> classProperties;
 
   ///
-  static void insertTestMap(const std::string& name, BasicClassProperties* ptr) {
+  static void insertTestMap(
+        const std::string& name,
+        BasicClassProperties* ptr) {
     classProperties.emplace(name, ptr);
   }
 
@@ -91,4 +93,4 @@ class PropertyManager : public Singleton<PropertyManager> {
 #define PROPERTYCLASS(x) \
   PropertyManager::insertTestMap(#x, new ClassProperties<x>()); \
 
-#endif  // RAYTRACERLIB_PROPERTYMANAGER_H
+#endif  // RAYTRACERLIB_PROPERTYMANAGER_H_

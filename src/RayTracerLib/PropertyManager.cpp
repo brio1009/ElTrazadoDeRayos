@@ -25,4 +25,8 @@ SOFTWARE.
 
 #include "./PropertyManager.h"
 
-std::unordered_map<std::string, BasicClassProperties*> PropertyManager::classProperties = std::unordered_map<std::string, BasicClassProperties*>();
+#include <string>
+
+std::unordered_map<
+    std::string, BasicClassProperties*> PropertyManager::classProperties =
+        std::unordered_map<std::string, BasicClassProperties*>();

@@ -95,23 +95,35 @@ void Scene::cgCube() {
   int lightsPerDimension = static_cast<int>(sqrt(numLights / 2.0));
   for (int x = 0; x < lightsPerDimension; ++x) {
     for (int z = 0; z < lightsPerDimension; ++z) {
-      Light* light = new PointLight(glm::vec4((-lightsPerDimension + static_cast<float>(x)) * 3,
-                                              20,
-                                              50 + static_cast<float>(z) * 3,
-                                              1));
-      light->setLightColor(Color(1.0f / numLights, 1.0f / numLights, 1.0f / numLights, 1.0f / numLights));
-      _lights.push_back(light); 
+      Light* light = new PointLight(
+            glm::vec4((-lightsPerDimension + static_cast<float>(x)) * 3,
+            20,
+            50 + static_cast<float>(z) * 3,
+            1));
+      light->setLightColor(
+            Color(
+                  1.0f / numLights,
+                  1.0f / numLights,
+                  1.0f / numLights,
+                  1.0f / numLights));
+      _lights.push_back(light);
     }
   }
 
   for (int x = 0; x < lightsPerDimension; ++x) {
     for (int z = 0; z < lightsPerDimension; ++z) {
-      Light* light = new PointLight(glm::vec4((static_cast<float>(x)),
-                                              0,
-                                              static_cast<float>(z),
-                                              1));
-      light->setLightColor(Color(1.0f / numLights, 1.0f / numLights, 1.0f / numLights, 1.0f / numLights));
-      _lights.push_back(light); 
+      Light* light = new PointLight(
+            glm::vec4((static_cast<float>(x)),
+            0,
+            static_cast<float>(z),
+            1));
+      light->setLightColor(
+            Color(
+                  1.0f / numLights,
+                  1.0f / numLights,
+                  1.0f / numLights,
+                  1.0f / numLights));
+      _lights.push_back(light);
     }
   }
 }
@@ -162,7 +174,7 @@ void Scene::compoundTestScene() {
   // Lights.
   Light* light = new AreaLight(glm::vec4(0, 10, -39, 1), 3.0);
   light->setLightColor(Color(1, 1, 1));
-  _lights.push_back(light); 
+  _lights.push_back(light);
 }
 
 // TODO(allofus, Wed May 21 17:12:00 CEST 2014): Remove if we have a scene load.
@@ -212,9 +224,18 @@ void Scene::defaultScene() {
   int lightsPerDimension = static_cast<int>(sqrt(numLights));
   for (int x = 0; x < lightsPerDimension; ++x) {
     for (int z = 0; z < lightsPerDimension; ++z) {
-      Light* light = new PointLight(glm::vec4((-lightsPerDimension + static_cast<float>(x)) * 3, 10, -39 + static_cast<float>(z) * 3, 1));
-      light->setLightColor(Color(1.0f / numLights, 1.0f / numLights, 1.0f / numLights, 1.0f / numLights));
-      _lights.push_back(light); 
+      Light* light = new PointLight(
+            glm::vec4((-lightsPerDimension + static_cast<float>(x)) * 3,
+            10,
+            -39 + static_cast<float>(z) * 3,
+            1));
+      light->setLightColor(
+            Color(
+                  1.0f / numLights,
+                  1.0f / numLights,
+                  1.0f / numLights,
+                  1.0f / numLights));
+      _lights.push_back(light);
     }
   }
 }

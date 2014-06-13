@@ -88,3 +88,4 @@ glm::vec2 Shape::getTextureCoord(const glm::vec4& p) const {
   glm::vec4 trans = _inverseTransform * p;
   return ProjectorFunctions::textureProjectionPlaneXZ(trans);
 }
+

@@ -48,7 +48,7 @@ struct IntersectionInfo {
                    const glm::vec4& hitPoint,
                    const glm::vec4& normal,
                    const Material* materialPtr,
-                   const glm::vec2& texCoord = glm::vec2(0,0))
+                   const glm::vec2& texCoord = glm::vec2(0, 0))
   : t(t),
     hitPoint(hitPoint),
     normal(normal),

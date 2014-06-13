@@ -26,25 +26,26 @@ SOFTWARE.
 #define GLM_FORCE_RADIANS
 
 // RayTracerLib.
-#include <Ray.h>
 #include <Ellipsoid.h>
-#include <Plane.h>
 #include <Image.h>
 #include <Material.h>
-#include <Scene.h>
 #include <OrthogonalCamera.h>
 #include <PerspectiveCamera.h>
+#include <Plane.h>
+#include <Ray.h>
+#include <Scene.h>
 // C Header.
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/vector_angle.hpp>
-#include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtc/constants.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/rotate_vector.hpp>
+#include <glm/gtx/vector_angle.hpp>
+#include <omp.h>
 // C++ Header.
 #include <algorithm>
-#include <ctime>
 #include <cstdio>
 #include <cstdlib>
+#include <ctime>
 #include <vector>
 
 //
@@ -63,18 +64,18 @@ void renderTestScene() {
         (angle / imgCount) * i, glm::vec3(0, 1, 0));
     trans = glm::rotate(trans, glm::radians(45.0f), glm::vec3(-1, 0, 0));
     cam.transform(glm::translate(trans, glm::vec3(0, 0, 100)));
-    clock_t start = clock();
+    double startTime = omp_get_wtime();
     cam.render(scene);
-    clock_t end = clock();
+    double endTime = omp_get_wtime();
     // Save the image under different names.
     char buff[100];
 #ifdef WINDOWS
     printf("Image %03lu took %.2f sec to render.\n", i,
-        static_cast<float>(end - start) / CLOCKS_PER_SEC);
+        endTime - startTime);
     _snprintf_s(buff, sizeof(buff), "Img%03lu.bmp", i);
 #else
     printf("Image %03zu took %.2f sec to render.\n", i,
-        static_cast<float>(end - start) / CLOCKS_PER_SEC);
+        endTime - startTime);
     snprintf(buff, sizeof(buff), "Img%03zu.bmp", i);
 #endif  // WINDOWS
     cam.getImage().saveAsBMP(buff);

@@ -39,25 +39,25 @@ using std::vector;
 Color Sampler::getSampledColor(
       const std::vector<Ray>& borders,
       const Scene& scene) const {
- vector<float> lambdas; 
- vector<Color> colors;
- size_t startLambda = lambdas.size();
- while(addNextLambdasToList(&lambdas)) {
-   size_t endLambda = lambdas.size() - 1;
-   // Calculate the Ray for given lambdas
-   Ray sample = createRayByLambdas(lambdas, startLambda, endLambda, borders);
-   // Get the color for given sample Ray.
-   IntersectionInfo info = scene.traceRay(sample);
-   if (info.materialPtr) {
-     colors.push_back(info.materialPtr->getColor(info,
-       sample,
-       scene));
-   } else {
-     colors.push_back(scene.backgroundColor(sample));
-   }
-   startLambda = lambdas.size();
- }
- return reconstructColor(colors, lambdas);
+  vector<float> lambdas;
+  vector<Color> colors;
+  size_t startLambda = lambdas.size();
+  while (addNextLambdasToList(&lambdas)) {
+    size_t endLambda = lambdas.size() - 1;
+    // Calculate the Ray for given lambdas
+    Ray sample = createRayByLambdas(lambdas, startLambda, endLambda, borders);
+    // Get the color for given sample Ray.
+    IntersectionInfo info = scene.traceRay(sample);
+    if (info.materialPtr) {
+      colors.push_back(info.materialPtr->getColor(info,
+        sample,
+        scene));
+    } else {
+      colors.push_back(scene.backgroundColor(sample));
+    }
+    startLambda = lambdas.size();
+  }
+  return reconstructColor(colors, lambdas);
 }
 // _____________________________________________________________________________
 bool Sampler::addNextLambdasToList(
@@ -71,7 +71,7 @@ bool Sampler::addNextLambdasToList(
     // Append the lambdas to the list
     lambdas->insert(lambdas->end(), nextLambdas.begin(), nextLambdas.end());
     return true;
-  } catch (int) {
+  } catch (int) { // NOLINT we are not google
     // Whenever an exception occures we couldnt produce a new sample.
     return false;
   } catch ( ... ) {

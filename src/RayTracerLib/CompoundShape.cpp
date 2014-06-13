@@ -28,6 +28,7 @@ SOFTWARE.
 #include <glm/glm.hpp>
 
 #include <algorithm>
+#include <limits>
 #include <vector>
 
 #include "./Constants.h"
@@ -97,8 +98,8 @@ IntersectionInfo CompoundShape::getIntersectionInfo(const Ray& ray,
   // Check if we hit something.
   if (hitRight) {
     IntersectionInfo info = _rightShapePtr->getIntersectionInfo(newRay,
-                                            smallestT - 2.0 * constants::TEPSILON,
-                                            smallestT + 2.0 * constants::TEPSILON);
+                              smallestT - 2.0 * constants::TEPSILON,
+                              smallestT + 2.0 * constants::TEPSILON);
     adaptInstersectionInfo(&info);
     if (getOperator() == CompoundShape::Operator::minusOp) {
       info.normal = -info.normal;
@@ -107,8 +108,8 @@ IntersectionInfo CompoundShape::getIntersectionInfo(const Ray& ray,
   }
   if (hitLeft) {
     IntersectionInfo info = _leftShapePtr->getIntersectionInfo(newRay,
-                                             smallestT - 2.0 * constants::TEPSILON,
-                                             smallestT + 2.0 * constants::TEPSILON);
+                               smallestT - 2.0 * constants::TEPSILON,
+                               smallestT + 2.0 * constants::TEPSILON);
     adaptInstersectionInfo(&info);
     return info;
   }
@@ -127,8 +128,7 @@ void CompoundShape::adaptInstersectionInfo(
   if (passTransformation()) {
     infoPtr->normal = glm::normalize(_transformation * infoPtr->normal);
     infoPtr->hitPoint = _transformation * infoPtr->hitPoint;
-    if (solve::isZero(infoPtr->hitPoint[3]))
-    {
+    if (solve::isZero(infoPtr->hitPoint[3])) {
       infoPtr->hitPoint[3] = 0.0;
       return;
     }

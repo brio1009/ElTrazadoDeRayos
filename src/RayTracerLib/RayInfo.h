@@ -37,7 +37,7 @@ struct RayInfo {
   /// The refractive index at the origin of the ray.
   // TODO(all, 26.05.2014): Make a stack out of this.
   float refractiveIndex;
-  
+
   /// Constructor.
   RayInfo() : depth(0), refractiveIndex(RefractiveIndex::air) { }
 };

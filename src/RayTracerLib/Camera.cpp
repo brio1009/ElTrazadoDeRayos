@@ -34,7 +34,7 @@ SOFTWARE.
 using std::vector;
 // _____________________________________________________________________________
 Camera::Camera(const int width, const int height) : _image(width, height) {
-  _sampler = new RegularSampler(2);
+  _sampler = new RegularSampler(1);
 }
 // _____________________________________________________________________________
 const Image& Camera::getImage() const {
@@ -47,6 +47,7 @@ void Camera::setImageSize(const int width, const int height) {
 // _____________________________________________________________________________
 void Camera::render(const Scene& scene) {
   // Send rays.
+#pragma omp parallel for
   for (int x = 0; x < _image.getWidth(); ++x) {
     for (int y = 0; y < _image.getHeight(); ++y) {
       // TODO(bauschp, Thu Jun 12 16:33:05 CEST 2014): remove overhead.

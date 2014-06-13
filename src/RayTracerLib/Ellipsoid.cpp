@@ -90,3 +90,4 @@ glm::vec2 Ellipsoid::getTextureCoord(const glm::vec4& p) const {
   glm::vec4 trans = _inverseTransform * p;
   return ProjectorFunctions::textureProjectionSphere(trans);
 }
+

@@ -76,7 +76,7 @@ project "ElTrazadoDeRayosLib"
   files {"../src/RayTracerLib/**"}
   kind "StaticLib"
   if os.get() == "linux" then 
-    postbuildcommands { "-python ../cpplint.py --root=src ../../src/RayTracerLib/** 2>&1" }
+    postbuildcommands { "-@python ../cpplint.py --root=src ../../src/RayTracerLib/** > /dev/null" }
   end
 
   -- This is nice to have so VS always uses the same uuids in its project files.
@@ -88,7 +88,7 @@ project "ConsoleMain"
   kind "ConsoleApp"
   links {"ElTrazadoDeRayosLib"}
   if os.get() == "linux" then 
-    postbuildcommands { "-python ../cpplint.py --root=src ../../src/ConsoleMain/** 2>&1" }
+    postbuildcommands { "-@python ../cpplint.py --root=src ../../src/ConsoleMain/** > /dev/null" }
   end
   -- This is nice to have so VS always uses the same uuids in its project files.
   -- Generated via http://www.uuidgenerator.net

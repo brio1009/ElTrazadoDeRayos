@@ -45,6 +45,7 @@ class Sampler {
       const Scene& scene) const;
   /// Virtual destructor.
   virtual ~Sampler() { }
+
  protected:
 // TODO(bauschp, Tue Jun 10 20:19:16 CEST 2014):
 // For adaptive sampling we might need to give the colors.
@@ -71,7 +72,7 @@ class Sampler {
   /// a Ray via bilinear Interpolation. This should throw an exception whenever
   /// Its not possible to create new lambdas.
   virtual std::vector<float> getLambdasForSample(
-      const size_t& size) const throw(int) = 0;
+      const size_t& size) const throw(int) = 0; // NOLINT we are not google.
   /// Reconstructes the returned color values with given lambda values.
   virtual Color reconstructColor(
       const std::vector<Color>& colors,

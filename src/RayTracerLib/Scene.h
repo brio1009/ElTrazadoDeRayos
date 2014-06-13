@@ -50,6 +50,7 @@ class Scene {
                                                              0.92f); }
   /// Returnes a reference to all the lights in the scene.
   const std::vector<Light*>& lights() const { return _lights; }
+
  private:
   /// Initializes the default scene.
   void defaultScene();
