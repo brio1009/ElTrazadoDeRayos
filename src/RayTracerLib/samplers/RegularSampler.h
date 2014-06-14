@@ -23,36 +23,38 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <glm/glm.hpp>
+#pragma once
+#ifndef RAYTRACERLIB_REGULARSAMPLER_H_
+#define RAYTRACERLIB_REGULARSAMPLER_H_
+
+#include <vector>
+
 #include "./Color.h"
-#include "./ColorMaterial.h"
-#include "./IntersectionInfo.h"
 #include "./Ray.h"
-#include "./Scene.h"
+#include "./Sampler.h"
+class Scene;
+/// This class is used to define a sampling based on a regular grid.
+/// Corresponding Samples are in the rectanglular defined area.
+class RegularSampler : public Sampler {
+ public:
+  /// Creates a new RegularSampler with given sample ammount per dimension
+  explicit RegularSampler(const size_t& samplesPerDimension)
+      : _samplesPerDimension(samplesPerDimension),
+      _offset(0.5f / samplesPerDimension) { }
+  /// Virtual destructor. (Override).
+  virtual ~RegularSampler() { }
+ protected:
+  /// (Override)
+  /// Throws an exception if size > _samplesPerDimension^2
+  virtual std::vector<float> getLambdasForSample(
+      const size_t& size) const throw(); // NOLINT we are not google
+  /// (Override)
+  virtual Color reconstructColor(
+      const std::vector<Color>& colors,
+      const std::vector<float>& lambdas) const;
+ private:
+  const size_t _samplesPerDimension;
+  const float _offset;
+};
+#endif  // RAYTRACERLIB_REGULARSAMPLER_H_
 
-// _____________________________________________________________________________
-Color ColorMaterial::getColor(const IntersectionInfo& intersectionInfo,
-                              const Ray& incomingRay,
-                              const Scene& scene) const {
-  // Build the returncolor.
-  Color returnColor(_color);
-
-  // Check if we need to send another ray.
-  if (_color.a() < 1.0f) {
-    // Build a new ray.
-    Ray newRay(intersectionInfo.hitPoint,
-               incomingRay.direction());
-    // Trace the ray.
-    IntersectionInfo info = scene.traceRay(newRay);
-    Color addColor;
-    if (info.materialPtr) {
-      addColor = info.materialPtr->getColor(info,
-                                            newRay,
-                                            scene);
-    }
-    returnColor = (static_cast<double>(_color.a())) * _color
-                  + (1.0 - static_cast<double>(_color.a())) * addColor;
-  }
-
-  return returnColor;
-}

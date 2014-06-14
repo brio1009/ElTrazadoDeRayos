@@ -24,37 +24,43 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_REGULARSAMPLER_H_
-#define RAYTRACERLIB_REGULARSAMPLER_H_
+#ifndef RAYTRACERLIB_CAMERA_H_
+#define RAYTRACERLIB_CAMERA_H_
 
-#include <vector>
-
-#include "./Color.h"
-#include "./Ray.h"
+#include "./Image.h"
+#include "./Spatial.h"
 #include "./Sampler.h"
-class Scene;
-/// This class is used to define a sampling based on a regular grid.
-/// Corresponding Samples are in the rectanglular defined area.
-class RegularSampler : public Sampler {
- public:
-  /// Creates a new RegularSampler with given sample ammount per dimension
-  explicit RegularSampler(const size_t& samplesPerDimension)
-      : _samplesPerDimension(samplesPerDimension),
-      _offset(0.5f / samplesPerDimension) { }
-  /// Virtual destructor. (Override).
-  virtual ~RegularSampler() { }
- protected:
-  /// (Override)
-  /// Throws an exception if size > _samplesPerDimension^2
-  virtual std::vector<float> getLambdasForSample(
-      const size_t& size) const throw(int); // NOLINT we are not google
-  /// (Override)
-  virtual Color reconstructColor(
-      const std::vector<Color>& colors,
-      const std::vector<float>& lambdas) const;
- private:
-  const size_t _samplesPerDimension;
-  const float _offset;
-};
-#endif  // RAYTRACERLIB_REGULARSAMPLER_H_
+#include "./RegularSampler.h"
 
+// Foward declaration.
+class Scene;
+
+class Camera : public Spatial {
+ public:
+  /// Constructor.
+  Camera(const int width, const int height);
+  /// Renders the scene to the image.
+  virtual void render(
+      const Scene& scene);
+
+  /// This method creates a Ray for given px and py. (TopLeft most)
+  virtual Ray createPixelCornerRay(
+      const size_t& px,
+      const size_t& py) const = 0;
+  /// Returns the image.
+  const Image& getImage() const;
+
+  /// Sets the image size. Resets the image.
+  virtual void setImageSize(const int width, const int height);
+  /// virtual destructor;
+  virtual ~Camera() {
+    delete _sampler;
+  }
+
+ protected:
+  /// Image where the scene is rendered to.
+  Sampler* _sampler;
+  Image _image;
+};
+
+#endif  // RAYTRACERLIB_CAMERA_H_

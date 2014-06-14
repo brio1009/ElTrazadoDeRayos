@@ -29,14 +29,14 @@ SOFTWARE.
 
 #include <ctime>
 #include <glm/glm.hpp>
-#include "../Object.h"
+#include "../Spatial.h"
 #include "../Color.h"
 
 // Forward declaration.
 class Ray;
 
 /// An abstract interface to interact with Lights.
-class Light : public Object {
+class Light : public Spatial {
  public:
   /// Destructor.
   virtual ~Light() { }

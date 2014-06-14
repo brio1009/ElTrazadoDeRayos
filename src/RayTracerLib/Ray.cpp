@@ -1,8 +1,8 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2014 CantTouchDis
-Copyright (c) 2014 brio1009 <christoph1009@gmail.com> 
+Copyright (c) 2014 CantTouchDis <bauschp@informatik.uni-freiburg.de>
+Copyright (c) 2014 brio1009 <christoph1009@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@ SOFTWARE.
 */
 
 #include "./Ray.h"
+
 #include "./Solver.h"
 
 // _____________________________________________________________________________

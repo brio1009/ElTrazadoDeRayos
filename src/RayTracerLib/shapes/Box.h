@@ -1,7 +1,8 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2014 CantTouchDis
+Copyright (c) 2014 CantTouchDis <bauschp@informatik.uni-freiburg.de>
+Copyright (c) 2014 brio1009 <christoph1009@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,31 +22,43 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#ifndef RAYTRACERLIB_OBJECT_H_
-#define RAYTRACERLIB_OBJECT_H_
 
-// GlMath include.
+#pragma once
+#ifndef RAYTRACERLIB_BOX_H_
+#define RAYTRACERLIB_BOX_H_
+
 #include <glm/glm.hpp>
+#include <vector>
 
 #include "./Constants.h"
+#include "./Shape.h"
 
-class Object {
+// A Primitive is a Shape that is defined in its own.
+class Box : public Shape {
  public:
+  /// Constructor with given dimensions. Rotation must be done with
+  /// a transformation.
+  Box(REAL x, REAL y, REAL z);
   /// Destructor.
-  virtual ~Object() {}
-  // Multiplies the matrix with the current Transformation.
-  virtual void transform(const glm::mat4& matrix);  //NOLINT mistaken for std
+  virtual ~Box() { }
 
-  /// Get the position of the object.
-  const glm::vec4& getPosition() const { return _transformation[3]; }
-
-  /// Set the position of the object.
-  void setPosition(const glm::vec4& position) { _transformation[3] = position; }
+  /// Intersection test.
+  virtual std::vector<REAL> intersect(const Ray& ray) const;
 
  protected:
-  // the transformation of this Shape
-  glm::mat4 _transformation;
-  glm::mat4 _inverseTransform;
+  /// Return normal.
+  virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
+
+ protected:
+  /// Returns the min. position.
+  glm::vec4 getMinPosition() const;
+  /// Returns the max. position.
+  glm::vec4 getMaxPosition() const;
+
+ private:
+  REAL _rX;
+  REAL _rY;
+  REAL _rZ;
 };
 
-#endif  // RAYTRACERLIB_OBJECT_H_
+#endif  // RAYTRACERLIB_BOX_H_

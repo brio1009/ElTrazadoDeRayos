@@ -22,7 +22,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
 #include "./OrthogonalCamera.h"
+
 #include <glm/glm.hpp>
 #include <cstdio>
 #include "./IntersectionInfo.h"
@@ -43,7 +45,7 @@ Ray OrthogonalCamera::createPixelCornerRay(
 // _____________________________________________________________________________
 void OrthogonalCamera::transform(const glm::mat4& matrix) {
   // transform as Object does.
-  Object::transform(matrix); // NOLINT linter gets confused with std::transform
+  Spatial::transform(matrix); // NOLINT linter gets confused with std::transform
   // recalculate the Image plane directions.
   _imagePlaneX = glm::vec4(_unitsPerPixel, 0, 0, 0);
   _imagePlaneY = glm::vec4(0, -_unitsPerPixel, 0, 0);

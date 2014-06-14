@@ -88,5 +88,5 @@ inline void solveQubicEquation(
 }
 
 }  // namespace solve
-#endif  // RAYTRACERLIB_SOLVER_H_
 
+#endif  // RAYTRACERLIB_SOLVER_H_

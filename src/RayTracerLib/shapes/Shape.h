@@ -39,13 +39,13 @@ SOFTWARE.
 #include "./ShadowMaterial.h"
 #include "./PhongMaterial.h"
 #include "./ColorMaterial.h"
-#include "./Object.h"
+#include "./Spatial.h"
 
 // Forward declaration.
 class Ray;
 
 // This abstract class is used to define essencial parts to render a "Shape"
-class Shape : public Object {
+class Shape : public Spatial {
  public:
   /// Constructor.
   Shape();

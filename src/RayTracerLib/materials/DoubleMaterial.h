@@ -28,7 +28,7 @@ SOFTWARE.
 #define RAYTRACERLIB_MATERIALS_DOUBLEMATERIAL_H_
 
 #include <glm/glm.hpp>
-#include "../Material.h"
+#include "./Material.h"
 #include "../Constants.h"
 
 // Forward declaration.

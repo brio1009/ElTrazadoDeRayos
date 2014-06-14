@@ -22,7 +22,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
 #include "./PerspectiveCamera.h"
+
 #include "./Ray.h"
 
 using std::vector;
@@ -51,7 +53,7 @@ Ray PerspectiveCamera::createPixelCornerRay(
 // _____________________________________________________________________________
 void PerspectiveCamera::transform(const glm::mat4& matrix) {
   // transform as Object does.
-  Object::transform(matrix); // NOLINT gets confused with std::transform
+  Spatial::transform(matrix); // NOLINT gets confused with std::transform
   // recalculate the Image plane directions.
   // _position = _transformation * glm::vec4(0, 0, 0, 1);
 }

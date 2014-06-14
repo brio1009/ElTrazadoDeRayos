@@ -1,7 +1,8 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2014 CantTouchDis
+Copyright (c) 2014 CantTouchDis <bauschp@informatik.uni-freiburg.de>
+Copyright (c) 2014 brio1009 <christoph1009@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,35 +22,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#pragma once
-#ifndef RAYTRACERLIB_PLANE_H_
-#define RAYTRACERLIB_PLANE_H_
+
+#include "./Spatial.h"
 
 #include <glm/glm.hpp>
 
-#include <vector>
-
-#include "./Constants.h"
-#include "./Shape.h"
-
-class Plane : public Shape {
- public:
-  // ___________________________________________________________________________
-  Plane(REAL nX, REAL nY, REAL nZ) : _nX(nX), _nY(nY), _nZ(nZ) {
-    _transformation = glm::mat4(1.0);
-  }
-  // ___________________________________________________________________________
-  virtual ~Plane() { }
-  // ___________________________________________________________________________
-  virtual std::vector<REAL> intersect(const Ray& ray) const;
-  // ___________________________________________________________________________
-  virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
- private:
-  REAL _nX;
-  REAL _nY;
-  REAL _nZ;
-};
-
-
-#endif  // RAYTRACERLIB_PLANE_H_
-
+// _____________________________________________________________________________
+void Spatial::transform(const glm::mat4& matrix) {  //NOLINT misstaken for std::tr
+  _transformation = matrix;
+  _inverseTransform = glm::inverse(_transformation);
+}

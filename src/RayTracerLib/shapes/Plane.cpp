@@ -23,44 +23,38 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
-#ifndef RAYTRACERLIB_CAMERA_H_
-#define RAYTRACERLIB_CAMERA_H_
+#include "./Plane.h"
 
-#include "./Image.h"
-#include "./Object.h"
-#include "./Sampler.h"
-#include "./RegularSampler.h"
+#include <glm/glm.hpp>
 
-// Foward declaration.
-class Scene;
+#include <vector>
 
-class Camera : public Object {
- public:
-  /// Constructor.
-  Camera(const int width, const int height);
-  /// Renders the scene to the image.
-  virtual void render(
-      const Scene& scene);
+#include "./Constants.h"
+#include "./Ray.h"
+#include "./Solver.h"
 
-  /// This method creates a Ray for given px and py. (TopLeft most)
-  virtual Ray createPixelCornerRay(
-      const size_t& px,
-      const size_t& py) const = 0;
-  /// Returns the image.
-  const Image& getImage() const;
+using std::vector;
 
-  /// Sets the image size. Resets the image.
-  virtual void setImageSize(const int width, const int height);
-  /// virtual destructor;
-  virtual ~Camera() {
-    delete _sampler;
-  }
+// ___________________________________________________________________________
+vector<REAL> Plane::intersect(const Ray& ray) const {
+  // ax + by + cz + d = 0
+  // a * (px + uxt) + b (py + uyt) + c (pz + uzt) + d = 0
+  // apx + bpy + cpz + d + auxt + buyt + cuzt = 0;
 
- protected:
-  /// Image where the scene is rendered to.
-  Sampler* _sampler;
-  Image _image;
-};
+  // Bring vector to unit space.
+  Ray transRay = _inverseTransform * ray;
+  const glm::vec4& transPos = transRay.origin();
+  const glm::vec4& transDir = transRay.direction();
 
-#endif  // RAYTRACERLIB_CAMERA_H_
+  REAL b = _nX * transPos[0] + _nY * transPos[1] + _nZ * transPos[2];
+  REAL a = _nX * transDir[0] + _nY * transDir[1] + _nZ * transDir[2];
+
+  // TODO(bauschp): put into own method and reuse.
+  vector<REAL> out;
+  solve::solveLinearEquation(&out, a, b);
+  return out;
+}
+// ___________________________________________________________________________
+glm::vec4 Plane::getNormalAt(const glm::vec4& p) const {
+  return _transformation * glm::vec4(_nX, _nY, _nZ, 0);
+}

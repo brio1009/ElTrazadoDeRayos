@@ -1,7 +1,8 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2014 CantTouchDis
+Copyright (c) 2014 CantTouchDis <bauschp@informatik.uni-freiburg.de>
+Copyright (c) 2014 brio1009 <christoph1009@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,11 +23,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "./Object.h"
+#ifndef RAYTRACERLIB_OBJECT_H_
+#define RAYTRACERLIB_OBJECT_H_
+
+// GlMath include.
 #include <glm/glm.hpp>
 
-// _____________________________________________________________________________
-void Object::transform(const glm::mat4& matrix) {  //NOLINT misstaken for std::tr
-  _transformation = matrix;
-  _inverseTransform = glm::inverse(_transformation);
-}
+#include "./Constants.h"
+
+class Spatial {
+ public:
+  /// Destructor.
+  virtual ~Spatial() {}
+  // Multiplies the matrix with the current Transformation.
+  virtual void transform(const glm::mat4& matrix);  //NOLINT mistaken for std
+
+  /// Get the position of the object.
+  const glm::vec4& getPosition() const { return _transformation[3]; }
+
+  /// Set the position of the object.
+  void setPosition(const glm::vec4& position) { _transformation[3] = position; }
+
+ protected:
+  // the transformation of this Shape
+  glm::mat4 _transformation;
+  glm::mat4 _inverseTransform;
+};
+
+#endif  // RAYTRACERLIB_OBJECT_H_

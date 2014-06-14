@@ -23,6 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#pragma once
 #ifndef RAYTRACERLIB_SINGLETON_H_
 #define RAYTRACERLIB_SINGLETON_H_
 /// Simple singleton template class, that provides a singleton interface
@@ -60,5 +61,5 @@ class Singleton {
   /// Private assignment operator to prevent assignment.
   Singleton& operator=(const Singleton&);
 };
-#endif  // RAYTRACERLIB_SINGLETON_H_
 
+#endif  // RAYTRACERLIB_SINGLETON_H_

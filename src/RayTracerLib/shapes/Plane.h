@@ -1,7 +1,8 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2014 CantTouchDis
+Copyright (c) 2014 CantTouchDis <bauschp@informatik.uni-freiburg.de>
+Copyright (c) 2014 brio1009 <christoph1009@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,38 +23,35 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "./Plane.h"
+#pragma once
+#ifndef RAYTRACERLIB_PLANE_H_
+#define RAYTRACERLIB_PLANE_H_
 
 #include <glm/glm.hpp>
 
 #include <vector>
 
 #include "./Constants.h"
-#include "./Ray.h"
-#include "./Solver.h"
+#include "./Shape.h"
 
-using std::vector;
+class Plane : public Shape {
+ public:
+  // ___________________________________________________________________________
+  Plane(REAL nX, REAL nY, REAL nZ) : _nX(nX), _nY(nY), _nZ(nZ) {
+    _transformation = glm::mat4(1.0);
+  }
+  // ___________________________________________________________________________
+  virtual ~Plane() { }
+  // ___________________________________________________________________________
+  virtual std::vector<REAL> intersect(const Ray& ray) const;
+  // ___________________________________________________________________________
+  virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
+ private:
+  REAL _nX;
+  REAL _nY;
+  REAL _nZ;
+};
 
-// ___________________________________________________________________________
-vector<REAL> Plane::intersect(const Ray& ray) const {
-  // ax + by + cz + d = 0
-  // a * (px + uxt) + b (py + uyt) + c (pz + uzt) + d = 0
-  // apx + bpy + cpz + d + auxt + buyt + cuzt = 0;
 
-  // Bring vector to unit space.
-  Ray transRay = _inverseTransform * ray;
-  const glm::vec4& transPos = transRay.origin();
-  const glm::vec4& transDir = transRay.direction();
+#endif  // RAYTRACERLIB_PLANE_H_
 
-  REAL b = _nX * transPos[0] + _nY * transPos[1] + _nZ * transPos[2];
-  REAL a = _nX * transDir[0] + _nY * transDir[1] + _nZ * transDir[2];
-
-  // TODO(bauschp): put into own method and reuse.
-  vector<REAL> out;
-  solve::solveLinearEquation(&out, a, b);
-  return out;
-}
-// ___________________________________________________________________________
-glm::vec4 Plane::getNormalAt(const glm::vec4& p) const {
-  return _transformation * glm::vec4(_nX, _nY, _nZ, 0);
-}
