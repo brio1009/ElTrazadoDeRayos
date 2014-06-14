@@ -30,10 +30,6 @@ SOFTWARE.
 #include "./Camera.h"
 
 class PerspectiveCamera : public Camera {
- private:
-  /// Variables to store the field of view angle.
-  REAL _focalLength;
-
  public:
   // Constructor.
   PerspectiveCamera(const int width,
@@ -49,6 +45,10 @@ class PerspectiveCamera : public Camera {
 
   // Destructor.
   virtual ~PerspectiveCamera();
+
+ private:
+  /// Variables to store the field of view angle.
+  REAL _focalLength;
 };
 
 #endif  // RAYTRACERLIB_PERSPECTIVECAMERA_H_

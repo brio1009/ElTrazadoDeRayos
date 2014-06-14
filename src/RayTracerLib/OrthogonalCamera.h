@@ -32,12 +32,6 @@ SOFTWARE.
 #include "./Constants.h"
 
 class OrthogonalCamera : public Camera {
- private:
-  REAL _unitsPerPixel;
-  glm::vec4 _imagePlaneX;
-  glm::vec4 _imagePlaneY;
-  glm::vec4 _imagePlaneTopLeftCorner;
-  glm::vec4 _viewingDirection;
  public:
   /// Constructor.
   OrthogonalCamera(const int width,
@@ -53,6 +47,13 @@ class OrthogonalCamera : public Camera {
       const size_t& py) const;
   /// Destructor
   virtual ~OrthogonalCamera() { }
+
+ private:
+  REAL _unitsPerPixel;
+  glm::vec4 _imagePlaneX;
+  glm::vec4 _imagePlaneY;
+  glm::vec4 _imagePlaneTopLeftCorner;
+  glm::vec4 _viewingDirection;
 };
 
 #endif  // RAYTRACERLIB_ORTHOGONALCAMERA_H_
