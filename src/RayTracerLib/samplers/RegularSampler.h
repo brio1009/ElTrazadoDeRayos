@@ -24,8 +24,8 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_REGULARSAMPLER_H_
-#define RAYTRACERLIB_REGULARSAMPLER_H_
+#ifndef RAYTRACERLIB_SAMPLERS_REGULARSAMPLER_H_
+#define RAYTRACERLIB_SAMPLERS_REGULARSAMPLER_H_
 
 #include <vector>
 
@@ -56,5 +56,5 @@ class RegularSampler : public Sampler {
   const size_t _samplesPerDimension;
   const float _offset;
 };
-#endif  // RAYTRACERLIB_REGULARSAMPLER_H_
+#endif  // RAYTRACERLIB_SAMPLERS_REGULARSAMPLER_H_
 

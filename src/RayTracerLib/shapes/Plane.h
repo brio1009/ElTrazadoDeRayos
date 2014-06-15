@@ -24,8 +24,8 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_PLANE_H_
-#define RAYTRACERLIB_PLANE_H_
+#ifndef RAYTRACERLIB_SHAPES_PLANE_H_
+#define RAYTRACERLIB_SHAPES_PLANE_H_
 
 #include <glm/glm.hpp>
 
@@ -53,5 +53,5 @@ class Plane : public Shape {
 };
 
 
-#endif  // RAYTRACERLIB_PLANE_H_
+#endif  // RAYTRACERLIB_SHAPES_PLANE_H_
 

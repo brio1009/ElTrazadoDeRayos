@@ -24,8 +24,8 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_MATERIALS_CORRESPONDERFUNCTIONS_H
-#define RAYTRACERLIB_MATERIALS_CORRESPONDERFUNCTIONS_H
+#ifndef RAYTRACERLIB_MATERIALS_CORRESPONDERFUNCTIONS_H_
+#define RAYTRACERLIB_MATERIALS_CORRESPONDERFUNCTIONS_H_
 
 #include <glm/glm.hpp>
 
@@ -36,6 +36,6 @@ namespace CorresponderFunctions {
   inline glm::vec2 clamp(const glm::vec2& uv) {
     return glm::clamp(uv, glm::vec2(0, 0), glm::vec2(1, 1));
   }
-}
+}  // namespace CorresponderFunctions
 
-#endif  // RAYTRACERLIB_MATERIALS_CORRESPONDERFUNCTIONS_H
+#endif  // RAYTRACERLIB_MATERIALS_CORRESPONDERFUNCTIONS_H_

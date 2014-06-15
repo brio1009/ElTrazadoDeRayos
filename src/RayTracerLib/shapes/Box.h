@@ -24,8 +24,8 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_BOX_H_
-#define RAYTRACERLIB_BOX_H_
+#ifndef RAYTRACERLIB_SHAPES_BOX_H_
+#define RAYTRACERLIB_SHAPES_BOX_H_
 
 #include <glm/glm.hpp>
 #include <vector>
@@ -61,4 +61,4 @@ class Box : public Shape {
   REAL _rZ;
 };
 
-#endif  // RAYTRACERLIB_BOX_H_
+#endif  // RAYTRACERLIB_SHAPES_BOX_H_

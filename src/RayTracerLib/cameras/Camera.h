@@ -24,8 +24,8 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_CAMERA_H_
-#define RAYTRACERLIB_CAMERA_H_
+#ifndef RAYTRACERLIB_CAMERAS_CAMERA_H_
+#define RAYTRACERLIB_CAMERAS_CAMERA_H_
 
 #include "./Image.h"
 #include "./Spatial.h"
@@ -63,4 +63,4 @@ class Camera : public Spatial {
   Image _image;
 };
 
-#endif  // RAYTRACERLIB_CAMERA_H_
+#endif  // RAYTRACERLIB_CAMERAS_CAMERA_H_

@@ -69,7 +69,7 @@ class DoubleMaterial : public Material {
   /// Pointer to the second material.
   const Material* _material2Ptr;
 
-  /// Defines in which 
+  /// Defines in which distances the material changes.
   REAL _uSize;
   REAL _vSize;
 };

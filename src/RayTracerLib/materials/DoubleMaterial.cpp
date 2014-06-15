@@ -37,7 +37,7 @@ Color DoubleMaterial::getColor(const IntersectionInfo& intersectionInfo,
                                      const Ray& incomingRay,
                                      const Scene& scene) const {
   if (checkerBoard(intersectionInfo.texCoord)) {
-    return _material1Ptr->getColor(intersectionInfo, incomingRay, scene);  
+    return _material1Ptr->getColor(intersectionInfo, incomingRay, scene);
   } else {
     return _material2Ptr->getColor(intersectionInfo, incomingRay, scene);
   }

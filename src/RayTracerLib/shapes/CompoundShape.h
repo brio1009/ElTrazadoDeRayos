@@ -24,8 +24,8 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_COMPOUNDSHAPE_H_
-#define RAYTRACERLIB_COMPOUNDSHAPE_H_
+#ifndef RAYTRACERLIB_SHAPES_COMPOUNDSHAPE_H_
+#define RAYTRACERLIB_SHAPES_COMPOUNDSHAPE_H_
 
 #include <glm/glm.hpp>
 
@@ -116,4 +116,4 @@ class CompoundShape : public Shape {
   Operator _operator;
 };
 
-#endif  // RAYTRACERLIB_COMPOUNDSHAPE_H_
+#endif  // RAYTRACERLIB_SHAPES_COMPOUNDSHAPE_H_

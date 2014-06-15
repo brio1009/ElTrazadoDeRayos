@@ -23,8 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef RAYTRACERLIB_OBJECT_H_
-#define RAYTRACERLIB_OBJECT_H_
+#ifndef RAYTRACERLIB_SPATIAL_H_
+#define RAYTRACERLIB_SPATIAL_H_
 
 // GlMath include.
 #include <glm/glm.hpp>
@@ -50,4 +50,4 @@ class Spatial {
   glm::mat4 _inverseTransform;
 };
 
-#endif  // RAYTRACERLIB_OBJECT_H_
+#endif  // RAYTRACERLIB_SPATIAL_H_

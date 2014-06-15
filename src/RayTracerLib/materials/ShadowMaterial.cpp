@@ -26,9 +26,10 @@ SOFTWARE.
 #include "./ShadowMaterial.h"
 
 #include <glm/glm.hpp>
+#include <algorithm>
 #include <cassert>
 #include <cmath>
-#include <algorithm>
+#include <vector>
 #include "./Color.h"
 #include "./Constants.h"
 #include "./IntersectionInfo.h"

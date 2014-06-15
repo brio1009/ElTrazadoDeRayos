@@ -24,8 +24,8 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_SHADOWMATERIAL_H_
-#define RAYTRACERLIB_SHADOWMATERIAL_H_
+#ifndef RAYTRACERLIB_MATERIALS_SHADOWMATERIAL_H_
+#define RAYTRACERLIB_MATERIALS_SHADOWMATERIAL_H_
 
 #include <glm/glm.hpp>
 #include "./PhongMaterial.h"
@@ -50,5 +50,4 @@ class ShadowMaterial : public PhongMaterial {
                          const Scene& scene) const;
 };
 
-#endif  // RAYTRACERLIB_SHADOWMATERIAL_H_
-
+#endif  // RAYTRACERLIB_MATERIALS_SHADOWMATERIAL_H_

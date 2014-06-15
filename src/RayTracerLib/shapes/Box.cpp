@@ -34,6 +34,7 @@ SOFTWARE.
 #include <vector>
 
 #include "./Constants.h"
+#include "../Solver.h"
 #include "./Ray.h"
 
 using std::vector;
@@ -50,13 +51,13 @@ vector<REAL> Box::intersect(const Ray& ray) const {
   const glm::vec4& rayDir = transRay.direction();
   glm::vec4 invRayDir;
 
-  invRayDir.x = (rayDir.x != 0.0) ? (1.0 / rayDir.x)
-                                  : std::numeric_limits<double>::max();
-  invRayDir.y = (rayDir.y != 0.0) ? (1.0 / rayDir.y)
-                                  : std::numeric_limits<double>::max();
-  invRayDir.z = (rayDir.z != 0.0) ? (1.0 / rayDir.z)
-                                  : std::numeric_limits<double>::max();
-  invRayDir.w = 0.0;
+  invRayDir.x = (!solve::isZero(rayDir.x)) ? (1.0f / rayDir.x)
+                                  : std::numeric_limits<float>::max();
+  invRayDir.y = (!solve::isZero(rayDir.y)) ? (1.0f / rayDir.y)
+                                  : std::numeric_limits<float>::max();
+  invRayDir.z = (!solve::isZero(rayDir.z)) ? (1.0f / rayDir.z)
+                                  : std::numeric_limits<float>::max();
+  invRayDir.w = 0.0f;
 
   glm::vec4 t1 = (getMinPosition() - transRay.origin()) * invRayDir;
   glm::vec4 t2 = (getMaxPosition() - transRay.origin()) * invRayDir;

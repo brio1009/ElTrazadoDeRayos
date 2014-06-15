@@ -94,7 +94,7 @@ Color GlassMaterial::getColor(const IntersectionInfo& intersectionInfo,
         * reflectionColor(normNormal,
                           axis,
                           tau2,
-                          intersectionInfo.hitPoint, 
+                          intersectionInfo.hitPoint,
                           incomingRay.rayInfo().depth,
                           scene);
   } else {

@@ -24,8 +24,8 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_GLASSMATERIAL_H_
-#define RAYTRACERLIB_GLASSMATERIAL_H_
+#ifndef RAYTRACERLIB_MATERIALS_GLASSMATERIAL_H_
+#define RAYTRACERLIB_MATERIALS_GLASSMATERIAL_H_
 
 #include "./Material.h"
 #include "./Constants.h"
@@ -63,5 +63,5 @@ class GlassMaterial : public Material {
   REAL _transparencyFactor;
 };
 
-#endif  // RAYTRACERLIB_GLASSMATERIAL_H_
+#endif  // RAYTRACERLIB_MATERIALS_GLASSMATERIAL_H_
 

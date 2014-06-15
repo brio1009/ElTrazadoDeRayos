@@ -23,13 +23,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-
 #pragma once
 #ifndef RAYTRACERLIB_LIGHTS_AREALIGHT_H_
 #define RAYTRACERLIB_LIGHTS_AREALIGHT_H_
 
-#include <ctime>
 #include <glm/glm.hpp>
+#include <ctime>
 #include "./Light.h"
 
 /// A simple area light that varies its position in a sphere.

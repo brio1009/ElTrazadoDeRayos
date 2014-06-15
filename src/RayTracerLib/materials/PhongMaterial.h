@@ -24,8 +24,8 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_PHONGMATERIAL_H_
-#define RAYTRACERLIB_PHONGMATERIAL_H_
+#ifndef RAYTRACERLIB_MATERIALS_PHONGMATERIAL_H_
+#define RAYTRACERLIB_MATERIALS_PHONGMATERIAL_H_
 
 #include <glm/glm.hpp>
 #include "./Material.h"
@@ -65,11 +65,12 @@ class PhongMaterial : public Material {
       const glm::vec4& viewer,
       const float skalar,
       const float shininess = 5.0f) const;
+
  private:
   /// Color member.
   Color _color;
 };
 
-#endif  // RAYTRACERLIB_PHONGMATERIAL_H_
+#endif  // RAYTRACERLIB_MATERIALS_PHONGMATERIAL_H_
 
 

@@ -24,8 +24,8 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_SHAPES_PROJECTORFUNCTIONS_H
-#define RAYTRACERLIB_SHAPES_PROJECTORFUNCTIONS_H
+#ifndef RAYTRACERLIB_SHAPES_PROJECTORFUNCTIONS_H_
+#define RAYTRACERLIB_SHAPES_PROJECTORFUNCTIONS_H_
 
 #include <glm/glm.hpp>
 #include "../Constants.h"
@@ -46,6 +46,6 @@ namespace ProjectorFunctions {
     return glm::vec2(0.5 + (atan2(d.z, d.x) / (2.0 * constants::PI)),
                       0.5 - (asin(d.y) / constants::PI));
   }
-}
+}  // namespace ProjectorFunctions
 
-#endif  // RAYTRACERLIB_SHAPES_PROJECTORFUNCTIONS_H
+#endif  // RAYTRACERLIB_SHAPES_PROJECTORFUNCTIONS_H_

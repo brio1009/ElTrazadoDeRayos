@@ -24,8 +24,8 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_JITTEREDSAMPLER_H_
-#define RAYTRACERLIB_JITTEREDSAMPLER_H_
+#ifndef RAYTRACERLIB_SAMPLERS_JITTEREDSAMPLER_H_
+#define RAYTRACERLIB_SAMPLERS_JITTEREDSAMPLER_H_
 
 #include "./Ray.h"
 #include "./Sampler.h"
@@ -49,5 +49,5 @@ class JitteredSampler : public Sampler {
   float _area;
   */
 };
-#endif  // RAYTRACERLIB_JITTEREDSAMPLER_H_
+#endif  // RAYTRACERLIB_SAMPLERS_JITTEREDSAMPLER_H_
 

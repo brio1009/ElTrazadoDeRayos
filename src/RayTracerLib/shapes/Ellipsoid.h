@@ -24,8 +24,8 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_ELLIPSOID_H_
-#define RAYTRACERLIB_ELLIPSOID_H_
+#ifndef RAYTRACERLIB_SHAPES_ELLIPSOID_H_
+#define RAYTRACERLIB_SHAPES_ELLIPSOID_H_
 
 #include <glm/glm.hpp>
 #include <vector>
@@ -58,4 +58,4 @@ class Ellipsoid : public Shape {
   REAL _rZ;
 };
 
-#endif  // RAYTRACERLIB_ELLIPSOID_H_
+#endif  // RAYTRACERLIB_SHAPES_ELLIPSOID_H_

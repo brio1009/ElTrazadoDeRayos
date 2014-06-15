@@ -24,8 +24,8 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_COLORMATERIAL_H_
-#define RAYTRACERLIB_COLORMATERIAL_H_
+#ifndef RAYTRACERLIB_MATERIALS_COLORMATERIAL_H_
+#define RAYTRACERLIB_MATERIALS_COLORMATERIAL_H_
 
 
 #include <glm/glm.hpp>
@@ -52,5 +52,5 @@ class ColorMaterial : public Material {
   Color _color;
 };
 
-#endif  // RAYTRACERLIB_COLORMATERIAL_H_
+#endif  // RAYTRACERLIB_MATERIALS_COLORMATERIAL_H_
 

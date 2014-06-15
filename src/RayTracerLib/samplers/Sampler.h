@@ -24,8 +24,8 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_SAMPLER_H_
-#define RAYTRACERLIB_SAMPLER_H_
+#ifndef RAYTRACERLIB_SAMPLERS_SAMPLER_H_
+#define RAYTRACERLIB_SAMPLERS_SAMPLER_H_
 
 #include <vector>
 
@@ -78,4 +78,4 @@ class Sampler {
       const std::vector<Color>& colors,
       const std::vector<float>& lambdas) const = 0;
 };
-#endif  // RAYTRACERLIB_SAMPLER_H_
+#endif  // RAYTRACERLIB_SAMPLERS_SAMPLER_H_

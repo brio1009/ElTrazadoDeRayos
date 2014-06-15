@@ -24,8 +24,8 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_SHAPE_H_
-#define RAYTRACERLIB_SHAPE_H_
+#ifndef RAYTRACERLIB_SHAPES_SHAPE_H_
+#define RAYTRACERLIB_SHAPES_SHAPE_H_
 
 #include <glm/glm.hpp>
 
@@ -85,4 +85,4 @@ class Shape : public Spatial {
   const Material* _materialPtr;
 };
 
-#endif  // RAYTRACERLIB_SHAPE_H_
+#endif  // RAYTRACERLIB_SHAPES_SHAPE_H_

@@ -24,8 +24,8 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_MATERIAL_H_
-#define RAYTRACERLIB_MATERIAL_H_
+#ifndef RAYTRACERLIB_MATERIALS_MATERIAL_H_
+#define RAYTRACERLIB_MATERIALS_MATERIAL_H_
 
 #include <glm/glm.hpp>
 
@@ -47,4 +47,4 @@ class Material {
                          const Scene& scene) const = 0;
 };
 
-#endif  // RAYTRACERLIB_MATERIAL_H_
+#endif  // RAYTRACERLIB_MATERIALS_MATERIAL_H_

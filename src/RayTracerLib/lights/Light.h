@@ -27,8 +27,8 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_LIGHTS_LIGHT_H_
 #define RAYTRACERLIB_LIGHTS_LIGHT_H_
 
-#include <ctime>
 #include <glm/glm.hpp>
+#include <ctime>
 #include "../Spatial.h"
 #include "../Color.h"
 
