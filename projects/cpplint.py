@@ -1390,7 +1390,11 @@ def GetHeaderGuardCPPVariable(filename):
   fileinfo = FileInfo(filename)
   file_path_from_root = fileinfo.RepositoryName()
   if _root:
-    file_path_from_root = re.sub('^' + _root + os.sep, '', file_path_from_root)
+    # file_path_from_root = re.sub('^' + _root + os.sep, '', file_path_from_root)
+    # cgissler, 06/15/2014: Somehow the filepath uses forward slashes even under
+    # Windows.
+    # Bug report: https://code.google.com/p/google-styleguide/issues/detail?can=2&start=0&num=100&q=&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary&groupby=&sort=&id=22
+    file_path_from_root = re.sub('^' + _root + '/', '', file_path_from_root)
   return re.sub(r'[-./\s]', '_', file_path_from_root).upper() + '_'
 
 
