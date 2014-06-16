@@ -57,9 +57,9 @@ project "ElTrazadoDeRayosLib"
   files {"../src/RayTracerLib/**"}
   kind "StaticLib"
   if os.get() == "windows" then
-    postbuildcommands { "py ..\\cpplintWindowsHelper.py" }
+    postbuildcommands { "py ..\\cpplintHelper.py" }
   elseif os.get() == "linux" then 
-    postbuildcommands { "-@python ../cpplint.py --root=src ../../src/RayTracerLib/** > /dev/null" }
+    postbuildcommands { "-@python ../cpplintHelper.py > /dev/null" }
   end
 
   -- This is nice to have so VS always uses the same uuids in its project files.

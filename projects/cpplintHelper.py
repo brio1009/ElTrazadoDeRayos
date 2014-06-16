@@ -2,10 +2,12 @@
 
 import sys
 import subprocess
+import os
 from os import walk
 
 # Define paths etc.
-srcPath = '..\\..\\src\\RayTracerLib'
+# Need feedback if this works on windows.
+srcPath = os.path.join('..', '..', 'src', 'RayTracerLib')
 
 # Get all the files.
 def getAllFiles():
@@ -14,7 +16,7 @@ def getAllFiles():
   for (dirPath, dirNames, fileNames) in walk(srcPath):
     # We need to walk over every files to add the complete path.
     for fileName in fileNames:
-      f.append(dirPath + '\\' + fileName)
+      f.append(os.path.join(dirPath, fileName))
   return f
   
 # Filter out cpp files.
@@ -24,9 +26,9 @@ def getAllSourceFiles():
   return [file for file in files if file.endswith(extensions)]
 
 # Check the given file with the linter.
-def lintFile(fileName):
+def lintFile(filesToCheck):
   try:
-    subprocess.check_call(['py', '..\\cpplint.py', '--root=src', fileName])
+    subprocess.check_call([sys.executable, os.path.join('..', 'cpplint.py'), '--root=src'] + filesToCheck)
   except subprocess.CalledProcessError as error:
     return False
   return True
@@ -36,13 +38,11 @@ def main():
   # Get the source files.
   srcFiles = getAllSourceFiles()
   filesToCheck = [file for file in srcFiles if file]
-
-  numBadFiles = 0
-  for file in filesToCheck:
-    if not lintFile(file):
-      numBadFiles += 1
-  print '\nBad files: ' + str(numBadFiles) + '\n'
-  sys.exit(numBadFiles)
+  # Return a error code if something failes.
+  if lintFile(filesToCheck):
+    sys.exit(0)
+  else:
+    sys.exit(1)
 
 # Execute main.
 if __name__ == '__main__':
