@@ -240,6 +240,37 @@ void Scene::defaultScene() {
   }
 }
 
+monteCarloScene(vector<Shape*>* shapes, vector<Light*> lights) {
+  Plane* back = new Plane(0, 0, 1);
+  back->setPosition(glm::vec4(0, 0, -10, 1));
+  shapes->push_back(back);
+  Plane* left = new Plane(-1, 0, 0);
+  left->setPosition(glm::vec4(10, 0, 0, 1));
+  shapes->push_back(left);
+  Plane* right = new Plane(1, 0, 0);
+  right->setPosition(glm::vec4(-10, 0, 0, 1));
+  shapes->push_back(right);
+  Plane* bottom = new Plane(0, 1, 0);
+  bottom->setPosition(glm::vec4(0, -10, 0, 1));
+  shapes->push_back(bottom);
+  Plane* front = new Plane(0, 0, -1);
+  front->setPosition(glm::vec4(0, 0, 10, 1));
+  shapes->push_back(front);
+  // set color of the walls.
+  back->setMaterial(new MonteCarloMaterial(Color(1, 1, 1)));
+  front->setMaterial(new MonteCarloMaterial(Color(1, 1, 1)));
+  left->setMaterial(new MonteCarloMaterial(Color(1, 0, 0)));
+  right->setMaterial(new MonteCarloMaterial(Color(0, 1, 0)));
+
+  Ellipsoid* ball = new Ellipsoid(2, 2, 2);
+  shapes->push_back(ball);
+  ball->setMaterial(new MonteCarloMaterial(Color(1, 1, 1)));
+
+  Light* light = new AreaLight(glm::vec4(0, 10, 0, 1), 2);
+ 
+  lights->push_back(light);
+}
+
 // _____________________________________________________________________________
 Scene::Scene() {
   /*
