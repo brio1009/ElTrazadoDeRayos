@@ -34,9 +34,9 @@ using std::vector;
 
 // _____________________________________________________________________________
 std::vector<float> RegularSampler::getLambdasForSample(
-      const size_t& index) const throw() { // NOLINT we are not google
+      const size_t& index) const {
   if (index >= _samplesPerDimension * _samplesPerDimension)
-    throw 0;
+    return vector<float>();
   size_t x = index % _samplesPerDimension;
   size_t y = (index - x) / _samplesPerDimension;
   vector<float> lambdas;

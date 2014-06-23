@@ -69,10 +69,10 @@ class Sampler {
       const std::vector<Ray>& borders) const;
   /// This returnes the lambdas to create a Ray from. e.g. Regular sampler would
   /// return two lambdas per sample which then can be used to construct
-  /// a Ray via bilinear Interpolation. This should throw an exception whenever
-  /// Its not possible to create new lambdas.
+  /// a Ray via bilinear Interpolation. Returns a empty list if no other sample
+  // can be created
   virtual std::vector<float> getLambdasForSample(
-      const size_t& size) const throw() = 0; // NOLINT we are not google.
+      const size_t& size) const = 0;
   /// Reconstructes the returned color values with given lambda values.
   virtual Color reconstructColor(
       const std::vector<Color>& colors,

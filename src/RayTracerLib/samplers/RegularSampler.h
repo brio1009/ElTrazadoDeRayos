@@ -47,7 +47,7 @@ class RegularSampler : public Sampler {
   /// (Override)
   /// Throws an exception if size > _samplesPerDimension^2
   virtual std::vector<float> getLambdasForSample(
-      const size_t& size) const throw(); // NOLINT we are not google
+      const size_t& size) const;
   /// (Override)
   virtual Color reconstructColor(
       const std::vector<Color>& colors,

@@ -68,6 +68,8 @@ bool Sampler::addNextLambdasToList(
   // Get the next lambdas.
   try {
     vector<float> nextLambdas = getLambdasForSample(nextSampleIndex);
+    if (nextLambdas.size() ==0)
+      return false;
     // Append the lambdas to the list
     lambdas->insert(lambdas->end(), nextLambdas.begin(), nextLambdas.end());
     return true;
@@ -75,6 +77,7 @@ bool Sampler::addNextLambdasToList(
     // Whenever an exception occures we couldnt produce a new sample.
     return false;
   } catch ( ... ) {
+    printf("What happened\n");
     throw;
   }
 }

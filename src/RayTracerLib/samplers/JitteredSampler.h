@@ -27,27 +27,27 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_SAMPLERS_JITTEREDSAMPLER_H_
 #define RAYTRACERLIB_SAMPLERS_JITTEREDSAMPLER_H_
 
-#include "./Ray.h"
+#include <vector>
 #include "./Sampler.h"
 /// Samples a area between three Rays into the scene.
 // TODO(bauschp, Tue May 27 10:05:09 CEST 2014): better doc
 class JitteredSampler : public Sampler {
-  /*
  public:
-  /// Creates a new Jittered sampler with given sample size per dimension.
-  explicit JitteredSampler(float area)
-      : _area(area * 0.5f) {
-  }
-  virtual void nextSampleConfiguration();
-//  virtual Color reconstructColor(const std::vector<Color>& colors);
+  /// Creates a new JitteredSampler with given SampleSize
+  explicit JitteredSampler(const size_t& sampleDimension)
+      : _sampleDimension(sampleDimension) { }
+  /// Virtual destructor. (Override).
+  virtual ~JitteredSampler() { }
+ protected:
+  /// (Override)
+  virtual std::vector<float> getLambdasForSample(
+      const size_t& size) const;
+  /// (Override)
+  virtual Color reconstructColor(
+      const std::vector<Color>& colors,
+      const std::vector<float>& lambdas) const;
  private:
-  /// overrides Sampler.h's declaration
-  virtual Ray getSample(const size_t& index);
-  /// The area the random samples should be contained in.
-  /// should be between 0 (for centerpoint sampling) and 1 for whole area
-  /// sampling.
-  float _area;
-  */
+  const size_t _sampleDimension;
 };
 #endif  // RAYTRACERLIB_SAMPLERS_JITTEREDSAMPLER_H_
 
