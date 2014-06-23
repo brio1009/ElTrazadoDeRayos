@@ -46,7 +46,6 @@ class MonteCarloMaterial : public PhongMaterial {
   virtual Color getColor(const IntersectionInfo& intersectionInfo,
                          const Ray& incomingRay,
                          const Scene& scene) const;
-
 };
 
 #endif  // RAYTRACERLIB_MATERIALS_MONTECARLOMATERIAL_H_

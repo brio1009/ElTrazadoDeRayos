@@ -64,7 +64,7 @@ void renderTestScene() {
     glm::mat4 trans = glm::rotate(glm::mat4(1.0),
         (angle / imgCount) * i, glm::vec3(0, 1, 0));
     trans = glm::rotate(trans, glm::radians(45.0f), glm::vec3(-1, 0, 0));
-    cam.transform(glm::translate(trans, glm::vec3(0, 0, 100)));
+    cam.transform(glm::translate(trans, glm::vec3(0, 0, 9)));
     double startTime = omp_get_wtime();
     cam.render(scene);
     double endTime = omp_get_wtime();

@@ -33,12 +33,15 @@ SOFTWARE.
 #include <cstdlib>
 #include <cmath>
 #include <algorithm>
+#include <vector>
 #include "./Color.h"
 #include "./Constants.h"
 #include "./IntersectionInfo.h"
 #include "./Scene.h"
 #include "./Light.h"
 #include "./Ray.h"
+
+using std::vector;
 
 // _____________________________________________________________________________
 MonteCarloMaterial::MonteCarloMaterial()
@@ -102,12 +105,13 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
 
   glm::vec3 axis = glm::cross(glm::vec3(intersectionInfo.normal),
                               glm::vec3(0, 1, 0));
-  float angle = glm::angle(glm::vec3(intersectionInfo.normal), glm::vec3(0, 1, 0));
+  float angle = glm::angle(glm::vec3(intersectionInfo.normal),
+                           glm::vec3(0, 1, 0));
 
   // Shoot sample rays into the hemisphere.
   for (size_t i = 0; i < hemisphereSamples; ++i) {
     // Get the sample direction.
-    glm::vec4 direction = glm::vec4(glm::sphericalRand(1.0f), 1);
+    glm::vec4 direction = glm::vec4(glm::sphericalRand(1.0f), 0);
     direction.y = abs(direction.y);
 
     // Get reflected color.
@@ -126,6 +130,17 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
     } else {
       lightColor = scene.backgroundColor(newRay);
     }
+    // Add the color to the return intensity.
+    lightColor *= lightNumWeight;
+    sumIntensity += diffuseTerm(lightColor,
+                                newRay.direction(),
+                                intersectionInfo.normal,
+                                kd);
+    sumIntensity += specularTerm(lightColor,
+                                 newRay.direction(),
+                                 intersectionInfo.normal,
+                                 -incomingRay.direction(),
+                                 ks);
   }
 
   // Add the ambient term.

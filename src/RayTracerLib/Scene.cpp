@@ -39,12 +39,13 @@ SOFTWARE.
 #include "./Box.h"
 #include "./Ellipsoid.h"
 #include "./Plane.h"
-#include "./PhongMaterial.h"
-#include "./ShadowMaterial.h"
+#include "./materials/PhongMaterial.h"
+#include "./materials/ShadowMaterial.h"
 #include "./materials/DoubleMaterial.h"
-#include "./GlassMaterial.h"
+#include "./materials/MonteCarloMaterial.h"
+#include "./materials/GlassMaterial.h"
 #include "./CompoundShape.h"
-#include "./PointLight.h"
+#include "./lights/PointLight.h"
 #include "./lights/AreaLight.h"
 
 using std::vector;
@@ -240,7 +241,8 @@ void Scene::defaultScene() {
   }
 }
 
-monteCarloScene(vector<Shape*>* shapes, vector<Light*> lights) {
+// _____________________________________________________________________________
+void monteCarloScene(vector<Shape*>* shapes, vector<Light*>* lights) {
   Plane* back = new Plane(0, 0, 1);
   back->setPosition(glm::vec4(0, 0, -10, 1));
   shapes->push_back(back);
@@ -257,17 +259,17 @@ monteCarloScene(vector<Shape*>* shapes, vector<Light*> lights) {
   front->setPosition(glm::vec4(0, 0, 10, 1));
   shapes->push_back(front);
   // set color of the walls.
-  back->setMaterial(new MonteCarloMaterial(Color(1, 1, 1)));
-  front->setMaterial(new MonteCarloMaterial(Color(1, 1, 1)));
-  left->setMaterial(new MonteCarloMaterial(Color(1, 0, 0)));
-  right->setMaterial(new MonteCarloMaterial(Color(0, 1, 0)));
+  back->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
+  front->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
+  left->setMaterialPtr(new MonteCarloMaterial(Color(1, 0, 0)));
+  right->setMaterialPtr(new MonteCarloMaterial(Color(0, 1, 0)));
 
   Ellipsoid* ball = new Ellipsoid(2, 2, 2);
   shapes->push_back(ball);
-  ball->setMaterial(new MonteCarloMaterial(Color(1, 1, 1)));
+  ball->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
 
   Light* light = new AreaLight(glm::vec4(0, 10, 0, 1), 2);
- 
+
   lights->push_back(light);
 }
 
@@ -278,7 +280,7 @@ Scene::Scene() {
   printf("map value: %s\n", typeid(*(PropertyManager::classProperties["CompoundShape"])).name());
   // testMap.emplace("asd", 1);
   */
-  compoundTestScene();
+  monteCarloScene(&_shapes, &_lights);
   // defaultScene();
   // cgCube();
 }

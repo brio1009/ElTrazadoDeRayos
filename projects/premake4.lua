@@ -44,7 +44,8 @@ configuration "Debug"
 configuration "Profile"
   defines {"PROF"}
   flags {"Symbols", "Optimize"}
-  buildoptions( "-pg" )
+  buildoptions{ "-pg", "-fopenmp" }
+  links { "gomp" }
   linkoptions( "-pg" )
   targetdir "../bin/prof"
 
