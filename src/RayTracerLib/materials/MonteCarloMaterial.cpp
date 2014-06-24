@@ -68,7 +68,7 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
   Color sumIntensity(0, 0, 0);
 
   // Number of samples in the hemisphere.
-  size_t hemisphereSamples = 20;
+  size_t hemisphereSamples = 5;
 
   // The ambient light.
   Color ambientColor(0, 0, 0);
@@ -81,11 +81,11 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
   for (size_t i = 0; i < lights.size(); ++i) {
     const Light* const lightPtr = lights.at(i);
     Color lightColor = lightPtr->getColor();
+    float sampleNumWeight = 1.0f / lightPtr->numberOfSamples();
+    lightColor *= lightNumWeight * sampleNumWeight;
     // Iterate over the number of samples of this light.
     for (size_t j = 0; j < lightPtr->numberOfSamples(); ++j) {
       // Adapt the color.
-      float sampleNumWeight = 1.0f / lightPtr->numberOfSamples();
-      lightColor *= lightNumWeight * sampleNumWeight;
       // Calculate the new intensity.
       glm::vec4 normNormal = glm::normalize(intersectionInfo.normal);
       Ray lightRay = lightPtr->getRay(intersectionInfo.hitPoint);

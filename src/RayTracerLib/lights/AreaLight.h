@@ -39,6 +39,7 @@ class AreaLight : public Light {
     : m_SphereRadius(sphereRadius),
       m_NumSamples(10) {
     setPosition(position);
+    setLightColor(Color(1, 1, 1));
   }
   /// Destructor.
   virtual ~AreaLight() { }

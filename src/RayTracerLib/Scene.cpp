@@ -244,32 +244,37 @@ void Scene::defaultScene() {
 // _____________________________________________________________________________
 void monteCarloScene(vector<Shape*>* shapes, vector<Light*>* lights) {
   Plane* back = new Plane(0, 0, 1);
-  back->setPosition(glm::vec4(0, 0, -10, 1));
+  back->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, 0, -10)));
   shapes->push_back(back);
-  Plane* left = new Plane(-1, 0, 0);
-  left->setPosition(glm::vec4(10, 0, 0, 1));
+
+  Plane* left = new Plane(1, 0, 0);
+  left->transform(glm::translate(glm::mat4(1.0), glm::vec3(-10, 0, 0)));
   shapes->push_back(left);
-  Plane* right = new Plane(1, 0, 0);
-  right->setPosition(glm::vec4(-10, 0, 0, 1));
+
+  Plane* right = new Plane(-1, 0, 0);
+  right->transform(glm::translate(glm::mat4(1.0), glm::vec3(10, 0, 0)));
   shapes->push_back(right);
+
   Plane* bottom = new Plane(0, 1, 0);
-  bottom->setPosition(glm::vec4(0, -10, 0, 1));
+  bottom->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -10, 0)));
   shapes->push_back(bottom);
+
   Plane* front = new Plane(0, 0, -1);
-  front->setPosition(glm::vec4(0, 0, 10, 1));
+  front->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, 0, 10)));
   shapes->push_back(front);
   // set color of the walls.
   back->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
   front->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
   left->setMaterialPtr(new MonteCarloMaterial(Color(1, 0, 0)));
   right->setMaterialPtr(new MonteCarloMaterial(Color(0, 1, 0)));
+  bottom->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
 
   Ellipsoid* ball = new Ellipsoid(2, 2, 2);
   shapes->push_back(ball);
   ball->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
 
-  Light* light = new AreaLight(glm::vec4(0, 10, 0, 1), 2);
-
+  Light* light = new AreaLight(glm::vec4(0, 9, 0, 1), 4);
+  light->setLightColor(Color(30, 30, 30));
   lights->push_back(light);
 }
 

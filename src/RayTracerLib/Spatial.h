@@ -42,7 +42,10 @@ class Spatial {
   const glm::vec4& getPosition() const { return _transformation[3]; }
 
   /// Set the position of the object.
-  void setPosition(const glm::vec4& position) { _transformation[3] = position; }
+  void setPosition(const glm::vec4& position) {
+    _transformation[3] = position;
+    _inverseTransform = glm::inverse(_transformation);
+  }
 
  protected:
   // the transformation of this Shape

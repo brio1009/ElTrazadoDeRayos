@@ -54,7 +54,7 @@ namespace constants {
   /// Smallest T-epsilon.
   const double TEPSILON = 1e-2;
   /// Maximal depth a ray can travel.
-  const unsigned char maxDepth = 10;
+  const unsigned char maxDepth = 3;
 
   /// Pi.
   const REAL PI = 3.1415926535897932;
