@@ -37,6 +37,7 @@ Color ColorMaterial::getColor(const IntersectionInfo& intersectionInfo,
   // Build the returncolor.
   Color returnColor(_color);
 
+  /*
   // Check if we need to send another ray.
   if (_color.a() < 1.0f) {
     // Build a new ray.
@@ -53,6 +54,7 @@ Color ColorMaterial::getColor(const IntersectionInfo& intersectionInfo,
     returnColor = (static_cast<double>(_color.a())) * _color
                   + (1.0 - static_cast<double>(_color.a())) * addColor;
   }
+  */
 
   return returnColor;
 }

@@ -40,6 +40,7 @@ SOFTWARE.
 #include "./Scene.h"
 #include "./Light.h"
 #include "./Ray.h"
+#include "../Solver.h"
 
 using std::vector;
 
@@ -68,7 +69,7 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
   Color sumIntensity(0, 0, 0);
 
   // Number of samples in the hemisphere.
-  size_t hemisphereSamples = 5;
+  size_t hemisphereSamples = 20;
 
   // The ambient light.
   Color ambientColor(0, 0, 0);
@@ -77,58 +78,89 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
   const std::vector<Light*>& lights = scene.lights();
   float lightNumWeight = 1.0f / (lights.size() + hemisphereSamples);
 
+  // Normal of the object at the position.
+  glm::vec4 normNormal = glm::normalize(intersectionInfo.normal);
+
   // Iterate over the lights.
   for (size_t i = 0; i < lights.size(); ++i) {
+    // Scale the light color.
     const Light* const lightPtr = lights.at(i);
     Color lightColor = lightPtr->getColor();
     float sampleNumWeight = 1.0f / lightPtr->numberOfSamples();
     lightColor *= lightNumWeight * sampleNumWeight;
+
     // Iterate over the number of samples of this light.
     for (size_t j = 0; j < lightPtr->numberOfSamples(); ++j) {
-      // Adapt the color.
-      // Calculate the new intensity.
-      glm::vec4 normNormal = glm::normalize(intersectionInfo.normal);
+      // The light ray.
       Ray lightRay = lightPtr->getRay(intersectionInfo.hitPoint);
-      sumIntensity += diffuseTerm(lightColor,
-                                  -lightRay.direction(),
-                                  normNormal,
-                                  kd);
-      sumIntensity += specularTerm(lightColor,
-                                   -lightRay.direction(),
-                                   normNormal,
-                                   -incomingRay.direction(),
-                                   ks);
+      // Cast a shadow ray.
+      Ray shadowRay(intersectionInfo.hitPoint, -lightRay.direction());
+      IntersectionInfo hitInfo = scene.traceRay(shadowRay);
+      glm::vec4 diff = intersectionInfo.hitPoint - lightRay.origin();
+      float distanceToLight = glm::dot(diff, diff);
+      diff = intersectionInfo.hitPoint - hitInfo.hitPoint;
+      float distanceToHit = glm::dot(diff, diff);
+      if (!hitInfo.materialPtr || distanceToLight < distanceToHit) {
+        sumIntensity += diffuseTerm(lightColor,
+                                    -lightRay.direction(),
+                                    normNormal,
+                                    kd);
+        sumIntensity += specularTerm(lightColor,
+                                     -lightRay.direction(),
+                                     normNormal,
+                                     -incomingRay.direction(),
+                                     ks);
+      }
       // Add the light to the ambient term.
       ambientColor += lightColor;
     }
   }
 
-  glm::vec3 axis = glm::cross(glm::vec3(intersectionInfo.normal),
-                              glm::vec3(0, 1, 0));
-  float angle = glm::angle(glm::vec3(intersectionInfo.normal),
-                           glm::vec3(0, 1, 0));
+  // Get the axis to get the tangent.
+  glm::vec3 up(0, 1, 0);
+  if (solve::isZero(glm::dot(glm::vec3(intersectionInfo.normal), up))) {
+    up = glm::vec3(1, 0, 0);
+  }
+
+  //
+  glm::vec3 tangent = glm::cross(glm::vec3(intersectionInfo.normal), up);
 
   // Shoot sample rays into the hemisphere.
   for (size_t i = 0; i < hemisphereSamples; ++i) {
-    // Get the sample direction.
-    glm::vec4 direction = glm::vec4(glm::sphericalRand(1.0f), 0);
-    direction.y = abs(direction.y);
+    // Get a sample on a circle around the hitpoint.
+    float randomAngle = (rand() / static_cast<float>(RAND_MAX)) * 2.0f * constants::PI;
+    glm::vec3 pointOnCircle = glm::rotate(tangent,
+                                          static_cast<float>(randomAngle),
+                                          glm::vec3(intersectionInfo.normal));
+    pointOnCircle += glm::vec3(intersectionInfo.hitPoint);
+
+    float percentage = (rand() / static_cast<float>(RAND_MAX));
+
+    glm::vec3 normalPoint = glm::vec3(intersectionInfo.hitPoint) + glm::vec3(intersectionInfo.normal);
+
+    glm::vec3 gotoPoint = percentage * pointOnCircle
+                          + (1.0f - percentage) * normalPoint;
+    glm::vec4 direction = -intersectionInfo.hitPoint + glm::vec4(gotoPoint, 1);
 
     // Get reflected color.
     Color lightColor(0, 0, 0);
     Ray newRay;
+    /*
     newRay.setDirection(glm::rotate(direction,
                                     static_cast<float>(angle),
                                     axis));
+    */
+    newRay.setDirection(direction);
     newRay.setOrigin(intersectionInfo.hitPoint);
     newRay.rayInfo().depth = incomingRay.rayInfo().depth + 1;
     IntersectionInfo info = scene.traceRay(newRay);
     if (info.materialPtr) {
-      lightColor =  info.materialPtr->getColor(info,
-                                               newRay,
-                                               scene);
+      lightColor = info.materialPtr->getColor(info,
+                                              newRay,
+                                              scene);
     } else {
-      lightColor = scene.backgroundColor(newRay);
+//       lightColor = scene.backgroundColor(newRay);
+      lightColor = Color(1, 0, 1);
     }
     // Add the color to the return intensity.
     lightColor *= lightNumWeight;

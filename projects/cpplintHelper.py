@@ -76,11 +76,8 @@ def main():
   # Get the source files.
   srcFiles = getAllSourceFiles()
   filesToCheck = [file for file in srcFiles if file]
-  # Return a error code if something failes.
-  if lintFile(filesToCheck):
-    sys.exit(0)
-  else:
-    sys.exit(1)
+  # Don't return an error code, or else the build process stops.
+  lintFile(filesToCheck)
 
 # Execute main.
 if __name__ == '__main__':

@@ -35,10 +35,10 @@ SOFTWARE.
 #include "./Shape.h"
 #include "./Ray.h"
 #include "./Color.h"
-#include "./ColorMaterial.h"
 #include "./Box.h"
 #include "./Ellipsoid.h"
 #include "./Plane.h"
+#include "./materials/ColorMaterial.h"
 #include "./materials/PhongMaterial.h"
 #include "./materials/ShadowMaterial.h"
 #include "./materials/DoubleMaterial.h"
@@ -259,8 +259,12 @@ void monteCarloScene(vector<Shape*>* shapes, vector<Light*>* lights) {
   bottom->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -10, 0)));
   shapes->push_back(bottom);
 
+  Plane* top = new Plane(0, -1, 0);
+  top->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, 10, 0)));
+  shapes->push_back(top);
+
   Plane* front = new Plane(0, 0, -1);
-  front->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, 0, 10)));
+  front->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, 0, 26)));
   shapes->push_back(front);
   // set color of the walls.
   back->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
@@ -268,13 +272,23 @@ void monteCarloScene(vector<Shape*>* shapes, vector<Light*>* lights) {
   left->setMaterialPtr(new MonteCarloMaterial(Color(1, 0, 0)));
   right->setMaterialPtr(new MonteCarloMaterial(Color(0, 1, 0)));
   bottom->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
+  top->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
 
+  /*
   Ellipsoid* ball = new Ellipsoid(2, 2, 2);
   shapes->push_back(ball);
+  ball->setPosition(glm::vec4(4, -8, 0, 1));
   ball->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
-
-  Light* light = new AreaLight(glm::vec4(0, 9, 0, 1), 4);
-  light->setLightColor(Color(30, 30, 30));
+  */
+  Box* box = new Box(5, 5, 5);
+  shapes->push_back(box);
+  glm::mat4 trans(glm::translate(glm::mat4(1.0), glm::vec3(4, -7.5, -2)));
+  trans = glm::rotate(trans, glm::radians(-25.0f), glm::vec3(0, 1, 0));
+  box->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
+  box->transform(trans);
+  //*/
+  Light* light = new PointLight(glm::vec4(0, 8, 0, 1));
+  light->setLightColor(Color(3, 3, 3));
   lights->push_back(light);
 }
 
