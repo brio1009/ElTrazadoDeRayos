@@ -61,22 +61,19 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
 
 
   // TODO(allofus, Thu May  8 15:27:52 CEST 2014): Add to constructor.
-  float ka = 0.1f;
-  float kd = 0.4f;
-  float ks = 0.5f;
+  float ka = 0.0f;
+  float kd = 1.0f;
+  float ks = 0.0f;
 
   // cause it should be between 0 and 1.
   Color sumIntensity(0, 0, 0);
 
   // Number of samples in the hemisphere.
-  size_t hemisphereSamples = 20;
-
-  // The ambient light.
-  Color ambientColor(0, 0, 0);
+  size_t hemisphereSamples = 5;
 
   // Weighting for each light.
   const std::vector<Light*>& lights = scene.lights();
-  float lightNumWeight = 1.0f / (lights.size() + hemisphereSamples);
+  int numSamples(0);
 
   // Normal of the object at the position.
   glm::vec4 normNormal = glm::normalize(intersectionInfo.normal);
@@ -86,8 +83,6 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
     // Scale the light color.
     const Light* const lightPtr = lights.at(i);
     Color lightColor = lightPtr->getColor();
-    float sampleNumWeight = 1.0f / lightPtr->numberOfSamples();
-    lightColor *= lightNumWeight * sampleNumWeight;
 
     // Iterate over the number of samples of this light.
     for (size_t j = 0; j < lightPtr->numberOfSamples(); ++j) {
@@ -111,15 +106,15 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
                                      -incomingRay.direction(),
                                      ks);
       }
-      // Add the light to the ambient term.
-      ambientColor += lightColor;
+      ++numSamples;
     }
   }
 
   // Get the axis to get the tangent.
-  glm::vec3 up(0, 1, 0);
+  glm::vec3 up(0, 1, 1);
+  glm::normalize(up);
   if (solve::isZero(glm::dot(glm::vec3(intersectionInfo.normal), up))) {
-    up = glm::vec3(1, 0, 0);
+    up = glm::vec3(1, 1, 0);
   }
 
   //
@@ -145,11 +140,6 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
     // Get reflected color.
     Color lightColor(0, 0, 0);
     Ray newRay;
-    /*
-    newRay.setDirection(glm::rotate(direction,
-                                    static_cast<float>(angle),
-                                    axis));
-    */
     newRay.setDirection(direction);
     newRay.setOrigin(intersectionInfo.hitPoint);
     newRay.rayInfo().depth = incomingRay.rayInfo().depth + 1;
@@ -159,11 +149,10 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
                                               newRay,
                                               scene);
     } else {
-//       lightColor = scene.backgroundColor(newRay);
-      lightColor = Color(1, 0, 1);
+      lightColor = scene.backgroundColor(newRay);
     }
     // Add the color to the return intensity.
-    lightColor *= lightNumWeight;
+    // lightColor *= lightNumWeight;
     sumIntensity += diffuseTerm(lightColor,
                                 newRay.direction(),
                                 intersectionInfo.normal,
@@ -173,10 +162,9 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
                                  intersectionInfo.normal,
                                  -incomingRay.direction(),
                                  ks);
+    // sumIntensity += lightColor;
+    ++numSamples;
   }
-
-  // Add the ambient term.
-  sumIntensity += ambientTerm(ambientColor, ka);
   // Return the color.
-  return color() * sumIntensity;
+  return color() * sumIntensity * (1.0f / numSamples);
 }
