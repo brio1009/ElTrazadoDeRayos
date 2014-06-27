@@ -23,43 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
-#ifndef RAYTRACERLIB_SHAPES_ELLIPSOID_H_
-#define RAYTRACERLIB_SHAPES_ELLIPSOID_H_
+#include "./ShapeFactory.h"
+#include <string>
+#include <map>
 
-#include <glm/glm.hpp>
-#include <vector>
-
-#include "./Constants.h"
-#include "./Shape.h"
-#include "../factories/ShapeFactory.h"
-
-// A Primitive is a Shape that is defined in its own.
-class Ellipsoid : public Shape,
-      private ShapeFactory::register_specialized<Ellipsoid> {
- public:
-  /// Default Ellipsoid constructor.
-  Ellipsoid() : Ellipsoid(1.0f, 1.0f, 1.0f) { }
-  /// Constructor with given radii in every axis-direction.
-  Ellipsoid(REAL x, REAL y, REAL z);
-  /// Destructor.
-  virtual ~Ellipsoid() { }
-
-  /// Returns intersections.
-  virtual std::vector<REAL> intersect(const Ray& ray) const;
-
-  static const char* name;
- protected:
-  /// Override.
-  virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
-
-  /// Override.
-  virtual glm::vec2 getTextureCoord(const glm::vec4& p) const;
-
- private:
-  // Radii.
-  REAL _rX;
-  REAL _rY;
-  REAL _rZ;
-};
-#endif  // RAYTRACERLIB_SHAPES_ELLIPSOID_H_

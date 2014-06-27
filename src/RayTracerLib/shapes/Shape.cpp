@@ -40,6 +40,8 @@ SOFTWARE.
 
 using std::vector;
 
+const char* Shape::name = "NONAME";
+
 // _____________________________________________________________________________
 Shape::Shape() {
   _materialPtr = new ShadowMaterial();

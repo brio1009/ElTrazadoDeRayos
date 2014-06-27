@@ -37,6 +37,8 @@ SOFTWARE.
 
 using std::vector;
 
+const char* Ellipsoid::name = "Ellipsoid";
+
 // _____________________________________________________________________________
 Ellipsoid::Ellipsoid(REAL x, REAL y, REAL z) : _rX(x), _rY(y), _rZ(z) {
 }

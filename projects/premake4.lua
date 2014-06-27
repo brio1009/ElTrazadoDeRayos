@@ -40,9 +40,10 @@ configuration "Debug"
   defines {"DEBUG"}
   flags {"Symbols"}
   targetdir "../bin/debug"
+  links { "gomp" }
 
 configuration "Profile"
-  defines {"PROF"}
+  defines {"PROF", "PASTEL_ENABLE_OMP"}
   flags {"Symbols", "Optimize"}
   buildoptions{ "-pg", "-fopenmp" }
   links { "gomp" }

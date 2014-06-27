@@ -66,12 +66,15 @@ class Shape : public Spatial {
   /// Setter for the material pointer. Be careful, the old material is not
   /// automatically deleted!
   void setMaterialPtr(const Material* materialPtr) {
+    if (_materialPtr) delete _materialPtr;
     _materialPtr = materialPtr;
   }
 
   /// Getter for the material pointer.
   const Material* getMaterialPtr() const { return _materialPtr; }
 
+  /// Name of the shape used to serialize/deserialize.
+  static const char* name;
  protected:
   // Returnes the appearence of the surface Point p
   // if p isn't on the surface everything can happen.
@@ -84,5 +87,4 @@ class Shape : public Spatial {
  private:
   const Material* _materialPtr;
 };
-
 #endif  // RAYTRACERLIB_SHAPES_SHAPE_H_
