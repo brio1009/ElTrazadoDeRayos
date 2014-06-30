@@ -40,15 +40,19 @@ configuration "Debug"
   defines {"DEBUG"}
   flags {"Symbols"}
   targetdir "../bin/debug"
+  
+configuration { "gmake",  "Debug" }
   links { "gomp" }
 
 configuration "Profile"
   defines {"PROF", "PASTEL_ENABLE_OMP"}
   flags {"Symbols", "Optimize"}
+  targetdir "../bin/prof"
+  
+configuration { "gmake",  "Profile" }
   buildoptions{ "-pg", "-fopenmp" }
   links { "gomp" }
   linkoptions( "-pg" )
-  targetdir "../bin/prof"
 
 -- Enable openmp for visual studio project files.
 configuration { "vs*",  "release" }
