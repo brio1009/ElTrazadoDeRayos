@@ -38,6 +38,8 @@ SOFTWARE.
 
 using std::vector;
 
+const char* CompoundShape::name = "CompoundShape";
+
 // _____________________________________________________________________________
 CompoundShape::CompoundShape()
   : _passTransformation(true),

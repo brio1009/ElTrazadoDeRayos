@@ -32,11 +32,11 @@ SOFTWARE.
 
 #include "./Constants.h"
 #include "./Shape.h"
-#include "../factories/ShapeFactory.h"
+#include "../factories/Factory.h"
 
 // A Primitive is a Shape that is defined in its own.
 class Ellipsoid : public Shape,
-      private ShapeFactory::register_specialized<Ellipsoid> {
+      private Factory<Shape>::register_specialized<Ellipsoid> {
  public:
   /// Default Ellipsoid constructor.
   Ellipsoid() : Ellipsoid(1.0f, 1.0f, 1.0f) { }
@@ -48,7 +48,9 @@ class Ellipsoid : public Shape,
   /// Returns intersections.
   virtual std::vector<REAL> intersect(const Ray& ray) const;
 
+  /// The class name. Needed for the Factory creating the object.
   static const char* name;
+
  protected:
   /// Override.
   virtual glm::vec4 getNormalAt(const glm::vec4& p) const;

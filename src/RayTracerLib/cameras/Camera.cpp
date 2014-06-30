@@ -52,7 +52,7 @@ void Camera::render(const Scene& scene) {
   // Send rays.
   size_t progress(0);
   size_t amount = _image.getWidth() * _image.getHeight();
-  // #pragma omp parallel for
+  // #pragma omp parallel for ordered
   for (int x = 0; x < _image.getWidth(); ++x) {
     for (int y = 0; y < _image.getHeight(); ++y) {
       // TODO(bauschp, Thu Jun 12 16:33:05 CEST 2014): remove overhead.

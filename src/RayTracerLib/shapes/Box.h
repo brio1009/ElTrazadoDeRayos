@@ -32,10 +32,15 @@ SOFTWARE.
 
 #include "./Constants.h"
 #include "./Shape.h"
+#include "../factories/Factory.h"
 
 // A Primitive is a Shape that is defined in its own.
-class Box : public Shape {
+class Box : public Shape,
+      private Factory<Shape>::register_specialized<Box> {
  public:
+  // Default constructor. Dimensions are 1, 1, 1.
+  Box() : Box(1.0, 1.0, 1.0) { }
+
   /// Constructor with given dimensions. Rotation must be done with
   /// a transformation.
   Box(REAL x, REAL y, REAL z);
@@ -44,6 +49,9 @@ class Box : public Shape {
 
   /// Intersection test.
   virtual std::vector<REAL> intersect(const Ray& ray) const;
+
+  /// The class name. Needed for the Factory creating the object.
+  static const char* name;
 
  protected:
   /// Return normal.

@@ -35,6 +35,8 @@ SOFTWARE.
 
 using std::vector;
 
+const char* Plane::name = "Plane";
+
 // ___________________________________________________________________________
 vector<REAL> Plane::intersect(const Ray& ray) const {
   // ax + by + cz + d = 0

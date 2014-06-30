@@ -47,6 +47,7 @@ SOFTWARE.
 #include "./CompoundShape.h"
 #include "./lights/PointLight.h"
 #include "./lights/AreaLight.h"
+#include "./factories/Factory.h"
 
 using std::vector;
 
@@ -286,10 +287,12 @@ void monteCarloScene(vector<Shape*>* shapes, vector<Light*>* lights) {
   trans = glm::rotate(trans, glm::radians(-25.0f), glm::vec3(0, 1, 0));
   box->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
   box->transform(trans);
-  //*/
+
   Light* light = new PointLight(glm::vec4(0, 8, 0, 1));
   light->setLightColor(Color(3, 3, 3));
   lights->push_back(light);
+
+  shapes->push_back(Factory<Shape>::Create("Ellipsoid"));
 }
 
 // _____________________________________________________________________________

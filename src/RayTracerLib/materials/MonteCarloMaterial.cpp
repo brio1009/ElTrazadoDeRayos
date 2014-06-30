@@ -123,15 +123,17 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
   // Shoot sample rays into the hemisphere.
   for (size_t i = 0; i < hemisphereSamples; ++i) {
     // Get a sample on a circle around the hitpoint.
-    float randomAngle = (rand() / static_cast<float>(RAND_MAX)) * 2.0f * constants::PI;
+    float randomAngle = (rand() / static_cast<float>(RAND_MAX))  // NOLINT
+                        * 2.0f * constants::PI;
     glm::vec3 pointOnCircle = glm::rotate(tangent,
                                           static_cast<float>(randomAngle),
                                           glm::vec3(intersectionInfo.normal));
     pointOnCircle += glm::vec3(intersectionInfo.hitPoint);
 
-    float percentage = (rand() / static_cast<float>(RAND_MAX));
+    float percentage = (rand() / static_cast<float>(RAND_MAX));  // NOLINT
 
-    glm::vec3 normalPoint = glm::vec3(intersectionInfo.hitPoint) + glm::vec3(intersectionInfo.normal);
+    glm::vec3 normalPoint = glm::vec3(intersectionInfo.hitPoint)
+                            + glm::vec3(intersectionInfo.normal);
 
     glm::vec3 gotoPoint = percentage * pointOnCircle
                           + (1.0f - percentage) * normalPoint;

@@ -39,6 +39,8 @@ SOFTWARE.
 
 using std::vector;
 
+const char* Box::name = "Box";
+
 // _____________________________________________________________________________
 Box::Box(REAL x, REAL y, REAL z) : _rX(x), _rY(y), _rZ(z) {
 }

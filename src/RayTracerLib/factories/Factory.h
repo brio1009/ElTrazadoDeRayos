@@ -22,23 +22,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
 #pragma once
-#ifndef RAYTRACERLIB_FACTORIES_SHAPEFACTORY_H_
-#define RAYTRACERLIB_FACTORIES_SHAPEFACTORY_H_
+#ifndef RAYTRACERLIB_FACTORIES_FACTORY_H_
+#define RAYTRACERLIB_FACTORIES_FACTORY_H_
+
 #include <map>
 #include <utility>
 #include <string>
 #include "../shapes/Shape.h"
+
 /// This class is used to create specific Shapes (@see RayTracerLib/shapes)
-class ShapeFactory {
+template <class BaseClass>
+class Factory {
  public:
   /// This construct defines an abstract interface to register Shapes
   /// in the factory. It provides a pure method to create a Shape of
   /// some sort.
   struct register_base {
     virtual const char* name() const = 0;
-    virtual Shape* create() = 0;
+    virtual BaseClass* create() = 0;
   };
+
   /// This construct specializes the registering
   template<class C>
   struct register_specialized : register_base {
@@ -46,15 +51,17 @@ class ShapeFactory {
     static const char* NAME;
     register_specialized() : _name(NAME) { }  // force name initialization
     const char* name() const { return C::name; }
-    Shape* create() { return new C(); }
+    BaseClass* create() { return new C(); }
    private:
     const char* _name;
   };
+
   /// This method creates a Shape of given name when called.
-  static Shape* Create(const char* name) {
+  static BaseClass* Create(const char* name) {
     printf("Creating %s one out of %zu many choices.\n", name, myMap().size());
     return myMap()[name]->create();
   }
+
  private:
   /// This method is called automaticly for every class that inherits from
   /// "register_specialized". Don't call it if you don't understand it.
@@ -63,6 +70,7 @@ class ShapeFactory {
     myMap()[entry->name()] = entry;
     return entry->name();
   }
+
   // This has to be done or the code will terminate with a segmentation fault
   // 80% of the time.
   static std::map<std::string, register_base*>& myMap() {
@@ -71,8 +79,11 @@ class ShapeFactory {
     return m_Map;
   }
 };
+
 // This initialization is used to register the specific Shapes.
-template<class C>
-const char* ShapeFactory::register_specialized<C>::NAME =
-      ShapeFactory::Register(new ShapeFactory::register_specialized<C>());
-#endif  // RAYTRACERLIB_FACTORIES_SHAPEFACTORY_H_
+template <class T>
+template <class C>
+const char* Factory<T>::register_specialized<C>::NAME =
+      Factory<T>::Register(new Factory<T>::register_specialized<C>());
+
+#endif  // RAYTRACERLIB_FACTORIES_FACTORY_H_

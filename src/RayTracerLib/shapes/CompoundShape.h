@@ -34,12 +34,14 @@ SOFTWARE.
 #include "./Constants.h"
 #include "./IntersectionInfo.h"
 #include "./Shape.h"
+#include "../factories/Factory.h"
 
 // Forward declaration.
 class Ray;
 
 ///
-class CompoundShape : public Shape {
+class CompoundShape : public Shape,
+      private Factory<Shape>::register_specialized<CompoundShape> {
  public:
   /// Enum to define how the child shapes are combined.
   enum class Operator {
@@ -48,7 +50,7 @@ class CompoundShape : public Shape {
     minusOp
   };
 
-  /// Constructor.
+  /// Default constructor.
   CompoundShape();
 
   /// Constructor.
@@ -87,6 +89,9 @@ class CompoundShape : public Shape {
 
   /// Set the right object.
   void setRightShapePtr(const Shape* shapePtr) { _rightShapePtr = shapePtr; }
+
+  /// The class name. Needed for the Factory creating the object.
+  static const char* name;
 
  protected:
   ///

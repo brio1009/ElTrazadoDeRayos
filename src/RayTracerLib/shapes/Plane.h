@@ -33,19 +33,27 @@ SOFTWARE.
 
 #include "./Constants.h"
 #include "./Shape.h"
+#include "../factories/Factory.h"
 
-class Plane : public Shape {
+///
+class Plane : public Shape,
+      private Factory<Shape>::register_specialized<Plane> {
  public:
-  // ___________________________________________________________________________
-  Plane(REAL nX, REAL nY, REAL nZ) : _nX(nX), _nY(nY), _nZ(nZ) {
-    _transformation = glm::mat4(1.0);
-  }
-  // ___________________________________________________________________________
+  /// Default constructor. Normal is y-up.
+  Plane() : Plane(0.0, 1.0, 0.0) { }
+
+  /// Constructor with given normal axis.
+  Plane(REAL nX, REAL nY, REAL nZ) : _nX(nX), _nY(nY), _nZ(nZ) { }
+  /// Destructor.
   virtual ~Plane() { }
-  // ___________________________________________________________________________
+  /// Test for intersections.
   virtual std::vector<REAL> intersect(const Ray& ray) const;
-  // ___________________________________________________________________________
+  /// Get the normal at a world position p.
   virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
+
+  /// The class name. Needed for the Factory creating the object.
+  static const char* name;
+
  private:
   REAL _nX;
   REAL _nY;
