@@ -26,20 +26,46 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_RAYINFO_H_
 #define RAYTRACERLIB_RAYINFO_H_
 
+#include <stack>
 #include "./Constants.h"
 
 /// This truct holds additional data for the ray.
-struct RayInfo {
+class RayInfo {
+ public:
+  /// Constructor.
+  RayInfo() : depth(0), colorContribution(1) {}
+
+  /// Remove the top element from the refractiveIndex stack.
+  void popRefractiveIndex() {
+    if (!_refractiveIndex.empty())
+      _refractiveIndex.pop();
+  }
+
+  /// Get the top element from the refractive Index stack.
+  float topRefractiveIndex() const {
+    if (_refractiveIndex.empty()) {
+      return RefractiveIndex::air;
+    }
+    return _refractiveIndex.top();
+  }
+
+  /// Push back a new refractive Index.
+  void pushRefractiveIndex(const float value) {
+    _refractiveIndex.push(value);
+  }
+
   /// The number of the ray since the camera. This helps us to prevent
   /// too long recursive ray traversal. The first ray has therefore depth
   /// 0.
   unsigned char depth;
-  /// The refractive index at the origin of the ray.
-  // TODO(all, 26.05.2014): Make a stack out of this.
-  float refractiveIndex;
 
-  /// Constructor.
-  RayInfo() : depth(0), refractiveIndex(RefractiveIndex::air) { }
+  /// Contribution of this ray to the final pixel color. Use as stopping
+  /// criteria for path tracing.
+  REAL colorContribution;
+
+ private:
+  /// The refractive index at the origin of the ray.
+  std::stack<float> _refractiveIndex;
 };
 
 #endif  // RAYTRACERLIB_RAYINFO_H_

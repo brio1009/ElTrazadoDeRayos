@@ -35,6 +35,10 @@ class Ray {
  public:
   /// Constructor. Constructs ray with origin (0, 0, 0) and direction (1, 0, 0).
   Ray() : _origin(0, 0, 0, 1), _direction(1, 0, 0, 0) { }
+
+  /// Copy constructor. Copies the ray info.
+  Ray(const Ray& ray);
+
   /// Constructor with given origin and direction.
   Ray(const glm::vec4& origin, const glm::vec4& direction);
   /// Setter for origin. Autmatically brings the 4th component to 1.

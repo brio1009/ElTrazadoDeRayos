@@ -45,6 +45,15 @@ class Material {
   virtual Color getColor(const IntersectionInfo& intersectionInfo,
                          const Ray& incomingRay,
                          const Scene& scene) const = 0;
+
+  /// Returns a color that should be used if the ray is not further
+  /// traced (i.e. the stopping criteria is met).
+  Color stoppingColor() const;
+
+ protected:
+  /// Returns true if the stopping criteria is met (either
+  /// max depth or min color contribution).
+  bool stoppingCriteriaMet(const Ray& ray) const;
 };
 
 #endif  // RAYTRACERLIB_MATERIALS_MATERIAL_H_

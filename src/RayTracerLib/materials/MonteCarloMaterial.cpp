@@ -53,12 +53,10 @@ MonteCarloMaterial::MonteCarloMaterial()
 Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
                                    const Ray& incomingRay,
                                    const Scene& scene) const {
-  // If the depth is too high we just return some color.
-  // TODO(all, Mon May 26 13:49:04 CEST 2014): What color to return?
-  if (incomingRay.rayInfo().depth >= constants::maxDepth) {
-    return Color(0, 0, 0);
+  // Check if we should further advance.
+  if (stoppingCriteriaMet(incomingRay)) {
+    return stoppingColor();
   }
-
 
   // TODO(allofus, Thu May  8 15:27:52 CEST 2014): Add to constructor.
   float ka = 0.0f;

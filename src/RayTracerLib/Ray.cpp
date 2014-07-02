@@ -34,6 +34,13 @@ Ray::Ray(const glm::vec4& origin, const glm::vec4& direction) {
 }
 
 // _____________________________________________________________________________
+Ray::Ray(const Ray& ray) {
+  setOrigin(ray.origin());
+  setDirection(ray.direction());
+  this->_rayInfo = ray.rayInfo();
+}
+
+// _____________________________________________________________________________
 void Ray::setOrigin(const glm::vec4& origin) {
   _origin = origin;
   if (solve::isZero(origin[3])) {

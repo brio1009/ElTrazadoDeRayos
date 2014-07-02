@@ -42,11 +42,6 @@ Color GlassMaterial::reflectionColor(const glm::vec4& normal,
     const glm::vec4& position,
     unsigned char currentDepth,
     const Scene& scene) const {
-  // If the depth is too high we just return some color.
-  // TODO(all, Mon May 26 13:49:04 CEST 2014): What color to return?
-  if (currentDepth >= constants::maxDepth) {
-    return Color(0, 0, 0);
-  }
   // Get reflected color.
   Ray newRay;
   newRay.setDirection(glm::rotate(normal,
@@ -54,6 +49,10 @@ Color GlassMaterial::reflectionColor(const glm::vec4& normal,
                                   axis));
   newRay.setOrigin(position);
   newRay.rayInfo().depth = currentDepth + 1;
+  // We pop the refractive index here, because we cannot do it for the const
+  // incomingRay.
+  newRay.rayInfo().popRefractiveIndex();
+  newRay.rayInfo().pushRefractiveIndex(_refractiveIndex);
   IntersectionInfo info = scene.traceRay(newRay);
   if (info.materialPtr) {
     return info.materialPtr->getColor(info,
@@ -67,6 +66,11 @@ Color GlassMaterial::reflectionColor(const glm::vec4& normal,
 Color GlassMaterial::getColor(const IntersectionInfo& intersectionInfo,
                               const Ray& incomingRay,
                               const Scene& scene) const {
+  // Check if we should further advance.
+  if (stoppingCriteriaMet(incomingRay)) {
+    return stoppingColor();
+  }
+
   Color materialColor;
   // The axis to rotate around.
   glm::vec4 normNormal = glm::normalize(intersectionInfo.normal);
@@ -76,15 +80,17 @@ Color GlassMaterial::getColor(const IntersectionInfo& intersectionInfo,
   float n1, n2, tau2;
   // calculate tau1 and tau2 in respect to the normal.
   if (tau1 < glm::pi<float>() / 2) {
-    n1 = RefractiveIndex::air;
+    n1 = incomingRay.rayInfo().topRefractiveIndex();
     n2 = _refractiveIndex;
     tau2 = glm::pi<float>() + asin((n1 / n2) * sin(tau1));
   } else {
     // angle was bigger then 90 degrees.
-    n2 = RefractiveIndex::air;
+    n2 = incomingRay.rayInfo().topRefractiveIndex();
     n1 = _refractiveIndex;
     tau2 = -asin((n1 / n2) * sin(glm::pi<float>() - tau1));
   }
+  // TODO(cgissler, 07/02/2014): Find a way to pop the refractive index here
+  // instead of in reflectionColor().
   // TODO(bauschp, Tue May 20 14:08:52 CEST 2014): maybe change to map lookup.
   // Should safe a lot of power calculations.
   float refl = pow((n1 - n2) / (n1 + n2), 2.0f);
