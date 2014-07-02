@@ -22,42 +22,38 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
-#include "./RegularSampler.h"
-
+#pragma once
+#ifndef RAYTRACERLIB_SAMPLERS_ADAPTIVESAMPLER_H_
+#define RAYTRACERLIB_SAMPLERS_ADAPTIVESAMPLER_H_
 #include <vector>
-
-#include "./Color.h"
-#include "./Ray.h"
-
-using std::vector;
-
-// _____________________________________________________________________________
-std::vector<float> RegularSampler::getLambdasForSample(
-      const size_t& index) const {
-  if (index >= _samplesPerDimension * _samplesPerDimension)
-    return vector<float>();
-  size_t x = index % _samplesPerDimension;
-  size_t y = (index - x) / _samplesPerDimension;
-  vector<float> lambdas;
-  lambdas.reserve(2);
-  lambdas.push_back(
-      static_cast<float>(x) / _samplesPerDimension + _offset);
-  lambdas.push_back(
-      static_cast<float>(y) / _samplesPerDimension + _offset);
-  return lambdas;
-}
-// _____________________________________________________________________________
-Color RegularSampler::reconstructColor(
+#include "./Sampler.h"
+class Color;
+class Scene;
+/// The adaptive Sampler returns a new sample whenever more samples are needed.
+/// The maximum can be defined when constructing an object of this class.
+class AdaptiveSampler : public Sampler {
+ public:
+  /// Creates a new AdaptiveSampler with fiven maximum Samples.
+  explicit AdaptiveSampler(const size_t& maxSamples)
+      : _maxSamples(maxSamples) { }
+  /// Virtual destructor. (Override).
+  virtual ~AdaptiveSampler() { }
+  static float generateHalton(const size_t& index, const size_t& base);
+  static float calculateVariance(const std::vector<Color>& colors);
+ protected:
+  /// (Override)
+  virtual std::vector<float> getLambdasForSample(
+      const size_t& size) const;
+  /// (Override)
+  virtual bool addNextLambdasToList(
+      const std::vector<Color>& color,
+      std::vector<float>* lambdas) const;
+  /// (Override)
+  virtual Color reconstructColor(
       const std::vector<Color>& colors,
-      const std::vector<float>& lambdas) const {
-  assert(colors.size() == _samplesPerDimension * _samplesPerDimension);
-  // calculate how much a colors weight is. (RegularSampler = same for all)
-  float scale = 1.0f / _samplesPerDimension;
-  scale /= _samplesPerDimension;
-  Color out(0, 0, 0);
-  auto end = colors.end();
-  for (auto it = colors.begin(); it != end; ++it)
-    out += scale * *it;
-  return out;
-}
+      const std::vector<float>& lambdas) const;
+ private:
+  const size_t _maxSamples;
+};
+#endif  // RAYTRACERLIB_SAMPLERS_ADAPTIVESAMPLER_H_
+

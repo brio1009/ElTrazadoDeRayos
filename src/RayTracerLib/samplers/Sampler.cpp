@@ -42,7 +42,7 @@ Color Sampler::getSampledColor(
   vector<float> lambdas;
   vector<Color> colors;
   size_t startLambda = lambdas.size();
-  while (addNextLambdasToList(&lambdas)) {
+  while (addNextLambdasToList(colors, &lambdas)) {
     size_t endLambda = lambdas.size() - 1;
     // Calculate the Ray for given lambdas
     Ray sample = createRayByLambdas(lambdas, startLambda, endLambda, borders);
@@ -61,25 +61,18 @@ Color Sampler::getSampledColor(
 }
 // _____________________________________________________________________________
 bool Sampler::addNextLambdasToList(
+      const std::vector<Color>& color,
       std::vector<float>* lambdas) const {
   // This creation only works for two lambdas.
   assert(lambdas->size() % 2 == 0);
   size_t nextSampleIndex = lambdas->size() / 2;
   // Get the next lambdas.
-  try {
-    vector<float> nextLambdas = getLambdasForSample(nextSampleIndex);
-    if (nextLambdas.size() ==0)
-      return false;
-    // Append the lambdas to the list
-    lambdas->insert(lambdas->end(), nextLambdas.begin(), nextLambdas.end());
-    return true;
-  } catch (int) { // NOLINT we are not google
-    // Whenever an exception occures we couldnt produce a new sample.
+  vector<float> nextLambdas = getLambdasForSample(nextSampleIndex);
+  if (nextLambdas.size() ==0)
     return false;
-  } catch ( ... ) {
-    printf("What happened\n");
-    throw;
-  }
+  // Append the lambdas to the list
+  lambdas->insert(lambdas->end(), nextLambdas.begin(), nextLambdas.end());
+  return true;
 }
 // _____________________________________________________________________________
 Ray Sampler::createRayByLambdas(
