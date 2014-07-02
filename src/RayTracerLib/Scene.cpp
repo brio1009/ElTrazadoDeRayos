@@ -273,26 +273,25 @@ void monteCarloScene(vector<Shape*>* shapes, vector<Light*>* lights) {
   left->setMaterialPtr(new MonteCarloMaterial(Color(1, 0, 0)));
   right->setMaterialPtr(new MonteCarloMaterial(Color(0, 1, 0)));
   bottom->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
-  top->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
+  top->setMaterialPtr(new ColorMaterial(Color(1, 1, 1)));
 
-  /*
-  Ellipsoid* ball = new Ellipsoid(2, 2, 2);
+
+  Ellipsoid* ball = new Ellipsoid(3, 1, 3);
   shapes->push_back(ball);
-  ball->setPosition(glm::vec4(4, -8, 0, 1));
-  ball->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
-  */
+  ball->setPosition(glm::vec4(-4, -7, 0, 1));
+  ball->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
+
   Box* box = new Box(5, 5, 5);
   shapes->push_back(box);
   glm::mat4 trans(glm::translate(glm::mat4(1.0), glm::vec3(4, -7.5, -2)));
   trans = glm::rotate(trans, glm::radians(-25.0f), glm::vec3(0, 1, 0));
   box->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
   box->transform(trans);
-
+/*
   Light* light = new PointLight(glm::vec4(0, 8, 0, 1));
   light->setLightColor(Color(3, 3, 3));
   lights->push_back(light);
-
-  shapes->push_back(Factory<Shape>::Create("Ellipsoid"));
+*/
 }
 
 // _____________________________________________________________________________

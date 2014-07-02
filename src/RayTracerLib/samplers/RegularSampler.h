@@ -45,7 +45,6 @@ class RegularSampler : public Sampler {
   virtual ~RegularSampler() { }
  protected:
   /// (Override)
-  /// Throws an exception if size > _samplesPerDimension^2
   virtual std::vector<float> getLambdasForSample(
       const size_t& size) const;
   /// (Override)

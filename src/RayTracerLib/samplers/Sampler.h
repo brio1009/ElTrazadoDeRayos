@@ -52,6 +52,7 @@ class Sampler {
   /// This methos calculates the next index of the sample and proceeds, to add
   /// its corresponding lambda values to the back of the given lambdas list.
   virtual bool addNextLambdasToList(
+      const std::vector<Color>& color,
       std::vector<float>* lambdas) const;
 // TODO(bauschp, Tue Jun 10 20:10:38 CEST 2014):
 // All these protected methodes could be put in their own classes and should be
