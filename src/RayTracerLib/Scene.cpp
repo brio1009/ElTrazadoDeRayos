@@ -270,7 +270,7 @@ void monteCarloScene(vector<Shape*>* shapes, vector<Light*>* lights) {
   left->setMaterialPtr(new MonteCarloMaterial(Color(1, 0, 0)));
   right->setMaterialPtr(new MonteCarloMaterial(Color(0, 1, 0)));
   bottom->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
-  top->setMaterialPtr(new ColorMaterial(Color(1, 1, 1)));
+  top->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
 
   // Top area light (just a white box).
   Box* boxLight = new Box(5, 5, 5);

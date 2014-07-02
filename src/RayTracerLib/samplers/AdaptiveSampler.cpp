@@ -73,7 +73,7 @@ float AdaptiveSampler::generateHalton(
   int i = index;
   while (i > 0.0f) {
     ret += f * (i % base);
-    i = floor(i / base);
+    i = static_cast<int>(floor(i / base));
     f /= base;
   }
   return ret;
