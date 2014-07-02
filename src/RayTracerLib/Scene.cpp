@@ -270,14 +270,15 @@ void monteCarloScene(vector<Shape*>* shapes, vector<Light*>* lights) {
   left->setMaterialPtr(new MonteCarloMaterial(Color(1, 0, 0)));
   right->setMaterialPtr(new MonteCarloMaterial(Color(0, 1, 0)));
   bottom->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
-  top->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
+  top->setMaterialPtr(new ColorMaterial(Color(1, 1, 1)));
 
+  /*
   // Top area light (just a white box).
   Box* boxLight = new Box(5, 5, 5);
   shapes->push_back(boxLight);
-  glm::mat4 trans(glm::translate(glm::mat4(1.0), glm::vec3(0, 9.9, 5)));
   boxLight->setMaterialPtr(new ColorMaterial(Color(1, 1, 1)));
-  boxLight->transform(trans);
+  boxLight->transform(glm::mat4(glm::translate(glm::mat4(1.0), glm::vec3(0, 9.9, 5))););
+  */
 
   // Create a sphere in the middle.
   Ellipsoid* ball = new Ellipsoid(2, 2, 2);
@@ -288,7 +289,7 @@ void monteCarloScene(vector<Shape*>* shapes, vector<Light*>* lights) {
   // Create the box in the room.
   Box* box = new Box(5, 5, 5);
   shapes->push_back(box);
-  trans = glm::mat4(glm::translate(glm::mat4(1.0), glm::vec3(4, -7.5, -2)));
+  glm::mat4 trans(glm::translate(glm::mat4(1.0), glm::vec3(4, -7.5, -2)));
   trans = glm::rotate(trans, glm::radians(-25.0f), glm::vec3(0, 1, 0));
   box->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
   box->transform(trans);
