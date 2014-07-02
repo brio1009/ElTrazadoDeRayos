@@ -23,39 +23,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-// This header probvides all nessecery constants for the Tracer Lib.
-#pragma once
-#ifndef RAYTRACERLIB_CONSTANTS_H_
-#define RAYTRACERLIB_CONSTANTS_H_
+#include "./Constants.h"
 
+#include <limits>
 
-// TODO(bauschp): Create a Variable for floating point precision.
-//                Maybe use #define name double/float
-
-typedef double REAL;
-
-/// Refraction indices we know.
 namespace RefractiveIndex {
-  extern const float glass;
-  extern const float water;
-  extern const float air;
-  extern const float diamond;
-  extern const float mirror;
+  const float glass = 1.52f;
+  const float water = 1.333f;
+  const float air = 1.00293f;
+  const float diamond = 2.42f;
+  const float mirror = std::numeric_limits<float>::max();
 };
 
 namespace constants {
-  // This defines how precise a floating point variable has to be to be
-  // approximatly the value.
-  // e.g. check for zero:
-  // bool isZero(float f) { return (f < EPSILON) && (f > -EPSILON); }
-  extern const double EPSILON;
+  // ___________________________________________________________________________
+  const double EPSILON = 1e-8;
 
-  /// Smallest T-epsilon.
-  extern const double TEPSILON;
-  /// Maximal depth a ray can travel.
-  extern const unsigned char maxDepth;
+  // ___________________________________________________________________________
+  const double TEPSILON = 1e-2;
+  // ___________________________________________________________________________
+  const unsigned char maxDepth = 30;
 
-  /// Pi.
-  extern const REAL PI;
+  // ___________________________________________________________________________
+  const REAL PI = 3.1415926535897932;
 }  // namespace constants
-#endif  // RAYTRACERLIB_CONSTANTS_H_
