@@ -33,7 +33,7 @@ class Property {
 };
 
 /// Proeprty specialized for one ValueType.
-template <class ValueType, class OwnerClass>
+template <class OwnerClass, class ValueType>
 class TypeProperty : public Property<OwnerClass> {
  public:
   /// Constructor setting the getter and setter ptr.

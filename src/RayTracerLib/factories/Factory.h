@@ -42,6 +42,7 @@ class Factory {
   /// some sort.
   struct register_base {
     virtual const char* name() const = 0;
+    virtual void registerProperties() = 0;
     virtual BaseClass* create() = 0;
   };
 
@@ -58,15 +59,17 @@ class Factory {
     /// Returns the name of this class.
     const char* name() const { return C::name; }
 
+    ///
+    virtual void registerProperties() { C::registerAllProperties(); }
+
     /// Create this object.
     BaseClass* create() { return new C(); }
 
     /// Register property.
     template<class ValueType>
-    void registerProperty(const std::string& propertyName,
-      void (C::*pSetter)(ValueType value),
-      ValueType (C::*pGetter)()) {
-      propertyMap()[propertyName] = new TypeProperty<C, ValueType>(pSetter, pGetter);
+    static void RegisterProperty(const std::string& propertyName) {
+      propertyMap()[propertyName] = new TypeProperty<C, ValueType>(nullptr, nullptr);
+      printf("registered property %s\n", propertyName.c_str());
     }
 
    private:

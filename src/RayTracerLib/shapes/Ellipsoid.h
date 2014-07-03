@@ -51,6 +51,18 @@ class Ellipsoid : public Shape,
   /// The class name. Needed for the Factory creating the object.
   static const char* name;
 
+  /// Getter for radius x.
+  REAL radiusX() const { return _rX; }
+
+  /// Setter for radius x.
+  void setRadiusX(REAL value) { _rX = value; }
+
+  /// Register all the properties.
+  static void registerAllProperties() {
+    printf("asdasd");
+    RegisterProperty<REAL>("radiusX");
+  }
+
  protected:
   /// Override.
   virtual glm::vec4 getNormalAt(const glm::vec4& p) const;

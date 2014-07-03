@@ -40,8 +40,7 @@ SOFTWARE.
 class Ray;
 
 ///
-class CompoundShape : public Shape,
-      private Factory<Shape>::register_specialized<CompoundShape> {
+class CompoundShape : public Shape {
  public:
   /// Enum to define how the child shapes are combined.
   enum class Operator {

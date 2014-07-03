@@ -36,8 +36,7 @@ SOFTWARE.
 #include "../factories/Factory.h"
 
 ///
-class Plane : public Shape,
-      private Factory<Shape>::register_specialized<Plane> {
+class Plane : public Shape {
  public:
   /// Default constructor. Normal is y-up.
   Plane() : Plane(0.0, 1.0, 0.0) { }
