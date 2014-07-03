@@ -30,25 +30,34 @@ SOFTWARE.
 /// Class that holds properties (setter, getter).
 template <class OwnerClass>
 class Property {
- protected:
-  /// Saves pointer to the getter (offset to class pointer).
-  void* _getterPtr;
-  /// Saves pointer to the setter (offset to class pointer).
-  void* _setterPtr;
 };
 
 /// Proeprty specialized for one ValueType.
 template <class ValueType, class OwnerClass>
 class TypeProperty : public Property<OwnerClass> {
  public:
-  typedef const ValueType& (OwnerClass::*getSign)();
+  /// Constructor setting the getter and setter ptr.
+  TypeProperty(void (OwnerClass::*pSetter)(ValueType value),
+               ValueType (OwnerClass::*pGetter)())
+    : setterPtr(pSetter),
+      getterPtr(pGetter) {
+  }
+
   /// Getter for the property.
   const ValueType& getValue(const OwnerClass* const objPtr) const {
-    // return objPtr->reinterpret_cast<getSign>(getterPtr());
+    return (objPtr->*getterPtr)();
   }
 
   /// Setter for the property.
-  void setValue(OwnerClass* const objPtr, const ValueType& value);
+  void setValue(OwnerClass* const objPtr, ValueType value) {
+    (objPtr->*setterPtr)(value);
+  }
+
+ private:
+   /// Saves pointer to the setter (offset to class pointer).
+   void (OwnerClass::*setterPtr)(ValueType value);
+   /// Saves pointer to the getter (offset to class pointer).
+   ValueType (OwnerClass::*getterPtr)();
 };
 
 #endif  // RAYTRACERLIB_FACTORIES_PROPERTY_H_

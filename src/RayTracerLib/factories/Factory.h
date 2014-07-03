@@ -62,6 +62,12 @@ class Factory {
     BaseClass* create() { return new C(); }
 
     /// Register property.
+    template<class ValueType>
+    void registerProperty(const std::string& propertyName,
+      void (C::*pSetter)(ValueType value),
+      ValueType (C::*pGetter)()) {
+      propertyMap()[propertyName] = new TypeProperty<C, ValueType>(pSetter, pGetter);
+    }
 
    private:
     /// Name of this class.
