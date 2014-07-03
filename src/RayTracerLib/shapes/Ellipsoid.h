@@ -59,7 +59,6 @@ class Ellipsoid : public Shape,
 
   /// Register all the properties.
   static void registerAllProperties() {
-    printf("asdasd");
     RegisterProperty<REAL>("radiusX");
   }
 

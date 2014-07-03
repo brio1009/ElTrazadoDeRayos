@@ -69,7 +69,7 @@ class Factory {
     template<class ValueType>
     static void RegisterProperty(const std::string& propertyName) {
       propertyMap()[propertyName] = new TypeProperty<C, ValueType>(nullptr, nullptr);
-      printf("registered property %s\n", propertyName.c_str());
+      printf("\tRegistered property \"%s\"\n", propertyName.c_str());
     }
 
    private:
@@ -96,6 +96,8 @@ class Factory {
   static const char* Register(register_base* entry) {
     printf("Registering %s\n", entry->name());
     myMap()[entry->name()] = entry;
+    entry->registerProperties();
+    printf("\n");
     return entry->name();
   }
 
