@@ -31,6 +31,7 @@ SOFTWARE.
 #include <utility>
 #include <string>
 #include "../shapes/Shape.h"
+#include "./Property.h"
 
 /// This class is used to create specific Shapes (@see RayTracerLib/shapes)
 template <class BaseClass>
@@ -48,12 +49,30 @@ class Factory {
   template<class C>
   struct register_specialized : register_base {
    public:
+    /// Needed to evaluate the class name at compile time.
     static const char* NAME;
+
+    /// Constructor.
     register_specialized() : _name(NAME) { }  // force name initialization
+
+    /// Returns the name of this class.
     const char* name() const { return C::name; }
+
+    /// Create this object.
     BaseClass* create() { return new C(); }
+
+    /// Register property.
+
    private:
+    /// Name of this class.
     const char* _name;
+
+    /// Map with properties of this class.
+    static std::map<std::string, Property<C>*>& propertyMap() {
+      /// This map stores each registered Shape. (don't modify.)
+      static std::map<std::string, Property<C>*> m_PropertyMap;
+      return m_PropertyMap;
+    }
   };
 
   /// This method creates a Shape of given name when called.

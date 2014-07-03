@@ -23,31 +23,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "./Constants.h"
+#pragma once
+#ifndef RAYTRACERLIB_FACTORIES_PROPERTY_H_
+#define RAYTRACERLIB_FACTORIES_PROPERTY_H_
 
-#include <limits>
-
-namespace RefractiveIndex {
-  const float glass = 1.52f;
-  const float water = 1.333f;
-  const float air = 1.00293f;
-  const float diamond = 2.42f;
-  const float mirror = std::numeric_limits<float>::max();
+/// Class that holds properties (setter, getter).
+template <class OwnerClass>
+class Property {
+ protected:
+  /// Saves pointer to the getter (offset to class pointer).
+  void* _getterPtr;
+  /// Saves pointer to the setter (offset to class pointer).
+  void* _setterPtr;
 };
 
-namespace constants {
-  // ___________________________________________________________________________
-  const double EPSILON = 1e-8;
+/// Proeprty specialized for one ValueType.
+template <class ValueType, class OwnerClass>
+class TypeProperty : public Property<OwnerClass> {
+ public:
+  typedef const ValueType& (OwnerClass::*getSign)();
+  /// Getter for the property.
+  const ValueType& getValue(const OwnerClass* const objPtr) const {
+    // return objPtr->reinterpret_cast<getSign>(getterPtr());
+  }
 
-  // ___________________________________________________________________________
-  const double TEPSILON = 1e-2;
+  /// Setter for the property.
+  void setValue(OwnerClass* const objPtr, const ValueType& value);
+};
 
-  // ___________________________________________________________________________
-  const unsigned char maxDepth = 10;
-
-  // ___________________________________________________________________________
-  const REAL minColorContribution = 0.001;
-
-  // ___________________________________________________________________________
-  const REAL PI = 3.1415926535897932;
-}  // namespace constants
+#endif  // RAYTRACERLIB_FACTORIES_PROPERTY_H_

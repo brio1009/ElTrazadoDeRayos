@@ -166,5 +166,5 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
     ++numSamples;
   }
   // Return the color.
-  return color() * sumIntensity * (1.0f / numSamples);
+  return color() * sumIntensity * (constants::PI / numSamples);
 }
