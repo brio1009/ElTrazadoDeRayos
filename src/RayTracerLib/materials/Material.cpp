@@ -23,37 +23,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
-#ifndef RAYTRACERLIB_MATERIALS_MATERIAL_H_
-#define RAYTRACERLIB_MATERIALS_MATERIAL_H_
+#include "./Material.h"
 
-#include <glm/glm.hpp>
+#include "../Color.h"
+#include "../Constants.h"
+#include "../Ray.h"
 
-// Forward declaration.
-class Color;
-struct IntersectionInfo;
-class Ray;
-class Scene;
+// _____________________________________________________________________________
+Color Material::stoppingColor() const {
+  return Color(0, 0, 0);
+}
 
-///
-class Material {
- public:
-  /// Destructor.
-  virtual ~Material() { }
-
-  /// Returns the color for the given positition and normal.
-  virtual Color getColor(const IntersectionInfo& intersectionInfo,
-                         const Ray& incomingRay,
-                         const Scene& scene) const = 0;
-
- protected:
-  /// Returns a color that should be used if the ray is not further
-  /// traced (i.e. the stopping criteria is met).
-  Color stoppingColor() const;
-
-  /// Returns true if the stopping criteria is met (either
-  /// max depth or min color contribution).
-  bool stoppingCriteriaMet(const Ray& ray) const;
-};
-
-#endif  // RAYTRACERLIB_MATERIALS_MATERIAL_H_
+// _____________________________________________________________________________
+bool Material::stoppingCriteriaMet(const Ray& ray) const {
+  return ray.rayInfo().depth >= constants::maxDepth
+         || ray.rayInfo().colorContribution <= constants::minColorContribution;
+}
