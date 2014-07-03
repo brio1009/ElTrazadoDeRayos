@@ -143,6 +143,10 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
     newRay.setDirection(direction);
     newRay.setOrigin(intersectionInfo.hitPoint);
     newRay.rayInfo().depth = incomingRay.rayInfo().depth + 1;
+    float dot = std::max(0.0f, glm::dot(newRay.direction(),
+                                        intersectionInfo.normal));
+    newRay.rayInfo().colorContribution = incomingRay.rayInfo().colorContribution
+                                         * dot;
     IntersectionInfo info = scene.traceRay(newRay);
     if (info.materialPtr) {
       lightColor = info.materialPtr->getColor(info,
@@ -166,5 +170,5 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
     ++numSamples;
   }
   // Return the color.
-  return color() * sumIntensity * (constants::PI / numSamples);
+  return color() * sumIntensity * (1.0 / numSamples);
 }
