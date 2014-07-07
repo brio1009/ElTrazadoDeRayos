@@ -92,8 +92,15 @@ void Scene::cgCube() {
                                   new ShadowMaterial(Color(1, 1, 1)), 10, 10));
   _shapes.push_back(plane0);
 
+  Shape* shpa = Factory<Shape>::Create("Ellipsoid");
+  //const Property<Shape>* const prop = reinterpret_cast<Factory<Shape>::register_specialized<Ellipsoid>* >(shpa)->getProperty("radiusX");
+  //prop->fromString(shpa, "100.0");
+  Factory<Shape>::setPropertyFromString("Ellipsoid", shpa, "radiusX", "100.0");
+  _shapes.push_back(shpa);
+  
+
   // Lights.
-  int numLights = 2;
+  int numLights = 1;
   int lightsPerDimension = static_cast<int>(sqrt(numLights / 2.0));
   for (int x = 0; x < lightsPerDimension; ++x) {
     for (int z = 0; z < lightsPerDimension; ++z) {
@@ -308,9 +315,9 @@ Scene::Scene() {
   printf("map value: %s\n", typeid(*(PropertyManager::classProperties["CompoundShape"])).name());
   // testMap.emplace("asd", 1);
   */
-  monteCarloScene(&_shapes, &_lights);
+  // monteCarloScene(&_shapes, &_lights);
   // defaultScene();
-  // cgCube();
+  cgCube();
 }
 
 // _____________________________________________________________________________

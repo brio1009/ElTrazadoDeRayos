@@ -41,7 +41,7 @@ class Property {
 
   /// Sets the value from string.
   virtual void fromString(OwnerClass* const objPtr,
-                          const std::string& value) = 0;
+                          const std::string& value) const = 0;
 
   /// Getter for the name.
   const std::string& name() const { return m_Name; }
@@ -80,7 +80,7 @@ class TypeProperty : public Property<OwnerClass> {
   }
 
   /// Setter for the property.
-  void setValue(OwnerClass* const objPtr, ValueType value) {
+  void setValue(OwnerClass* const objPtr, ValueType value) const {
     (objPtr->*setterPtr)(value);
   }
 
@@ -90,7 +90,7 @@ class TypeProperty : public Property<OwnerClass> {
   }
 
   /// Sets the value from string.
-  void fromString(OwnerClass* const objPtr, const std::string& value) {
+  void fromString(OwnerClass* const objPtr, const std::string& value) const {
     setValue(objPtr, StringCastHelper<ValueType>::fromString(value));
   }
 
