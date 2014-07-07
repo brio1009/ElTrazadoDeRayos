@@ -68,7 +68,9 @@ class Factory {
     /// Register property.
     template<class ValueType>
     static void RegisterProperty(const std::string& propertyName) {
-      propertyMap()[propertyName] = new TypeProperty<C, ValueType>(nullptr, nullptr);
+      propertyMap()[propertyName] = new TypeProperty<C, ValueType>(propertyName,
+                                                                   nullptr,
+                                                                   nullptr);
       printf("\tRegistered property \"%s\"\n", propertyName.c_str());
     }
 

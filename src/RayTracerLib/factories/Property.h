@@ -27,9 +27,38 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_FACTORIES_PROPERTY_H_
 #define RAYTRACERLIB_FACTORIES_PROPERTY_H_
 
+#include <string>
+
 /// Class that holds properties (setter, getter).
 template <class OwnerClass>
 class Property {
+ public:
+  /// Constructor with given name.
+  explicit Property(const std::string& name) : m_Name(name) { }
+
+  /// Returns the value of the property as string.
+  virtual std::string toString(const OwnerClass* const objPtr) const = 0;
+
+  /// Sets the value from string.
+  virtual void fromString(OwnerClass* const objPtr,
+                          const std::string& value) = 0;
+
+  /// Getter for the name.
+  const std::string& name() const { return m_Name; }
+
+ protected:
+  /// The name of this property.
+  const std::string m_Name;
+};
+
+/// Helper struct to partially specialize.
+template <class ValueType>
+struct StringCastHelper {
+  /// Returns the value of the property as string.
+  static std::string toString(const ValueType& value);
+
+  /// Returns the value from string.
+  static ValueType fromString(const std::string& value);
 };
 
 /// Proeprty specialized for one ValueType.
@@ -37,14 +66,16 @@ template <class OwnerClass, class ValueType>
 class TypeProperty : public Property<OwnerClass> {
  public:
   /// Constructor setting the getter and setter ptr.
-  TypeProperty(void (OwnerClass::*pSetter)(ValueType value),
-               ValueType (OwnerClass::*pGetter)())
+  TypeProperty(const std::string& name,
+               void (OwnerClass::*pSetter)(ValueType value),
+               ValueType (OwnerClass::*pGetter)() const)
     : setterPtr(pSetter),
-      getterPtr(pGetter) {
+      getterPtr(pGetter),
+      Property<OwnerClass>(name) {
   }
 
   /// Getter for the property.
-  const ValueType& getValue(const OwnerClass* const objPtr) const {
+  ValueType getValue(const OwnerClass* const objPtr) const {
     return (objPtr->*getterPtr)();
   }
 
@@ -53,11 +84,21 @@ class TypeProperty : public Property<OwnerClass> {
     (objPtr->*setterPtr)(value);
   }
 
+  /// Returns the value of the property as string.
+  std::string toString(const OwnerClass* const objPtr) const {
+    return StringCastHelper<ValueType>::toString(getValue(objPtr));
+  }
+
+  /// Sets the value from string.
+  void fromString(OwnerClass* const objPtr, const std::string& value) {
+    setValue(objPtr, StringCastHelper<ValueType>::fromString(value));
+  }
+
  private:
-   /// Saves pointer to the setter (offset to class pointer).
-   void (OwnerClass::*setterPtr)(ValueType value);
-   /// Saves pointer to the getter (offset to class pointer).
-   ValueType (OwnerClass::*getterPtr)();
+  /// Saves pointer to the setter (offset to class pointer).
+  void (OwnerClass::*setterPtr)(ValueType value);
+  /// Saves pointer to the getter (offset to class pointer).
+  ValueType (OwnerClass::*getterPtr)() const;
 };
 
 #endif  // RAYTRACERLIB_FACTORIES_PROPERTY_H_
