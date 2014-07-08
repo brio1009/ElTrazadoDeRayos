@@ -51,16 +51,16 @@ class Ellipsoid : public Shape,
   /// The class name. Needed for the Factory creating the object.
   static const char* name;
 
-  /// Getter for radius x.
-  REAL radiusX() const { return _rX; }
-
-  /// Setter for radius x.
-  void setRadiusX(REAL value) { _rX = value; }
-
+/*
+  // GETSET(REAL, _rX, radiusX)
   /// Register all the properties.
   static void registerAllProperties() {
-    RegisterProperty<REAL>("radiusX", &Ellipsoid::setRadiusX, &Ellipsoid::radiusX);
+    RegisterProperty<REAL>("radiusX",
+          &Ellipsoid::setradiusX,
+          &Ellipsoid::radiusX);
   }
+  */
+createRegisterAll(Ellipsoid, REAL, _rX, radiusX, REAL, _rY, radiusY)
 
  protected:
   /// Override.

@@ -153,5 +153,38 @@ template <class T>
 template <class C>
 const char* Factory<T>::register_specialized<C>::NAME =
       Factory<T>::Register(new Factory<T>::register_specialized<C>());
+// NOLINT
+#define GETSET(type, varname, propname)\
+public:\
+  void set##propname(type value) {\
+    varname = value; \
+  }\
+  type propname() const {\
+    return varname;\
+  }\
+/* This counts the number of args */
+#define NARGS_SEQ(_1,_2,_3,_4,_5,_6,_7,_8,_9,_10,\
+                  _11,_12,_13,_14,_15,_16,_17,_18,_20,N,...) N
+#define NARGS(...) NARGS_SEQ(__VA_ARGS__, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,\
+                   1, 1, 1, 1, 1, 1, 3, 0, 0, 0)
+
+/* This will let macros expand before concating them */
+#define PRIMITIVE_CAT(x, y) x ## y
+#define CAT(x, y) PRIMITIVE_CAT(x, y)
+#define RegisterP_0(classname, ...) // ERROR
+#define RegisterP_3(classname, type, varname, propname)\
+  GETSET(type, varname, propname)\
+  static void registerAllProperties() {\
+    RegisterProperty<type>(#propname, &classname::set##propname, &classname::propname);
+
+#define RegisterP_1(classname, type, varname, propname, ...)\
+  GETSET(type, varname, propname)\
+  CAT(RegisterP_, NARGS(__VA_ARGS__))(classname, __VA_ARGS__)\
+    RegisterProperty<type>(#propname, &classname::set##propname, &classname::propname);
+
+#define createRegisterAll(classname,\
+      ...)\
+  CAT(RegisterP_, NARGS(__VA_ARGS__))(classname, __VA_ARGS__)\
+  }
 
 #endif  // RAYTRACERLIB_FACTORIES_FACTORY_H_
