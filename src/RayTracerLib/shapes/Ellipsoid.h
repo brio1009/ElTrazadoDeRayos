@@ -59,7 +59,7 @@ class Ellipsoid : public Shape,
 
   /// Register all the properties.
   static void registerAllProperties() {
-    RegisterProperty<REAL>("radiusX");
+    RegisterProperty<REAL>("radiusX", &Ellipsoid::setRadiusX, &Ellipsoid::radiusX);
   }
 
  protected:
