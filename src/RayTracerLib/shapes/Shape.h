@@ -33,6 +33,7 @@ SOFTWARE.
 #include <limits>
 #include <vector>
 
+#include "../factories/PropertyInterface.h"
 #include "./Constants.h"
 #include "./Color.h"
 #include "./IntersectionInfo.h"
@@ -45,7 +46,7 @@ SOFTWARE.
 class Ray;
 
 // This abstract class is used to define essencial parts to render a "Shape"
-class Shape : public Spatial {
+class Shape : public Spatial, public PropertyInterface<Shape> {
  public:
   /// Constructor.
   Shape();

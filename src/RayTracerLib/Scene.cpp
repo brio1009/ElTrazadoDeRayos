@@ -92,12 +92,10 @@ void Scene::cgCube() {
                                   new ShadowMaterial(Color(1, 1, 1)), 10, 10));
   _shapes.push_back(plane0);
 
+  // Create a shape with the factory.
   Shape* shpa = Factory<Shape>::Create("Ellipsoid");
-  //const Property<Shape>* const prop = reinterpret_cast<Factory<Shape>::register_specialized<Ellipsoid>* >(shpa)->getProperty("radiusX");
-  //prop->fromString(shpa, "100.0");
-  Factory<Shape>::setPropertyFromString("Ellipsoid", shpa, "radiusX", "100.0");
+  shpa->setFromString("radiusX", "100.0");
   _shapes.push_back(shpa);
-  
 
   // Lights.
   int numLights = 1;

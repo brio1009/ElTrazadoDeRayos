@@ -45,8 +45,10 @@ class Factory {
     virtual void registerProperties() = 0;
     virtual BaseClass* create() = 0;
     virtual void setPropertyFromString(BaseClass* const objPtr,
-                                       const std::string& propertyName,
-                                       const std::string& propertyValue) = 0;
+                                   const std::string& propertyName,
+                                   const std::string& propertyValue) const = 0;
+    virtual std::string getPropertyAsString(const BaseClass* const objPtr,
+                                    const std::string& propertyName) const = 0;
   };
 
   /// This construct specializes the registering
@@ -69,7 +71,8 @@ class Factory {
     BaseClass* create() { return new C(); }
 
     /// Get the proeprty with the given name. nullptr if not exist.
-    const Property<C>* const getProperty(const std::string& propertyName) {
+    const Property<C>* const getProperty(
+          const std::string& propertyName) const {
       auto it = propertyMap().find(propertyName);
       if (it == propertyMap().end())
         return nullptr;
@@ -80,10 +83,19 @@ class Factory {
     /// Set the given property with the given value.
     void setPropertyFromString(BaseClass* const objPtr,
                                const std::string& propertyName,
-                               const std::string& propertyValue) {
+                               const std::string& propertyValue) const {
       const Property<C>* const prop = getProperty(propertyName);
       if (prop)
         prop->fromString(reinterpret_cast<C*>(objPtr), propertyValue);
+    }
+
+    /// Get the the given property as string.
+    std::string getPropertyAsString(const BaseClass* const objPtr,
+                                    const std::string& propertyName) const {
+      const Property<C>* const prop = getProperty(propertyName);
+      if (prop)
+        return prop->toString(reinterpret_cast<const C* const>(objPtr));
+      return "";
     }
 
     /// Register property.
@@ -120,7 +132,19 @@ class Factory {
         return;
       register_base* base = classIt->second;
       base->setPropertyFromString(objPtr, propertyName, propertyValue);
-    }
+  }
+
+  /// Get the property as string.
+  static std::string getPropertyAsString(const std::string& className,
+                                         const BaseClass* const objPtr,
+                                         const std::string& propertyName) {
+      // First find the register_base.
+      auto classIt = myMap().find(className);
+      if (classIt == myMap().end())
+        return "";
+      register_base* base = classIt->second;
+      return base->getPropertyAsString(objPtr, propertyName);
+  }
 
   /// This method creates a Shape of given name when called.
   static BaseClass* Create(const char* name) {
