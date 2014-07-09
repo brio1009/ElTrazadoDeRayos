@@ -50,7 +50,7 @@ SOFTWARE.
 #include <vector>
 
 //
-void renderTestScene() {
+void renderTestScene(const char* fileName) {
   Scene scene;
   // REMEMBER VIM: use :r !date to insert current time.
   // TODO(allofus, Wed May  7 21:13:19 CEST 2014): to scale a image transform
@@ -73,11 +73,11 @@ void renderTestScene() {
 #ifdef WINDOWS
     printf("Image %03lu took %.2f sec to render.\n", i,
         endTime - startTime);
-    _snprintf_s(buff, sizeof(buff), "Img%03lu.bmp", i);
+    _snprintf_s(buff, sizeof(buff), "%s%03lu.bmp", fileName, i);
 #else
     printf("Image %03zu took %.2f sec to render.\n", i,
         endTime - startTime);
-    snprintf(buff, sizeof(buff), "Img%03zu.bmp", i);
+    snprintf(buff, sizeof(buff), "%s%03zu.bmp", fileName, i);
 #endif  // WINDOWS
     cam.getImage().saveAsBMP(buff);
   }
@@ -85,20 +85,24 @@ void renderTestScene() {
 
 // The main method.
 int main(int argc, char** argv) {
+  const char* fileName = "Img";
   // Print usage info.
-  if (argc > 2) {
-    printf("Usage: %s <optional: random seed>\n", argv[0]);
+  if (argc > 3) {
+    printf("Usage: %s <optional: output> <optional: random seed>\n", argv[0]);
     exit(EXIT_FAILURE);
   }
   // Initialize the rand function.
   unsigned int seed = static_cast<unsigned int>(time(NULL));
-  if (argc == 2) {
-    seed = static_cast<unsigned int>(atoi(argv[1]));
+  if (argc < 3) {
+    fileName = argv[1];
+  }
+  if (argc == 3) {
+    seed = static_cast<unsigned int>(atoi(argv[2]));
   }
   printf("Random seed used: %u\n\n", seed);
   srand(seed);
 
   // Render our test scene.
-  renderTestScene();
+  renderTestScene(fileName);
 }
 

@@ -68,7 +68,7 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
   Color sumIntensity(0, 0, 0);
 
   // Number of samples in the hemisphere.
-  size_t hemisphereSamples = 10;
+  size_t hemisphereSamples = 1;  // 20 * incomingRay.rayInfo().colorContribution;
 
   // Weighting for each light.
   const std::vector<Light*>& lights = scene.lights();
@@ -125,10 +125,8 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
     newRay.setDirection(direction);
     newRay.setOrigin(intersectionInfo.hitPoint);
     newRay.rayInfo().depth = incomingRay.rayInfo().depth + 1;
-    float dot = std::max(0.0f, glm::dot(newRay.direction(),
-                                        intersectionInfo.normal));
     newRay.rayInfo().colorContribution = incomingRay.rayInfo().colorContribution
-                                         * dot;
+                                         * cos(theta);
     IntersectionInfo info = scene.traceRay(newRay);
     if (info.materialPtr) {
       lightColor = info.materialPtr->getColor(info,
@@ -139,6 +137,7 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
     }
     // Add the color to the return intensity.
     // lightColor *= lightNumWeight;
+/*
     sumIntensity += diffuseTerm(lightColor,
                                 newRay.direction(),
                                 intersectionInfo.normal,
@@ -148,6 +147,12 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
                                  intersectionInfo.normal,
                                  -incomingRay.direction(),
                                  ks);
+*/
+    if (theta > 1.6 || theta < 0)
+    {
+      printf("asdasd\n");
+    }
+    sumIntensity += cos(theta) * lightColor;
   }
   // Return the color.
   return color() * sumIntensity * (1.0 / hemisphereSamples);
