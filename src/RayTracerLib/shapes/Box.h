@@ -35,7 +35,11 @@ SOFTWARE.
 #include "../factories/Factory.h"
 
 // A Primitive is a Shape that is defined in its own.
-class Box : public Shape {
+class Box : public Shape,
+      private Factory<Shape>::register_specialized<Box>  {
+  // Create properties (also generates getter and setter).
+  PROPERTIES(Box, )
+
  public:
   // Default constructor. Dimensions are 1, 1, 1.
   Box() : Box(1.0, 1.0, 1.0) { }

@@ -40,7 +40,11 @@ SOFTWARE.
 class Ray;
 
 ///
-class CompoundShape : public Shape {
+class CompoundShape : public Shape,
+      private Factory<Shape>::register_specialized<CompoundShape>  {
+  // Create properties (also generates getter and setter).
+  PROPERTIES(CompoundShape, )
+
  public:
   /// Enum to define how the child shapes are combined.
   enum class Operator {
