@@ -51,6 +51,7 @@ class GlassMaterial : public Material {
       const float& angle,
       const glm::vec4& position,
       const unsigned char currentDepth,
+      const float& colorContribution,
       const Scene& scene) const;
 
   /// Defines the refractive index which we use to compute the ray directions.

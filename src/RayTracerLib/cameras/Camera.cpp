@@ -42,7 +42,7 @@ using std::vector;
 
 // _____________________________________________________________________________
 Camera::Camera(const int width, const int height) : _image(width, height) {
-  _sampler = new RegularSampler(10);
+  _sampler = new RegularSampler(1);
 }
 // _____________________________________________________________________________
 const Image& Camera::getImage() const {
@@ -58,21 +58,23 @@ void Camera::render(const Scene& scene) {
   size_t progress(0);
   size_t amount = (_image.getWidth() * _image.getHeight())
                   / omp_get_max_threads();
-  #pragma omp parallel for
-  for (int x = 0; x < _image.getWidth(); ++x) {
-    for (int y = 0; y < _image.getHeight(); ++y) {
-      // TODO(bauschp, Thu Jun 12 16:33:05 CEST 2014): remove overhead.
-      vector<Ray> borders;
-      borders.reserve(4);
-      for (unsigned char piy = 0; piy <= 1; ++piy)
-        for (unsigned char pix = 0; pix <= 1; ++pix)
-          borders.push_back(createPixelCornerRay(x + pix, y + piy));
-      _image.setPixel(x, y,
-            _sampler->getSampledColor(borders, scene));
-      // Print progress (only if we are in first thread).
-      if (omp_get_thread_num() == 0) {
-        printf("Progress: %.2f%%\r", (100.0f * progress++) / amount);
-      }
+  size_t amountPixels = _image.getWidth() * _image.getHeight();
+  #pragma omp parallel for schedule(dynamic, 100)
+  for (int i = 0; i < amountPixels; ++i) {
+    // Get the pixel coordinates from i.
+    int x = i % _image.getWidth();
+    int y = i / _image.getWidth();
+    // TODO(bauschp, Thu Jun 12 16:33:05 CEST 2014): remove overhead.
+    vector<Ray> borders;
+    borders.reserve(4);
+    for (unsigned char piy = 0; piy <= 1; ++piy)
+      for (unsigned char pix = 0; pix <= 1; ++pix)
+        borders.push_back(createPixelCornerRay(x + pix, y + piy));
+    _image.setPixel(x, y,
+          _sampler->getSampledColor(borders, scene));
+    // Print progress (only if we are in first thread).
+    if (omp_get_thread_num() == 0) {
+      printf("Progress: %.2f%%\r", (100.0f * i) / amountPixels);
     }
   }
 }

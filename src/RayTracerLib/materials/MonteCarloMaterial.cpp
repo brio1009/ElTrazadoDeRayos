@@ -34,6 +34,7 @@ SOFTWARE.
 #include <cmath>
 #include <algorithm>
 #include <vector>
+#include "../samplers/AdaptiveSampler.h"
 #include "./Color.h"
 #include "./Constants.h"
 #include "./IntersectionInfo.h"
@@ -67,7 +68,7 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
   Color sumIntensity(0, 0, 0);
 
   // Number of samples in the hemisphere.
-  size_t hemisphereSamples = 1;
+  size_t hemisphereSamples = 10;
 
   // Weighting for each light.
   const std::vector<Light*>& lights = scene.lights();
@@ -84,11 +85,26 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
   //
   glm::vec3 tangent = glm::cross(glm::vec3(intersectionInfo.normal), up);
 
+  // boolean to decide if regular smapling.
+  bool regularSampling(false);
+
   // Shoot sample rays into the hemisphere.
   for (size_t i = 0; i < hemisphereSamples; ++i) {
     // Get a sample on a circle around the hitpoint.
-    float phi = (rand() / static_cast<float>(RAND_MAX))  // NOLINT
-                        * 2.0f * constants::PI;
+    float phi(0);
+    float theta(0);
+    if (regularSampling) {
+      phi = AdaptiveSampler::generateHalton(i, 2);
+      theta = AdaptiveSampler::generateHalton(i, 3);
+    } else {
+      phi = rand() / static_cast<float>(RAND_MAX);  // NOLINT
+      theta = rand() / static_cast<float>(RAND_MAX);  // NOLINT
+    }
+    // Transform them to uniform samples.
+    phi *= 2.0f * constants::PI;
+    theta = acos(1.0f - theta);
+
+    // Get the direction from phi and theta.
     glm::vec3 rotatedTangent = glm::rotate(tangent,
                                           static_cast<float>(phi),
                                           glm::vec3(intersectionInfo.normal));
@@ -96,12 +112,11 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
     // rotatedTangent towards the normal.
     glm::vec3 crossTangent = glm::cross(rotatedTangent,
                                         glm::vec3(intersectionInfo.normal));
-    float theta = acos(1.0f - (rand() / static_cast<float>(RAND_MAX)));  // NOLINT
 
     rotatedTangent = glm::rotate(glm::vec3(intersectionInfo.normal),
                                  static_cast<float>(phi),
                                  crossTangent);
-    
+
     glm::vec4 direction = glm::vec4(rotatedTangent, 0);
 
     // Get reflected color.

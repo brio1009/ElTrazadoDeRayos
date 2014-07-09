@@ -53,8 +53,7 @@ Color RegularSampler::reconstructColor(
       const std::vector<float>& lambdas) const {
   assert(colors.size() == _samplesPerDimension * _samplesPerDimension);
   // calculate how much a colors weight is. (RegularSampler = same for all)
-  float scale = 1.0f / _samplesPerDimension;
-  scale /= _samplesPerDimension;
+  float scale = 1.0f / (_samplesPerDimension * _samplesPerDimension);
   Color out(0, 0, 0);
   auto end = colors.end();
   for (auto it = colors.begin(); it != end; ++it)

@@ -41,6 +41,7 @@ Color GlassMaterial::reflectionColor(const glm::vec4& normal,
     const float& angle,
     const glm::vec4& position,
     unsigned char currentDepth,
+    const float& colorContribution,
     const Scene& scene) const {
   // Get reflected color.
   Ray newRay;
@@ -53,6 +54,7 @@ Color GlassMaterial::reflectionColor(const glm::vec4& normal,
   // incomingRay.
   newRay.rayInfo().popRefractiveIndex();
   newRay.rayInfo().pushRefractiveIndex(_refractiveIndex);
+  newRay.rayInfo().colorContribution = colorContribution;
   IntersectionInfo info = scene.traceRay(newRay);
   if (info.materialPtr) {
     return info.materialPtr->getColor(info,
@@ -102,6 +104,7 @@ Color GlassMaterial::getColor(const IntersectionInfo& intersectionInfo,
                           tau2,
                           intersectionInfo.hitPoint,
                           incomingRay.rayInfo().depth,
+                          (1 - refl) * incomingRay.rayInfo().colorContribution,
                           scene);
   } else {
     refl = 1.0f;
@@ -112,6 +115,7 @@ Color GlassMaterial::getColor(const IntersectionInfo& intersectionInfo,
                         -tau1,
                         intersectionInfo.hitPoint,
                         incomingRay.rayInfo().depth,
+                        refl * incomingRay.rayInfo().colorContribution,
                         scene);
   return materialColor;
 }
