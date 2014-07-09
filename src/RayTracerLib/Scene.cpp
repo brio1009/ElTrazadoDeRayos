@@ -94,7 +94,7 @@ void Scene::cgCube() {
 
   // Create a shape with the factory.
   Shape* shpa = Factory<Shape>::Create("Ellipsoid");
-  shpa->setFromString("radiusX", "100.0");
+  shpa->setFromString("RadiusX", "100.0");
   _shapes.push_back(shpa);
 
   // Lights.
@@ -275,15 +275,16 @@ void monteCarloScene(vector<Shape*>* shapes, vector<Light*>* lights) {
   left->setMaterialPtr(new MonteCarloMaterial(Color(1, 0, 0)));
   right->setMaterialPtr(new MonteCarloMaterial(Color(0, 1, 0)));
   bottom->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
-  top->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
+  top->setMaterialPtr(new ColorMaterial(Color(1, 1, 1)));
 
   // Top area light (just a white box).
+  /*
   Box* boxLight = new Box(5, 5, 5);
   shapes->push_back(boxLight);
   boxLight->setMaterialPtr(new ColorMaterial(Color(1, 1, 1)));
   boxLight->transform(glm::mat4(glm::translate(glm::mat4(1.0),
                                                glm::vec3(0, 9.9, 5))));
-
+  */
   // Create a sphere in the middle.
   Ellipsoid* ball = new Ellipsoid(2, 2, 2);
   shapes->push_back(ball);
@@ -313,9 +314,9 @@ Scene::Scene() {
   printf("map value: %s\n", typeid(*(PropertyManager::classProperties["CompoundShape"])).name());
   // testMap.emplace("asd", 1);
   */
-  // monteCarloScene(&_shapes, &_lights);
+  monteCarloScene(&_shapes, &_lights);
   // defaultScene();
-  cgCube();
+  // cgCube();
 }
 
 // _____________________________________________________________________________

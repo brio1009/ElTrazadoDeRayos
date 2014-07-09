@@ -221,9 +221,11 @@ public:\
     RegisterProperty<type>(#propname, &classname::set##propname, &classname::get##propname);
 
 // The macro that is called from outside to create and register properties.
+// Also defines the name method so we can use setFromString etc.
 #define PROPERTIES(classname,\
       ...)\
   CAT(RegisterP_, NARGS(__VA_ARGS__))(classname, __VA_ARGS__)\
-  }
+  }\
+  virtual const char* className() const { return classname::name; }
 
 #endif  // RAYTRACERLIB_FACTORIES_FACTORY_H_

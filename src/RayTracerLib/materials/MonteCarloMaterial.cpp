@@ -71,42 +71,9 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
 
   // Weighting for each light.
   const std::vector<Light*>& lights = scene.lights();
-  int numSamples(0);
 
   // Normal of the object at the position.
   glm::vec4 normNormal = glm::normalize(intersectionInfo.normal);
-
-  // Iterate over the lights.
-  for (size_t i = 0; i < lights.size(); ++i) {
-    // Scale the light color.
-    const Light* const lightPtr = lights.at(i);
-    Color lightColor = lightPtr->getColor();
-
-    // Iterate over the number of samples of this light.
-    for (size_t j = 0; j < lightPtr->numberOfSamples(); ++j) {
-      // The light ray.
-      Ray lightRay = lightPtr->getRay(intersectionInfo.hitPoint);
-      // Cast a shadow ray.
-      Ray shadowRay(intersectionInfo.hitPoint, -lightRay.direction());
-      IntersectionInfo hitInfo = scene.traceRay(shadowRay);
-      glm::vec4 diff = intersectionInfo.hitPoint - lightRay.origin();
-      float distanceToLight = glm::dot(diff, diff);
-      diff = intersectionInfo.hitPoint - hitInfo.hitPoint;
-      float distanceToHit = glm::dot(diff, diff);
-      if (!hitInfo.materialPtr || distanceToLight < distanceToHit) {
-        sumIntensity += diffuseTerm(lightColor,
-                                    -lightRay.direction(),
-                                    normNormal,
-                                    kd);
-        sumIntensity += specularTerm(lightColor,
-                                     -lightRay.direction(),
-                                     normNormal,
-                                     -incomingRay.direction(),
-                                     ks);
-      }
-      ++numSamples;
-    }
-  }
 
   // Get the axis to get the tangent.
   glm::vec3 up(0, 1, 1);
@@ -114,28 +81,28 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
   if (solve::isZero(glm::dot(glm::vec3(intersectionInfo.normal), up))) {
     up = glm::vec3(1, 1, 0);
   }
-
   //
   glm::vec3 tangent = glm::cross(glm::vec3(intersectionInfo.normal), up);
 
   // Shoot sample rays into the hemisphere.
   for (size_t i = 0; i < hemisphereSamples; ++i) {
     // Get a sample on a circle around the hitpoint.
-    float randomAngle = (rand() / static_cast<float>(RAND_MAX))  // NOLINT
+    float phi = (rand() / static_cast<float>(RAND_MAX))  // NOLINT
                         * 2.0f * constants::PI;
-    glm::vec3 pointOnCircle = glm::rotate(tangent,
-                                          static_cast<float>(randomAngle),
+    glm::vec3 rotatedTangent = glm::rotate(tangent,
+                                          static_cast<float>(phi),
                                           glm::vec3(intersectionInfo.normal));
-    pointOnCircle += glm::vec3(intersectionInfo.hitPoint);
+    // Get the cross between rotatedTangent and normal, so we can rotate the
+    // rotatedTangent towards the normal.
+    glm::vec3 crossTangent = glm::cross(rotatedTangent,
+                                        glm::vec3(intersectionInfo.normal));
+    float theta = acos(1.0f - (rand() / static_cast<float>(RAND_MAX)));  // NOLINT
 
-    float percentage = (rand() / static_cast<float>(RAND_MAX));  // NOLINT
-
-    glm::vec3 normalPoint = glm::vec3(intersectionInfo.hitPoint)
-                            + glm::vec3(intersectionInfo.normal);
-
-    glm::vec3 gotoPoint = percentage * pointOnCircle
-                          + (1.0f - percentage) * normalPoint;
-    glm::vec4 direction = -intersectionInfo.hitPoint + glm::vec4(gotoPoint, 1);
+    rotatedTangent = glm::rotate(glm::vec3(intersectionInfo.normal),
+                                 static_cast<float>(phi),
+                                 crossTangent);
+    
+    glm::vec4 direction = glm::vec4(rotatedTangent, 0);
 
     // Get reflected color.
     Color lightColor(0, 0, 0);
@@ -166,9 +133,7 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
                                  intersectionInfo.normal,
                                  -incomingRay.direction(),
                                  ks);
-    // sumIntensity += lightColor;
-    ++numSamples;
   }
   // Return the color.
-  return color() * sumIntensity * (1.0 / numSamples);
+  return color() * sumIntensity * (1.0 / hemisphereSamples);
 }

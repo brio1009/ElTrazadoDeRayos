@@ -34,18 +34,18 @@ template <class BaseClass>
 class PropertyInterface {
  public:
   ///
-  virtual const char* name() const { return ""; }
+  virtual const char* className() const { return ""; }
   ///
   void setFromString(const std::string& propertyName,
                      const std::string& value) {
-    Factory<BaseClass>::setPropertyFromString(this->name(),
+    Factory<BaseClass>::setPropertyFromString(this->className(),
                                              reinterpret_cast<BaseClass*>(this),
                                              propertyName,
                                              value);
   }
   ///
   std::string getValueAsString(const std::string& propertyName) const {
-    Factory<BaseClass>::getPropertyAsString(this->name(),
+    Factory<BaseClass>::getPropertyAsString(this->className(),
                                             reinterpret_cast<BaseClass*>(this),
                                             propertyName);
   }
