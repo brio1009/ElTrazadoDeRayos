@@ -23,41 +23,50 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "./Plane.h"
+#pragma once
+#ifndef RAYTRACERLIB_SHAPES_RECTANGLE_H_
+#define RAYTRACERLIB_SHAPES_RECTANGLE_H_
 
 #include <glm/glm.hpp>
 
 #include <vector>
 
 #include "./Constants.h"
-#include "./Ray.h"
-#include "./Solver.h"
+#include "./Shape.h"
+#include "../factories/Factory.h"
 
-using std::vector;
+///
+class Rectangle : public Shape,
+      private Factory<Shape>::register_specialized<Rectangle>  {
+  // Create properties (also generates getter and setter).
+  PROPERTIES(Rectangle, )
 
-const char* Plane::name = "Plane";
+ public:
+  /// Default constructor. Normal is y-up.
+  Rectangle() : Rectangle(glm::vec3(0, 1, 0), glm::vec2(1, 1)) { }
 
-// ___________________________________________________________________________
-vector<REAL> Plane::intersect(const Ray& ray) const {
-  // ax + by + cz + d = 0
-  // a * (px + uxt) + b (py + uyt) + c (pz + uzt) + d = 0
-  // apx + bpy + cpz + d + auxt + buyt + cuzt = 0;
+  /// Constructor with given normal axis.
+  Rectangle(const glm::vec3& normal, const glm::vec2& extent)
+    : m_Extent(extent),
+      m_Normal(normal) { }
+  /// Destructor.
+  virtual ~Rectangle() { }
+  /// Test for intersections.
+  virtual std::vector<REAL> intersect(const Ray& ray) const;
+  /// Get the normal at a world position p.
+  virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
 
-  // Bring vector to unit space.
-  Ray transRay = _inverseTransform * ray;
-  const glm::vec4& transPos = transRay.origin();
-  const glm::vec4& transDir = transRay.direction();
+  /// The class name. Needed for the Factory creating the object.
+  static const char* name;
 
-  REAL b = _nX * transPos[0] + _nY * transPos[1] + _nZ * transPos[2];
-  REAL a = _nX * transDir[0] + _nY * transDir[1] + _nZ * transDir[2];
+ private:
+  // Extent int x- and z-direction.
+  glm::vec2 m_Extent;
 
-  // TODO(bauschp): put into own method and reuse.
-  vector<REAL> out;
-  solve::solveLinearEquation(&out, a, b);
-  return out;
-}
+  // Normal.
+  glm::vec3 m_Normal;
+};
 
-// ___________________________________________________________________________
-glm::vec4 Plane::getNormalAt(const glm::vec4& p) const {
-  return _transformation * glm::vec4(_nX, _nY, _nZ, 0);
-}
+
+#endif  // RAYTRACERLIB_SHAPES_RECTANGLE_H_
+

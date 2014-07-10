@@ -23,10 +23,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "./Plane.h"
+#include "./Rectangle.h"
 
 #include <glm/glm.hpp>
 
+#include <ctime>
 #include <vector>
 
 #include "./Constants.h"
@@ -35,29 +36,39 @@ SOFTWARE.
 
 using std::vector;
 
-const char* Plane::name = "Plane";
+const char* Rectangle::name = "Rectangle";
 
 // ___________________________________________________________________________
-vector<REAL> Plane::intersect(const Ray& ray) const {
-  // ax + by + cz + d = 0
-  // a * (px + uxt) + b (py + uyt) + c (pz + uzt) + d = 0
-  // apx + bpy + cpz + d + auxt + buyt + cuzt = 0;
-
+vector<REAL> Rectangle::intersect(const Ray& ray) const {
   // Bring vector to unit space.
   Ray transRay = _inverseTransform * ray;
   const glm::vec4& transPos = transRay.origin();
   const glm::vec4& transDir = transRay.direction();
 
-  REAL b = _nX * transPos[0] + _nY * transPos[1] + _nZ * transPos[2];
-  REAL a = _nX * transDir[0] + _nY * transDir[1] + _nZ * transDir[2];
+  REAL b = m_Normal.x * transPos.x
+           + m_Normal.y * transPos.y
+           + m_Normal.z * transPos.z;
+  REAL a = m_Normal.x * transDir.x
+           + m_Normal.y * transDir.y
+           + m_Normal.z * transDir.z;
 
-  // TODO(bauschp): put into own method and reuse.
+  vector<REAL> solutions;
+  solve::solveLinearEquation(&solutions, a, b);
+
+  // Loop over the solutions and test if they are valid.
   vector<REAL> out;
-  solve::solveLinearEquation(&out, a, b);
+  for (size_t i = 0; i < solutions.size(); ++i) {
+    glm::vec4 hitPoint = transPos
+                         + transDir * static_cast<float>(solutions.at(i));
+    if (hitPoint.x <= m_Extent.x && hitPoint.z <= m_Extent.y) {
+      out.push_back(solutions.at(i));
+    }
+  }
+
   return out;
 }
 
 // ___________________________________________________________________________
-glm::vec4 Plane::getNormalAt(const glm::vec4& p) const {
-  return _transformation * glm::vec4(_nX, _nY, _nZ, 0);
+glm::vec4 Rectangle::getNormalAt(const glm::vec4& p) const {
+  return _transformation * glm::vec4(m_Normal, 0);
 }

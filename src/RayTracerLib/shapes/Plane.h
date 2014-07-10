@@ -47,6 +47,9 @@ class Plane : public Shape,
 
   /// Constructor with given normal axis.
   Plane(REAL nX, REAL nY, REAL nZ) : _nX(nX), _nY(nY), _nZ(nZ) { }
+  /// Constructor with given normal axis.
+  Plane(const glm::vec3& normal) : Plane(normal.x, normal.y, normal.z) { }
+
   /// Destructor.
   virtual ~Plane() { }
   /// Test for intersections.

@@ -68,7 +68,7 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
   Color sumIntensity(0, 0, 0);
 
   // Number of samples in the hemisphere.
-  size_t hemisphereSamples = 1;  // 20 * incomingRay.rayInfo().colorContribution;
+  size_t hemisphereSamples = 2;  // 20 * incomingRay.rayInfo().colorContribution;
 
   // Weighting for each light.
   const std::vector<Light*>& lights = scene.lights();
