@@ -42,7 +42,7 @@ using std::vector;
 
 // _____________________________________________________________________________
 Camera::Camera(const int width, const int height) : _image(width, height) {
-  _sampler = new RegularSampler(5);
+  _sampler = new RegularSampler(10);
 }
 // _____________________________________________________________________________
 const Image& Camera::getImage() const {

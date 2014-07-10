@@ -74,16 +74,17 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
   const std::vector<Light*>& lights = scene.lights();
 
   // Normal of the object at the position.
-  glm::vec4 normNormal = glm::normalize(intersectionInfo.normal);
+  glm::vec3 normal = glm::vec3(glm::normalize(intersectionInfo.normal));
 
-  // Get the axis to get the tangent.
-  glm::vec3 up(0, 1, 1);
-  glm::normalize(up);
-  if (solve::isZero(glm::dot(glm::vec3(intersectionInfo.normal), up))) {
-    up = glm::vec3(1, 1, 0);
+  // Get the tangent.
+  glm::vec3 tangent(0, 0, 1);
+
+  glm::vec3 up(0, 1, 0);
+  glm::vec3 diff = glm::abs(normal) - up;
+
+  if (!solve::isZero(glm::dot(diff, diff))) {
+    tangent = glm::cross(normal, up);
   }
-  //
-  glm::vec3 tangent = glm::cross(glm::vec3(intersectionInfo.normal), up);
 
   // boolean to decide if regular smapling.
   bool regularSampling(false);
@@ -106,15 +107,14 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
 
     // Get the direction from phi and theta.
     glm::vec3 rotatedTangent = glm::rotate(tangent,
-                                          static_cast<float>(phi),
-                                          glm::vec3(intersectionInfo.normal));
+                                           static_cast<float>(phi),
+                                           normal);
     // Get the cross between rotatedTangent and normal, so we can rotate the
     // rotatedTangent towards the normal.
-    glm::vec3 crossTangent = glm::cross(rotatedTangent,
-                                        glm::vec3(intersectionInfo.normal));
+    glm::vec3 crossTangent = glm::cross(rotatedTangent, normal);
 
-    rotatedTangent = glm::rotate(glm::vec3(intersectionInfo.normal),
-                                 static_cast<float>(phi),
+    rotatedTangent = glm::rotate(normal,
+                                 static_cast<float>(theta),
                                  crossTangent);
 
     glm::vec4 direction = glm::vec4(rotatedTangent, 0);
@@ -135,19 +135,8 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
     } else {
       lightColor = scene.backgroundColor(newRay);
     }
+
     // Add the color to the return intensity.
-    // lightColor *= lightNumWeight;
-/*
-    sumIntensity += diffuseTerm(lightColor,
-                                newRay.direction(),
-                                intersectionInfo.normal,
-                                kd);
-    sumIntensity += specularTerm(lightColor,
-                                 newRay.direction(),
-                                 intersectionInfo.normal,
-                                 -incomingRay.direction(),
-                                 ks);
-*/
     if (theta > 1.6 || theta < 0)
     {
       printf("asdasd\n");
