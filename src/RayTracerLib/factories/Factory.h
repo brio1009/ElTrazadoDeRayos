@@ -76,7 +76,6 @@ class Factory {
       auto it = propertyMap().find(propertyName);
       if (it == propertyMap().end())
         return nullptr;
-
       return it->second;
     }
 
@@ -128,8 +127,9 @@ class Factory {
                                     const std::string& propertyValue) {
       // First find the register_base.
       auto classIt = myMap().find(className);
-      if (classIt == myMap().end())
+      if (classIt == myMap().end()) {
         return;
+      }
       register_base* base = classIt->second;
       base->setPropertyFromString(objPtr, propertyName, propertyValue);
   }
@@ -183,46 +183,93 @@ const char* Factory<T>::register_specialized<C>::NAME =
 public:\
   void set##propname(type value) {\
     varname = value; \
+    printf(#varname" is now %.2f\n", varname);\
   }\
   type get##propname() const {\
     return varname;\
   }\
 // This counts the number of args.
-#define NARGS_SEQ(_1,_2,_3,_4,_5,_6,_7,_8,_9,_10,\
-                  _11,_12,_13,_14,_15,_16,_17,_18,_20,N,...) N
-#define NARGS(...) NARGS_SEQ(__VA_ARGS__, 0, 9, 0, 0, 6, 0, 0, 12, 0, 0,\
-                   9, 0, 0, 6, 0, 0, 3, 0, 0, 0)
+#define NARGS_SEQ(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, \
+                  _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, \
+                  _22, _23, _24, _25, _26, _27, _28, _29, _30, N, ...) N
+#define NARGS(...) NARGS_SEQ(__VA_ARGS__, 30, 1, 1, 27, 1, 1, 24, 1, 1, 21, \
+                   1, 1, 18, 1, 1, 15, 1, 1, 12, 1, 1, \
+                   9, 1, 1, 6, 1, 1, 3, 1, 0, 0)
 
 // This will let macros expand before concating them.
 #define PRIMITIVE_CAT(x, y) x ## y
 #define CAT(x, y) PRIMITIVE_CAT(x, y)
 // Create just the start so no compile error occurs when no properties are set.
-#define RegisterP_0(classname, ...) public: static void registerAllProperties() {
-// Creates the properties and registers them.
+#define RegisterP_1(classname, ...)\
+  static_assert(0, "Wrong argument count");\
+  public: static void registerAllProperties() {
+#define RegisterP_0(classname, ...)\
+  public: static void registerAllProperties() {
+// This macro ends a recursion.
 #define RegisterP_3(classname, type, varname, propname)\
   GETSET(type, varname, propname)\
   static void registerAllProperties() {\
-    RegisterProperty<type>(#propname, &classname::set##propname, &classname::get##propname);
-
-// Called when more than 4 arguments (1 property) is there.
+    RegisterProperty<type>(#propname, \
+          &classname::set##propname, \
+          &classname::get##propname);
+// These macros are used to enable a recursion up to 10.
 #define RegisterP_6(classname, type, varname, propname, ...)\
   GETSET(type, varname, propname)\
   CAT(RegisterP_, NARGS(__VA_ARGS__))(classname, __VA_ARGS__)\
-    RegisterProperty<type>(#propname, &classname::set##propname, &classname::get##propname);
-
+    RegisterProperty<type>(#propname, \
+          &classname::set##propname, \
+          &classname::get##propname);
 #define RegisterP_9(classname, type, varname, propname, ...)\
   GETSET(type, varname, propname)\
   CAT(RegisterP_, NARGS(__VA_ARGS__))(classname, __VA_ARGS__)\
-    RegisterProperty<type>(#propname, &classname::set##propname, &classname::get##propname);
-
+    RegisterProperty<type>(#propname, \
+          &classname::set##propname, \
+          &classname::get##propname);
 #define RegisterP_12(classname, type, varname, propname, ...)\
   GETSET(type, varname, propname)\
   CAT(RegisterP_, NARGS(__VA_ARGS__))(classname, __VA_ARGS__)\
-    RegisterProperty<type>(#propname, &classname::set##propname, &classname::get##propname);
-
+    RegisterProperty<type>(#propname, \
+          &classname::set##propname, \
+          &classname::get##propname);
+#define RegisterP_15(classname, type, varname, propname, ...)\
+  GETSET(type, varname, propname)\
+  CAT(RegisterP_, NARGS(__VA_ARGS__))(classname, __VA_ARGS__)\
+    RegisterProperty<type>(#propname, \
+          &classname::set##propname, \
+          &classname::get##propname);
+#define RegisterP_18(classname, type, varname, propname, ...)\
+  GETSET(type, varname, propname)\
+  CAT(RegisterP_, NARGS(__VA_ARGS__))(classname, __VA_ARGS__)\
+    RegisterProperty<type>(#propname, \
+          &classname::set##propname, \
+          &classname::get##propname);
+#define RegisterP_21(classname, type, varname, propname, ...)\
+  GETSET(type, varname, propname)\
+  CAT(RegisterP_, NARGS(__VA_ARGS__))(classname, __VA_ARGS__)\
+    RegisterProperty<type>(#propname, \
+          &classname::set##propname, \
+          &classname::get##propname);
+#define RegisterP_24(classname, type, varname, propname, ...)\
+  GETSET(type, varname, propname)\
+  CAT(RegisterP_, NARGS(__VA_ARGS__))(classname, __VA_ARGS__)\
+    RegisterProperty<type>(#propname, \
+          &classname::set##propname, \
+          &classname::get##propname);
+#define RegisterP_27(classname, type, varname, propname, ...)\
+  GETSET(type, varname, propname)\
+  CAT(RegisterP_, NARGS(__VA_ARGS__))(classname, __VA_ARGS__)\
+    RegisterProperty<type>(#propname, \
+          &classname::set##propname, \
+          &classname::get##propname);
+#define RegisterP_30(classname, type, varname, propname, ...)\
+  GETSET(type, varname, propname)\
+  CAT(RegisterP_, NARGS(__VA_ARGS__))(classname, __VA_ARGS__)\
+    RegisterProperty<type>(#propname, \
+          &classname::set##propname, \
+          &classname::get##propname);
 // The macro that is called from outside to create and register properties.
 // Also defines the name method so we can use setFromString etc.
-#define PROPERTIES(classname,\
+#define PROPERTIES(classname, \
       ...)\
   CAT(RegisterP_, NARGS(__VA_ARGS__))(classname, __VA_ARGS__)\
   }\

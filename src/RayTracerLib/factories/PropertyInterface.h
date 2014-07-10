@@ -39,14 +39,14 @@ class PropertyInterface {
   void setFromString(const std::string& propertyName,
                      const std::string& value) {
     Factory<BaseClass>::setPropertyFromString(this->className(),
-                                             reinterpret_cast<BaseClass*>(this),
+                                             dynamic_cast<BaseClass*>(this),
                                              propertyName,
                                              value);
   }
   ///
   std::string getValueAsString(const std::string& propertyName) const {
     Factory<BaseClass>::getPropertyAsString(this->className(),
-                                            reinterpret_cast<BaseClass*>(this),
+                                            dynamic_cast<BaseClass*>(this),
                                             propertyName);
   }
 };
