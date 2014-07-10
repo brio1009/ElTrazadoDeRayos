@@ -93,7 +93,7 @@ int main(int argc, char** argv) {
   }
   // Initialize the rand function.
   unsigned int seed = static_cast<unsigned int>(time(NULL));
-  if (argc < 3) {
+  if (argc > 1) {
     fileName = argv[1];
   }
   if (argc == 3) {
