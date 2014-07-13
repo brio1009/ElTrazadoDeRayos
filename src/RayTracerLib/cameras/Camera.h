@@ -39,6 +39,12 @@ class Camera : public Spatial {
  public:
   /// Constructor.
   Camera(const int width, const int height);
+
+  /// Virtual destructor.
+  virtual ~Camera() {
+    delete _sampler;
+  }
+
   /// Renders the scene to the image.
   virtual void render(
       const Scene& scene);
@@ -52,15 +58,22 @@ class Camera : public Spatial {
 
   /// Sets the image size. Resets the image.
   virtual void setImageSize(const int width, const int height);
-  /// virtual destructor;
-  virtual ~Camera() {
-    delete _sampler;
-  }
+
+  /// Setter for m_Active.
+  void setActive(const bool active) { m_Active = active; }
+
+  /// Getter for m_Active.
+  bool active() const { return m_Active; }
 
  protected:
-  /// Image where the scene is rendered to.
+  /// Sampler used by this camera.
   Sampler* _sampler;
+  /// Image where the scene is rendered to.
   Image _image;
+  /// Boolean to determine if this camera is currently active
+  /// (meaning it should render an image when Scene::render()
+  /// is called).
+  bool m_Active;
 };
 
 #endif  // RAYTRACERLIB_CAMERAS_CAMERA_H_

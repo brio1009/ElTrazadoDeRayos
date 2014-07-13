@@ -29,6 +29,7 @@ SOFTWARE.
 #include <ctime>
 #include <limits>
 #include <vector>
+#include "./cameras/Camera.h"
 #include "./Constants.h"
 #include "./IntersectionInfo.h"
 #include "./Scene.h"
@@ -341,4 +342,13 @@ IntersectionInfo Scene::traceRay(const Ray& ray) const {
     }
   }
   return info;
+}
+
+// _____________________________________________________________________________
+void Scene::render() const {
+  // Loop over all cameras and render.
+  for (size_t i = 0; i < m_Cameras.size(); ++i) {
+    Camera* const tmpCamera = m_Cameras.at(i);
+    tmpCamera->render(*this);
+  }
 }

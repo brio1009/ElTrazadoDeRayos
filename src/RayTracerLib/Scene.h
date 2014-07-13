@@ -35,6 +35,7 @@ class Ray;
 class Shape;
 class Light;
 struct IntersectionInfo;
+class Camera;
 
 /// Holds the scene objects.
 class Scene {
@@ -52,6 +53,9 @@ class Scene {
   /// Returnes a reference to all the lights in the scene.
   const std::vector<Light*>& lights() const { return _lights; }
 
+  /// Renders the scene with all cameras in the camera vector.
+  void render() const;
+
  private:
   /// Initializes the default scene.
   void defaultScene();
@@ -65,6 +69,9 @@ class Scene {
   std::vector<Shape*> _shapes;
   /// Holds the lights in a scene.
   std::vector<Light*> _lights;
+
+  /// Holds the cameras in this scene.
+  std::vector<Camera*> m_Cameras;
 };
 
 #endif  // RAYTRACERLIB_SCENE_H_
