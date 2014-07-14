@@ -33,19 +33,20 @@ SOFTWARE.
 #include "./Constants.h"
 #include "./IntersectionInfo.h"
 #include "./Scene.h"
-#include "./Shape.h"
 #include "./Ray.h"
 #include "./Color.h"
-#include "./Box.h"
-#include "./Ellipsoid.h"
-#include "./Plane.h"
+#include "./shapes/Box.h"
+#include "./shapes/CompoundShape.h"
+#include "./shapes/Ellipsoid.h"
+#include "./shapes/Plane.h"
+#include "./shapes/Rectangle.h"
+#include "./shapes/Shape.h"
 #include "./materials/ColorMaterial.h"
 #include "./materials/PhongMaterial.h"
 #include "./materials/ShadowMaterial.h"
 #include "./materials/DoubleMaterial.h"
 #include "./materials/MonteCarloMaterial.h"
 #include "./materials/GlassMaterial.h"
-#include "./CompoundShape.h"
 #include "./lights/PointLight.h"
 #include "./lights/AreaLight.h"
 #include "./factories/Factory.h"
@@ -286,6 +287,16 @@ void monteCarloScene(vector<Shape*>* shapes, vector<Light*>* lights) {
   boxLight->transform(glm::mat4(glm::translate(glm::mat4(1.0),
                                                glm::vec3(0, 9.9, 5))));
   */
+  /*
+  // Top area light.
+  Rectangle* rectangleLight = new Rectangle(glm::vec3(0, -1, 0),
+                                            glm::vec2(4, 4));
+  rectangleLight->transform(glm::translate(glm::mat4(1), glm::vec3(0, 9.9, 0))
+                            * rectangleLight->getTransformMatrix());
+  rectangleLight->setMaterialPtr(new ColorMaterial(Color(1, 1, 1)));
+  shapes->push_back(rectangleLight);
+  */
+
   // Create a sphere in the middle.
   Ellipsoid* ball = new Ellipsoid(2, 2, 2);
   shapes->push_back(ball);

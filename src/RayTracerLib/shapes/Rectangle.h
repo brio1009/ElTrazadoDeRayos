@@ -46,9 +46,8 @@ class Rectangle : public Shape,
   Rectangle() : Rectangle(glm::vec3(0, 1, 0), glm::vec2(1, 1)) { }
 
   /// Constructor with given normal axis.
-  Rectangle(const glm::vec3& normal, const glm::vec2& extent)
-    : m_Extent(extent),
-      m_Normal(normal) { }
+  Rectangle(const glm::vec3& normal, const glm::vec2& extent);
+
   /// Destructor.
   virtual ~Rectangle() { }
   /// Test for intersections.
@@ -62,9 +61,6 @@ class Rectangle : public Shape,
  private:
   // Extent int x- and z-direction.
   glm::vec2 m_Extent;
-
-  // Normal.
-  glm::vec3 m_Normal;
 };
 
 

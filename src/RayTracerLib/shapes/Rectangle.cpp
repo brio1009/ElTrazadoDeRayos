@@ -25,8 +25,11 @@ SOFTWARE.
 
 #include "./Rectangle.h"
 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
+#include <glm/gtx/vector_angle.hpp>
 
+#include <cmath>
 #include <ctime>
 #include <vector>
 
@@ -39,18 +42,34 @@ using std::vector;
 const char* Rectangle::name = "Rectangle";
 
 // ___________________________________________________________________________
+Rectangle::Rectangle(const glm::vec3& normal, const glm::vec2& extent)
+    : m_Extent(extent) {
+  // Rotate vector so normal is up.
+  // Get the tangent.
+  glm::vec3 tangent(1, 0, 0);
+
+  glm::vec3 up(0, 1, 0);
+  glm::vec3 diff = glm::abs(normal) - up;
+
+  if (!solve::isZero(glm::dot(diff, diff))) {
+    tangent = glm::cross(normal, up);
+  }
+  float angle = glm::orientedAngle(normal, up, tangent);
+  printf("angle: %.4f, tangent: (%.2f, %.2f, %.2f)\n", angle, tangent.x, tangent.y, tangent.z);  // NOLINT
+  transform(glm::rotate(glm::mat4(1), angle, -tangent));  // NOLINT
+  glm::vec4 normal2 = _transformation * glm::vec4(0, 1, 0, 0);
+  printf("tangent: (%.2f, %.2f, %.2f)\n", normal2.x, normal2.y, normal2.z);  // NOLINT
+}
+
+// ___________________________________________________________________________
 vector<REAL> Rectangle::intersect(const Ray& ray) const {
   // Bring vector to unit space.
   Ray transRay = _inverseTransform * ray;
   const glm::vec4& transPos = transRay.origin();
   const glm::vec4& transDir = transRay.direction();
 
-  REAL b = m_Normal.x * transPos.x
-           + m_Normal.y * transPos.y
-           + m_Normal.z * transPos.z;
-  REAL a = m_Normal.x * transDir.x
-           + m_Normal.y * transDir.y
-           + m_Normal.z * transDir.z;
+  REAL a = transDir.y;  // transDir.x + transDir.y + 
+  REAL b = transPos.y;  // transPos.x + transPos.y + 
 
   vector<REAL> solutions;
   solve::solveLinearEquation(&solutions, a, b);
@@ -60,7 +79,8 @@ vector<REAL> Rectangle::intersect(const Ray& ray) const {
   for (size_t i = 0; i < solutions.size(); ++i) {
     glm::vec4 hitPoint = transPos
                          + transDir * static_cast<float>(solutions.at(i));
-    if (hitPoint.x <= m_Extent.x && hitPoint.z <= m_Extent.y) {
+    if (std::abs(hitPoint.x) <= m_Extent.x
+        && std::abs(hitPoint.z) <= m_Extent.y) {
       out.push_back(solutions.at(i));
     }
   }
@@ -70,5 +90,5 @@ vector<REAL> Rectangle::intersect(const Ray& ray) const {
 
 // ___________________________________________________________________________
 glm::vec4 Rectangle::getNormalAt(const glm::vec4& p) const {
-  return _transformation * glm::vec4(m_Normal, 0);
+  return _transformation * glm::vec4(0, 1, 0, 0);
 }
