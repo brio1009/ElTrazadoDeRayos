@@ -53,6 +53,48 @@ SOFTWARE.
 
 using std::vector;
 
+void monteCarloCSG(vector<Shape*>* shapes, vector<Light*>* lights) {
+  // Main cube.
+  Box* box = new Box(40, 40, 40);
+  box->setMaterialPtr(new MonteCarloMaterial(Color(1.0f, 0.6f, 0.75f)));
+
+  // Sphere.
+  Ellipsoid* ellipsoid = new Ellipsoid(26, 26, 26);
+  ellipsoid->setMaterialPtr(new MonteCarloMaterial(Color(0.1f, 0.1f, 0.9f)));
+
+  // Compound Shape of them.
+  CompoundShape* roundedBox = new CompoundShape(box, ellipsoid);
+  roundedBox->setOperator(CompoundShape::Operator::intersectionOp);
+
+  // Two tubes.
+  Ellipsoid* tube1 = new Ellipsoid(10000, 12, 12);
+  Ellipsoid* tube2 = new Ellipsoid(12, 10000, 12);
+  // Compound shape of them.
+  CompoundShape* twoTubes = new CompoundShape(tube1, tube2);
+  twoTubes->setOperator(CompoundShape::Operator::unionOp);
+  // Third tube.
+  Ellipsoid* tube3 = new Ellipsoid(12, 12, 10000);
+  // Compound shape of them.
+  CompoundShape* threeTubes = new CompoundShape(twoTubes, tube3);
+  threeTubes->setOperator(CompoundShape::Operator::unionOp);
+  threeTubes->setMaterialPtr(new MonteCarloMaterial(Color(0, 1, 0)));
+  // threeTubes->setMaterialPtr(new GlassMaterial(RefractiveIndex::mirror));
+  threeTubes->setUseChildMaterials(false);
+
+  // Main compound shape.
+  CompoundShape* mainObject = new CompoundShape(roundedBox, threeTubes);
+  mainObject->setOperator(CompoundShape::Operator::minusOp);
+
+  shapes->push_back(mainObject);
+
+  // Ground plane.
+  Plane* plane0 = new Plane(0, 1, 0);
+  plane0->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -40, 0)));
+  plane0->setMaterialPtr(new DoubleMaterial(new MonteCarloMaterial(),
+                                  new MonteCarloMaterial(Color(1, 1, 1)), 10, 10));
+  shapes->push_back(plane0);
+}
+
 void Scene::cgCube() {
   // Main cube.
   Box* box = new Box(40, 40, 40);
@@ -326,7 +368,8 @@ Scene::Scene() {
   printf("map value: %s\n", typeid(*(PropertyManager::classProperties["CompoundShape"])).name());
   // testMap.emplace("asd", 1);
   */
-  monteCarloScene(&_shapes, &_lights);
+  // monteCarloScene(&_shapes, &_lights);
+  monteCarloCSG(&_shapes, &_lights);
   // defaultScene();
   // cgCube();
 }

@@ -25,6 +25,7 @@ SOFTWARE.
 
 #include "./Constants.h"
 
+#include <cstdint>
 #include <limits>
 
 namespace RefractiveIndex {
@@ -43,11 +44,13 @@ namespace constants {
   const double TEPSILON = 1e-2;
 
   // ___________________________________________________________________________
-  const unsigned char maxDepth = 30;
+  const unsigned char maxDepth = 5;
 
   // ___________________________________________________________________________
   const REAL minColorContribution = 0.001;
 
   // ___________________________________________________________________________
   const REAL PI = 3.1415926535897932;
+  // ___________________________________________________________________________
+  const uint64_t DefaultSamplesPerDim = 10;
 }  // namespace constants
