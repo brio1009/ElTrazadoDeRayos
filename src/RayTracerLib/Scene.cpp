@@ -96,7 +96,7 @@ void monteCarloCSG(vector<Shape*>* shapes,
 
   // Ground plane.
   Plane* plane0 = new Plane(0, 1, 0);
-  plane0->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -40, 0)));
+  plane0->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -25, 0)));
   plane0->setMaterialPtr(new DoubleMaterial(new MonteCarloMaterial(),
                          new MonteCarloMaterial(Color(1, 1, 1)), 10, 10));
   shapes->push_back(plane0);
@@ -104,7 +104,7 @@ void monteCarloCSG(vector<Shape*>* shapes,
   glm::mat4 trans = glm::rotate(glm::mat4(1.0),
       glm::radians(45.0f), glm::vec3(0, 1, 0));
   // Now rotate downwards by 45 degree.
-  trans = glm::rotate(trans, glm::radians(45.0f), glm::vec3(-1, 0, 0));
+  trans = glm::rotate(trans, glm::radians(20.0f), glm::vec3(-1, 0, 0));
 
   PerspectiveCamera* cam = new PerspectiveCamera(1280, 720,
                                                  glm::radians(85.0f));
