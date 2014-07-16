@@ -58,7 +58,9 @@ SOFTWARE.
 
 using std::vector;
 
-void monteCarloCSG(vector<Shape*>* shapes, vector<Light*>* lights) {
+void monteCarloCSG(vector<Shape*>* shapes,
+        vector<Light*>* lights,
+        vector<Camera*>* cameras) {
   // Main cube.
   Box* box = new Box(40, 40, 40);
   box->setMaterialPtr(new MonteCarloMaterial(Color(1.0f, 0.6f, 0.75f)));
@@ -98,6 +100,16 @@ void monteCarloCSG(vector<Shape*>* shapes, vector<Light*>* lights) {
   plane0->setMaterialPtr(new DoubleMaterial(new MonteCarloMaterial(),
                          new MonteCarloMaterial(Color(1, 1, 1)), 10, 10));
   shapes->push_back(plane0);
+  // Rotate 45degree around y axis.
+  glm::mat4 trans = glm::rotate(glm::mat4(1.0),
+      glm::radians(45.0f), glm::vec3(0, 1, 0));
+  // Now rotate downwards by 45 degree.
+  trans = glm::rotate(trans, glm::radians(45.0f), glm::vec3(-1, 0, 0));
+
+  PerspectiveCamera* cam = new PerspectiveCamera(1280, 720,
+                                                 glm::radians(85.0f));
+  cam->transform(glm::translate(trans, glm::vec3(0, 0, 100)));
+  cameras->push_back(cam);
 }
 
 // _____________________________________________________________________________
@@ -395,7 +407,7 @@ Scene::Scene() {
   // testMap.emplace("asd", 1);
   */
   // monteCarloScene(&_shapes, &_lights, &m_Cameras);
-  monteCarloCSG(&_shapes, &_lights);
+  monteCarloCSG(&_shapes, &_lights, &m_Cameras);
   // defaultScene();
   // cgCube();
 }
