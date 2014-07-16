@@ -55,10 +55,8 @@ Rectangle::Rectangle(const glm::vec3& normal, const glm::vec2& extent)
     tangent = glm::cross(normal, up);
   }
   float angle = glm::orientedAngle(normal, up, tangent);
-  printf("angle: %.4f, tangent: (%.2f, %.2f, %.2f)\n", angle, tangent.x, tangent.y, tangent.z);  // NOLINT
   transform(glm::rotate(glm::mat4(1), angle, -tangent));  // NOLINT
   glm::vec4 normal2 = _transformation * glm::vec4(0, 1, 0, 0);
-  printf("tangent: (%.2f, %.2f, %.2f)\n", normal2.x, normal2.y, normal2.z);  // NOLINT
 }
 
 // ___________________________________________________________________________
@@ -68,11 +66,8 @@ vector<REAL> Rectangle::intersect(const Ray& ray) const {
   const glm::vec4& transPos = transRay.origin();
   const glm::vec4& transDir = transRay.direction();
 
-  REAL a = transDir.y;  // transDir.x + transDir.y + 
-  REAL b = transPos.y;  // transPos.x + transPos.y + 
-
   vector<REAL> solutions;
-  solve::solveLinearEquation(&solutions, a, b);
+  solve::solveLinearEquation(&solutions, transDir.y, transPos.y);
 
   // Loop over the solutions and test if they are valid.
   vector<REAL> out;

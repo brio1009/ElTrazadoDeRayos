@@ -30,20 +30,29 @@ SOFTWARE.
 
 // C++ Header.
 #include <vector>
+#include <memory>
 
 #include "./Constants.h"
 #include "./IntersectionInfo.h"
 #include "./Material.h"
 #include "./Ray.h"
 #include "./Scene.h"
+#include "../samplers/RegularSampler.h"
 #include "../samplers/AdaptiveSampler.h"
 
 using std::vector;
 
 // _____________________________________________________________________________
 Camera::Camera(const int width, const int height) : _image(width, height) {
-  _sampler = new RegularSampler(10);
+  m_Sampler = std::make_shared<RegularSampler>(10);
 }
+
+// _____________________________________________________________________________
+Camera::Camera(const Camera& camera)
+  : _image(camera._image),
+    m_Sampler(camera.m_Sampler) {
+}
+
 // _____________________________________________________________________________
 const Image& Camera::getImage() const {
   return _image;
@@ -71,7 +80,7 @@ void Camera::render(const Scene& scene) {
       for (unsigned char pix = 0; pix <= 1; ++pix)
         borders.push_back(createPixelCornerRay(x + pix, y + piy));
     _image.setPixel(x, y,
-          _sampler->getSampledColor(borders, scene));
+          m_Sampler->getSampledColor(borders, scene));
     // Print progress (only if we are in first thread).
     if (omp_get_thread_num() == 0) {
       printf("Progress: %.2f%%\r", (100.0f * i) / amountPixels);

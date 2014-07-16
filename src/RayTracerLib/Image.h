@@ -32,7 +32,7 @@ SOFTWARE.
 #include "./Color.h"
 
 /// This class provides an easy to use interface to write and read pixel
-/// values of an image.
+/// values of an image. Its memory is x-axis-first.
 class Image {
  public:
   /// Constructor.

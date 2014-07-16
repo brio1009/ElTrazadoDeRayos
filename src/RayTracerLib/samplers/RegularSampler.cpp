@@ -47,6 +47,7 @@ std::vector<float> RegularSampler::getLambdasForSample(
       static_cast<float>(y) / _samplesPerDimension + _offset);
   return lambdas;
 }
+
 // _____________________________________________________________________________
 Color RegularSampler::reconstructColor(
       const std::vector<Color>& colors,
@@ -56,7 +57,9 @@ Color RegularSampler::reconstructColor(
   float scale = 1.0f / (_samplesPerDimension * _samplesPerDimension);
   Color out(0, 0, 0);
   auto end = colors.end();
-  for (auto it = colors.begin(); it != end; ++it)
+  for (auto it = colors.begin(); it != end; ++it) {
     out += scale * *it;
+  }
+
   return out;
 }
