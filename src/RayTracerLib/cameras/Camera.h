@@ -27,23 +27,26 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_CAMERAS_CAMERA_H_
 #define RAYTRACERLIB_CAMERAS_CAMERA_H_
 
+#include <memory>
+
 #include "./Image.h"
 #include "./Spatial.h"
-#include "./Sampler.h"
-#include "./RegularSampler.h"
 
 // Foward declaration.
+class Ray;
 class Scene;
+class Sampler;
 
 class Camera : public Spatial {
  public:
   /// Constructor.
   Camera(const int width, const int height);
 
+  /// Copy constructor.
+  explicit Camera(const Camera& camera);
+
   /// Virtual destructor.
-  virtual ~Camera() {
-    delete _sampler;
-  }
+  virtual ~Camera() { }
 
   /// Renders the scene to the image.
   virtual void render(
@@ -67,7 +70,7 @@ class Camera : public Spatial {
 
  protected:
   /// Sampler used by this camera.
-  Sampler* _sampler;
+  std::shared_ptr<Sampler> m_Sampler;
   /// Image where the scene is rendered to.
   Image _image;
   /// Boolean to determine if this camera is currently active

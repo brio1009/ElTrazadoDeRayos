@@ -37,7 +37,6 @@ SOFTWARE.
 #include <Scene.h>
 // C Header.
 #include <glm/glm.hpp>
-#include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/vector_angle.hpp>
@@ -51,35 +50,22 @@ SOFTWARE.
 
 //
 void renderTestScene(const char* fileName) {
+  // Create the scene. This also adds all the objects.
   Scene scene;
-  // REMEMBER VIM: use :r !date to insert current time.
-  // TODO(allofus, Wed May  7 21:13:19 CEST 2014): to scale a image transform
-  // the thrid param to match smaller change.
-  // e.g. when converting from 80x80 (first trace) to  512x512 divide 80 by 512
-  // OrthogonalCamera cam(512, 512, 0.1);
-  PerspectiveCamera cam(1280, 720, glm::radians(85.0f));
-  size_t imgCount = 1;
-  float angle = glm::pi<float>() * 2.0f;
-  for (size_t i = 0; i < imgCount; ++i) {
-    glm::mat4 trans = glm::rotate(glm::mat4(1.0),
-        (angle / imgCount) * i, glm::vec3(0, 1, 0));
-    trans = glm::rotate(trans, glm::radians(0.0f), glm::vec3(-1, 0, 0));
-    cam.transform(glm::translate(trans, glm::vec3(0, 0, 25)));
-    double startTime = omp_get_wtime();
-    cam.render(scene);
-    double endTime = omp_get_wtime();
+
+  // Render all the images.
+  scene.render();
+
+  // Get the cameras and save the images.
+  for (size_t i = 0; i < scene.cameras().size(); ++i) {
     // Save the image under different names.
     char buff[100];
 #ifdef WINDOWS
-    printf("Image %03lu took %.2f sec to render.\n", i,
-        endTime - startTime);
     _snprintf_s(buff, sizeof(buff), "%s%03lu.bmp", fileName, i);
 #else
-    printf("Image %03zu took %.2f sec to render.\n", i,
-        endTime - startTime);
     snprintf(buff, sizeof(buff), "%s%03zu.bmp", fileName, i);
 #endif  // WINDOWS
-    cam.getImage().saveAsBMP(buff);
+    scene.cameras().at(i)->getImage().saveAsBMP(buff);
   }
 }
 

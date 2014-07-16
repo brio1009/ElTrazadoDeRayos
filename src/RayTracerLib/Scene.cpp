@@ -25,11 +25,16 @@ SOFTWARE.
 
 #define GLM_FORCE_RADIANS
 
+#include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <omp.h>
+
 #include <ctime>
 #include <limits>
 #include <vector>
+
 #include "./cameras/Camera.h"
+#include "./cameras/PerspectiveCamera.h"
 #include "./Constants.h"
 #include "./IntersectionInfo.h"
 #include "./Scene.h"
@@ -53,7 +58,10 @@ SOFTWARE.
 
 using std::vector;
 
-void Scene::cgCube() {
+// _____________________________________________________________________________
+void cgCube(vector<Shape*>* shapes,
+            vector<Light*>* lights,
+            vector<Camera*>* cameras) {
   // Main cube.
   Box* box = new Box(40, 40, 40);
   box->setMaterialPtr(new ShadowMaterial(Color(1.0f, 0.6f, 0.75f)));
@@ -85,19 +93,19 @@ void Scene::cgCube() {
   CompoundShape* mainObject = new CompoundShape(roundedBox, threeTubes);
   mainObject->setOperator(CompoundShape::Operator::minusOp);
 
-  _shapes.push_back(mainObject);
+  shapes->push_back(mainObject);
 
   // Ground plane.
   Plane* plane0 = new Plane(0, 1, 0);
   plane0->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -40, 0)));
   plane0->setMaterialPtr(new DoubleMaterial(new ShadowMaterial(),
                                   new ShadowMaterial(Color(1, 1, 1)), 10, 10));
-  _shapes.push_back(plane0);
+  shapes->push_back(plane0);
 
   // Create a shape with the factory.
   Shape* shpa = Factory<Shape>::Create("Ellipsoid");
   shpa->setFromString("RadiusX", "100.0");
-  _shapes.push_back(shpa);
+  shapes->push_back(shpa);
 
   // Lights.
   int numLights = 1;
@@ -115,7 +123,7 @@ void Scene::cgCube() {
                   1.0f / numLights,
                   1.0f / numLights,
                   1.0f / numLights));
-      _lights.push_back(light);
+      lights->push_back(light);
     }
   }
 
@@ -132,12 +140,15 @@ void Scene::cgCube() {
                   1.0f / numLights,
                   1.0f / numLights,
                   1.0f / numLights));
-      _lights.push_back(light);
+      lights->push_back(light);
     }
   }
 }
 
-void Scene::compoundTestScene() {
+// _____________________________________________________________________________
+void compoundTestScene(vector<Shape*>* shapes,
+                       vector<Light*>* lights,
+                       vector<Camera*>* cameras) {
   // Compound shape 1.
   Box* box = new Box(20, 20, 20);
   glm::mat4 trans = glm::translate(glm::mat4(1.0), glm::vec3(-30, -20, -15));
@@ -153,7 +164,7 @@ void Scene::compoundTestScene() {
   cmpdShape->setRightShapePtr(ellipsoid);
   trans = glm::translate(glm::mat4(1.0), glm::vec3(-30, -20, -15));
   cmpdShape->transform(trans);
-  _shapes.push_back(cmpdShape);
+  shapes->push_back(cmpdShape);
 
   // Compound shape 2.
   Box* box2 = new Box(20, 20, 20);
@@ -171,26 +182,28 @@ void Scene::compoundTestScene() {
   cmpdShape2->setRightShapePtr(ellipsoid2);
   trans = glm::translate(glm::mat4(1.0), glm::vec3(-15, -5, 0));
   cmpdShape2->transform(trans);
-  _shapes.push_back(cmpdShape2);
+  shapes->push_back(cmpdShape2);
 
   // Ground plane.
   Plane* plane0 = new Plane(0, 1, 0);
   plane0->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -30, 0)));
   plane0->setMaterialPtr(new DoubleMaterial(new ShadowMaterial(),
                                   new ShadowMaterial(Color(1, 1, 1)), 10, 10));
-  _shapes.push_back(plane0);
+  shapes->push_back(plane0);
 
   // Lights.
   Light* light = new AreaLight(glm::vec4(0, 10, -39, 1), 3.0);
   light->setLightColor(Color(1, 1, 1));
-  _lights.push_back(light);
+  lights->push_back(light);
 }
 
-// TODO(allofus, Wed May 21 17:12:00 CEST 2014): Remove if we have a scene load.
-void Scene::defaultScene() {
+// _____________________________________________________________________________
+void defaultScene(vector<Shape*>* shapes,
+                  vector<Light*>* lights,
+                  vector<Camera*>* cameras) {
   Ellipsoid* ell = new Ellipsoid(20, 10, 20);
   ell->transform(glm::translate(glm::mat4(1.0), glm::vec3(50, 20, 0)));
-  _shapes.push_back(ell);
+  shapes->push_back(ell);
 
   Ellipsoid* ell1 = new Ellipsoid(10, 30, 30);
   glm::mat4 trans = glm::translate(glm::mat4(1.0), glm::vec3(0, 0, 31));
@@ -199,11 +212,11 @@ void Scene::defaultScene() {
   // ell1->setMaterialPtr(new GlassMaterial(RefractiveIndex::mirror));
   ell1->setMaterialPtr(new DoubleMaterial(new ShadowMaterial(),
                                   new ShadowMaterial(Color(1, 1, 1)), 10, 10));
-  _shapes.push_back(ell1);
+  shapes->push_back(ell1);
 
   Box* ell3 = new Box(20, 20, 20);
   ell3->transform(glm::translate(glm::mat4(1.0), glm::vec3(-30, -0, -50)));
-  _shapes.push_back(ell3);
+  shapes->push_back(ell3);
 
   // ell3->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
 //  Ellipsoid* ell2 = new Ellipsoid(5, 5, 5);
@@ -219,14 +232,14 @@ void Scene::defaultScene() {
   // ball->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
   ball->setMaterialPtr(new DoubleMaterial(new ShadowMaterial(),
                                   new ShadowMaterial(), 0.1, 0.1));
-  _shapes.push_back(ball);
+  shapes->push_back(ball);
 
   // Ground plane.
   Plane* plane0 = new Plane(0, 1, 0);
   plane0->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -30, 0)));
   plane0->setMaterialPtr(new DoubleMaterial(new ShadowMaterial(),
                                   new ShadowMaterial(Color(1, 1, 1)), 10, 10));
-  _shapes.push_back(plane0);
+  shapes->push_back(plane0);
 
   // Generate Lights for the scene.
   int numLights = 16;
@@ -244,13 +257,15 @@ void Scene::defaultScene() {
                   1.0f / numLights,
                   1.0f / numLights,
                   1.0f / numLights));
-      _lights.push_back(light);
+      lights->push_back(light);
     }
   }
 }
 
 // _____________________________________________________________________________
-void monteCarloScene(vector<Shape*>* shapes, vector<Light*>* lights) {
+void monteCarloScene(vector<Shape*>* shapes,
+                     vector<Light*>* lights,
+                     vector<Camera*>* cameras) {
   // Create the walls.
   Plane* back = new Plane(0, 0, 1);
   back->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, 0, -10)));
@@ -277,7 +292,7 @@ void monteCarloScene(vector<Shape*>* shapes, vector<Light*>* lights) {
   left->setMaterialPtr(new MonteCarloMaterial(Color(1, 0, 0)));
   right->setMaterialPtr(new MonteCarloMaterial(Color(0, 1, 0)));
   bottom->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
-  top->setMaterialPtr(new ColorMaterial(Color(1, 1, 1)));
+  top->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
 
   // Top area light (just a white box).
   /*
@@ -287,7 +302,6 @@ void monteCarloScene(vector<Shape*>* shapes, vector<Light*>* lights) {
   boxLight->transform(glm::mat4(glm::translate(glm::mat4(1.0),
                                                glm::vec3(0, 9.9, 5))));
   */
-  /*
   // Top area light.
   Rectangle* rectangleLight = new Rectangle(glm::vec3(0, -1, 0),
                                             glm::vec2(4, 4));
@@ -295,7 +309,6 @@ void monteCarloScene(vector<Shape*>* shapes, vector<Light*>* lights) {
                             * rectangleLight->getTransformMatrix());
   rectangleLight->setMaterialPtr(new ColorMaterial(Color(1, 1, 1)));
   shapes->push_back(rectangleLight);
-  */
 
   // Create a sphere in the middle.
   Ellipsoid* ball = new Ellipsoid(2, 2, 2);
@@ -317,6 +330,19 @@ void monteCarloScene(vector<Shape*>* shapes, vector<Light*>* lights) {
   light->setLightColor(Color(3, 3, 3));
   lights->push_back(light);
   */
+
+  // Add the camera.
+  size_t imgCount = 1;
+  float angle = glm::pi<float>() * 2.0f;
+  for (size_t i = 0; i < imgCount; ++i) {
+    glm::mat4 trans = glm::rotate(glm::mat4(1.0),
+        (angle / imgCount) * i, glm::vec3(0, 1, 0));
+    trans = glm::rotate(trans, glm::radians(0.0f), glm::vec3(-1, 0, 0));
+    PerspectiveCamera* cam = new PerspectiveCamera(1280, 720,
+                                                   glm::radians(85.0f));
+    cam->transform(glm::translate(trans, glm::vec3(0, 0, 25)));
+    cameras->push_back(cam);
+  }
 }
 
 // _____________________________________________________________________________
@@ -326,7 +352,7 @@ Scene::Scene() {
   printf("map value: %s\n", typeid(*(PropertyManager::classProperties["CompoundShape"])).name());
   // testMap.emplace("asd", 1);
   */
-  monteCarloScene(&_shapes, &_lights);
+  monteCarloScene(&_shapes, &_lights, &m_Cameras);
   // defaultScene();
   // cgCube();
 }
@@ -337,6 +363,8 @@ Scene::~Scene() {
   for (auto it = _shapes.begin(); it != _shapes.end(); ++it)
     delete *it;
   for (auto it = _lights.begin(); it != _lights.end(); ++it)
+    delete *it;
+  for (auto it = m_Cameras.begin(); it != m_Cameras.end(); ++it)
     delete *it;
 }
 
@@ -360,6 +388,14 @@ void Scene::render() const {
   // Loop over all cameras and render.
   for (size_t i = 0; i < m_Cameras.size(); ++i) {
     Camera* const tmpCamera = m_Cameras.at(i);
+
+    double startTime = omp_get_wtime();
     tmpCamera->render(*this);
+    double endTime = omp_get_wtime();
+#ifdef WINDOWS
+    printf("Image %03lu took %.2f sec to render.\n", i, endTime - startTime);
+#else
+    printf("Image %03zu took %.2f sec to render.\n", i, endTime - startTime);
+#endif  // WINDOWS
   }
 }
