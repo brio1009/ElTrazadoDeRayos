@@ -96,7 +96,7 @@ void monteCarloCSG(vector<Shape*>* shapes, vector<Light*>* lights) {
   Plane* plane0 = new Plane(0, 1, 0);
   plane0->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -40, 0)));
   plane0->setMaterialPtr(new DoubleMaterial(new MonteCarloMaterial(),
-                                  new MonteCarloMaterial(Color(1, 1, 1)), 10, 10));
+                         new MonteCarloMaterial(Color(1, 1, 1)), 10, 10));
   shapes->push_back(plane0);
 }
 
