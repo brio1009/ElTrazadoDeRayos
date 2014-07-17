@@ -51,6 +51,10 @@ class Camera : public Spatial {
   /// Renders the scene to the image.
   virtual void render(
       const Scene& scene);
+  /// Renders the scene with the camera from startPixel to endPixel - 1
+  void render(const Scene& scene,
+      const size_t& startPixel,
+      const size_t& endPixel);
 
   /// This method creates a Ray for given px and py. (TopLeft most)
   virtual Ray createPixelCornerRay(

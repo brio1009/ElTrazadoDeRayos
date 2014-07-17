@@ -63,13 +63,21 @@ void Camera::setImageSize(const int width, const int height) {
 }
 // _____________________________________________________________________________
 void Camera::render(const Scene& scene) {
+  int amountPixels = _image.getWidth() * _image.getHeight();
+  render(scene, 0, amountPixels);
+}
+
+// _____________________________________________________________________________
+void Camera::render(const Scene& scene,
+      const size_t& startPixel,
+      const size_t& endPixel) {
   // Send rays.
   size_t progress(0);
   size_t amount = (_image.getWidth() * _image.getHeight())
                   / omp_get_max_threads();
   int amountPixels = _image.getWidth() * _image.getHeight();
   #pragma omp parallel for schedule(dynamic, 100)
-  for (int i = 0; i < amountPixels; ++i) {
+  for (int i = startPixel; i < endPixel; ++i) {
     // Get the pixel coordinates from i.
     int x = i % _image.getWidth();
     int y = i / _image.getWidth();
