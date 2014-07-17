@@ -26,21 +26,45 @@
 #this is used to call this project on a computer that has no git but checked out the project as svn.
 #specify username hostname and what the output Image's should be called and they land in the bin/release
 #after the programm finishes.
+
+#this constant is used to determine the offset of computers used by this Script
+offset=11
+#timeout arguments for ssh change if not local.
+sshTimeoutArgs="-o ConnectTimeout=1 -o ConnectionAttempts=1"
 space=" "
 username=$1
-hostname=$2
-image=$3
+#use NAME%02d to use multiple computers.
+computername=$2
+hostname=$3
+image=$4
+chunks=$5
 storeImagePath=../bin/release
 projectDirectory=Documents/ElTrazadoDeRayos/trunk
 releaseDir=bin/release
 programWithParam=./ConsoleMain$space$image
-whattocall="cd $projectDirectory; svn update; cd projects; ./BuildLinuxProjects.sh > /dev/null; cd gmake; make > /dev/null; cd ../../$releaseDir;$programWithParam"
+whattocall="cd $projectDirectory;cd $releaseDir;$programWithParam"
 #call the programm remote.
-ssh $hostname $whattocall
+for (( c=0; c<=$chunks-1; c++ ))
+do
+  callExactly="$whattocall""Chunk""$c $chunks $c > /dev/null"
+  exactComputerName=$(printf "$computername" $(($c+$offset)) )
+  ssh $sshTimeoutArgs $exactComputerName.$hostname $callExactly &
+done
+wait
 #test if ssh was interrupted
 test $? -gt 128 && exit 1
+#use convert to make one image out of them
+exactComputerName=$(printf "$computername" $((2+$offset)) )
+
+convertString="convert $image* -fx \""
+for (( c=0; c<=$chunks-2; c++ ))
+do
+  convertString="$convertString""u[$c]+"
+done
+convertString="$convertString""u[$(($chunks-1))]\" $image"".png"
+ssh $sshTimeoutArgs $exactComputerName.$hostname "cd $projectDirectory; cd $releaseDir;$convertString"
 #copy the image.
-scp $hostname:/home/$username/$projectDirectory/$releaseDir/$image* $storeImagePath/
+scp $sshTimeoutArgs $exactComputerName.$hostname:/home/$username/$projectDirectory/$releaseDir/$image.png $storeImagePath/
 #remove the images from the computer to save precious space.
-ssh $hostname "cd $projectDirectory; cd $releaseDir; rm $image*"
+ssh $sshTimeoutArgs $exactComputerName.$hostname "cd $projectDirectory; cd $releaseDir; rm $image*"
 
