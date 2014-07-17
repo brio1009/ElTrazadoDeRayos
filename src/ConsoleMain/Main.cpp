@@ -49,12 +49,11 @@ SOFTWARE.
 #include <vector>
 
 //
-void renderTestScene(const char* fileName) {
+void renderTestScene(const char* fileName, size_t chunks, size_t chunkNr) {
   // Create the scene. This also adds all the objects.
   Scene scene;
-
   // Render all the images.
-  scene.render();
+  scene.render(chunks, chunkNr);
 
   // Get the cameras and save the images.
   for (size_t i = 0; i < scene.cameras().size(); ++i) {
@@ -73,8 +72,9 @@ void renderTestScene(const char* fileName) {
 int main(int argc, char** argv) {
   const char* fileName = "Img";
   // Print usage info.
-  if (argc > 3) {
-    printf("Usage: %s <optional: output> <optional: random seed>\n", argv[0]);
+  if (argc > 4) {
+    printf("Usage: %s <optional: output> <optional: chunks chunknr> "
+           "<optional: random seed>\n", argv[0]);
     exit(EXIT_FAILURE);
   }
   // Initialize the rand function.
@@ -82,13 +82,19 @@ int main(int argc, char** argv) {
   if (argc > 1) {
     fileName = argv[1];
   }
-  if (argc == 3) {
-    seed = static_cast<unsigned int>(atoi(argv[2]));
+  size_t chunks = 1;
+  size_t chunkNr = 0;
+  if (argc > 3) {
+    chunks = atol(argv[2]);
+    chunkNr = atol(argv[3]);
+  }
+  if (argc == 5) {
+    seed = static_cast<unsigned int>(atoi(argv[4]));
   }
   printf("Random seed used: %u\n\n", seed);
   srand(seed);
 
   // Render our test scene.
-  renderTestScene(fileName);
+  renderTestScene(fileName, chunks, chunkNr);
 }
 

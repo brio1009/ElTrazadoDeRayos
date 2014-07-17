@@ -59,6 +59,9 @@ class Scene {
   /// Renders the scene with all cameras in the camera vector.
   void render() const;
 
+  /// Renders the scene with all cameras in the camera vector.
+  void render(size_t chunks, size_t chunkNr) const;
+
  private:
   /// Holds the renderable objects.
   std::vector<Shape*> _shapes;

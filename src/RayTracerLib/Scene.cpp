@@ -440,12 +440,27 @@ IntersectionInfo Scene::traceRay(const Ray& ray) const {
 
 // _____________________________________________________________________________
 void Scene::render() const {
+  render(1, 0);
+}
+
+void Scene::render(size_t chunks, size_t chunkNr) const {
+  // Should never happen.
+  if (chunks == 0)
+    return;
   // Loop over all cameras and render.
   for (size_t i = 0; i < m_Cameras.size(); ++i) {
     Camera* const tmpCamera = m_Cameras.at(i);
-
+    // calculate pixels.
+    size_t amountPixel =
+          tmpCamera->getImage().getWidth()
+          * tmpCamera->getImage().getHeight();
+    size_t startPixel = (amountPixel / chunks) * chunkNr;
+    size_t endPixel =
+          (chunks == (chunkNr + 1))
+          ? amountPixel
+          : startPixel + (amountPixel / chunks);
     double startTime = omp_get_wtime();
-    tmpCamera->render(*this);
+    tmpCamera->render(*this, startPixel, endPixel);
     double endTime = omp_get_wtime();
 #ifdef WINDOWS
     printf("Image %03lu took %.2f sec to render.\n", i, endTime - startTime);

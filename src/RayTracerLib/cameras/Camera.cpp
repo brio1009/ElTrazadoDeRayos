@@ -73,9 +73,7 @@ void Camera::render(const Scene& scene,
       const size_t& endPixel) {
   // Send rays.
   size_t progress(0);
-  size_t amount = (_image.getWidth() * _image.getHeight())
-                  / omp_get_max_threads();
-  int amountPixels = _image.getWidth() * _image.getHeight();
+  int amountPixels = endPixel - startPixel;
   #pragma omp parallel for schedule(dynamic, 100)
   for (int i = startPixel; i < endPixel; ++i) {
     // Get the pixel coordinates from i.
@@ -91,7 +89,7 @@ void Camera::render(const Scene& scene,
           m_Sampler->getSampledColor(borders, scene));
     // Print progress (only if we are in first thread).
     if (omp_get_thread_num() == 0) {
-      printf("Progress: %.2f%%\r", (100.0f * i) / amountPixels);
+      printf("Progress: %.2f%%\r", (100.0f * (i - startPixel)) / amountPixels);
     }
   }
 }
