@@ -43,7 +43,8 @@ const char* Rectangle::name = "Rectangle";
 
 // ___________________________________________________________________________
 Rectangle::Rectangle(const glm::vec3& normal, const glm::vec2& extent)
-    : m_Extent(extent) {
+    : m_Extent(extent),
+      m_ClipBackplane(false) {
   // Rotate vector so normal is up.
   // Get the tangent.
   glm::vec3 tangent(1, 0, 0);
@@ -67,6 +68,12 @@ vector<REAL> Rectangle::intersect(const Ray& ray) const {
   const glm::vec4& transDir = transRay.direction();
 
   vector<REAL> solutions;
+  // Test if we hit the plane from the back. If yes don't return a hitpoint.
+  if (clipBackplane() && glm::dot(transDir, glm::vec4(0, 1, 0, 0)) > 0) {
+    return solutions;
+  }
+
+  // Get the hitpoints.
   solve::solveLinearEquation(&solutions, transDir.y, transPos.y);
 
   // Loop over the solutions and test if they are valid.

@@ -58,9 +58,11 @@ SOFTWARE.
 
 using std::vector;
 
+
+// _____________________________________________________________________________
 void monteCarloCSG(vector<Shape*>* shapes,
-        vector<Light*>* lights,
-        vector<Camera*>* cameras) {
+                   vector<Light*>* lights,
+                   vector<Camera*>* cameras) {
   // Main cube.
   Box* box = new Box(40, 40, 40);
   box->setMaterialPtr(new MonteCarloMaterial(Color(1.0f, 0.6f, 0.75f)));
@@ -95,14 +97,21 @@ void monteCarloCSG(vector<Shape*>* shapes,
   shapes->push_back(mainObject);
 
   // Ground plane.
-  Plane* plane0 = new Plane(0, 1, 0);
-  plane0->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -25, 0)));
+  Rectangle* plane0 = new Rectangle(glm::vec3(0, 1, 0), glm::vec2(400, 400));
+  glm::mat4 trans = glm::rotate(glm::mat4(1.0),
+                                glm::radians(45.0f),
+                                glm::vec3(0, 1, 0));
+  trans = glm::translate(trans, glm::vec3(0, -25, 0));
+  plane0->transform(trans);
   plane0->setMaterialPtr(new DoubleMaterial(new MonteCarloMaterial(),
                          new MonteCarloMaterial(Color(1, 1, 1)), 10, 10));
   shapes->push_back(plane0);
+
   // Rotate 45degree around y axis.
-  glm::mat4 trans = glm::rotate(glm::mat4(1.0),
-      glm::radians(45.0f), glm::vec3(0, 1, 0));
+  trans = glm::rotate(glm::mat4(1.0),
+                      glm::radians(45.0f),
+                      glm::vec3(0, 1, 0));
+
   // Now rotate downwards by 45 degree.
   trans = glm::rotate(trans, glm::radians(20.0f), glm::vec3(-1, 0, 0));
 
@@ -321,59 +330,78 @@ void monteCarloScene(vector<Shape*>* shapes,
                      vector<Light*>* lights,
                      vector<Camera*>* cameras) {
   // Create the walls.
-  Plane* back = new Plane(0, 0, 1);
-  back->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, 0, -10)));
-  shapes->push_back(back);
-  Plane* left = new Plane(1, 0, 0);
-  left->transform(glm::translate(glm::mat4(1.0), glm::vec3(-10, 0, 0)));
-  shapes->push_back(left);
-  Plane* right = new Plane(-1, 0, 0);
-  right->transform(glm::translate(glm::mat4(1.0), glm::vec3(10, 0, 0)));
-  shapes->push_back(right);
-  Plane* bottom = new Plane(0, 1, 0);
-  bottom->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, -10, 0)));
-  shapes->push_back(bottom);
-  Plane* top = new Plane(0, -1, 0);
-  top->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, 10, 0)));
-  shapes->push_back(top);
-  Plane* front = new Plane(0, 0, -1);
-  front->transform(glm::translate(glm::mat4(1.0), glm::vec3(0, 0, 26)));
+  // Front wall.
+  Rectangle* front = new Rectangle(glm::vec3(0, 0, -1), glm::vec2(10, 10));
+  front->setPosition(glm::vec4(0, 0, 10, 1));
+  front->setClipBackplane(true);
   shapes->push_back(front);
 
+  // Back wall.
+  Rectangle* back = new Rectangle(glm::vec3(0, 0, 1), glm::vec2(10, 10));
+  back->setPosition(glm::vec4(0, 0, -10, 1));
+  back->setClipBackplane(true);
+  shapes->push_back(back);
+
+  // Left wall.
+  Rectangle* left = new Rectangle(glm::vec3(1, 0, 0), glm::vec2(10, 10));
+  left->setPosition(glm::vec4(-10, 0, 0, 1));
+  left->setClipBackplane(true);
+  shapes->push_back(left);
+
+  // Right wall.
+  Rectangle* right = new Rectangle(glm::vec3(-1, 0, 0), glm::vec2(10, 10));
+  right->setPosition(glm::vec4(10, 0, 0, 1));
+  right->setClipBackplane(true);
+  shapes->push_back(right);
+
+  // Bottom floor.
+  Rectangle* bottom = new Rectangle(glm::vec3(0, 1, 0), glm::vec2(10, 10));
+  bottom->setPosition(glm::vec4(0, -10, 0, 1));
+  bottom->setClipBackplane(true);
+  shapes->push_back(bottom);
+
+  // Top ceiling.
+  Rectangle* top = new Rectangle(glm::vec3(0, -1, 0), glm::vec2(10, 10));
+  top->setPosition(glm::vec4(0, 10, 0, 1));
+  top->setClipBackplane(true);
+  shapes->push_back(top);
+
   // Set material of the walls.
-  back->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
   front->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
+  back->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
   left->setMaterialPtr(new MonteCarloMaterial(Color(1, 0, 0)));
   right->setMaterialPtr(new MonteCarloMaterial(Color(0, 1, 0)));
   bottom->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
-  top->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
+  top->setMaterialPtr(new ColorMaterial(Color(1, 1, 1)));
 
-  // Top area light (just a white box).
-  /*
-  Box* boxLight = new Box(5, 5, 5);
-  shapes->push_back(boxLight);
-  boxLight->setMaterialPtr(new ColorMaterial(Color(1, 1, 1)));
-  boxLight->transform(glm::mat4(glm::translate(glm::mat4(1.0),
-                                               glm::vec3(0, 9.9, 5))));
-  */
   // Top area light.
+  /*
   Rectangle* rectangleLight = new Rectangle(glm::vec3(0, -1, 0),
                                             glm::vec2(4, 4));
   rectangleLight->transform(glm::translate(glm::mat4(1), glm::vec3(0, 9.9, 0))
                             * rectangleLight->getTransformMatrix());
   rectangleLight->setMaterialPtr(new ColorMaterial(Color(1, 1, 1)));
+  rectangleLight->setClipBackplane(true);
   shapes->push_back(rectangleLight);
+  */
 
   // Create a sphere in the middle.
   Ellipsoid* ball = new Ellipsoid(2, 2, 2);
   shapes->push_back(ball);
-  ball->setPosition(glm::vec4(-4, -8, 0, 1));
+  ball->setPosition(glm::vec4(-4, -8, -2, 1));
   ball->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
+
+  /*
+  Ellipsoid* ball2 = new Ellipsoid(2, 2, 2);
+  shapes->push_back(ball2);
+  ball2->setPosition(glm::vec4(4, -3, -4, 1));
+  ball2->setMaterialPtr(new GlassMaterial(RefractiveIndex::mirror));
+  */
 
   // Create the box in the room.
   Box* box = new Box(5, 5, 5);
   shapes->push_back(box);
-  glm::mat4 trans(glm::translate(glm::mat4(1.0), glm::vec3(4, -7.5, -2)));
+  glm::mat4 trans(glm::translate(glm::mat4(1.0), glm::vec3(4, -7.5, -4)));
   trans = glm::rotate(trans, glm::radians(-25.0f), glm::vec3(0, 1, 0));
   box->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
   box->transform(trans);
@@ -391,10 +419,11 @@ void monteCarloScene(vector<Shape*>* shapes,
   for (size_t i = 0; i < imgCount; ++i) {
     glm::mat4 trans = glm::rotate(glm::mat4(1.0),
         (angle / imgCount) * i, glm::vec3(0, 1, 0));
-    trans = glm::rotate(trans, glm::radians(0.0f), glm::vec3(-1, 0, 0));
+    // trans = glm::rotate(trans, glm::radians(20.0f), glm::vec3(-1, 0, 0));
+    // trans = glm::rotate(trans, glm::radians(45.0f), glm::vec3(0, 1, 0));
     PerspectiveCamera* cam = new PerspectiveCamera(1280, 720,
                                                    glm::radians(85.0f));
-    cam->transform(glm::translate(trans, glm::vec3(0, 0, 25)));
+    cam->transform(glm::translate(trans, glm::vec3(0, 0, 23)));
     cameras->push_back(cam);
   }
 }

@@ -55,12 +55,21 @@ class Rectangle : public Shape,
   /// Get the normal at a world position p.
   virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
 
+  /// Setter for m_ClipBackplane.
+  void setClipBackplane(const bool value) { m_ClipBackplane = value; }
+
+  /// Getter for m_ClipBackplane.
+  bool clipBackplane() const { return m_ClipBackplane; }
+
   /// The class name. Needed for the Factory creating the object.
   static const char* name;
 
  private:
-  // Extent int x- and z-direction.
+  /// Extent int x- and z-direction.
   glm::vec2 m_Extent;
+
+  /// Signals if the the rectangle should be rendered from the back.
+  bool m_ClipBackplane;
 };
 
 
