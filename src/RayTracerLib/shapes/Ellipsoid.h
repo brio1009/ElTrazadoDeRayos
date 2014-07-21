@@ -29,6 +29,7 @@ SOFTWARE.
 
 #include <glm/glm.hpp>
 #include <vector>
+#include <type_traits>
 
 #include "./Constants.h"
 #include "./Shape.h"
@@ -70,4 +71,6 @@ class Ellipsoid : public Shape,
   REAL _rY;
   REAL _rZ;
 };
+
+static_assert(std::is_base_of<Shape, Ellipsoid>::value, "OK");
 #endif  // RAYTRACERLIB_SHAPES_ELLIPSOID_H_

@@ -46,7 +46,10 @@ SOFTWARE.
 class Ray;
 
 // This abstract class is used to define essencial parts to render a "Shape"
-class Shape : public Spatial, public PropertyInterface<Shape> {
+class Shape : public Spatial,
+              public PropertyInterface<Shape>,
+              private Factory<Shape>::register_specialized<Shape> {
+  PROPERTIES(Shape, )
  public:
   /// Constructor.
   Shape();

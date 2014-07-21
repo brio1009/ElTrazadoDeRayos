@@ -32,6 +32,18 @@ SOFTWARE.
 #include <string>
 #include "../shapes/Shape.h"
 #include "./Property.h"
+/// WOW THIS IS UGLY!!!
+template<class Base, class Special>
+class CreationHelper {
+ protected:
+  /// Create this object.
+  Base* create() { return new Special(); }
+};
+template<class Base>
+class CreationHelper<Base, Base> {
+ protected:
+  Base* create() { return nullptr; }
+};
 
 /// This class is used to create specific Shapes (@see RayTracerLib/shapes)
 template <class BaseClass>
@@ -53,7 +65,7 @@ class Factory {
 
   /// This construct specializes the registering
   template<class C>
-  struct register_specialized : register_base {
+  struct register_specialized : register_base, CreationHelper<BaseClass, C> {
    public:
     /// Needed to evaluate the class name at compile time.
     static const char* NAME;
@@ -64,11 +76,11 @@ class Factory {
     /// Returns the name of this class.
     const char* name() const { return C::name; }
 
+    /// 
+    BaseClass* create() { return CreationHelper<BaseClass, C>::create(); }
     ///
     virtual void registerProperties() { C::registerAllProperties(); }
 
-    /// Create this object.
-    BaseClass* create() { return new C(); }
 
     /// Get the proeprty with the given name. nullptr if not exist.
     const Property<C>* const getProperty(
@@ -208,6 +220,7 @@ public:\
 // This macro ends a recursion.
 #define RegisterP_3(classname, type, varname, propname)\
   GETSET(type, varname, propname)\
+  using register_specialized<classname>::RegisterProperty;\
   static void registerAllProperties() {\
     RegisterProperty<type>(#propname, \
           &classname::set##propname, \
