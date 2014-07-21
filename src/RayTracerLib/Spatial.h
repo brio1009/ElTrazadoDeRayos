@@ -39,7 +39,7 @@ class Spatial {
   virtual void transform(const glm::mat4& matrix);  //NOLINT mistaken for std
 
   /// Getter for the transformation matrix.
-  const glm::mat4& getTransformMatrix() { return _transformation; }
+  const glm::mat4& getTransformMatrix() const { return _transformation; }
 
   /// Get the position of the object.
   const glm::vec4& getPosition() const { return _transformation[3]; }

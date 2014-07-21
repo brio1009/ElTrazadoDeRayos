@@ -64,6 +64,9 @@ class Rectangle : public Shape,
   /// The class name. Needed for the Factory creating the object.
   static const char* name;
 
+  /// Getter for extent.
+  const glm::vec2& extent() const { return m_Extent; }
+
  private:
   /// Extent int x- and z-direction.
   glm::vec2 m_Extent;

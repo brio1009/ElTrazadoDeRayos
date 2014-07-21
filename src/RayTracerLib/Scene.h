@@ -28,6 +28,7 @@ SOFTWARE.
 #define RAYTRACERLIB_SCENE_H_
 
 #include <vector>
+#include <unordered_set>
 #include "./Color.h"
 
 // Forward declaration.
@@ -36,6 +37,7 @@ class Shape;
 class Light;
 struct IntersectionInfo;
 class Camera;
+class ImportantShape;
 
 /// Holds the scene objects.
 class Scene {
@@ -62,9 +64,23 @@ class Scene {
   /// Renders the scene with all cameras in the camera vector.
   void render(size_t chunks, size_t chunkNr) const;
 
+  /// Inserts a shape into the shape vector (and maybe also into the
+  /// important area shape list (for lighing).
+  void addShape(Shape* shapePtr);
+
+  /// Returns a reference to the important shape set.
+  const std::vector<ImportantShape*>& importantShapes() const {
+    return m_ImportantShapes;
+  }
+
  private:
   /// Holds the renderable objects.
   std::vector<Shape*> _shapes;
+
+  /// Holds the the important shapes that should be sampled
+  /// with the area form of the rendering equation.
+  std::vector<ImportantShape*> m_ImportantShapes;
+
   /// Holds the lights in a scene.
   std::vector<Light*> _lights;
 

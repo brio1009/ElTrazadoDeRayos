@@ -39,11 +39,13 @@ struct IntersectionInfo {
   glm::vec4 hitPoint;
   glm::vec4 normal;
   glm::vec2 texCoord;
+  bool hitImportantShape;
   const Material* materialPtr;
   IntersectionInfo() : t(std::numeric_limits<REAL>::max()),
                        hitPoint(0),
                        normal(0),
                        materialPtr(nullptr),
+                       hitImportantShape(false),
                        texCoord(0, 0) { }
   IntersectionInfo(const REAL t,
                    const glm::vec4& hitPoint,
@@ -54,7 +56,8 @@ struct IntersectionInfo {
     hitPoint(hitPoint),
     normal(normal),
     materialPtr(materialPtr),
-    texCoord(texCoord) { }
+    texCoord(texCoord),
+    hitImportantShape(false) { }
 
   /// Copy constructor.
   IntersectionInfo(const IntersectionInfo& i)
@@ -62,7 +65,8 @@ struct IntersectionInfo {
       hitPoint(i.hitPoint),
       normal(i.normal),
       materialPtr(i.materialPtr),
-      texCoord(i.texCoord)
+      texCoord(i.texCoord),
+      hitImportantShape(i.hitImportantShape)
   { }
 };
 

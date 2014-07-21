@@ -75,7 +75,7 @@ void Camera::render(const Scene& scene,
   size_t progress(0);
   int amountPixels = endPixel - startPixel;
   #pragma omp parallel for schedule(dynamic, 100)
-  for (int i = startPixel; i < endPixel; ++i) {
+  for (int i = startPixel; i < static_cast<int>(endPixel); ++i) {
     // Get the pixel coordinates from i.
     int x = i % _image.getWidth();
     int y = i / _image.getWidth();

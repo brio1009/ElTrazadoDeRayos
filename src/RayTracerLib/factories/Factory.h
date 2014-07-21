@@ -76,7 +76,7 @@ class Factory {
     /// Returns the name of this class.
     const char* name() const { return C::name; }
 
-    /// 
+    ///
     BaseClass* create() { return CreationHelper<BaseClass, C>::create(); }
     ///
     virtual void registerProperties() { C::registerAllProperties(); }
