@@ -99,8 +99,13 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
           // TODO(cgissler, 21/07/2014): Think about how we can do this better
           // than using the distance.
           if (std::abs(info.t - distance) < constants::TEPSILON) {
-            importantShapeColor += (shapePtr->area() / (distance * numSamples))
-                                   * cos(theta)
+            // Calculate the thetaPrime for the shape.
+            float thetaPrime = glm::angle(shapePtr->getNormal(info.hitPoint),
+                                          -newRay.direction());
+            //
+            importantShapeColor += (shapePtr->area()
+                                    / (distance * distance * numSamples))
+                                   * cos(theta) * cos(thetaPrime)
                                    * info.materialPtr->getColor(info,
                                                                 newRay,
                                                                 scene);
