@@ -55,6 +55,9 @@ class Ellipsoid : public Shape,
   /// Returns intersections.
   virtual std::vector<REAL> intersect(const Ray& ray) const;
 
+  /// Getter for the radius.
+  glm::vec3 radii() const { return glm::vec3(_rX, _rY, _rZ); }
+
   /// The class name. Needed for the Factory creating the object.
   static const char* name;
 

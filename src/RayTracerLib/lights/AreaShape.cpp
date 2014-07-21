@@ -26,8 +26,10 @@ SOFTWARE.
 #include "./AreaShape.h"
 
 #include <glm/glm.hpp>
+#include <glm/gtc/random.hpp>
 #include "../samplers/AdaptiveSampler.h"
 #include "../shapes/Rectangle.h"
+#include "../shapes/Ellipsoid.h"
 #include "../IntersectionInfo.h"
 
 // ____________________________________________________________________________
@@ -38,6 +40,16 @@ IntersectionInfo AreaShape<Rectangle>::getIntersectionInfo(const Ray& ray,
                                                    const REAL minimumT,
                                                    const REAL maximumT) const {
   IntersectionInfo info = Rectangle::getIntersectionInfo(ray,
+                                                         minimumT,
+                                                         maximumT);
+  info.hitImportantShape = true;
+  return info;
+}
+template<>
+IntersectionInfo AreaShape<Ellipsoid>::getIntersectionInfo(const Ray& ray,
+  const REAL minimumT,
+  const REAL maximumT) const {
+  IntersectionInfo info = Ellipsoid::getIntersectionInfo(ray,
                                                          minimumT,
                                                          maximumT);
   info.hitImportantShape = true;
@@ -67,3 +79,32 @@ float AreaShape<Rectangle>::area() const {
   // Times 4 because extent is radius.
   return this->extent().x * this->extent().y * 4;
 }
+
+// Implementation for Ellipsoid.
+// ____________________________________________________________________________
+template<>
+size_t AreaShape<Ellipsoid>::numSamples() const {
+  return 10;
+}
+
+// ____________________________________________________________________________
+template<>
+glm::vec4 AreaShape<Ellipsoid>::getSample(const size_t sampleNr) const {
+  return getTransformMatrix() * glm::vec4(glm::sphericalRand(1.0f), 1.0f);
+}
+
+// ____________________________________________________________________________
+template<>
+float AreaShape<Ellipsoid>::area() const {
+  // Approximated according to
+  // http://en.wikipedia.org/wiki/Ellipsoid#Surface_area
+  float p = 1.6075f;
+  float a = this->radii().x;
+  float b = this->radii().y;
+  float c = this->radii().z;
+  return 4.0f * constants::PI * pow((((pow(a, p) * pow(b, p))
+                                       + (pow(a, p) * pow(c, p))
+                                       + (pow(b, p) * pow(c, p))) / 3.0f),
+                                     1.0f / p);
+}
+
