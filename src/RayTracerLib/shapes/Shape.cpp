@@ -40,7 +40,7 @@ SOFTWARE.
 
 using std::vector;
 
-const char* Shape::name = "NONAME";
+const char* Shape::name = "Shape";
 
 // _____________________________________________________________________________
 Shape::Shape() {

@@ -52,5 +52,5 @@ namespace constants {
   // ___________________________________________________________________________
   const REAL PI = 3.1415926535897932;
   // ___________________________________________________________________________
-  const uint64_t DefaultSamplesPerDim = 10;
+  const uint64_t DefaultSamplesPerDim = 2;
 }  // namespace constants

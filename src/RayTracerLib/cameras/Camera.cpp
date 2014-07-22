@@ -29,6 +29,7 @@ SOFTWARE.
 #include <omp.h>
 
 // C++ Header.
+#include <algorithm>
 #include <vector>
 #include <memory>
 
@@ -44,7 +45,7 @@ using std::vector;
 
 // _____________________________________________________________________________
 Camera::Camera(const int width, const int height) : _image(width, height) {
-  m_Sampler = std::make_shared<RegularSampler>(5);
+  m_Sampler = std::make_shared<RegularSampler>(constants::DefaultSamplesPerDim);
 }
 
 // _____________________________________________________________________________
@@ -74,6 +75,10 @@ void Camera::render(const Scene& scene,
   // Send rays.
   size_t progress(0);
   int amountPixels = endPixel - startPixel;
+#ifdef BENICE
+  // Keeps one core free for other stuff.
+  omp_set_num_threads(std::max(omp_get_max_threads() - 1, 1));
+#endif  // BENICE
   #pragma omp parallel for schedule(dynamic, 100)
   for (int i = startPixel; i < static_cast<int>(endPixel); ++i) {
     // Get the pixel coordinates from i.

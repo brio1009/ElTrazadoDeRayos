@@ -31,7 +31,7 @@
 offset=5
 lastPeer=20
 #timeout arguments for ssh change if not local.
-sshTimeoutArgs="-o ConnectTimeout=1 -o ConnectionAttempts=1"
+sshTimeoutArgs="-o ConnectTimeout=1 -o ConnectionAttempts=1 -o BatchMode=yes -o StrictHostKeyChecking=no"
 space=" "
 username=$1
 #use NAME%02d to use multiple computers.
@@ -62,6 +62,7 @@ if [[ $numPeers -lt $chunks ]]; then
   exit 1
 fi
 echo "now calling the programm remote on the free peers"
+echo "PeerID's: ${onlinePeers[*]}"
 #call the programm remote.
 for (( c=0; c<=$chunks-1; c++ ))
 do
@@ -71,7 +72,7 @@ do
 done
 wait
 #test if ssh was interrupted
-test $? -gt 128 && exit 1
+test $? -gt 128 && killall ssh && exit 1
 #use convert to make one image out of them
 exactComputerName=$(printf "$computername" ${onlinePeers[0]} )
 
