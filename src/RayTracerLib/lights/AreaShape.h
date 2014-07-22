@@ -33,8 +33,8 @@ SOFTWARE.
 #include <utility>
 #include "../Constants.h"
 
+#include "../IntersectionInfo.h"
 /// Forward declaration.
-struct IntersectionInfo;
 class Ray;
 
 ///
@@ -81,5 +81,16 @@ class AreaShape : public T, public ImportantShape {
     return T::getNormalAt(p);
   }
 };
+// Implementations of template class functions.
+template<class T>
+IntersectionInfo AreaShape<T>::getIntersectionInfo(const Ray& ray,
+                                                   const REAL minimumT,
+                                                   const REAL maximumT) const {
+  IntersectionInfo info = T::getIntersectionInfo(ray,
+                                                         minimumT,
+                                                         maximumT);
+  info.hitImportantShape = true;
+  return info;
+}
 
 #endif  // RAYTRACERLIB_LIGHTS_AREASHAPE_H_

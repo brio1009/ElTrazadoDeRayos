@@ -32,35 +32,12 @@ SOFTWARE.
 #include "../shapes/Ellipsoid.h"
 #include "../IntersectionInfo.h"
 
-// ____________________________________________________________________________
-// TODO(cgissler, 21/07/2014): I tried to do this with a template class T
-// but it didn't work. Fix it!
-template<>
-IntersectionInfo AreaShape<Rectangle>::getIntersectionInfo(const Ray& ray,
-                                                   const REAL minimumT,
-                                                   const REAL maximumT) const {
-  IntersectionInfo info = Rectangle::getIntersectionInfo(ray,
-                                                         minimumT,
-                                                         maximumT);
-  info.hitImportantShape = true;
-  return info;
-}
-template<>
-IntersectionInfo AreaShape<Ellipsoid>::getIntersectionInfo(const Ray& ray,
-  const REAL minimumT,
-  const REAL maximumT) const {
-  IntersectionInfo info = Ellipsoid::getIntersectionInfo(ray,
-                                                         minimumT,
-                                                         maximumT);
-  info.hitImportantShape = true;
-  return info;
-}
 
 // Implementation for Rectangle.
 // ____________________________________________________________________________
 template<>
 size_t AreaShape<Rectangle>::numSamples() const {
-  return 10;
+  return 20;
 }
 
 // ____________________________________________________________________________
