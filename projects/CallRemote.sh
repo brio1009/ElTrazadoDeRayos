@@ -28,7 +28,8 @@
 #after the programm finishes.
 
 #this constant is used to determine the offset of computers used by this Script
-offset=11
+offset=5
+lastPeer=20
 #timeout arguments for ssh change if not local.
 sshTimeoutArgs="-o ConnectTimeout=1 -o ConnectionAttempts=1"
 space=" "
@@ -43,18 +44,36 @@ projectDirectory=Documents/ElTrazadoDeRayos/trunk
 releaseDir=bin/release
 programWithParam=./ConsoleMain$space$image
 whattocall="cd $projectDirectory;cd $releaseDir;$programWithParam"
+#find the computers that run linux (are online)
+echo "Searching for free peers"
+numPeers=0
+onlinePeers=();
+for (( c=$offset; c<=$lastPeer && $numPeers<=$chunks; c++ ))
+do
+  exactComputerName=$(printf "$computername" $(($c)) )
+  ssh -q $sshTimeoutArgs $exactComputerName.$hostname "exit"
+  if [[ $(echo $?) -eq 0 ]]; then
+    onlinePeers[$numPeers]=$c
+    ((numPeers++))
+  fi
+done
+if [[ $numPeers -lt $chunks ]]; then
+  echo "Not enough peers found"
+  exit 1
+fi
+echo "now calling the programm remote on the free peers"
 #call the programm remote.
 for (( c=0; c<=$chunks-1; c++ ))
 do
   callExactly="$whattocall""Chunk""$c $chunks $c > /dev/null"
-  exactComputerName=$(printf "$computername" $(($c+$offset)) )
+  exactComputerName=$(printf "$computername" ${onlinePeers[$c]} )
   ssh $sshTimeoutArgs $exactComputerName.$hostname $callExactly &
 done
 wait
 #test if ssh was interrupted
 test $? -gt 128 && exit 1
 #use convert to make one image out of them
-exactComputerName=$(printf "$computername" $((2+$offset)) )
+exactComputerName=$(printf "$computername" ${onlinePeers[0]} )
 
 convertString="convert $image* -fx \""
 for (( c=0; c<=$chunks-2; c++ ))

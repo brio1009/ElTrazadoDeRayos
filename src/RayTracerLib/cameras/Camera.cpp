@@ -44,7 +44,7 @@ using std::vector;
 
 // _____________________________________________________________________________
 Camera::Camera(const int width, const int height) : _image(width, height) {
-  m_Sampler = std::make_shared<RegularSampler>(1);
+  m_Sampler = std::make_shared<RegularSampler>(5);
 }
 
 // _____________________________________________________________________________

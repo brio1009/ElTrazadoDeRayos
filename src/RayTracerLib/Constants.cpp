@@ -44,7 +44,7 @@ namespace constants {
   const double TEPSILON = 1e-2;
 
   // ___________________________________________________________________________
-  const unsigned char maxDepth = 1;
+  const unsigned char maxDepth = 4;
 
   // ___________________________________________________________________________
   const REAL minColorContribution = 0.001;
