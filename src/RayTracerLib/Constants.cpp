@@ -44,7 +44,7 @@ namespace constants {
   const double TEPSILON = 1e-2;
 
   // ___________________________________________________________________________
-  const unsigned char maxDepth = 1;
+  const unsigned char maxDepth = 3;
 
   // ___________________________________________________________________________
   const REAL minColorContribution = 0.001;
@@ -52,5 +52,5 @@ namespace constants {
   // ___________________________________________________________________________
   const REAL PI = 3.1415926535897932;
   // ___________________________________________________________________________
-  const uint64_t DefaultSamplesPerDim = 1;
+  const uint64_t DefaultSamplesPerDim = 5;
 }  // namespace constants

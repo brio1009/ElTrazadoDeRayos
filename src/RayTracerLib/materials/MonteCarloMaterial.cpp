@@ -65,7 +65,7 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
   bool sampleImportantShapes(true);
 
   // Number of samples in the hemisphere.
-  size_t hemisphereSamples = 0;
+  size_t hemisphereSamples = 1;
 
   // Boolean to decide if regular smapling should be used for the "random"
   // hemisphere samples.
@@ -74,7 +74,7 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
   // -------------------------- LIGHT SAMPLING --------------------------------
   // Color of the important shapes.
   Color importantShapeColor(0, 0, 0);
-  if (sampleImportantShapes) {
+  if (sampleImportantShapes && scene.importantShapes().size() != 0) {
     // Loop over the important objects.
     for (size_t i = 0; i < scene.importantShapes().size(); ++i) {
       const ImportantShape* const shapePtr = scene.importantShapes().at(i);

@@ -119,6 +119,7 @@ void monteCarloCSG(vector<Shape*>* shapes,
   PerspectiveCamera* cam = new PerspectiveCamera(1280, 720,
                                                  glm::radians(85.0f));
   cam->transform(glm::translate(trans, glm::vec3(0, 0, 100)));
+  cam->setUsePostProcessing(true);
   cameras->push_back(cam);
 }
 
@@ -442,8 +443,8 @@ Scene::Scene() {
   printf("map value: %s\n", typeid(*(PropertyManager::classProperties["CompoundShape"])).name());
   // testMap.emplace("asd", 1);
   */
-  monteCarloScene(&_shapes, &_lights, &m_Cameras, this);
-  // monteCarloCSG(&_shapes, &_lights, &m_Cameras);
+  // monteCarloScene(&_shapes, &_lights, &m_Cameras, this);
+  monteCarloCSG(&_shapes, &_lights, &m_Cameras);
   // defaultScene();
   // cgCube();
 }

@@ -83,8 +83,6 @@ do
 done
 convertString="$convertString""u[$(($chunks-1))]\" $image"".png"
 ssh $sshTimeoutArgs $exactComputerName.$hostname "cd $projectDirectory; cd $releaseDir;$convertString"
-#copy the image.
-scp $sshTimeoutArgs $exactComputerName.$hostname:/home/$username/$projectDirectory/$releaseDir/$image.png $storeImagePath/
-#remove the images from the computer to save precious space.
-ssh $sshTimeoutArgs $exactComputerName.$hostname "cd $projectDirectory; cd $releaseDir; rm $image*"
+#copy the image and remove the images from the computer to save precious space.
+(scp $sshTimeoutArgs $exactComputerName.$hostname:/home/$username/$projectDirectory/$releaseDir/$image.png $storeImagePath/ && ssh $sshTimeoutArgs $exactComputerName.$hostname "cd $projectDirectory; cd $releaseDir; rm $image*.bmp")
 
