@@ -87,8 +87,8 @@ IntersectionInfo AreaShape<T>::getIntersectionInfo(const Ray& ray,
                                                    const REAL minimumT,
                                                    const REAL maximumT) const {
   IntersectionInfo info = T::getIntersectionInfo(ray,
-                                                         minimumT,
-                                                         maximumT);
+                                                 minimumT,
+                                                 maximumT);
   info.hitImportantShape = true;
   return info;
 }

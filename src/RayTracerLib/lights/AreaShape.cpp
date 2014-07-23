@@ -37,17 +37,18 @@ SOFTWARE.
 // ____________________________________________________________________________
 template<>
 size_t AreaShape<Rectangle>::numSamples() const {
-  return 20;
+  return 1;
 }
 
 // ____________________________________________________________________________
 template<>
 glm::vec4 AreaShape<Rectangle>::getSample(const size_t sampleNr) const {
   glm::vec3 rectPoint = (AdaptiveSampler::generateHalton(sampleNr, 2) - 0.5f)
-                          * glm::vec3(extent().x, 0, 0)
+                          * glm::vec3(2.0f * extent().x, 0, 0)
                         + (AdaptiveSampler::generateHalton(sampleNr, 3) - 0.5f)
-                          * glm::vec3(0, 0, extent().y);
-  return getTransformMatrix() * glm::vec4(rectPoint, 1);
+                          * glm::vec3(0, 0, 2.0f * extent().y);
+  // return getTransformMatrix() * glm::vec4(rectPoint, 1);
+  return getPosition();
 }
 
 // ____________________________________________________________________________

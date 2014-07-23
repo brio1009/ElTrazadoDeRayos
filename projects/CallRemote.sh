@@ -28,7 +28,7 @@
 #after the programm finishes.
 
 #this constant is used to determine the offset of computers used by this Script
-offset=5
+offset=0
 lastPeer=20
 #timeout arguments for ssh change if not local.
 sshTimeoutArgs="-o ConnectTimeout=1 -o ConnectionAttempts=1 -o BatchMode=yes -o StrictHostKeyChecking=no"
@@ -40,7 +40,7 @@ hostname=$3
 image=$4
 chunks=$5
 storeImagePath=../bin/release
-projectDirectory=Documents/ElTrazadoDeRayos/trunk
+projectDirectory=Desktop/dev/ElTrazadoDeRayos/
 releaseDir=bin/release
 programWithParam=./ConsoleMain$space$image
 whattocall="cd $projectDirectory;cd $releaseDir;$programWithParam"
@@ -84,5 +84,5 @@ done
 convertString="$convertString""u[$(($chunks-1))]\" $image"".png"
 ssh $sshTimeoutArgs $exactComputerName.$hostname "cd $projectDirectory; cd $releaseDir;$convertString"
 #copy the image and remove the images from the computer to save precious space.
-(scp $sshTimeoutArgs $exactComputerName.$hostname:/home/$username/$projectDirectory/$releaseDir/$image.png $storeImagePath/ && ssh $sshTimeoutArgs $exactComputerName.$hostname "cd $projectDirectory; cd $releaseDir; rm $image*.bmp")
+(scp $sshTimeoutArgs $exactComputerName.$hostname:/home/$username/$projectDirectory/$releaseDir/$image.png $storeImagePath/ && ssh $sshTimeoutArgs $exactComputerName.$hostname "cd $projectDirectory; cd $releaseDir; rm -f $image*.bmp")
 

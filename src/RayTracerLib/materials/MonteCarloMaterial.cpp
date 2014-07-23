@@ -90,22 +90,28 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
         newRay.setDirection(direction);
         newRay.setOrigin(intersectionInfo.hitPoint);
         newRay.rayInfo().depth = incomingRay.rayInfo().depth + 1;
-        float theta = glm::angle(intersectionInfo.normal, newRay.direction());
+        float cosTheta = glm::dot(intersectionInfo.normal, newRay.direction());
+        if (cosTheta <= 0.0f) {
+          continue;
+        }
         newRay.rayInfo().colorContribution =
-                          incomingRay.rayInfo().colorContribution * cos(theta);
+                          incomingRay.rayInfo().colorContribution * cosTheta;
         IntersectionInfo info = scene.traceRay(newRay);
         if (info.materialPtr && info.hitImportantShape) {
           // Check if we really hit the important shape.
           // TODO(cgissler, 21/07/2014): Think about how we can do this better
           // than using the distance.
           if (std::abs(info.t - distance) < constants::TEPSILON) {
-            // Calculate the thetaPrime for the shape.
-            float thetaPrime = glm::angle(shapePtr->getNormal(info.hitPoint),
-                                          -newRay.direction());
+            // Calculate the cos(thetaPrime) for the shape.
+            float cosThetaPrime = glm::dot(shapePtr->getNormal(info.hitPoint),
+                                           -newRay.direction());
+            if (cosThetaPrime <= 0.0f) {
+              continue;
+            }
             //
             importantShapeColor += (shapePtr->area()
                                     / (distance * distance * numSamples))
-                                   * cos(theta) * cos(thetaPrime)
+                                   * cosThetaPrime
                                    * info.materialPtr->getColor(info,
                                                                 newRay,
                                                                 scene);
@@ -113,7 +119,8 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
         }
       }
     }
-    importantShapeColor *= (1.0 / scene.importantShapes().size());
+    importantShapeColor *= (1.0 / (2.0 * constants::PI));
+    //                        / scene.importantShapes().size());
   }
 
   // -------------------- RANDOM HEMISPHERE SAMPLING --------------------------
@@ -145,6 +152,7 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
       } else {
         phi = rand() / static_cast<float>(RAND_MAX);  // NOLINT
         theta = rand() / static_cast<float>(RAND_MAX);  // NOLINT
+        theta *= 0.998f;  // Do this to prevent rays in tangent direction.
       }
       // Transform them to uniform samples.
       phi *= 2.0f * constants::PI;
@@ -189,9 +197,9 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
       }
 
       // Add the color to the return intensity.
-      hemisphereColor += cos(theta) * lightColor;
+      hemisphereColor += lightColor;
     }
-    hemisphereColor *= (1.0 / hemisphereSamples);
+    hemisphereColor *= (1.0f / hemisphereSamples);
   }
 
   // Combine and return the color.

@@ -92,5 +92,5 @@ vector<REAL> Rectangle::intersect(const Ray& ray) const {
 
 // ___________________________________________________________________________
 glm::vec4 Rectangle::getNormalAt(const glm::vec4& p) const {
-  return _transformation * glm::vec4(0, 1, 0, 0);
+  return glm::normalize(_transformation * glm::vec4(0, 1, 0, 0));
 }
