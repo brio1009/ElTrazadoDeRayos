@@ -36,7 +36,9 @@ SOFTWARE.
 class Ray;
 class Scene;
 class Sampler;
+class PostProcessor;
 
+/// Camera class.
 class Camera : public Spatial {
  public:
   /// Constructor.
@@ -72,11 +74,26 @@ class Camera : public Spatial {
   /// Getter for m_Active.
   bool active() const { return m_Active; }
 
+  /// Setter for m_UsePostProcessing.
+  void setUsePostProcessing(const bool usePostProcessing) {
+    m_UsePostProcessing = usePostProcessing;
+  }
+
+  /// Getter for m_UsePostProcessing.
+  bool usePostProcessing() const { return m_UsePostProcessing; }
+
  protected:
   /// Sampler used by this camera.
   std::shared_ptr<Sampler> m_Sampler;
+  /// Post processor used by this camera.
+  std::shared_ptr<PostProcessor> m_PostProcessor;
+
+  /// Boolean to specify if post processor should be used.
+  bool m_UsePostProcessing;
+
   /// Image where the scene is rendered to.
   Image _image;
+
   /// Boolean to determine if this camera is currently active
   /// (meaning it should render an image when Scene::render()
   /// is called).

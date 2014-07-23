@@ -91,7 +91,7 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
         newRay.setOrigin(intersectionInfo.hitPoint);
         newRay.rayInfo().depth = incomingRay.rayInfo().depth + 1;
         float theta = glm::angle(intersectionInfo.normal, newRay.direction());
-        newRay.rayInfo().colorContribution = 
+        newRay.rayInfo().colorContribution =
                           incomingRay.rayInfo().colorContribution * cos(theta);
         IntersectionInfo info = scene.traceRay(newRay);
         if (info.materialPtr && info.hitImportantShape) {
@@ -170,7 +170,7 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
       newRay.setDirection(direction);
       newRay.setOrigin(intersectionInfo.hitPoint);
       newRay.rayInfo().depth = incomingRay.rayInfo().depth + 1;
-      newRay.rayInfo().colorContribution = 
+      newRay.rayInfo().colorContribution =
                                         incomingRay.rayInfo().colorContribution
                                         * cos(theta);
       IntersectionInfo info = scene.traceRay(newRay);

@@ -40,18 +40,24 @@ SOFTWARE.
 #include "./Scene.h"
 #include "../samplers/RegularSampler.h"
 #include "../samplers/AdaptiveSampler.h"
+#include "../postprocessors/GammaCorrector.h"
 
 using std::vector;
 
 // _____________________________________________________________________________
-Camera::Camera(const int width, const int height) : _image(width, height) {
+Camera::Camera(const int width, const int height)
+    : _image(width, height),
+      m_UsePostProcessing(true) {
   m_Sampler = std::make_shared<RegularSampler>(constants::DefaultSamplesPerDim);
+  m_PostProcessor = std::make_shared<GammaCorrector>(2.2);
 }
 
 // _____________________________________________________________________________
 Camera::Camera(const Camera& camera)
   : _image(camera._image),
-    m_Sampler(camera.m_Sampler) {
+    m_Sampler(camera.m_Sampler),
+    m_PostProcessor(camera.m_PostProcessor),
+    m_UsePostProcessing(camera.m_UsePostProcessing) {
 }
 
 // _____________________________________________________________________________
@@ -97,4 +103,8 @@ void Camera::render(const Scene& scene,
       printf("Progress: %.2f%%\r", (100.0f * (i - startPixel)) / amountPixels);
     }
   }
+
+  // Use the post processor.
+  if (usePostProcessing())
+    m_PostProcessor->doPostProcess(&_image, startPixel, endPixel);
 }

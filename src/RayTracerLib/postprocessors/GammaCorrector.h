@@ -23,34 +23,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "./Constants.h"
+#pragma once
+#ifndef RAYTRACERLIB_POSTPROCESSORS_GAMMACORRECTOR_H_
+#define RAYTRACERLIB_POSTPROCESSORS_GAMMACORRECTOR_H_
 
-#include <cstdint>
-#include <limits>
+#include "./PostProcessor.h"
 
-namespace RefractiveIndex {
-  const float glass = 1.52f;
-  const float water = 1.333f;
-  const float air = 1.00293f;
-  const float diamond = 2.42f;
-  const float mirror = std::numeric_limits<float>::max();
+// Forward declaration.
+class Image;
+
+/// Simple interface for post processors.
+class GammaCorrector : public PostProcessor {
+ public:
+  /// Default constructor. Uses gamma = 1.0f;
+  GammaCorrector() : m_Gamma(1.0f) { }
+
+  /// Constructor with given gamma value.
+  explicit GammaCorrector(const float gamma) : m_Gamma(gamma) { }
+
+  /// Postprocesses only a range of pixels.
+  virtual void doPostProcess(Image* imagePtr,
+                             const size_t& startPixel,
+                             const size_t& endPixel) const;
+
+ private:
+  /// The gamma value.
+  float m_Gamma;
 };
 
-namespace constants {
-  // ___________________________________________________________________________
-  const double EPSILON = 1e-8;
-
-  // ___________________________________________________________________________
-  const double TEPSILON = 1e-2;
-
-  // ___________________________________________________________________________
-  const unsigned char maxDepth = 1;
-
-  // ___________________________________________________________________________
-  const REAL minColorContribution = 0.001;
-
-  // ___________________________________________________________________________
-  const REAL PI = 3.1415926535897932;
-  // ___________________________________________________________________________
-  const uint64_t DefaultSamplesPerDim = 1;
-}  // namespace constants
+#endif  // RAYTRACERLIB_POSTPROCESSORS_GAMMACORRECTOR_H_

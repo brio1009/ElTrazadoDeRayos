@@ -431,6 +431,11 @@ void monteCarloScene(vector<Shape*>* shapes,
 }
 
 // _____________________________________________________________________________
+void openHemisphereScene(vector<Camera*>* cameras,
+                         Scene* scenePtr) {
+}
+
+// _____________________________________________________________________________
 Scene::Scene() {
   /*
   PROPERTYCLASS(CompoundShape);

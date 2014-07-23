@@ -23,34 +23,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "./Constants.h"
+#include "./PostProcessor.h"
 
-#include <cstdint>
-#include <limits>
+#include <ctime>
+#include "../Image.h"
 
-namespace RefractiveIndex {
-  const float glass = 1.52f;
-  const float water = 1.333f;
-  const float air = 1.00293f;
-  const float diamond = 2.42f;
-  const float mirror = std::numeric_limits<float>::max();
-};
+// _____________________________________________________________________________
+PostProcessor::~PostProcessor() {
+}
 
-namespace constants {
-  // ___________________________________________________________________________
-  const double EPSILON = 1e-8;
-
-  // ___________________________________________________________________________
-  const double TEPSILON = 1e-2;
-
-  // ___________________________________________________________________________
-  const unsigned char maxDepth = 1;
-
-  // ___________________________________________________________________________
-  const REAL minColorContribution = 0.001;
-
-  // ___________________________________________________________________________
-  const REAL PI = 3.1415926535897932;
-  // ___________________________________________________________________________
-  const uint64_t DefaultSamplesPerDim = 1;
-}  // namespace constants
+// _____________________________________________________________________________
+void PostProcessor::doPostProcess(Image* imagePtr) const {
+    int amountPixels = imagePtr->getWidth() * imagePtr->getHeight();
+    doPostProcess(imagePtr, 0, amountPixels);
+  }

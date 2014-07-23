@@ -23,34 +23,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "./Constants.h"
+#include "./GammaCorrector.h"
 
-#include <cstdint>
-#include <limits>
+#include <cmath>
+#include "../Color.h"
+#include "../Image.h"
 
-namespace RefractiveIndex {
-  const float glass = 1.52f;
-  const float water = 1.333f;
-  const float air = 1.00293f;
-  const float diamond = 2.42f;
-  const float mirror = std::numeric_limits<float>::max();
-};
+// _____________________________________________________________________________
+void GammaCorrector::doPostProcess(Image* imagePtr,
+                                   const size_t& startPixel,
+                                   const size_t& endPixel) const {
+  float invGamma = 1.0f / m_Gamma;
+  // Loop over all pixels and correct them.
+  #pragma omp parallel for schedule(dynamic, 100)
+  for (int i = startPixel; i < static_cast<int>(endPixel); ++i) {
+    // Get the pixel coordinates from i.
+    int x = i % imagePtr->getWidth();
+    int y = i / imagePtr->getWidth();
+    // Get the color.
+    const Color& color = imagePtr->getPixel(x, y);
+    // Set the corrected color.
+    Color correctedColor(pow(color.r(), invGamma),
+                         pow(color.g(), invGamma),
+                         pow(color.b(), invGamma));
+    imagePtr->setPixel(x, y, correctedColor);
+  }
+}
 
-namespace constants {
-  // ___________________________________________________________________________
-  const double EPSILON = 1e-8;
-
-  // ___________________________________________________________________________
-  const double TEPSILON = 1e-2;
-
-  // ___________________________________________________________________________
-  const unsigned char maxDepth = 1;
-
-  // ___________________________________________________________________________
-  const REAL minColorContribution = 0.001;
-
-  // ___________________________________________________________________________
-  const REAL PI = 3.1415926535897932;
-  // ___________________________________________________________________________
-  const uint64_t DefaultSamplesPerDim = 1;
-}  // namespace constants
