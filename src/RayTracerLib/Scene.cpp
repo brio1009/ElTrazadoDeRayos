@@ -438,6 +438,36 @@ void monteCarloScene(vector<Shape*>* shapes,
 // _____________________________________________________________________________
 void openHemisphereScene(vector<Camera*>* cameras,
                          Scene* scenePtr) {
+  // A simple Scene that shows full Hemisphere rendering.
+  // Bottom floor.
+  Rectangle* bottom = new Rectangle(glm::vec3(0, 1, 0), glm::vec2(20, 10));
+  bottom->setPosition(glm::vec4(0, -10, 0, 1));
+  bottom->setClipBackplane(true);
+  bottom->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
+  scenePtr->addShape(bottom);
+
+  // Left box.
+  Box* box = new Box(5, 5, 5);
+  glm::mat4 trans(glm::translate(glm::mat4(1.0), glm::vec3(-15, -7.5, -4)));
+  trans = glm::rotate(trans, glm::radians(-25.0f), glm::vec3(0, 1, 0));
+  box->setMaterialPtr(new MonteCarloMaterial(Color(1, 0.0, 0.0)));
+  box->transform(trans);
+  //scenePtr->addShape(box);
+  // Right ball.
+  Ellipsoid* ball = new Ellipsoid(2.5, 2.5, 2.5);
+  trans = glm::mat4(glm::translate(glm::mat4(1.0), glm::vec3(15, -7.5, -4)));
+  trans = glm::rotate(trans, glm::radians(-25.0f), glm::vec3(0, 1, 0));
+  ball->setMaterialPtr(new MonteCarloMaterial(Color(0.0, 0.0, 0.9)));
+  ball->transform(trans);
+  //scenePtr->addShape(ball);
+
+  // Add the camera.
+  PerspectiveCamera* cam = new PerspectiveCamera(1280, 720,
+                                                 glm::radians(85.0f));
+  trans = glm::mat4(1.0);
+  cam->transform(glm::translate(trans, glm::vec3(0, 0, 27)));
+  cam->setUsePostProcessing(false);
+  cameras->push_back(cam);
 }
 
 // _____________________________________________________________________________
@@ -447,8 +477,8 @@ Scene::Scene() {
   printf("map value: %s\n", typeid(*(PropertyManager::classProperties["CompoundShape"])).name());
   // testMap.emplace("asd", 1);
   */
-  monteCarloScene(&_shapes, &_lights, &m_Cameras, this);
-  // monteCarloCSG(&_shapes, &_lights, &m_Cameras);
+  // monteCarloScene(&_shapes, &_lights, &m_Cameras, this);
+  openHemisphereScene(&m_Cameras, this);
   // defaultScene();
   // cgCube();
 }

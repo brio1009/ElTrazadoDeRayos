@@ -147,12 +147,13 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
       float phi(0);
       float theta(0);
       if (regularSampling) {
-        phi = AdaptiveSampler::generateHalton(i, 2);
-        theta = AdaptiveSampler::generateHalton(i, 3);
+        size_t index = rand() % 20;
+        phi = AdaptiveSampler::generateHalton(index, 2);
+        theta = AdaptiveSampler::generateHalton(index, 3);
       } else {
         phi = rand() / static_cast<float>(RAND_MAX);  // NOLINT
         theta = rand() / static_cast<float>(RAND_MAX);  // NOLINT
-        theta *= 0.998f;  // Do this to prevent rays in tangent direction.
+//        theta *= 0.998f;  // Do this to prevent rays in tangent direction.
       }
       // Transform them to uniform samples.
       phi *= 2.0f * constants::PI;
@@ -195,11 +196,12 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
       } else {
         lightColor = scene.backgroundColor(newRay);
       }
-
+      float albedo = 1.0f;
+      float brdfValue = albedo / constants::PI;
       // Add the color to the return intensity.
-      hemisphereColor += lightColor;
+      hemisphereColor += lightColor * cos(theta) * brdfValue;
     }
-    hemisphereColor *= (1.0f / hemisphereSamples);
+    hemisphereColor *= (constants::PI * 2.0f / hemisphereSamples);
   }
 
   // Combine and return the color.

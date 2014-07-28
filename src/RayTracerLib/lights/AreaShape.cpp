@@ -34,13 +34,13 @@ SOFTWARE.
 
 
 // Implementation for Rectangle.
-// ____________________________________________________________________________
+// _____________________________________________________________________________
 template<>
 size_t AreaShape<Rectangle>::numSamples() const {
   return 1;
 }
 
-// ____________________________________________________________________________
+// _____________________________________________________________________________
 template<>
 glm::vec4 AreaShape<Rectangle>::getSample(const size_t sampleNr) const {
   glm::vec3 rectPoint = (AdaptiveSampler::generateHalton(sampleNr, 2) - 0.5f)
@@ -51,7 +51,7 @@ glm::vec4 AreaShape<Rectangle>::getSample(const size_t sampleNr) const {
   return getPosition();
 }
 
-// ____________________________________________________________________________
+// _____________________________________________________________________________
 template<>
 float AreaShape<Rectangle>::area() const {
   // Times 4 because extent is radius.
@@ -59,19 +59,22 @@ float AreaShape<Rectangle>::area() const {
 }
 
 // Implementation for Ellipsoid.
-// ____________________________________________________________________________
+// _____________________________________________________________________________
 template<>
 size_t AreaShape<Ellipsoid>::numSamples() const {
-  return 10;
+  return 20;
 }
 
-// ____________________________________________________________________________
+// _____________________________________________________________________________
 template<>
 glm::vec4 AreaShape<Ellipsoid>::getSample(const size_t sampleNr) const {
-  return getTransformMatrix() * glm::vec4(glm::sphericalRand(1.0f), 1.0f);
+  // TODO(bauschp, Mon Jul 28 11:33:37 CEST 2014): fix so ellipsoids are sampled
+  // the right way.
+  return getTransformMatrix() *
+        glm::vec4(glm::sphericalRand(this->radii().x), 1.0f);
 }
 
-// ____________________________________________________________________________
+// _____________________________________________________________________________
 template<>
 float AreaShape<Ellipsoid>::area() const {
   // Approximated according to
