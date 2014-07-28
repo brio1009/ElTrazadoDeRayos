@@ -28,8 +28,6 @@ SOFTWARE.
 #include <algorithm>
 #include <limits>
 
-const Color Color::_outOfRangeColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
-
 // _____________________________________________________________________________
 Color::Color(const Color& color) : _r(color.r()),
                                    _g(color.g()),
@@ -98,6 +96,13 @@ Color Color::operator*(const double& rhs) {
 }
 
 // _____________________________________________________________________________
+Color Color::outOfRangeColor() const {
+  // Just scale it to the max value.
+  float invMax = 1.0 / std::max(_r, std::max(_g, _b));
+  return invMax * (*this);
+}
+
+// _____________________________________________________________________________
 void Color::setR(const float r) {
   _r = r;
 }
@@ -120,7 +125,7 @@ void Color::setA(const float a) {
 // _____________________________________________________________________________
 int Color::getRAsInt() const {
   if (isOutOfRange()) {
-    return floatToInt(_outOfRangeColor.r());
+    return floatToInt(outOfRangeColor().r());
   }
   return floatToInt(_r);
 }
@@ -128,7 +133,7 @@ int Color::getRAsInt() const {
 // _____________________________________________________________________________
 int Color::getGAsInt() const {
   if (isOutOfRange()) {
-    return floatToInt(_outOfRangeColor.g());
+    return floatToInt(outOfRangeColor().g());
   }
   return floatToInt(_g);
 }
@@ -136,7 +141,7 @@ int Color::getGAsInt() const {
 // _____________________________________________________________________________
 int Color::getBAsInt() const {
   if (isOutOfRange()) {
-    return floatToInt(_outOfRangeColor.b());
+    return floatToInt(outOfRangeColor().b());
   }
   return floatToInt(_b);
 }
@@ -144,7 +149,7 @@ int Color::getBAsInt() const {
 // _____________________________________________________________________________
 int Color::getAAsInt() const {
   if (isOutOfRange()) {
-    return floatToInt(_outOfRangeColor.a());
+    return floatToInt(outOfRangeColor().a());
   }
   return floatToInt(_a);
 }

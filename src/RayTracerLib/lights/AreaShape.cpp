@@ -62,7 +62,7 @@ float AreaShape<Rectangle>::area() const {
 // _____________________________________________________________________________
 template<>
 size_t AreaShape<Ellipsoid>::numSamples() const {
-  return 20;
+  return 5;
 }
 
 // _____________________________________________________________________________

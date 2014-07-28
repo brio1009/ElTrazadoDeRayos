@@ -135,6 +135,9 @@ class Color {
   /// Check if this color is out of the displayable color range.
   bool isOutOfRange() const;
 
+  /// Returns the out of range color.
+  Color outOfRangeColor() const;
+
   /// Conversion from float to int colors.
   int floatToInt(const float val) const;
 

@@ -40,7 +40,7 @@ SOFTWARE.
 #include "./Scene.h"
 #include "../samplers/RegularSampler.h"
 #include "../samplers/AdaptiveSampler.h"
-#include "../postprocessors/GammaCorrector.h"
+#include "../postprocessors/ImageNormalizer.h"
 
 using std::vector;
 
@@ -49,7 +49,7 @@ Camera::Camera(const int width, const int height)
     : _image(width, height),
       m_UsePostProcessing(true) {
   m_Sampler = std::make_shared<RegularSampler>(constants::DefaultSamplesPerDim);
-  m_PostProcessor = std::make_shared<GammaCorrector>(2.2);
+  m_PostProcessor = std::make_shared<ImageNormalizer>();
 }
 
 // _____________________________________________________________________________

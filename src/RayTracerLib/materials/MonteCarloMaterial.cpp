@@ -111,7 +111,7 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
             //
             importantShapeColor += (shapePtr->area()
                                     / (distance * distance * numSamples))
-                                   * cosThetaPrime
+                                   * cosThetaPrime * cosTheta
                                    * info.materialPtr->getColor(info,
                                                                 newRay,
                                                                 scene);
@@ -119,7 +119,7 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
         }
       }
     }
-    importantShapeColor *= (1.0 / (2.0 * constants::PI));
+    importantShapeColor *= 2.0;
     //                        / scene.importantShapes().size());
   }
 

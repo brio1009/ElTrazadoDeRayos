@@ -387,12 +387,12 @@ void monteCarloScene(vector<Shape*>* shapes,
   rectangleLight->transform(glm::translate(glm::mat4(1),
                             glm::vec3(0, 9.5, 0))
                             * rectangleLight->getTransformMatrix());
-  rectangleLight->setMaterialPtr(new ColorMaterial(Color(2, 2, 2)));
+  rectangleLight->setMaterialPtr(new ColorMaterial(Color(1, 1, 1)));
   rectangleLight->setClipBackplane(true);
   scenePtr->addShape(rectangleLight);
 
   // Create a sphere in the middle.
-  Ellipsoid* ball = new Ellipsoid(2, 2, 2);
+  Ellipsoid* ball = new AreaShape<Ellipsoid>(2, 2, 2);
   ball->setPosition(glm::vec4(-4, -8, -2, 1));
   ball->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
   scenePtr->addShape(ball);
@@ -477,8 +477,8 @@ Scene::Scene() {
   printf("map value: %s\n", typeid(*(PropertyManager::classProperties["CompoundShape"])).name());
   // testMap.emplace("asd", 1);
   */
-  // monteCarloScene(&_shapes, &_lights, &m_Cameras, this);
-  openHemisphereScene(&m_Cameras, this);
+  monteCarloScene(&_shapes, &_lights, &m_Cameras, this);
+  // openHemisphereScene(&m_Cameras, this);
   // defaultScene();
   // cgCube();
 }
