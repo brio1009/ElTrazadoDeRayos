@@ -381,7 +381,7 @@ void monteCarloScene(vector<Shape*>* shapes,
   top->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
 
   // Top area light.
-  AreaShape<Rectangle>* rectangleLight =
+  Rectangle* rectangleLight =
                     new AreaShape<Rectangle>(glm::vec3(0, -1, 0),
                                              glm::vec2(4, 4));
   rectangleLight->transform(glm::translate(glm::mat4(1),
@@ -392,7 +392,7 @@ void monteCarloScene(vector<Shape*>* shapes,
   scenePtr->addShape(rectangleLight);
 
   // Create a sphere in the middle.
-  Ellipsoid* ball = new AreaShape<Ellipsoid>(2, 2, 2);
+  Ellipsoid* ball = new Ellipsoid(2, 2, 2);
   ball->setPosition(glm::vec4(-4, -8, -2, 1));
   ball->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
   scenePtr->addShape(ball);
@@ -452,14 +452,14 @@ void openHemisphereScene(vector<Camera*>* cameras,
   trans = glm::rotate(trans, glm::radians(-25.0f), glm::vec3(0, 1, 0));
   box->setMaterialPtr(new MonteCarloMaterial(Color(1, 0.0, 0.0)));
   box->transform(trans);
-  //scenePtr->addShape(box);
+  // scenePtr->addShape(box);
   // Right ball.
   Ellipsoid* ball = new Ellipsoid(2.5, 2.5, 2.5);
   trans = glm::mat4(glm::translate(glm::mat4(1.0), glm::vec3(15, -7.5, -4)));
   trans = glm::rotate(trans, glm::radians(-25.0f), glm::vec3(0, 1, 0));
   ball->setMaterialPtr(new MonteCarloMaterial(Color(0.0, 0.0, 0.9)));
   ball->transform(trans);
-  //scenePtr->addShape(ball);
+  // scenePtr->addShape(ball);
 
   // Add the camera.
   PerspectiveCamera* cam = new PerspectiveCamera(1280, 720,
