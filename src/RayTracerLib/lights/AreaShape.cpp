@@ -43,12 +43,10 @@ size_t AreaShape<Rectangle>::numSamples() const {
 // _____________________________________________________________________________
 template<>
 glm::vec4 AreaShape<Rectangle>::getSample(const size_t sampleNr) const {
-  glm::vec3 rectPoint = (AdaptiveSampler::generateHalton(sampleNr, 2) - 0.5f)
-                          * glm::vec3(2.0f * extent().x, 0, 0)
-                        + (AdaptiveSampler::generateHalton(sampleNr, 3) - 0.5f)
-                          * glm::vec3(0, 0, 2.0f * extent().y);
-  // return getTransformMatrix() * glm::vec4(rectPoint, 1);
-  return getPosition();
+  glm::vec2 randVal = glm::linearRand(glm::vec2(-0.5f), glm::vec2(0.5f));
+  glm::vec3 rectPoint = randVal.x * glm::vec3(2.0f * extent().x, 0, 0)
+                        + randVal.y * glm::vec3(0, 0, 2.0f * extent().y);
+  return getTransformMatrix() * glm::vec4(rectPoint, 1);
 }
 
 // _____________________________________________________________________________
@@ -62,7 +60,7 @@ float AreaShape<Rectangle>::area() const {
 // _____________________________________________________________________________
 template<>
 size_t AreaShape<Ellipsoid>::numSamples() const {
-  return 5;
+  return 1;
 }
 
 // _____________________________________________________________________________

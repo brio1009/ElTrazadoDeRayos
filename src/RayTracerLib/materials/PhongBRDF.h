@@ -24,34 +24,34 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_MATERIALS_MONTECARLOMATERIAL_H_
-#define RAYTRACERLIB_MATERIALS_MONTECARLOMATERIAL_H_
+#ifndef RAYTRACERLIB_MATERIALS_PHONGBRDF_H_
+#define RAYTRACERLIB_MATERIALS_PHONGBRDF_H_
 
 #include <glm/glm.hpp>
-#include <memory>
-#include "./PhongMaterial.h"
 
-// Forward declaration.
-class Color;
-class BRDF;
+#include "./BRDF.h"
 
-/// Phong material that shades the object with the phong reflection model.
-class MonteCarloMaterial : public PhongMaterial {
+class IntersectionInfo;
+class Ray;
+
+class PhongBRDF : public BRDF {
  public:
-  /// Constructor. Randoms a color.
-  MonteCarloMaterial();
+  PhongBRDF() { }
+  ~PhongBRDF() {}
+  /// generates a theta and phi for given position. (position not used yet, but
+  /// there could be uses for it when creating subsurfacescattering materials.
+  glm::vec2 generateHemisphereSample(
+        const Ray& incomingRay,
+        const IntersectionInfo& intersectionInfo,
+        const size_t& num) const;
 
-  /// Constructor.
-  explicit MonteCarloMaterial(const Color& color);
-
-  /// Returns the color for the given position, normal and ray direction.
-  virtual Color getColor(const IntersectionInfo& intersectionInfo,
-                         const Ray& incomingRay,
-                         const Scene& scene) const;
- private:
-  std::shared_ptr<BRDF> m_BRDF;
+  /// Returnes the value p(X_i) that is used in the rendering equation.
+  float getPDFOfX(const glm::vec2& sample) const;
+  /// Returnes the value of the BRDF at given position with given omegas.
+  float evaluateBRDF(
+          const glm::vec4& position,
+          const glm::vec2& omegaIn,
+          const glm::vec2& omegaOut) const;
 };
-
-#endif  // RAYTRACERLIB_MATERIALS_MONTECARLOMATERIAL_H_
-
+#endif  // RAYTRACERLIB_MATERIALS_PHONGBRDF_H_
 

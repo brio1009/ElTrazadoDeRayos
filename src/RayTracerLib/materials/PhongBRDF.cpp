@@ -22,36 +22,30 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#include "./PhongBRDF.h"
+#include "../Constants.h"
 
-#pragma once
-#ifndef RAYTRACERLIB_MATERIALS_MONTECARLOMATERIAL_H_
-#define RAYTRACERLIB_MATERIALS_MONTECARLOMATERIAL_H_
+// _____________________________________________________________________________
+glm::vec2 PhongBRDF::generateHemisphereSample(
+      const Ray& incomingRay,
+      const IntersectionInfo& intersectionInfo,
+      const size_t& num) const {
+  glm::vec2 out(
+        rand()/static_cast<float>(RAND_MAX),   //NOLINT
+        rand()/static_cast<float>(RAND_MAX));  //NOLINT
+  out.x *= 2.0f * constants::PI;
+  out.y = acos(1.0f - out.y);
+  return out;
+}
 
-#include <glm/glm.hpp>
-#include <memory>
-#include "./PhongMaterial.h"
-
-// Forward declaration.
-class Color;
-class BRDF;
-
-/// Phong material that shades the object with the phong reflection model.
-class MonteCarloMaterial : public PhongMaterial {
- public:
-  /// Constructor. Randoms a color.
-  MonteCarloMaterial();
-
-  /// Constructor.
-  explicit MonteCarloMaterial(const Color& color);
-
-  /// Returns the color for the given position, normal and ray direction.
-  virtual Color getColor(const IntersectionInfo& intersectionInfo,
-                         const Ray& incomingRay,
-                         const Scene& scene) const;
- private:
-  std::shared_ptr<BRDF> m_BRDF;
-};
-
-#endif  // RAYTRACERLIB_MATERIALS_MONTECARLOMATERIAL_H_
-
-
+// _____________________________________________________________________________
+float PhongBRDF::getPDFOfX(const glm::vec2& sample) const {
+  return 0.5f / constants::PI;
+}
+// _____________________________________________________________________________
+float PhongBRDF::evaluateBRDF(
+        const glm::vec4& position,
+        const glm::vec2& omegaIn,
+        const glm::vec2& omegaOut) const {
+  return 1.0f / constants::PI;
+}

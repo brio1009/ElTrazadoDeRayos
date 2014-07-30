@@ -31,9 +31,11 @@ SOFTWARE.
 #include <glm/gtc/random.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <cstdlib>
+#include <cassert>
 #include <cmath>
 #include <algorithm>
 #include <vector>
+#include <memory>
 #include "../lights/AreaShape.h"
 #include "../samplers/AdaptiveSampler.h"
 #include "./Color.h"
@@ -43,12 +45,21 @@ SOFTWARE.
 #include "./Light.h"
 #include "./Ray.h"
 #include "../Solver.h"
+#include "./BRDF.h"
+#include "./PhongBRDF.h"
+
 
 using std::vector;
 
 // _____________________________________________________________________________
 MonteCarloMaterial::MonteCarloMaterial()
     : PhongMaterial() {
+  m_BRDF = std::make_shared<PhongBRDF>();
+}
+// _____________________________________________________________________________
+MonteCarloMaterial::MonteCarloMaterial(const Color& color)
+      : PhongMaterial(color) {
+  m_BRDF = std::make_shared<PhongBRDF>();
 }
 
 // _____________________________________________________________________________
@@ -65,7 +76,7 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
   bool sampleImportantShapes(true);
 
   // Number of samples in the hemisphere.
-  size_t hemisphereSamples = 1;
+  size_t hemisphereSamples = m_BRDF->getSampleCount();
 
   // Boolean to decide if regular smapling should be used for the "random"
   // hemisphere samples.
@@ -144,31 +155,23 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
     // Shoot sample rays into the hemisphere.
     for (size_t i = 0; i < hemisphereSamples; ++i) {
       // Get a sample on a circle around the hitpoint.
-      float phi(0);
-      float theta(0);
-      if (regularSampling) {
-        size_t index = rand() % 20;
-        phi = AdaptiveSampler::generateHalton(index, 2);
-        theta = AdaptiveSampler::generateHalton(index, 3);
-      } else {
-        phi = rand() / static_cast<float>(RAND_MAX);  // NOLINT
-        theta = rand() / static_cast<float>(RAND_MAX);  // NOLINT
-//        theta *= 0.998f;  // Do this to prevent rays in tangent direction.
-      }
-      // Transform them to uniform samples.
-      phi *= 2.0f * constants::PI;
-      theta = acos(1.0f - theta);
+      // omega.x = phi
+      // omega.y = theta
+      glm::vec2 omega = m_BRDF->generateHemisphereSample(
+            incomingRay,
+            intersectionInfo,
+            i);
 
       // Get the direction from phi and theta.
       glm::vec3 rotatedTangent = glm::rotate(tangent,
-                                             static_cast<float>(phi),
+                                             static_cast<float>(omega.x),
                                              normal);
       // Get the cross between rotatedTangent and normal, so we can rotate the
       // rotatedTangent towards the normal.
       glm::vec3 crossTangent = glm::cross(rotatedTangent, normal);
 
       rotatedTangent = glm::rotate(normal,
-                                   static_cast<float>(theta),
+                                   static_cast<float>(omega.y),
                                    crossTangent);
 
       glm::vec4 direction = glm::vec4(rotatedTangent, 0);
@@ -179,9 +182,10 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
       newRay.setDirection(direction);
       newRay.setOrigin(intersectionInfo.hitPoint);
       newRay.rayInfo().depth = incomingRay.rayInfo().depth + 1;
+      // TODO(bauschp, Wed Jul 30 15:01:24 CEST 2014): is this right?
       newRay.rayInfo().colorContribution =
                                         incomingRay.rayInfo().colorContribution
-                                        * cos(theta);
+                                        * cos(omega.y);
       IntersectionInfo info = scene.traceRay(newRay);
       if (info.materialPtr) {
         // Don't use this sample if we sample important shapes seperately and
@@ -196,12 +200,15 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
       } else {
         lightColor = scene.backgroundColor(newRay);
       }
-      float albedo = 1.0f;
-      float brdfValue = albedo / constants::PI;
+      float brdfValue = m_BRDF->evaluateBRDF(
+                  intersectionInfo.hitPoint,  // Position on the surface.
+                  glm::vec2(),                // incoming direction.
+                  glm::vec2());               // outgoing direction.
+      float invPDFValue = 1.0f / m_BRDF->getPDFOfX(glm::vec2());  // outgoing.
       // Add the color to the return intensity.
-      hemisphereColor += lightColor * cos(theta) * brdfValue;
+      hemisphereColor += lightColor * cos(omega.y) * brdfValue * invPDFValue;
     }
-    hemisphereColor *= (constants::PI * 2.0f / hemisphereSamples);
+    hemisphereColor *= (1.0f / hemisphereSamples);
   }
 
   // Combine and return the color.
