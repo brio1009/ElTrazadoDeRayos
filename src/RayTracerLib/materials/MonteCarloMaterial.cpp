@@ -82,6 +82,19 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
   // hemisphere samples.
   bool regularSampling(false);
 
+  // Normal of the object at the position.
+  glm::vec3 normal = glm::vec3(glm::normalize(intersectionInfo.normal));
+
+  // Get the tangent.
+  glm::vec3 tangent(0, 0, 1);
+
+  glm::vec3 up(0, 1, 0);
+  glm::vec3 diff = glm::abs(normal) - up;
+
+  if (!solve::isZero(glm::dot(diff, diff))) {
+    tangent = glm::cross(normal, up);
+  }
+
   // -------------------------- LIGHT SAMPLING --------------------------------
   // Color of the important shapes.
   Color importantShapeColor(0, 0, 0);
@@ -101,7 +114,8 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
         newRay.setDirection(direction);
         newRay.setOrigin(intersectionInfo.hitPoint);
         newRay.rayInfo().depth = incomingRay.rayInfo().depth + 1;
-        float cosTheta = glm::dot(intersectionInfo.normal, newRay.direction());
+        float theta = glm::angle(intersectionInfo.normal, newRay.direction());
+        float cosTheta = cos(theta);
         if (cosTheta <= 0.0f) {
           continue;
         }
@@ -119,10 +133,20 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
             if (cosThetaPrime <= 0.0f) {
               continue;
             }
+            // Calculate the phi.
+            float phi = glm::orientedAngle(glm::vec3(intersectionInfo.normal),
+                                             glm::vec3(newRay.direction()),
+                                             tangent);
             //
+            float brdfValue = m_BRDF->evaluateBRDF(
+                  intersectionInfo.hitPoint,  // Position on the surface.
+                  glm::vec2(),                // incoming direction.
+                  glm::vec2(phi, theta));               // outgoing direction.
+            float invPDFValue = 1.0f / m_BRDF->getPDFOfX(glm::vec2(phi, theta));
             importantShapeColor += (shapePtr->area()
                                     / (distance * distance * numSamples))
                                    * cosThetaPrime * cosTheta
+                                   * invPDFValue * brdfValue
                                    * info.materialPtr->getColor(info,
                                                                 newRay,
                                                                 scene);
@@ -130,8 +154,6 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
         }
       }
     }
-    importantShapeColor *= 2.0;
-    //                        / scene.importantShapes().size());
   }
 
   // -------------------- RANDOM HEMISPHERE SAMPLING --------------------------
@@ -203,8 +225,8 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
       float brdfValue = m_BRDF->evaluateBRDF(
                   intersectionInfo.hitPoint,  // Position on the surface.
                   glm::vec2(),                // incoming direction.
-                  glm::vec2());               // outgoing direction.
-      float invPDFValue = 1.0f / m_BRDF->getPDFOfX(glm::vec2());  // outgoing.
+                  omega);               // outgoing direction.
+      float invPDFValue = 1.0f / m_BRDF->getPDFOfX(omega);  // outgoing.
       // Add the color to the return intensity.
       hemisphereColor += lightColor * cos(omega.y) * brdfValue * invPDFValue;
     }
