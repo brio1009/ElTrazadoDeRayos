@@ -51,8 +51,8 @@ class BRDF {
   /// Returnes the value of the BRDF at given position with given omegas.
   virtual float evaluateBRDF(
           const glm::vec4& position,
-          const glm::vec2& omegaIn,
-          const glm::vec2& omegaOut) const = 0;
+          const glm::vec4& directionIn,
+          const glm::vec4& directionOut) const = 0;
 };
 #endif  // RAYTRACERLIB_MATERIALS_BRDF_H_
 

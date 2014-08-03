@@ -23,6 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #include "./PhongBRDF.h"
+#include <algorithm>
 #include "../Constants.h"
 
 // _____________________________________________________________________________
@@ -45,7 +46,15 @@ float PhongBRDF::getPDFOfX(const glm::vec2& sample) const {
 // _____________________________________________________________________________
 float PhongBRDF::evaluateBRDF(
         const glm::vec4& position,
-        const glm::vec2& omegaIn,
-        const glm::vec2& omegaOut) const {
-  return 1.0f / constants::PI;
+        const glm::vec4& directionIn,
+        const glm::vec4& directionOut) const {
+  float kd = 0.7f;
+  float ks = 0.3f;
+  float shininess = 2.0f;
+  // Diffuse Term
+  float overallBRDFValue = kd / constants::PI;
+  // Specular Term
+  float dot = std::max(0.0f, glm::dot(-directionIn, directionOut));
+  overallBRDFValue += ks * pow(dot, shininess);
+  return overallBRDFValue;
 }

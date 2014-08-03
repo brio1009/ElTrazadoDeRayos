@@ -50,8 +50,8 @@ class PhongBRDF : public BRDF {
   /// Returnes the value of the BRDF at given position with given omegas.
   float evaluateBRDF(
           const glm::vec4& position,
-          const glm::vec2& omegaIn,
-          const glm::vec2& omegaOut) const;
+          const glm::vec4& directionIn,
+          const glm::vec4& directionOut) const;
 };
 #endif  // RAYTRACERLIB_MATERIALS_PHONGBRDF_H_
 

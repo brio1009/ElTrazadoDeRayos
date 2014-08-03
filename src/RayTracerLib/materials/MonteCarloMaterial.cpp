@@ -140,8 +140,8 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
             //
             float brdfValue = m_BRDF->evaluateBRDF(
                   intersectionInfo.hitPoint,  // Position on the surface.
-                  glm::vec2(),                // incoming direction.
-                  glm::vec2(phi, theta));               // outgoing direction.
+                  incomingRay.direction(),     // incoming direction.
+                  newRay.direction());        // outgoing direction.
             float invPDFValue = 1.0f / m_BRDF->getPDFOfX(glm::vec2(phi, theta));
             importantShapeColor += (shapePtr->area()
                                     / (distance * distance * numSamples))
@@ -224,8 +224,8 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
       }
       float brdfValue = m_BRDF->evaluateBRDF(
                   intersectionInfo.hitPoint,  // Position on the surface.
-                  glm::vec2(),                // incoming direction.
-                  omega);               // outgoing direction.
+                  incomingRay.direction(),    // incoming direction.
+                  newRay.direction());        // outgoing direction.
       float invPDFValue = 1.0f / m_BRDF->getPDFOfX(omega);  // outgoing.
       // Add the color to the return intensity.
       hemisphereColor += lightColor * cos(omega.y) * brdfValue * invPDFValue;
