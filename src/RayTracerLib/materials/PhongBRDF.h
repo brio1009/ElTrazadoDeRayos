@@ -31,27 +31,31 @@ SOFTWARE.
 
 #include "./BRDF.h"
 
-class IntersectionInfo;
+// Forward declaration.
+struct IntersectionInfo;
 class Ray;
 
 class PhongBRDF : public BRDF {
  public:
+  /// Constructor.
   PhongBRDF() { }
-  ~PhongBRDF() {}
+  /// Destructor.
+  ~PhongBRDF() { }
+
   /// generates a theta and phi for given position. (position not used yet, but
   /// there could be uses for it when creating subsurfacescattering materials.
-  glm::vec2 generateHemisphereSample(
+  virtual glm::vec2 generateHemisphereSample(
         const Ray& incomingRay,
         const IntersectionInfo& intersectionInfo,
         const size_t& num) const;
 
   /// Returnes the value p(X_i) that is used in the rendering equation.
   float getPDFOfX(const glm::vec2& sample) const;
-  /// Returnes the value of the BRDF at given position with given omegas.
-  float evaluateBRDF(
-          const glm::vec4& position,
-          const glm::vec4& directionIn,
-          const glm::vec4& directionOut) const;
-};
-#endif  // RAYTRACERLIB_MATERIALS_PHONGBRDF_H_
 
+  /// Returnes the value of the BRDF at given position with given omegas.
+  float evaluateBRDF(const glm::vec4& position,
+                     const glm::vec4& directionIn,
+                     const glm::vec4& directionOut) const;
+};
+
+#endif  // RAYTRACERLIB_MATERIALS_PHONGBRDF_H_

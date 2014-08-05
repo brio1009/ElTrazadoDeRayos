@@ -27,8 +27,10 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_MATERIALS_BRDF_H_
 #define RAYTRACERLIB_MATERIALS_BRDF_H_
 
-class IntersectionInfo;
+// Forward declaration.
+struct IntersectionInfo;
 class Ray;
+
 /// This abstract class describes the Material as BRDF.
 /// It provides theta and phi values for samples on the hemisphere.
 /// It also provides a density for theta and phi, that is nessecary,

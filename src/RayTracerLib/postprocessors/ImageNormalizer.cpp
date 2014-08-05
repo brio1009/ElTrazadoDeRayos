@@ -27,6 +27,7 @@ SOFTWARE.
 
 #include <algorithm>
 #include <cmath>
+#include <limits>
 #include "../Color.h"
 #include "../Image.h"
 
@@ -46,7 +47,8 @@ void ImageNormalizer::doPostProcess(Image* imagePtr,
       int y = i / imagePtr->getWidth();
       // Get the color.
       const Color& color = imagePtr->getPixel(x, y);
-      tMax = std::max(std::max(tMax, color.r()), std::max(color.g(), color.b()));
+      tMax = std::max(std::max(tMax, color.r()),
+                      std::max(color.g(), color.b()));
     }
     #pragma omp critical
     {

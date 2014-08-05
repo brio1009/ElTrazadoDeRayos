@@ -23,6 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #include "./PhongBRDF.h"
+
 #include <algorithm>
 #include "../Constants.h"
 
@@ -43,6 +44,7 @@ glm::vec2 PhongBRDF::generateHemisphereSample(
 float PhongBRDF::getPDFOfX(const glm::vec2& sample) const {
   return 0.5f / constants::PI;
 }
+
 // _____________________________________________________________________________
 float PhongBRDF::evaluateBRDF(
         const glm::vec4& position,
