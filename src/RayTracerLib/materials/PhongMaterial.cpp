@@ -39,27 +39,22 @@ SOFTWARE.
 #include "./Ray.h"
 
 // _____________________________________________________________________________
-PhongMaterial::PhongMaterial() {
+PhongMaterial::PhongMaterial() : PhongMaterial(Color(0, 0, 0)) {
   // Construct a random color.
   // TODO(allofus, Sun May 11 14:12:21 CEST 2014): change to threadsafe alt.
-  _color.setR((rand() % 255) / 255.0f);  //NOLINT
-  _color.setG((rand() % 255) / 255.0f);  //NOLINT
-  _color.setB((rand() % 255) / 255.0f);  //NOLINT
-  _color.setA(1.0f);
+  m_color.setR((rand() % 255) / 255.0f);  //NOLINT
+  m_color.setG((rand() % 255) / 255.0f);  //NOLINT
+  m_color.setB((rand() % 255) / 255.0f);  //NOLINT
+  m_color.setA(1.0f);
 }
 
 // _____________________________________________________________________________
 Color PhongMaterial::getColor(const IntersectionInfo& intersectionInfo,
                               const Ray& incomingRay,
                               const Scene& scene) const {
-  // TODO(allofus, Thu May  8 15:27:52 CEST 2014): Add to constructor.
-  float ka = 0.1f;
-  float kd = 0.4f;
-  float ks = 0.5f;
-
   // cause it should be between 0 and 1.
   Color sumIntensity(0, 0, 0);
-  sumIntensity += ambientTerm(Color(1, 1, 1), ka);
+  sumIntensity += ambientTerm(Color(1, 1, 1), m_ka);
 
   // Iterate over the lights.
   const std::vector<Light*>& lights = scene.lights();
@@ -73,9 +68,9 @@ Color PhongMaterial::getColor(const IntersectionInfo& intersectionInfo,
       Ray lightRay = lightPtr->getRay(intersectionInfo.hitPoint);
       sumIntensity += diffuseTerm(lightColor,
                                   -lightRay.direction(),
-                                  normNormal, kd);
+                                  normNormal, m_kd);
       sumIntensity += specularTerm(lightColor, -lightRay.direction(),
-          normNormal, -incomingRay.direction(), ks);
+          normNormal, -incomingRay.direction(), m_ks, m_shiny);
     }
   }
   return color() * sumIntensity;

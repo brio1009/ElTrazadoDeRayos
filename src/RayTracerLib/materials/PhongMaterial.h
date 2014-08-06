@@ -38,7 +38,20 @@ class PhongMaterial : public Material {
   PhongMaterial();
 
   /// Constructor.
-  explicit PhongMaterial(const Color& color) : _color(color) { }
+  explicit PhongMaterial(const Color& color)
+                  : PhongMaterial(color, 0.6f, 0.4f, 0.0f, 20.0f) { }
+
+  /// Constructor
+  PhongMaterial(const Color& color,
+                const float kd,
+                const float ks,
+                const float ka,
+                const float shiny)
+                  : m_color(color),
+                  m_shiny(shiny),
+                  m_kd(kd),
+                  m_ks(ks),
+                  m_ka(ka) { }
 
   /// Returns the color for the given position, normal and ray direction.
   virtual Color getColor(const IntersectionInfo& intersectionInfo,
@@ -48,7 +61,7 @@ class PhongMaterial : public Material {
  protected:
   /// Getter for the color.
   virtual const Color& color(const glm::vec2& uv = glm::vec2()) const {
-    return _color;
+    return m_color;
   }
 
   /// Helper to compute the ambient color.
@@ -68,7 +81,11 @@ class PhongMaterial : public Material {
 
  private:
   /// Color member.
-  Color _color;
+  Color m_color;
+  float m_shiny;
+  float m_kd;
+  float m_ks;
+  float m_ka;
 };
 
 #endif  // RAYTRACERLIB_MATERIALS_PHONGMATERIAL_H_

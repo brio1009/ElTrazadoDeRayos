@@ -29,14 +29,14 @@ SOFTWARE.
 
 #include <glm/glm.hpp>
 #include <memory>
-#include "./PhongMaterial.h"
+#include "./Material.h"
+#include "../Color.h"
 
 // Forward declaration.
-class Color;
 class BRDF;
 
 /// Phong material that shades the object with the phong reflection model.
-class MonteCarloMaterial : public PhongMaterial {
+class MonteCarloMaterial : public Material {
  public:
   /// Constructor. Randoms a color.
   MonteCarloMaterial();
@@ -50,6 +50,7 @@ class MonteCarloMaterial : public PhongMaterial {
                          const Scene& scene) const;
  private:
   std::shared_ptr<BRDF> m_BRDF;
+  Color m_color;
 };
 
 #endif  // RAYTRACERLIB_MATERIALS_MONTECARLOMATERIAL_H_

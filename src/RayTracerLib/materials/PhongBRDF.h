@@ -37,8 +37,14 @@ class Ray;
 
 class PhongBRDF : public BRDF {
  public:
+  PhongBRDF(const float rohDiffuse,
+            const float rohSpecular,
+            const float shiny)
+              : m_shiny(shiny),
+                m_rohDiffuse(rohDiffuse),
+                m_rohSpecular(rohSpecular) { }
   /// Constructor.
-  PhongBRDF() { }
+  PhongBRDF() : PhongBRDF(0.6f, 0.4f, 20.0f) { }
   /// Destructor.
   ~PhongBRDF() { }
 
@@ -56,6 +62,11 @@ class PhongBRDF : public BRDF {
   float evaluateBRDF(const glm::vec4& position,
                      const glm::vec4& directionIn,
                      const glm::vec4& directionOut) const;
+
+ private:
+  float m_shiny;
+  float m_rohDiffuse;
+  float m_rohSpecular;
 };
 
 #endif  // RAYTRACERLIB_MATERIALS_PHONGBRDF_H_

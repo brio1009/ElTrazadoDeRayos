@@ -52,13 +52,12 @@ SOFTWARE.
 using std::vector;
 
 // _____________________________________________________________________________
-MonteCarloMaterial::MonteCarloMaterial()
-    : PhongMaterial() {
+MonteCarloMaterial::MonteCarloMaterial() {
   m_BRDF = std::make_shared<PhongBRDF>();
 }
 // _____________________________________________________________________________
 MonteCarloMaterial::MonteCarloMaterial(const Color& color)
-      : PhongMaterial(color) {
+    : m_color(color) {
   m_BRDF = std::make_shared<PhongBRDF>();
 }
 
@@ -234,5 +233,5 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
   }
 
   // Combine and return the color.
-  return color() * (hemisphereColor + importantShapeColor);
+  return m_color * (hemisphereColor + importantShapeColor);
 }

@@ -50,13 +50,10 @@ float PhongBRDF::evaluateBRDF(
         const glm::vec4& position,
         const glm::vec4& directionIn,
         const glm::vec4& directionOut) const {
-  float kd = 0.7f;
-  float ks = 0.3f;
-  float shininess = 2.0f;
   // Diffuse Term
-  float overallBRDFValue = kd / constants::PI;
+  float overallBRDFValue = m_rohDiffuse / constants::PI;
   // Specular Term
   float dot = std::max(0.0f, glm::dot(-directionIn, directionOut));
-  overallBRDFValue += ks * pow(dot, shininess);
+  overallBRDFValue += m_rohSpecular * pow(dot, m_shiny);
   return overallBRDFValue;
 }
