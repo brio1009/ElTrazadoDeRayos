@@ -27,14 +27,13 @@ SOFTWARE.
 #define GLM_FORCE_RADIANS
 
 // RayTracerLib.
-#include <Ellipsoid.h>
 #include <Image.h>
-#include <Material.h>
-#include <OrthogonalCamera.h>
-#include <PerspectiveCamera.h>
-#include <Plane.h>
 #include <Ray.h>
 #include <Scene.h>
+#include <cameras/PerspectiveCamera.h>
+#include <materials/Material.h>
+#include <shapes/Ellipsoid.h>
+#include <shapes/Plane.h>
 // C Header.
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

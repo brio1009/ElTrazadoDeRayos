@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "./Shape.h"
+#include "shapes/Shape.h"
 
 #include <glm/glm.hpp>
 
@@ -35,8 +35,8 @@ SOFTWARE.
 #include "./Color.h"
 #include "./IntersectionInfo.h"
 #include "./Ray.h"
-#include "./ShadowMaterial.h"
-#include "./shapes/ProjectorFunctions.h"
+#include "materials/ShadowMaterial.h"
+#include "shapes/ProjectorFunctions.h"
 
 using std::vector;
 

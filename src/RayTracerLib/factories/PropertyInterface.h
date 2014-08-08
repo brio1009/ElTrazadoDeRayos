@@ -27,7 +27,7 @@ SOFTWARE.
 #define RAYTRACERLIB_FACTORIES_PROPERTYINTERFACE_H_
 
 #include <string>
-#include "./Factory.h"
+#include "factories/Factory.h"
 
 ///
 template <class BaseClass>

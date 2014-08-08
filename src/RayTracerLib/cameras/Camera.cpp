@@ -35,12 +35,12 @@ SOFTWARE.
 
 #include "./Constants.h"
 #include "./IntersectionInfo.h"
-#include "./Material.h"
+#include "materials/Material.h"
 #include "./Ray.h"
 #include "./Scene.h"
-#include "../samplers/RegularSampler.h"
-#include "../samplers/AdaptiveSampler.h"
-#include "../postprocessors/GammaCorrector.h"
+#include "samplers/RegularSampler.h"
+#include "samplers/AdaptiveSampler.h"
+#include "postprocessors/GammaCorrector.h"
 
 using std::vector;
 

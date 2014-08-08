@@ -27,11 +27,11 @@ SOFTWARE.
 
 #include <glm/glm.hpp>
 #include <cstdio>
-#include "./IntersectionInfo.h"
 #include "./Constants.h"
-#include "./Scene.h"
+#include "./IntersectionInfo.h"
 #include "./Ray.h"
-#include "./Material.h"
+#include "./Scene.h"
+#include "materials/Material.h"
 
 // _____________________________________________________________________________
 Ray OrthogonalCamera::createPixelCornerRay(

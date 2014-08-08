@@ -33,12 +33,13 @@ SOFTWARE.
 #include <limits>
 #include <vector>
 
-#include "../Color.h"
-#include "../Constants.h"
-#include "../IntersectionInfo.h"
-#include "../Spatial.h"
-#include "../factories/PropertyInterface.h"
-#include "../materials/Material.h"
+#include "./Color.h"
+#include "./Constants.h"
+#include "./IntersectionInfo.h"
+#include "./Spatial.h"
+#include "factories/Factory.h"
+#include "factories/PropertyInterface.h"
+#include "materials/Material.h"
 
 // Forward declaration.
 class Ray;

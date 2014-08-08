@@ -30,7 +30,6 @@ SOFTWARE.
 #include <map>
 #include <utility>
 #include <string>
-#include "../shapes/Shape.h"
 #include "./Property.h"
 /// WOW THIS IS UGLY!!!
 template<class Base, class Special>
