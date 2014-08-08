@@ -2,7 +2,7 @@ solution "ElTrazadoDeRayos"
 
 language "C++"
 location("./" .. _ACTION)  -- Where to put the project files.
-includedirs {"../include", "../include/glm", "../src/**"}
+includedirs {"../include", "../include/glm", "../include/rapidxml", "../src/RayTracerLib"}
 libdirs {"../lib"}
 flags {"StaticRuntime"}
 

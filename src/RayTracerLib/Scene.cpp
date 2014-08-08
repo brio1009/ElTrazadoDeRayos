@@ -61,6 +61,61 @@ using std::vector;
 
 
 // _____________________________________________________________________________
+void pathTraceGlobal(vector<Shape*>* shapes,
+                     vector<Light*>* lights,
+                     vector<Camera*>* cameras,
+                     Scene* scenePtr) {
+  // Bottom floor.
+  Rectangle* bottom = new Rectangle(glm::vec3(0, 1, 0), glm::vec2(20, 20));
+  bottom->setPosition(glm::vec4(0, -1.875, 0, 1));
+  bottom->setClipBackplane(true);
+  shapes->push_back(bottom);
+
+  bottom->setMaterialPtr(new MonteCarloMaterial(Color(0.3, 0.9, 0.4)));
+
+  CompoundShape* sha1 = new CompoundShape(
+        new Ellipsoid(1.5, 99999, 1.5),
+        new Box(4, 3.75, 4));
+  sha1->setUseChildMaterials(false);
+  sha1->setOperator(CompoundShape::Operator::intersectionOp);
+  sha1->setMaterialPtr(new MonteCarloMaterial(Color(0.8, 0.8, 0.8)));
+  scenePtr->addShape(sha1);
+
+  Box* box = new Box(10, 2.5, 1);
+  shapes->push_back(box);
+  glm::mat4 trans(glm::translate(glm::mat4(1.0), glm::vec3(0, -0.625, -2)));
+  box->setMaterialPtr(new MonteCarloMaterial(Color(0.9, 0.9, 0.9)));
+  box->transform(trans);
+
+  Ellipsoid* ball1 = new Ellipsoid(0.6125, 0.6125, 0.6125);
+  ball1->setMaterialPtr(new MonteCarloMaterial(Color(0.9, 0.3, 0.5)));
+  trans = glm::translate(glm::mat4(1.0), glm::vec3(-2.1125, -1.2625, 0));
+  ball1->transform(trans);
+  shapes->push_back(ball1);
+
+  Ellipsoid* ball2 = new Ellipsoid(0.5, 0.5, 0.5);
+  ball2->setMaterialPtr(new MonteCarloMaterial(Color(0.9, 0.9, 0.9)));
+  trans = glm::translate(glm::mat4(1.0), glm::vec3(0, -1.375, 2));
+  ball2->transform(trans);
+  shapes->push_back(ball2);
+
+  Ellipsoid* ball3 = new Ellipsoid(0.8333, 0.8333, 0.8333);
+  ball3->setMaterialPtr(new MonteCarloMaterial(Color(0.9, 0.9, 0.9)));
+  trans = glm::translate(glm::mat4(1.0), glm::vec3(0, -1.375, 2));
+  ball3->transform(trans);
+  shapes->push_back(ball3);
+
+  float angle = glm::pi<float>() * 2.0f;
+  trans = glm::rotate(glm::mat4(1.0),
+      (angle / 20) * (-1), glm::vec3(0, 1, 0));
+  trans = glm::translate(trans, glm::vec3(0, 0, 23));
+  PerspectiveCamera* cam = new PerspectiveCamera(1280, 720,
+                                                 glm::radians(85.0f));
+  cam->transform(trans);
+  cam->setUsePostProcessing(false);
+  cameras->push_back(cam);
+}
+// _____________________________________________________________________________
 void monteCarloCSG(vector<Shape*>* shapes,
                    vector<Light*>* lights,
                    vector<Camera*>* cameras) {
@@ -383,7 +438,7 @@ void monteCarloScene(vector<Shape*>* shapes,
   // Top area light.
   Rectangle* rectangleLight =
                     new AreaShape<Rectangle>(glm::vec3(0, -1, 0),
-                                             glm::vec2(4, 4));
+                                             glm::vec2(2, 2));
   rectangleLight->transform(glm::translate(glm::mat4(1),
                             glm::vec3(0, 9.5, 0))
                             * rectangleLight->getTransformMatrix());
@@ -477,7 +532,8 @@ Scene::Scene() {
   printf("map value: %s\n", typeid(*(PropertyManager::classProperties["CompoundShape"])).name());
   // testMap.emplace("asd", 1);
   */
-  monteCarloScene(&_shapes, &_lights, &m_Cameras, this);
+  // monteCarloScene(&_shapes, &_lights, &m_Cameras, this);
+  pathTraceGlobal(&_shapes, &_lights, &m_Cameras, this);
   // openHemisphereScene(&m_Cameras, this);
   // defaultScene();
   // cgCube();

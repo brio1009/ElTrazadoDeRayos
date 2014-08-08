@@ -35,7 +35,7 @@ SOFTWARE.
 #include "./Constants.h"
 #include "./IntersectionInfo.h"
 #include "./Scene.h"
-#include "./Light.h"
+#include "lights/Light.h"
 #include "./Ray.h"
 
 // _____________________________________________________________________________

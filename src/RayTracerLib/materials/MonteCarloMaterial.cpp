@@ -42,11 +42,11 @@ SOFTWARE.
 #include "./Constants.h"
 #include "./IntersectionInfo.h"
 #include "./Scene.h"
-#include "./Light.h"
+#include "lights/Light.h"
 #include "./Ray.h"
-#include "../Solver.h"
-#include "./BRDF.h"
-#include "./PhongBRDF.h"
+#include "./Solver.h"
+#include "materials/BRDF.h"
+#include "materials/PhongBRDF.h"
 
 
 using std::vector;

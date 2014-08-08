@@ -31,7 +31,7 @@ SOFTWARE.
 #include "./Ray.h"
 #include "./Scene.h"
 #include "./IntersectionInfo.h"
-#include "./Material.h"
+#include "materials/Material.h"
 
 using std::vector;
 
