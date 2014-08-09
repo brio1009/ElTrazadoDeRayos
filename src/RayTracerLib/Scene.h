@@ -56,7 +56,7 @@ class Scene {
   const std::vector<Light*>& lights() const { return _lights; }
 
   /// Returnes a reference to all the cameras in the scene.
-  const std::vector<Camera*>& cameras() const { return m_Cameras; }
+  std::vector<Camera*>& cameras() { return m_Cameras; }
 
   /// Renders the scene with all cameras in the camera vector.
   void render() const;
