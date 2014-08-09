@@ -28,8 +28,10 @@ SOFTWARE.
 #define RAYTRACERLIB_FACTORIES_FACTORY_H_
 
 #include <map>
+#include <unordered_set>
 #include <utility>
 #include <string>
+#include <stack>
 #include "./Property.h"
 /// WOW THIS IS UGLY!!!
 template<class Base, class Special>
@@ -52,6 +54,7 @@ class Factory {
   /// in the factory. It provides a pure method to create a Shape of
   /// some sort.
   struct register_base {
+   public:
     virtual const char* name() const = 0;
     virtual void registerProperties() = 0;
     virtual BaseClass* create() = 0;
@@ -60,6 +63,7 @@ class Factory {
                                    const std::string& propertyValue) const = 0;
     virtual std::string getPropertyAsString(const BaseClass* const objPtr,
                                     const std::string& propertyName) const = 0;
+    virtual std::string parent() = 0;
   };
 
   /// This construct specializes the registering
@@ -74,6 +78,8 @@ class Factory {
 
     /// Returns the name of this class.
     const char* name() const { return C::name; }
+    /// Parent name.
+    virtual std::string parent() { return C::parent; }
 
     ///
     BaseClass* create() { return CreationHelper<BaseClass, C>::create(); }
@@ -119,47 +125,47 @@ class Factory {
       printf("\tRegistered property \"%s\"\n", propertyName.c_str());
     }
 
-   private:
-    /// Name of this class.
-    const char* _name;
-
     /// Map with properties of this class.
     static std::map<std::string, Property<C>*>& propertyMap() {
       /// This map stores each registered Shape. (don't modify.)
       static std::map<std::string, Property<C>*> m_PropertyMap;
       return m_PropertyMap;
     }
+
+   private:
+    /// Name of this class.
+    const char* _name;
   };
 
   /// Sets the property from string.
   static void setPropertyFromString(const std::string& className,
-                                    BaseClass* const objPtr,
-                                    const std::string& propertyName,
-                                    const std::string& propertyValue) {
-      // First find the register_base.
-      auto classIt = myMap().find(className);
-      if (classIt == myMap().end()) {
-        return;
-      }
-      register_base* base = classIt->second;
-      base->setPropertyFromString(objPtr, propertyName, propertyValue);
+                                  BaseClass* const objPtr,
+                                  const std::string& propertyName,
+                                  const std::string& propertyValue) {
+    // First find the register_base.
+    auto classIt = myMap().find(className);
+    if (classIt == myMap().end()) {
+      return;
+    }
+    register_base* base = classIt->second;
+    base->setPropertyFromString(objPtr, propertyName, propertyValue);
   }
 
   /// Get the property as string.
   static std::string getPropertyAsString(const std::string& className,
                                          const BaseClass* const objPtr,
                                          const std::string& propertyName) {
-      // First find the register_base.
-      auto classIt = myMap().find(className);
-      if (classIt == myMap().end())
-        return "";
-      register_base* base = classIt->second;
-      return base->getPropertyAsString(objPtr, propertyName);
+    // First find the register_base.
+    auto classIt = myMap().find(className);
+    if (classIt == myMap().end())
+      return "";
+    register_base* base = classIt->second;
+    return base->getPropertyAsString(objPtr, propertyName);
   }
 
   /// This method creates a Shape of given name when called.
   static BaseClass* Create(const char* name) {
-    printf("Creating %s one out of %zu many choices.\n", name, myMap().size());
+    inheritProps();
     return myMap()[name]->create();
   }
 
@@ -172,6 +178,55 @@ class Factory {
     entry->registerProperties();
     printf("\n");
     return entry->name();
+  }
+
+  /// Used to inherit all parent properties.
+  static bool inheritOnce;
+  /// Used to inherit properties.
+  static void inheritProps() {
+    if (inheritOnce) {
+      // Once flag to false.
+      inheritOnce = false;
+      // Inherit all parent stuff.
+      auto it = myMap().begin();
+      auto end = myMap().end();
+      std::unordered_set<std::string> done;
+      // none is done by definition.
+      done.insert("none");
+      std::stack<std::string> afterParent;
+      printf("Try to inherit\n");
+      while (it != end) {
+        std::string parentName = it->second->parent();
+        printf("Current element %s.\n", it->first.c_str());
+        printf("Current elements parent %s.\n", parentName.c_str());
+        // did last find work?
+        // check if it has parent that is not done yet.
+        if (done.find(parentName) == done.end()) {
+          printf("Adding %s to the stack cause it has parent %s.\n",
+                it->first.c_str(), parentName.c_str());
+          afterParent.push(it->first);
+          it = myMap().find(parentName);
+          continue;
+        }
+        // add parent properties.
+        if (parentName != "none") {
+          printf("Adding Properties of %s to %s.\n",
+                parentName.c_str(), it->first.c_str());
+          auto parent = myMap().find(parentName);
+          printf("TODO: copy properties.\n");
+        }
+        // it is done now.
+        done.insert(it->first);
+        if (!afterParent.empty()) {
+          it = myMap().find(afterParent.top());
+          afterParent.pop();
+          continue;
+        }
+        // next entry.
+        it++;
+      }
+      printf("Done inheriting.\n");
+    }
   }
 
   // This has to be done or the code will terminate with a segmentation fault
@@ -189,6 +244,8 @@ template <class C>
 const char* Factory<T>::register_specialized<C>::NAME =
       Factory<T>::Register(new Factory<T>::register_specialized<C>());
 
+template<class T>
+bool Factory<T>::inheritOnce = true;
 // NOLINT
 #define GETSET(type, varname, propname)\
 public:\

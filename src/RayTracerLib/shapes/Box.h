@@ -55,6 +55,7 @@ class Box : public Shape,
 
   /// The class name. Needed for the Factory creating the object.
   static const char* name;
+  static const char* parent;
 
  protected:
   /// Return normal.

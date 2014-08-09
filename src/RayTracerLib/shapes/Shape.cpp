@@ -41,6 +41,7 @@ SOFTWARE.
 using std::vector;
 
 const char* Shape::name = "Shape";
+const char* Shape::parent = "none";
 
 // _____________________________________________________________________________
 Shape::Shape() {

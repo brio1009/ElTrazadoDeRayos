@@ -40,6 +40,7 @@ SOFTWARE.
 using std::vector;
 
 const char* Rectangle::name = "Rectangle";
+const char* Rectangle::parent = "none";
 
 // ___________________________________________________________________________
 Rectangle::Rectangle(const glm::vec3& normal, const glm::vec2& extent)

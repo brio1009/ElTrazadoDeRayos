@@ -32,6 +32,7 @@ SOFTWARE.
 #include <cstdlib>
 #include <limits>
 #include <vector>
+#include <string>
 
 #include "./Color.h"
 #include "./Constants.h"
@@ -78,6 +79,8 @@ class Shape : public Spatial,
 
   /// Name of the shape used to serialize/deserialize.
   static const char* name;
+
+  static const char* parent;
 
  protected:
   // Returnes the appearence of the surface Point p

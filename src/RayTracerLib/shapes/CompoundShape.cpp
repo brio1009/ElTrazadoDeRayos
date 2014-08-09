@@ -39,6 +39,7 @@ SOFTWARE.
 using std::vector;
 
 const char* CompoundShape::name = "CompoundShape";
+const char* CompoundShape::parent = "none";
 
 // _____________________________________________________________________________
 CompoundShape::CompoundShape()

@@ -70,7 +70,10 @@ void SceneFileParser::parse(const std::string& filename, Scene* scene) const {
     // call all the needed atributes.
     for (rapidxml::xml_attribute<>* attr = child->first_attribute();
          attr; attr = attr->next_attribute()) {
-      printf("Calling %s with value %s on %s\n", string("set").append(attr->name()).c_str(), attr->value(), child->name());
+      printf("Calling %s with value %s on %s\n",
+            string("set").append(attr->name()).c_str(),
+            attr->value(),
+            child->name());
       shape->setFromString(attr->name(), attr->value());
     }
     scene->addShape(shape);
