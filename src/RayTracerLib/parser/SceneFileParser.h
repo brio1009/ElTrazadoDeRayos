@@ -44,7 +44,24 @@ class SceneFileParser {
   /// reads the content of the file into a fitting sized memory.
   /// IMPORTANT!!! free the memory!!!!!!!
   static char* getFileContents(const std::string& filename);
+
+  template<class T>
+  rapidxml::xml_node<>* parseGroup(rapidxml::xml_document<>* doc) const;
+
+  template<class T>
+  void parseGroupSpecial(rapidxml::xml_node<>* node, ...) const;
 };
+
+template<class T>
+rapidxml::xml_node<>* SceneFileParser::parseGroup(
+      rapidxml::xml_document<>* doc) const {
+  std::string groupName(T::name);
+  groupName.append("s");
+  rapidxml::xml_node<>* node = doc->first_node(groupName.c_str(), 0, false);
+  if (node)
+    return node->first_node();
+  return nullptr;
+}
 
 
 #endif  // RAYTRACERLIB_PARSER_SCENEFILEPARSER_H_

@@ -38,7 +38,10 @@ SOFTWARE.
 class Box : public Shape,
       private Factory<Shape>::register_specialized<Box>  {
   // Create properties (also generates getter and setter).
-  PROPERTIES(Box, )
+  PROPERTIES(Box,
+             REAL, _rX, ExtendX,
+             REAL, _rY, ExtendY,
+             REAL, _rZ, ExtendZ)
 
  public:
   // Default constructor. Dimensions are 1, 1, 1.

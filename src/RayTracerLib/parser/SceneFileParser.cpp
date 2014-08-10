@@ -31,10 +31,11 @@ SOFTWARE.
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <cstdarg>
 #include <cstdio>
-#include <string>
+#include <cstring>
 #include <map>
-#include <unordered_map>
+#include <string>
 
 #include "./Scene.h"
 #include "factories/Factory.h"
@@ -46,6 +47,87 @@ SOFTWARE.
 // UP TO HERE!!!
 
 using std::string;
+
+struct cstringcomp {
+  bool operator()(const char* s1, const char* s2) {
+    return strcmp(s1, s2) < 0;
+  }
+};
+// _____________________________________________________________________________
+template<>
+void SceneFileParser::parseGroupSpecial<Material>(
+      rapidxml::xml_node<>* node, ...) const {
+  // Get the material map from the variadic
+  va_list ap;
+  // Read needed stuff.
+  va_start(ap, node);
+  std::map<char*, Material*, cstringcomp>* materialMap =
+        reinterpret_cast<std::map<
+              char*,
+              Material*,
+              cstringcomp>*>(va_arg(ap, void*));
+  va_end(ap);
+  rapidxml::xml_node<>* child = node;
+  while (child) {
+    // add this child.
+    // TODO(bauschp, Fr 8. Aug 23:28:39 CEST 2014): check if pointer alreadt ex.
+    Material* mat = Factory<Material>::Create(child->name());
+    // call all the needed atributes.
+    for (rapidxml::xml_attribute<>* attr = child->first_attribute();
+         attr; attr = attr->next_attribute()) {
+      if (strcmp(attr->name(), "id") == 0) {
+        materialMap->emplace(attr->value(), mat);
+        continue;
+      }
+      mat->setFromString(attr->name(), attr->value());
+    }
+    child = child->next_sibling();
+  }
+  printf("Map now contains %zu elements.\n", materialMap->size());
+}
+
+// _____________________________________________________________________________
+template<>
+void SceneFileParser::parseGroupSpecial<Shape>(
+      rapidxml::xml_node<>* node, ...) const {
+  // Get the material map from the variadic
+  va_list ap;
+  // Read needed stuff.
+  va_start(ap, node);
+  std::map<char*, Material*, cstringcomp>* materialMap =
+        reinterpret_cast<std::map<
+              char*,
+              Material*,
+              cstringcomp>*>(va_arg(ap, void*));
+  Scene* scene = reinterpret_cast<Scene*>(va_arg(ap, void*));
+  va_end(ap);
+
+  // start working.
+  rapidxml::xml_node<>* child = node;
+  while (child) {
+    // add this child.
+    // TODO(bauschp, Fr 8. Aug 23:28:39 CEST 2014): check if pointer alreadt ex.
+    Shape* shape = Factory<Shape>::Create(child->name());
+    // call all the needed atributes.
+    for (rapidxml::xml_attribute<>* attr = child->first_attribute();
+         attr; attr = attr->next_attribute()) {
+      if (strcmp(attr->name(), Material::name) != 0) {
+        shape->setFromString(attr->name(), attr->value());
+        continue;
+      }
+      auto map_entry = materialMap->find(attr->value());
+      if (map_entry == materialMap->end()) {
+        perror("Material not defined above\n");
+        continue;
+      }
+      shape->setFromString(
+          Material::name,
+          StringCastHelper<const Material*>::toString(map_entry->second));
+    }
+    scene->addShape(shape);
+    child = child->next_sibling();
+  }
+}
 
 // _____________________________________________________________________________
 void SceneFileParser::parse(const std::string& filename, Scene* scene) const {
@@ -61,32 +143,13 @@ void SceneFileParser::parse(const std::string& filename, Scene* scene) const {
   }
   // now create the scene.
   // first of all create the materials in the material group.
-  // TODO(bauschp, Fr 8. Aug 23:38:28 CEST 2014): change to material.
-  rapidxml::xml_node<>* node = doc.first_node("shapes");
-  std::unordered_map<char*, Shape*> materialMap;
-  rapidxml::xml_node<>* child = node->first_node();
-  // TODO(bauschp, Fr 8. Aug 23:21:24 CEST 2014): automaticly read the class.
-  while (child) {
-    // add this child.
-    // TODO(bauschp, Fr 8. Aug 23:28:39 CEST 2014): check if pointer alreadt ex.
-    Shape* shape = Factory<Shape>::Create(child->name());
-    // call all the needed atributes.
-    for (rapidxml::xml_attribute<>* attr = child->first_attribute();
-         attr; attr = attr->next_attribute()) {
-      printf("Calling %s with value %s on %s\n",
-            string("set").append(attr->name()).c_str(),
-            attr->value(),
-            child->name());
-      shape->setFromString(attr->name(), attr->value());
-    }
-    MonteCarloMaterial* mat = new MonteCarloMaterial();
-    mat->setColor(1, 0, 0);
-    shape->setFromString(
-          "Material",
-          StringCastHelper<const Material*>::toString(mat));
-    scene->addShape(shape);
-    child = child->next_sibling();
-  }
+  std::map<char*, Material*, cstringcomp> materialMap;
+  rapidxml::xml_node<>* groupStart = parseGroup<Material>(&doc);
+  parseGroupSpecial<Material>(groupStart, &materialMap);
+
+  // now add the shapes.
+  groupStart = parseGroup<Shape>(&doc);
+  parseGroupSpecial<Shape>(groupStart, &materialMap, scene);
   // TODO(bauschp, Sa 9. Aug 09:08:20 CEST 2014): Read the cams from the file.
   float angle = glm::pi<float>() * 2.0f;
   glm::mat4 trans = glm::rotate(glm::mat4(1.0),

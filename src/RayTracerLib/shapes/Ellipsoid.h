@@ -33,8 +33,8 @@ SOFTWARE.
 #include <vector>
 
 #include "./Constants.h"
-#include "shapes/Shape.h"
 #include "factories/Factory.h"
+#include "shapes/Shape.h"
 
 // A Primitive is a Shape that is defined in its own.
 class Ellipsoid : public Shape,

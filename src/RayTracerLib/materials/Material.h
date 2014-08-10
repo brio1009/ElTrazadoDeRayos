@@ -29,6 +29,8 @@ SOFTWARE.
 
 #include <glm/glm.hpp>
 
+#include "factories/Factory.h"
+#include "factories/PropertyInterface.h"
 // Forward declaration.
 class Color;
 struct IntersectionInfo;
@@ -36,15 +38,25 @@ class Ray;
 class Scene;
 
 ///
-class Material {
+class Material : public PropertyInterface<Material>,
+                 private Factory<Material>::register_specialized<Material> {
+  PROPERTIES(Material)
  public:
   /// Destructor.
   virtual ~Material() { }
+
+  /// Adds the special properties of Shape.
+  static void createSpecialProperties() { }
 
   /// Returns the color for the given positition and normal.
   virtual Color getColor(const IntersectionInfo& intersectionInfo,
                          const Ray& incomingRay,
                          const Scene& scene) const = 0;
+
+  /// Name of the shape used to serialize/deserialize.
+  static const char* name;
+
+  static const char* parent;
 
  protected:
   /// Returns a color that should be used if the ray is not further

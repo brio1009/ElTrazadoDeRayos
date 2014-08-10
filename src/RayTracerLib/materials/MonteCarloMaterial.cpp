@@ -36,20 +36,23 @@ SOFTWARE.
 #include <algorithm>
 #include <vector>
 #include <memory>
-#include "../lights/AreaShape.h"
-#include "../samplers/AdaptiveSampler.h"
 #include "./Color.h"
 #include "./Constants.h"
 #include "./IntersectionInfo.h"
-#include "./Scene.h"
-#include "lights/Light.h"
 #include "./Ray.h"
+#include "./Scene.h"
 #include "./Solver.h"
+#include "lights/AreaShape.h"
+#include "lights/Light.h"
 #include "materials/BRDF.h"
 #include "materials/PhongBRDF.h"
+#include "samplers/AdaptiveSampler.h"
 
 
 using std::vector;
+
+const char* MonteCarloMaterial::name = "MonteCarloMaterial";
+const char* MonteCarloMaterial::parent = Material::name;
 
 // _____________________________________________________________________________
 MonteCarloMaterial::MonteCarloMaterial() {

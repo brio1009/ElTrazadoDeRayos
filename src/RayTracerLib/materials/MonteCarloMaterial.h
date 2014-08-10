@@ -29,14 +29,20 @@ SOFTWARE.
 
 #include <glm/glm.hpp>
 #include <memory>
-#include "./Material.h"
-#include "../Color.h"
+#include "./Constants.h"
+#include "./Color.h"
+#include "materials/Material.h"
 
 // Forward declaration.
 class BRDF;
 
 /// Phong material that shades the object with the phong reflection model.
-class MonteCarloMaterial : public Material {
+class MonteCarloMaterial : public Material,
+      private Factory<Material>::register_specialized<MonteCarloMaterial> {
+  PROPERTIES(MonteCarloMaterial,
+        REAL, m_color.r(), R,
+        REAL, m_color.g(), G,
+        REAL, m_color.b(), B)
  public:
   /// Constructor. Randoms a color.
   MonteCarloMaterial();
@@ -51,6 +57,11 @@ class MonteCarloMaterial : public Material {
   virtual void setColor(const float r, const float g, const float b) {
     m_color = Color(r, g, b);
   }
+
+  /// Name of the material used to serialize/deserialize.
+  static const char* name;
+
+  static const char* parent;
  private:
   std::shared_ptr<BRDF> m_BRDF;
   Color m_color;

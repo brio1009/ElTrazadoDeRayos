@@ -111,7 +111,6 @@ class Factory {
       // check parent properties.
       if (PARENT == "none")
         return;
-      printf("trying to call superclass(%s) property.\n", PARENT);
       Factory<BaseClass>::setPropertyFromString(
             PARENT,
             objPtr,
@@ -128,7 +127,6 @@ class Factory {
       // check if parent propexists.
       if (PARENT == "none")
         return "";
-      printf("trying to call superclass(%s) property.\n", PARENT);
       return Factory<BaseClass>::getPropertyAsString(
             PARENT,
             objPtr,
@@ -223,7 +221,6 @@ const char* Factory<T>::register_specialized<C>::PARENT = C::parent;
 public:\
   void set##propname(type value) {\
     varname = value; \
-    printf(#varname" is now %.2f\n", varname);\
   }\
   type get##propname() const {\
     return varname;\

@@ -113,6 +113,17 @@ class Color {
   /// A-getter.
   inline float a() const { return _a; }
 
+  // TODO(bauschp, So 10. Aug 17:56:13 CEST 2014): check if this produces
+  // errors.
+  /// R-getter.
+  inline float& r() { return _r; }
+  /// G-getter.
+  inline float& g() { return _g; }
+  /// B-getter.
+  inline float& b() { return _b; }
+  /// A-getter.
+  inline float& a() { return _a; }
+
   /// R-getter in range 0-255.
   int getRAsInt() const;
   /// G-getter in range 0-255.
