@@ -39,8 +39,11 @@ SOFTWARE.
 #include "./Scene.h"
 #include "factories/Factory.h"
 #include "shapes/Shape.h"
+// REMOVE ME!!!!
 #include "cameras/PerspectiveCamera.h"
-
+#include "materials/MonteCarloMaterial.h"
+#include "factories/Property.h"
+// UP TO HERE!!!
 
 using std::string;
 
@@ -76,6 +79,11 @@ void SceneFileParser::parse(const std::string& filename, Scene* scene) const {
             child->name());
       shape->setFromString(attr->name(), attr->value());
     }
+    MonteCarloMaterial* mat = new MonteCarloMaterial();
+    mat->setColor(1, 0, 0);
+    shape->setFromString(
+          "Material",
+          StringCastHelper<const Material*>::toString(mat));
     scene->addShape(shape);
     child = child->next_sibling();
   }

@@ -42,6 +42,7 @@ using std::vector;
 
 const char* Shape::name = "Shape";
 const char* Shape::parent = "none";
+bool Shape::onceSpecial = true;
 
 // _____________________________________________________________________________
 Shape::Shape() {

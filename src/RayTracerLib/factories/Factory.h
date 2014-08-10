@@ -85,7 +85,10 @@ class Factory {
     ///
     BaseClass* create() { return CreationHelper<BaseClass, C>::create(); }
     ///
-    virtual void registerProperties() { C::registerAllProperties(); C::createSpecialProperties(); }
+    virtual void registerProperties() {
+      C::registerAllProperties();
+      C::createSpecialProperties();
+    }
 
     /// Get the proeprty with the given name. nullptr if not exist.
     const Property<C>* const getProperty(

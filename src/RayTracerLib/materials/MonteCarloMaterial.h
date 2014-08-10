@@ -48,6 +48,9 @@ class MonteCarloMaterial : public Material {
   virtual Color getColor(const IntersectionInfo& intersectionInfo,
                          const Ray& incomingRay,
                          const Scene& scene) const;
+  virtual void setColor(const float r, const float g, const float b) {
+    m_color = Color(r, g, b);
+  }
  private:
   std::shared_ptr<BRDF> m_BRDF;
   Color m_color;

@@ -54,10 +54,12 @@ class Shape : public Spatial,
   /// Constructor.
   Shape();
 
-  // TODO(bauschp, So 10. Aug 14:34:30 CEST 2014): those will be added
-  // in every subclass. Find a way to reduce overhead.
+  /// Adds the special properties of Shape.
   static void createSpecialProperties() {
-    printf("ADDING SPECIAL PROPS\n");
+    if (!onceSpecial)
+      return;
+    onceSpecial = false;
+    printf("ADDING SPECIAL PROPS TO SHAPE\n");
     RegisterProperty<REAL>("X",
           &Shape::setX,
           nullptr);
@@ -66,6 +68,9 @@ class Shape : public Spatial,
           nullptr);
     RegisterProperty<REAL>("Z",
           &Shape::setZ,
+          nullptr);
+    RegisterProperty<const Material*>("Material",
+          &Shape::setMaterialPtr,
           nullptr);
   }
 
@@ -108,6 +113,7 @@ class Shape : public Spatial,
 
  private:
   const Material* _materialPtr;
+  static bool onceSpecial;
 };
 
 #endif  // RAYTRACERLIB_SHAPES_SHAPE_H_

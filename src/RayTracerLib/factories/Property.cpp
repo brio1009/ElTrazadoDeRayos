@@ -27,6 +27,8 @@ SOFTWARE.
 
 #include <string>
 
+class Material;
+
 // Specializations for StringCastHelper.
 template <>
 std::string StringCastHelper<double>::toString(const double& value) {
@@ -38,3 +40,18 @@ double StringCastHelper<double>::fromString(const std::string& value) {
   return std::stod(value);
 }
 
+// Specializations for StringCastHelper.
+template <>
+std::string StringCastHelper<Material const*>::toString(
+      const Material* const & value) {
+  std::string result = std::to_string(reinterpret_cast<size_t>(value));
+  return result;
+}
+
+template <>
+Material const* StringCastHelper<Material const*>::fromString(
+      const std::string& value) {
+  Material const* result =
+        reinterpret_cast<Material* const>(std::stoull(value));
+  return result;
+}
