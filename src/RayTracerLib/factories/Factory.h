@@ -28,11 +28,11 @@ SOFTWARE.
 #define RAYTRACERLIB_FACTORIES_FACTORY_H_
 
 #include <map>
+#include <stack>
+#include <string>
 #include <unordered_set>
 #include <utility>
-#include <string>
-#include <stack>
-#include "./Property.h"
+#include "factories/Property.h"
 /// WOW THIS IS UGLY!!!
 template<class Base, class Special>
 class CreationHelper {
@@ -72,6 +72,7 @@ class Factory {
    public:
     /// Needed to evaluate the class name at compile time.
     static const char* NAME;
+    static const char* PARENT;
 
     /// Constructor.
     register_specialized() : _name(NAME) { }  // force name initialization
@@ -84,8 +85,7 @@ class Factory {
     ///
     BaseClass* create() { return CreationHelper<BaseClass, C>::create(); }
     ///
-    virtual void registerProperties() { C::registerAllProperties(); }
-
+    virtual void registerProperties() { C::registerAllProperties(); C::createSpecialProperties(); }
 
     /// Get the proeprty with the given name. nullptr if not exist.
     const Property<C>* const getProperty(
@@ -101,8 +101,19 @@ class Factory {
                                const std::string& propertyName,
                                const std::string& propertyValue) const {
       const Property<C>* const prop = getProperty(propertyName);
-      if (prop)
+      if (prop) {
         prop->fromString(reinterpret_cast<C*>(objPtr), propertyValue);
+        return;
+      }
+      // check parent properties.
+      if (PARENT == "none")
+        return;
+      printf("trying to call superclass(%s) property.\n", PARENT);
+      Factory<BaseClass>::setPropertyFromString(
+            PARENT,
+            objPtr,
+            propertyName,
+            propertyValue);
     }
 
     /// Get the the given property as string.
@@ -111,7 +122,14 @@ class Factory {
       const Property<C>* const prop = getProperty(propertyName);
       if (prop)
         return prop->toString(reinterpret_cast<const C* const>(objPtr));
-      return "";
+      // check if parent propexists.
+      if (PARENT == "none")
+        return "";
+      printf("trying to call superclass(%s) property.\n", PARENT);
+      return Factory<BaseClass>::getPropertyAsString(
+            PARENT,
+            objPtr,
+            propertyName);
     }
 
     /// Register property.
@@ -165,7 +183,7 @@ class Factory {
 
   /// This method creates a Shape of given name when called.
   static BaseClass* Create(const char* name) {
-    inheritProps();
+    // inheritProps();
     return myMap()[name]->create();
   }
 
@@ -178,55 +196,6 @@ class Factory {
     entry->registerProperties();
     printf("\n");
     return entry->name();
-  }
-
-  /// Used to inherit all parent properties.
-  static bool inheritOnce;
-  /// Used to inherit properties.
-  static void inheritProps() {
-    if (inheritOnce) {
-      // Once flag to false.
-      inheritOnce = false;
-      // Inherit all parent stuff.
-      auto it = myMap().begin();
-      auto end = myMap().end();
-      std::unordered_set<std::string> done;
-      // none is done by definition.
-      done.insert("none");
-      std::stack<std::string> afterParent;
-      printf("Try to inherit\n");
-      while (it != end) {
-        std::string parentName = it->second->parent();
-        printf("Current element %s.\n", it->first.c_str());
-        printf("Current elements parent %s.\n", parentName.c_str());
-        // did last find work?
-        // check if it has parent that is not done yet.
-        if (done.find(parentName) == done.end()) {
-          printf("Adding %s to the stack cause it has parent %s.\n",
-                it->first.c_str(), parentName.c_str());
-          afterParent.push(it->first);
-          it = myMap().find(parentName);
-          continue;
-        }
-        // add parent properties.
-        if (parentName != "none") {
-          printf("Adding Properties of %s to %s.\n",
-                parentName.c_str(), it->first.c_str());
-          auto parent = myMap().find(parentName);
-          printf("TODO: copy properties.\n");
-        }
-        // it is done now.
-        done.insert(it->first);
-        if (!afterParent.empty()) {
-          it = myMap().find(afterParent.top());
-          afterParent.pop();
-          continue;
-        }
-        // next entry.
-        it++;
-      }
-      printf("Done inheriting.\n");
-    }
   }
 
   // This has to be done or the code will terminate with a segmentation fault
@@ -243,10 +212,10 @@ template <class T>
 template <class C>
 const char* Factory<T>::register_specialized<C>::NAME =
       Factory<T>::Register(new Factory<T>::register_specialized<C>());
+template <class T>
+template <class C>
+const char* Factory<T>::register_specialized<C>::PARENT = C::parent;
 
-template<class T>
-bool Factory<T>::inheritOnce = true;
-// NOLINT
 #define GETSET(type, varname, propname)\
 public:\
   void set##propname(type value) {\

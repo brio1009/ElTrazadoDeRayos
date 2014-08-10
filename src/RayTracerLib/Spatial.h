@@ -50,6 +50,26 @@ class Spatial {
     _inverseTransform = glm::inverse(_transformation);
   }
 
+  // The following 3 setters cant be created automaticly because inverse has to
+  // be updated.
+  /// Sets the X value of the position vector.
+  void setX(REAL x) {
+    _transformation[3].x = x;
+    _inverseTransform = glm::inverse(_transformation);
+  }
+
+  /// Sets the Y value of the position vector.
+  void setY(REAL y) {
+    _transformation[3].y = y;
+    _inverseTransform = glm::inverse(_transformation);
+  }
+
+  /// Sets the Z value of the position vector.
+  void setZ(REAL z) {
+    _transformation[3].z = z;
+    _inverseTransform = glm::inverse(_transformation);
+  }
+
  protected:
   // the transformation of this Shape
   glm::mat4 _transformation;

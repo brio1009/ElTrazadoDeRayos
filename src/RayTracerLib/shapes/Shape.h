@@ -49,10 +49,25 @@ class Ray;
 class Shape : public Spatial,
               public PropertyInterface<Shape>,
               private Factory<Shape>::register_specialized<Shape> {
-  PROPERTIES(Shape, )
+  PROPERTIES(Shape)
  public:
   /// Constructor.
   Shape();
+
+  // TODO(bauschp, So 10. Aug 14:34:30 CEST 2014): those will be added
+  // in every subclass. Find a way to reduce overhead.
+  static void createSpecialProperties() {
+    printf("ADDING SPECIAL PROPS\n");
+    RegisterProperty<REAL>("X",
+          &Shape::setX,
+          nullptr);
+    RegisterProperty<REAL>("Y",
+          &Shape::setY,
+          nullptr);
+    RegisterProperty<REAL>("Z",
+          &Shape::setZ,
+          nullptr);
+  }
 
   /// Destructor.
   virtual ~Shape();
