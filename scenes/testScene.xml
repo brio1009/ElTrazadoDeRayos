@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<materials>
+  <!-- CASE SENSITIVE ATTRIBUTES -->
+  <MonteCarloMaterial id="testmaterial" R="0.4" G="0.8" B="1.0" />
+</materials>
 <shapes>
   <!-- CASE SENSITIVE ATTRIBUTES -->
-  <Ellipsoid RadiusX="1" RadiusY="3" RadiusZ="1" />
+  <Ellipsoid RadiusX="1" RadiusY="3" RadiusZ="1" X="10" Material="testmaterial" />
+  <Box ExtendX="5" X="-10" />
 </shapes>
