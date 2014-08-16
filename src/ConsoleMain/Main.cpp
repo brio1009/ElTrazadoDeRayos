@@ -32,6 +32,7 @@ SOFTWARE.
 #include <Scene.h>
 #include <cameras/PerspectiveCamera.h>
 #include <materials/Material.h>
+#include <parser/SceneFileParser.h>
 #include <shapes/Ellipsoid.h>
 #include <shapes/Plane.h>
 // C Header.
@@ -51,6 +52,9 @@ SOFTWARE.
 void renderTestScene(const char* fileName, size_t chunks, size_t chunkNr) {
   // Create the scene. This also adds all the objects.
   Scene scene;
+  // Load the desired Scene.
+  SceneFileParser sceneParser;
+  sceneParser.parse("testScene.xml", &scene);
   // Render all the images.
   scene.render(chunks, chunkNr);
 
