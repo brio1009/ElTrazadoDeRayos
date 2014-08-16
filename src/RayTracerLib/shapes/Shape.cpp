@@ -41,8 +41,6 @@ SOFTWARE.
 using std::vector;
 
 const char* Shape::name = "Shape";
-const char* Shape::parent = "none";
-bool Shape::onceSpecial = true;
 
 // _____________________________________________________________________________
 Shape::Shape() {
@@ -51,8 +49,9 @@ Shape::Shape() {
 
 // _____________________________________________________________________________
 Shape::~Shape() {
+  // TODO(bauschp, Sa 16. Aug 15:33:36 CEST 2014): change to shared ptr.
   if (_materialPtr) {
-    delete _materialPtr;
+    // delete _materialPtr;
   }
 }
 

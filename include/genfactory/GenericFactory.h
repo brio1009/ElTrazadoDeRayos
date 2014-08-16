@@ -201,13 +201,13 @@ template<
 void GenericFactory<Base>::helpRegisterProperties(SpecialCase) {
   // call register Properties.
   C::registerProperties();
+  printf("%zu after calling %s::registerProperties().\n", properyMap().size(), C::name);
 }
 
 template<typename Base>
 template<typename C>
 void GenericFactory<Base>::helpRegisterProperties(BasicCase) {
-  fprintf(stderr, "Couldn't find static void %s::registerProperties()\n",
-      convert_to_string(C::name).c_str());
+  fprintf(stderr, "Couldn't find static void C::registerProperties()\n");
 }
 template<typename Base>
 template<typename C, typename Type>
@@ -306,7 +306,7 @@ void GenericFactory<Base>::setProperty(
     prop->set(objPtr, value);
     return;
   }
-  perror("There is no propery with this name.");
+  fprintf(stderr, "There is no property named %s\n", propName.c_str());
 }
 
 template<typename Base>
@@ -316,7 +316,7 @@ std::string GenericFactory<Base>::getProperty(
   Property<Base>* prop = properyMap()[propName];
   if (prop)
     return prop->get(objPtr);
-  perror("There is no propery with this name.");
+  fprintf(stderr, "There is no property named %s\n", propName.c_str());
   return "ERROR";
 }
 

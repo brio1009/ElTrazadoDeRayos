@@ -40,7 +40,6 @@ SOFTWARE.
 using std::vector;
 
 const char* Box::name = "Box";
-const char* Box::parent = "Shape";
 
 // _____________________________________________________________________________
 Box::Box(REAL x, REAL y, REAL z) : _rX(x), _rY(y), _rZ(z) {

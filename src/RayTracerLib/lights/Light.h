@@ -31,7 +31,6 @@ SOFTWARE.
 #include <ctime>
 #include "./Spatial.h"
 #include "./Color.h"
-#include "factories/Factory.h"
 #include "factories/PropertyInterface.h"
 
 // Forward declaration.
@@ -39,32 +38,10 @@ class Ray;
 
 /// An abstract interface to interact with Lights.
 class Light : public Spatial,
-        public PropertyInterface<Light>,
-        private Factory<Light>::register_specialized<Light> {
-  PROPERTIES(Light,
-        REAL, m_color.r(), R,
-        REAL, m_color.g(), G,
-        REAL, m_color.b(), B)
+        public PropertyInterface<Light> {
  public:
   /// Destructor.
   virtual ~Light() { }
-
-  /// Adds the special properties of Shape.
-  static void createSpecialProperties() {
-    if (!onceSpecial)
-      return;
-    onceSpecial = false;
-    printf("ADDING SPECIAL PROPS TO LIGHT\n");
-    RegisterProperty<REAL>("X",
-          &Light::setX,
-          nullptr);
-    RegisterProperty<REAL>("Y",
-          &Light::setY,
-          nullptr);
-    RegisterProperty<REAL>("Z",
-          &Light::setZ,
-          nullptr);
-  }
 
   /// Returns a ray from this light to the given position pos.
   virtual Ray getRay(const glm::vec4& pos) const = 0;
@@ -91,7 +68,6 @@ class Light : public Spatial,
  private:
   /// The color of the light.
   Color m_color;
-  static bool onceSpecial;
 };
 
 #endif  // RAYTRACERLIB_LIGHTS_LIGHT_H_

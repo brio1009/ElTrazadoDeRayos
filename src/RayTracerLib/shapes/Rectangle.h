@@ -33,16 +33,11 @@ SOFTWARE.
 
 #include "./Constants.h"
 #include "./Shape.h"
-#include "../factories/Factory.h"
 
 ///
-class Rectangle : public Shape,
-      private Factory<Shape>::register_specialized<Rectangle>  {
-  // Create properties (also generates getter and setter).
-  PROPERTIES(Rectangle,
-        REAL, m_Extent.x, ExtentX,
-        REAL, m_Extent.y, ExtentY)
-
+class Rectangle : public Shape {
+  GETSET(float, m_Extent.x, ExtentX)
+  GETSET(float, m_Extent.y, ExtentY)
  public:
   /// Default constructor. Normal is y-up.
   Rectangle() : Rectangle(glm::vec3(0, 1, 0), glm::vec2(1, 1)) { }
@@ -66,16 +61,6 @@ class Rectangle : public Shape,
   /// Getter for extent.
   const glm::vec2& extent() const { return m_Extent; }
 
-  static void createSpecialProperties() {
-    if (!onceSpecial)
-      return;
-    onceSpecial = false;
-    printf("ADDING SPECIAL PROPS TO RECTANGLE\n");
-    RegisterProperty<float>("nX", &Rectangle::setNormalX, nullptr);
-    RegisterProperty<float>("nY", &Rectangle::setNormalY, nullptr);
-    RegisterProperty<float>("nZ", &Rectangle::setNormalZ, nullptr);
-    RegisterProperty<bool>("NoBack", &Rectangle::setClipBackplane, nullptr);
-  }
   // ################### SPECIAL PROPERTIES #######################
   /// sets the X compnent of the normal.
   void setNormalX(float x) {
@@ -94,10 +79,43 @@ class Rectangle : public Shape,
   // ################### SPECIAL PROPERTIES END ###################
   /// The class name. Needed for the Factory creating the object.
   static const char* name;
-  static const char* parent;
 
   void setNormal(const glm::vec3& normal);
 
+  Rectangle* create() const {
+    return new Rectangle();
+  }
+
+  static void registerProperties() {
+    static bool m_lock(true);
+    if (!m_lock)
+      return;
+    m_lock = false;
+    genfactory::GenericFactory<Shape>::registerProperty(
+        "nX",
+        &Rectangle::setNormalX,
+        &Rectangle::noGet);
+    genfactory::GenericFactory<Shape>::registerProperty(
+        "nY",
+        &Rectangle::setNormalY,
+        &Rectangle::noGet);
+    genfactory::GenericFactory<Shape>::registerProperty(
+        "nZ",
+        &Rectangle::setNormalZ,
+        &Rectangle::noGet);
+    genfactory::GenericFactory<Shape>::registerProperty(
+        "ExtentX",
+        &Rectangle::setExtentX,
+        &Rectangle::noGet);
+    genfactory::GenericFactory<Shape>::registerProperty(
+        "ExtentY",
+        &Rectangle::setExtentY,
+        &Rectangle::noGet);
+    genfactory::GenericFactory<Shape>::registerProperty(
+        "NoBack",
+        &Rectangle::setClipBackplane,
+        &Rectangle::noGet);
+  }
 
  private:
   /// Extent int x- and z-direction.
@@ -107,9 +125,19 @@ class Rectangle : public Shape,
 
   /// Signals if the the rectangle should be rendered from the back.
   bool m_ClipBackplane;
-  static bool onceSpecial;
 };
 
+namespace genfactory {
+template <>
+inline std::string StringCastHelper<bool>::toString(const bool& value) {
+  return std::to_string(value);
+}
+
+template <>
+inline bool StringCastHelper<bool>::fromString(const std::string& value) {
+  return std::stoi(value) == 1;
+}
+}  // namespace genfactory
 
 #endif  // RAYTRACERLIB_SHAPES_RECTANGLE_H_
 

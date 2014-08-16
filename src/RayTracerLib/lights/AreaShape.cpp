@@ -36,6 +36,8 @@ SOFTWARE.
 #include "./IntersectionInfo.h"
 
 
+template<>
+const char* AreaShape<Rectangle>::name = "RectangleImportant";
 // Implementation for Rectangle.
 // _____________________________________________________________________________
 template<>

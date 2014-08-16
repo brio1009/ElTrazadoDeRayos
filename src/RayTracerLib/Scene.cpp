@@ -55,7 +55,6 @@ SOFTWARE.
 #include "./lights/PointLight.h"
 #include "./lights/AreaLight.h"
 #include "./lights/AreaShape.h"
-#include "./factories/Factory.h"
 
 using std::vector;
 
@@ -225,10 +224,6 @@ void cgCube(vector<Shape*>* shapes,
                                   new ShadowMaterial(Color(1, 1, 1)), 10, 10));
   shapes->push_back(plane0);
 
-  // Create a shape with the factory.
-  Shape* shpa = Factory<Shape>::Create("Ellipsoid");
-  shpa->setFromString("RadiusX", "100.0");
-  shapes->push_back(shpa);
   // Lights.
   int numLights = 1;
   int lightsPerDimension = static_cast<int>(sqrt(numLights / 2.0));

@@ -29,6 +29,8 @@ SOFTWARE.
 
 #include <glm/glm.hpp>
 
+#include <genfactory/GenericFactory.h>
+
 #include <cstdlib>
 #include <limits>
 #include <vector>
@@ -38,7 +40,6 @@ SOFTWARE.
 #include "./Constants.h"
 #include "./IntersectionInfo.h"
 #include "./Spatial.h"
-#include "factories/Factory.h"
 #include "factories/PropertyInterface.h"
 #include "materials/Material.h"
 
@@ -47,32 +48,10 @@ class Ray;
 
 // This abstract class is used to define essencial parts to render a "Shape"
 class Shape : public Spatial,
-              public PropertyInterface<Shape>,
-              private Factory<Shape>::register_specialized<Shape> {
-  PROPERTIES(Shape)
+              public PropertyInterface<Shape> {
  public:
   /// Constructor.
   Shape();
-
-  /// Adds the special properties of Shape.
-  static void createSpecialProperties() {
-    if (!onceSpecial)
-      return;
-    onceSpecial = false;
-    printf("ADDING SPECIAL PROPS TO SHAPE\n");
-    RegisterProperty<REAL>("X",
-          &Shape::setX,
-          nullptr);
-    RegisterProperty<REAL>("Y",
-          &Shape::setY,
-          nullptr);
-    RegisterProperty<REAL>("Z",
-          &Shape::setZ,
-          nullptr);
-    RegisterProperty<const Material*>("Material",
-          &Shape::setMaterialPtr,
-          nullptr);
-  }
 
   /// Destructor.
   virtual ~Shape();
@@ -97,11 +76,30 @@ class Shape : public Spatial,
   /// Getter for the material pointer.
   const Material* getMaterialPtr() const { return _materialPtr; }
 
-  /// Name of the shape used to serialize/deserialize.
   static const char* name;
 
-  static const char* parent;
-
+  static void registerProperties() {
+    static bool m_lock(true);
+    if (!m_lock)
+      return;
+    m_lock = false;
+    genfactory::GenericFactory<Shape>::registerProperty<Shape, REAL>(
+        "X",
+        &Shape::setX,
+        &Shape::noGet);
+    genfactory::GenericFactory<Shape>::registerProperty<Shape, REAL>(
+        "Y",
+        &Shape::setY,
+        &Shape::noGet);
+    genfactory::GenericFactory<Shape>::registerProperty<Shape, REAL>(
+        "Z",
+        &Shape::setZ,
+        &Shape::noGet);
+    genfactory::GenericFactory<Shape>::registerProperty(
+        "Material",
+        &Shape::setMaterialPtr,
+        &Shape::getMaterialPtr);
+  }
  protected:
   // Returnes the appearence of the surface Point p
   // if p isn't on the surface everything can happen.
@@ -111,9 +109,44 @@ class Shape : public Spatial,
   /// Uv coordinates.
   virtual glm::vec2 getTextureCoord(const glm::vec4& p) const;
 
+
  private:
   const Material* _materialPtr;
-  static bool onceSpecial;
 };
+namespace genfactory {
+template <>
+inline std::string StringCastHelper<float>::toString(const float& value) {
+  return std::to_string(value);
+}
 
+template <>
+inline float StringCastHelper<float>::fromString(const std::string& value) {
+  return std::stod(value);
+}
+
+template <>
+inline std::string StringCastHelper<double>::toString(const double& value) {
+  return std::to_string(value);
+}
+
+template <>
+inline double StringCastHelper<double>::fromString(const std::string& value) {
+  return std::stod(value);
+}
+
+template <>
+inline std::string StringCastHelper<Material const*>::toString(
+      const Material* const & value) {
+  std::string result = std::to_string(reinterpret_cast<size_t>(value));
+  return result;
+}
+
+template <>
+inline Material const* StringCastHelper<Material const*>::fromString(
+      const std::string& value) {
+  Material const* result =
+        reinterpret_cast<Material* const>(std::stoull(value));
+  return result;
+}
+}  // namespace genfactory
 #endif  // RAYTRACERLIB_SHAPES_SHAPE_H_

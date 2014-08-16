@@ -29,7 +29,6 @@ SOFTWARE.
 
 #include <glm/glm.hpp>
 
-#include "factories/Factory.h"
 #include "factories/PropertyInterface.h"
 // Forward declaration.
 class Color;
@@ -38,9 +37,7 @@ class Ray;
 class Scene;
 
 ///
-class Material : public PropertyInterface<Material>,
-                 private Factory<Material>::register_specialized<Material> {
-  PROPERTIES(Material)
+class Material : public PropertyInterface<Material> {
  public:
   /// Destructor.
   virtual ~Material() { }
@@ -55,8 +52,6 @@ class Material : public PropertyInterface<Material>,
 
   /// Name of the shape used to serialize/deserialize.
   static const char* name;
-
-  static const char* parent;
 
  protected:
   /// Returns a color that should be used if the ray is not further

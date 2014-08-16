@@ -33,18 +33,10 @@ SOFTWARE.
 #include <vector>
 
 #include "./Constants.h"
-#include "factories/Factory.h"
 #include "shapes/Shape.h"
 
 // A Primitive is a Shape that is defined in its own.
-class Ellipsoid : public Shape,
-      protected Factory<Shape>::register_specialized<Ellipsoid> {
-  // Create properties (also generates getter and setter).
-  PROPERTIES(Ellipsoid,
-             REAL, _rX, RadiusX,
-             REAL, _rY, RadiusY,
-             REAL, _rZ, RadiusZ)
-
+class Ellipsoid : public Shape {
  public:
   /// Default Ellipsoid constructor.
   Ellipsoid() : Ellipsoid(1.0f, 1.0f, 1.0f) { }
@@ -59,11 +51,12 @@ class Ellipsoid : public Shape,
   /// Getter for the radius.
   glm::vec3 radii() const { return glm::vec3(_rX, _rY, _rZ); }
 
-  /// Inherit the properties of Shape.
-  /// TODO(bauschp, Sa 9. Aug 15:08:24 CEST 2014): add to PROPERTIES macro.
-  static const char* parent;
   /// The class name. Needed for the Factory creating the object.
   static const char* name;
+
+  Ellipsoid* create() const {
+    return new Ellipsoid();
+  }
 
  protected:
   /// Override.

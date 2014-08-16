@@ -26,8 +26,9 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_FACTORIES_PROPERTYINTERFACE_H_
 #define RAYTRACERLIB_FACTORIES_PROPERTYINTERFACE_H_
 
+#include <genfactory/GenericFactory.h>
+
 #include <string>
-#include "factories/Factory.h"
 
 ///
 template <class BaseClass>
@@ -38,17 +39,24 @@ class PropertyInterface {
   ///
   void setFromString(const std::string& propertyName,
                      const std::string& value) {
-    Factory<BaseClass>::setPropertyFromString(this->className(),
-                                             dynamic_cast<BaseClass*>(this),
-                                             propertyName,
-                                             value);
+    genfactory::GenericFactory<BaseClass>::setProperty(
+          propertyName,
+          dynamic_cast<BaseClass*>(this),
+          value);
   }
   ///
   std::string getValueAsString(const std::string& propertyName) const {
-    Factory<BaseClass>::getPropertyAsString(this->className(),
-                                            dynamic_cast<BaseClass*>(this),
-                                            propertyName);
+    return genfactory::GenericFactory<BaseClass>::getProperty(
+          propertyName,
+          dynamic_cast<BaseClass*>(this));
   }
+ 
+  virtual BaseClass* create() const { return nullptr; }
+
+  template<typename Type>
+  Type noGet() const { return Type(); }
+  template<typename Type>
+  void noSet(Type t) { }
 };
 
 #endif  // RAYTRACERLIB_FACTORIES_PROPERTYINTERFACE_H_

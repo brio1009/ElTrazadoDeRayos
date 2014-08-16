@@ -76,4 +76,5 @@ class Spatial {
   glm::mat4 _inverseTransform;
 };
 
+
 #endif  // RAYTRACERLIB_SPATIAL_H_

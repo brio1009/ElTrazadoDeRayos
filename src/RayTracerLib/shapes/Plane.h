@@ -33,14 +33,9 @@ SOFTWARE.
 
 #include "./Constants.h"
 #include "./Shape.h"
-#include "../factories/Factory.h"
 
 ///
-class Plane : public Shape,
-      private Factory<Shape>::register_specialized<Plane>  {
-  // Create properties (also generates getter and setter).
-  PROPERTIES(Plane, )
-
+class Plane : public Shape {
  public:
   /// Default constructor. Normal is y-up.
   Plane() : Plane(0.0, 1.0, 0.0) { }
@@ -60,7 +55,10 @@ class Plane : public Shape,
 
   /// The class name. Needed for the Factory creating the object.
   static const char* name;
-  static const char* parent;
+
+  Plane* create() const {
+    return new Plane();
+  }
 
  private:
   REAL _nX;

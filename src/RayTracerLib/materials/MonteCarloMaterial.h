@@ -35,14 +35,20 @@ SOFTWARE.
 
 // Forward declaration.
 class BRDF;
+namespace genfactory {
+template <>
+std::string StringCastHelper<double>::toString(const double& value);
+
+template <>
+double StringCastHelper<double>::fromString(const std::string& value);
+}  // namespace genfactory
 
 /// Phong material that shades the object with the phong reflection model.
-class MonteCarloMaterial : public Material,
-      private Factory<Material>::register_specialized<MonteCarloMaterial> {
-  PROPERTIES(MonteCarloMaterial,
-        REAL, m_color.r(), R,
-        REAL, m_color.g(), G,
-        REAL, m_color.b(), B)
+class MonteCarloMaterial : public Material {
+  GETSET(REAL, m_color.r(), R)
+  GETSET(REAL, m_color.g(), G)
+  GETSET(REAL, m_color.b(), B)
+
  public:
   /// Constructor. Randoms a color.
   MonteCarloMaterial();
@@ -61,7 +67,28 @@ class MonteCarloMaterial : public Material,
   /// Name of the material used to serialize/deserialize.
   static const char* name;
 
-  static const char* parent;
+  MonteCarloMaterial* create() const {
+    return new MonteCarloMaterial();
+  }
+  static void registerProperties() {
+    static bool m_lock(true);
+    if (!m_lock)
+      return;
+    m_lock = false;
+    genfactory::GenericFactory<Material>::registerProperty(
+        "R",
+        &MonteCarloMaterial::setR,
+        &MonteCarloMaterial::getR);
+    genfactory::GenericFactory<Material>::registerProperty(
+        "G",
+        &MonteCarloMaterial::setG,
+        &MonteCarloMaterial::getG);
+    genfactory::GenericFactory<Material>::registerProperty(
+        "B",
+        &MonteCarloMaterial::setB,
+        &MonteCarloMaterial::getB);
+  }
+
  private:
   std::shared_ptr<BRDF> m_BRDF;
   Color m_color;

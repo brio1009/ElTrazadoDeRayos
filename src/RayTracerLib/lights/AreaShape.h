@@ -82,6 +82,8 @@ class AreaShape : public T, public ImportantShape {
   virtual glm::vec4 getNormal(const glm::vec4& p) const {
     return T::getNormalAt(p);
   }
+  
+  static const char* name;
 };
 // Implementations of template class functions.
 template<class T>

@@ -67,4 +67,12 @@ namespace constants {
   extern const uint64_t DefaultSamplesPerDim;
 }  // namespace constants
 
+#define GETSET(type, varname, propname)\
+public:\
+void set##propname(type value) {\
+varname = value; \
+}\
+type get##propname() const {\
+return varname;\
+}
 #endif  // RAYTRACERLIB_CONSTANTS_H_

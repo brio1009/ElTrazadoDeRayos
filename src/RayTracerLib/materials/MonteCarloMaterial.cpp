@@ -52,7 +52,6 @@ SOFTWARE.
 using std::vector;
 
 const char* MonteCarloMaterial::name = "MonteCarloMaterial";
-const char* MonteCarloMaterial::parent = "Material";
 
 // _____________________________________________________________________________
 MonteCarloMaterial::MonteCarloMaterial() {

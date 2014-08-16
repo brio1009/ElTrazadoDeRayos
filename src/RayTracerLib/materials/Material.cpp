@@ -30,7 +30,6 @@ SOFTWARE.
 #include "../Ray.h"
 
 const char* Material::name = "Material";
-const char* Material::parent = "none";
 
 // _____________________________________________________________________________
 Color Material::stoppingColor() const {

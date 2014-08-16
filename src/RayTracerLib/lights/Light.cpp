@@ -27,5 +27,3 @@ SOFTWARE.
 
 
 const char* Light::name = "Light";
-const char* Light::parent = "none";
-bool Light::onceSpecial = true;

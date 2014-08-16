@@ -32,17 +32,9 @@ SOFTWARE.
 
 #include "./Constants.h"
 #include "./Shape.h"
-#include "../factories/Factory.h"
 
 // A Primitive is a Shape that is defined in its own.
-class Box : public Shape,
-      private Factory<Shape>::register_specialized<Box>  {
-  // Create properties (also generates getter and setter).
-  PROPERTIES(Box,
-             REAL, _rX, ExtendX,
-             REAL, _rY, ExtendY,
-             REAL, _rZ, ExtendZ)
-
+class Box : public Shape {
  public:
   // Default constructor. Dimensions are 1, 1, 1.
   Box() : Box(1.0, 1.0, 1.0) { }
@@ -58,7 +50,10 @@ class Box : public Shape,
 
   /// The class name. Needed for the Factory creating the object.
   static const char* name;
-  static const char* parent;
+
+  Box* create() const {
+    return new Box();
+  }
 
  protected:
   /// Return normal.

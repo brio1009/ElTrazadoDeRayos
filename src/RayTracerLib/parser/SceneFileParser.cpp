@@ -31,6 +31,9 @@ SOFTWARE.
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <genfactory/GenericFactory.h>
+#include <genfactory/Property.h>
+
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
@@ -38,12 +41,10 @@ SOFTWARE.
 #include <string>
 
 #include "./Scene.h"
-#include "factories/Factory.h"
 #include "shapes/Shape.h"
 // REMOVE ME!!!!
 #include "cameras/PerspectiveCamera.h"
 #include "materials/ColorMaterial.h"
-#include "factories/Property.h"
 // UP TO HERE!!!
 
 using std::string;
@@ -71,7 +72,11 @@ void SceneFileParser::parseGroupSpecial<Material>(
   while (child) {
     // add this child.
     // TODO(bauschp, Fr 8. Aug 23:28:39 CEST 2014): check if pointer alreadt ex.
-    Material* mat = Factory<Material>::Create(child->name());
+    Material* mat = genfactory::GenericFactory<Material>::create(child->name());
+    if (!mat) {
+      child = child->next_sibling();
+      continue;
+    }
     // call all the needed atributes.
     for (rapidxml::xml_attribute<>* attr = child->first_attribute();
          attr; attr = attr->next_attribute()) {
@@ -109,11 +114,14 @@ void SceneFileParser::parseGroupSpecial<Shape>(
     rapidxml::xml_attribute<>* tmpAttr = child->first_attribute("Light");
     Shape* shape;
     if (tmpAttr && strcmp(tmpAttr->value(), "1") == 0) {
-      shape = Factory<Shape>::CreateImportant(child->name());
-      printf("Created an ImportantShape\n");
+      shape = genfactory::GenericFactory<Shape>::create(std::string(child->name()) + "Important");
       shape->setMaterialPtr(new ColorMaterial(Color(1, 1, 1)));
     } else {
-      shape = Factory<Shape>::Create(child->name());
+      shape = genfactory::GenericFactory<Shape>::create(child->name());
+    }
+    if (!shape) {
+      child = child->next_sibling();
+      continue;
     }
     // call all the needed atributes.
     for (rapidxml::xml_attribute<>* attr = child->first_attribute();
@@ -129,7 +137,7 @@ void SceneFileParser::parseGroupSpecial<Shape>(
       }
       shape->setFromString(
           Material::name,
-          StringCastHelper<const Material*>::toString(map_entry->second));
+          genfactory::StringCastHelper<const Material*>::toString(map_entry->second));
     }
     scene->addShape(shape);
     child = child->next_sibling();
