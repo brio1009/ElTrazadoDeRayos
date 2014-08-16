@@ -23,34 +23,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "./Constants.h"
+#include "lights/Light.h"
 
-#include <cstdint>
-#include <limits>
 
-namespace RefractiveIndex {
-  const float glass = 1.52f;
-  const float water = 1.333f;
-  const float air = 1.00293f;
-  const float diamond = 2.42f;
-  const float mirror = std::numeric_limits<float>::max();
-};
-
-namespace constants {
-  // ___________________________________________________________________________
-  const double EPSILON = 1e-8;
-
-  // ___________________________________________________________________________
-  const double TEPSILON = 1e-2;
-
-  // ___________________________________________________________________________
-  const unsigned char maxDepth = 5;
-
-  // ___________________________________________________________________________
-  const REAL minColorContribution = 0.001;
-
-  // ___________________________________________________________________________
-  const REAL PI = 3.1415926535897932;
-  // ___________________________________________________________________________
-  const uint64_t DefaultSamplesPerDim = 2;
-}  // namespace constants
+const char* Light::name = "Light";
+const char* Light::parent = "none";
+bool Light::onceSpecial = true;

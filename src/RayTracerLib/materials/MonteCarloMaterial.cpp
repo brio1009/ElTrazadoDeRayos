@@ -52,7 +52,7 @@ SOFTWARE.
 using std::vector;
 
 const char* MonteCarloMaterial::name = "MonteCarloMaterial";
-const char* MonteCarloMaterial::parent = Material::name;
+const char* MonteCarloMaterial::parent = "Material";
 
 // _____________________________________________________________________________
 MonteCarloMaterial::MonteCarloMaterial() {
@@ -79,10 +79,6 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
 
   // Number of samples in the hemisphere.
   size_t hemisphereSamples = m_BRDF->getSampleCount();
-
-  // Boolean to decide if regular smapling should be used for the "random"
-  // hemisphere samples.
-  bool regularSampling(false);
 
   // Normal of the object at the position.
   glm::vec3 normal = glm::vec3(glm::normalize(intersectionInfo.normal));

@@ -27,23 +27,41 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_FACTORIES_FACTORY_H_
 #define RAYTRACERLIB_FACTORIES_FACTORY_H_
 
+#include <cstring>
 #include <map>
 #include <stack>
 #include <string>
 #include <unordered_set>
 #include <utility>
 #include "factories/Property.h"
+#include "lights/AreaShape.h"
+// Forward
+class Shape;
 /// WOW THIS IS UGLY!!!
 template<class Base, class Special>
 class CreationHelper {
  protected:
   /// Create this object.
   Base* create() { return new Special(); }
+  Base* createSpecial() { return nullptr; }
 };
 template<class Base>
 class CreationHelper<Base, Base> {
  protected:
   Base* create() { return nullptr; }
+  Base* createSpecial() { return nullptr; }
+};
+template<>
+class CreationHelper<Shape, Shape> {
+ protected:
+  Shape* create() { return nullptr; }
+  Shape* createSpecial() { return nullptr; }
+};
+template<class Special>
+class CreationHelper<Shape, Special> {
+ protected:
+  Shape* create() { return new Special(); }
+  Shape* createSpecial() { return new AreaShape<Special>(); }
 };
 
 /// This class is used to create specific Shapes (@see RayTracerLib/shapes)
@@ -58,6 +76,7 @@ class Factory {
     virtual const char* name() const = 0;
     virtual void registerProperties() = 0;
     virtual BaseClass* create() = 0;
+    virtual BaseClass* createImportant() = 0;
     virtual void setPropertyFromString(BaseClass* const objPtr,
                                    const std::string& propertyName,
                                    const std::string& propertyValue) const = 0;
@@ -84,6 +103,8 @@ class Factory {
 
     ///
     BaseClass* create() { return CreationHelper<BaseClass, C>::create(); }
+
+    BaseClass* createImportant() { return CreationHelper<BaseClass, C>::createSpecial(); }
     ///
     virtual void registerProperties() {
       C::registerAllProperties();
@@ -109,7 +130,7 @@ class Factory {
         return;
       }
       // check parent properties.
-      if (PARENT == "none")
+      if (strcmp(PARENT, "none") == 0)
         return;
       Factory<BaseClass>::setPropertyFromString(
             PARENT,
@@ -125,7 +146,7 @@ class Factory {
       if (prop)
         return prop->toString(reinterpret_cast<const C* const>(objPtr));
       // check if parent propexists.
-      if (PARENT == "none")
+      if (strcmp(PARENT, "none") == 0)
         return "";
       return Factory<BaseClass>::getPropertyAsString(
             PARENT,
@@ -186,6 +207,11 @@ class Factory {
   static BaseClass* Create(const char* name) {
     // inheritProps();
     return myMap()[name]->create();
+  }
+  /// This method creates a Shape of given name when called.
+  static BaseClass* CreateImportant(const char* name) {
+    // inheritProps();
+    return myMap()[name]->createImportant();
   }
 
  private:

@@ -29,38 +29,69 @@ SOFTWARE.
 
 #include <glm/glm.hpp>
 #include <ctime>
-#include "../Spatial.h"
-#include "../Color.h"
+#include "./Spatial.h"
+#include "./Color.h"
+#include "factories/Factory.h"
+#include "factories/PropertyInterface.h"
 
 // Forward declaration.
 class Ray;
 
 /// An abstract interface to interact with Lights.
-class Light : public Spatial {
+class Light : public Spatial,
+        public PropertyInterface<Light>,
+        private Factory<Light>::register_specialized<Light> {
+  PROPERTIES(Light,
+        REAL, m_color.r(), R,
+        REAL, m_color.g(), G,
+        REAL, m_color.b(), B)
  public:
   /// Destructor.
   virtual ~Light() { }
+
+  /// Adds the special properties of Shape.
+  static void createSpecialProperties() {
+    if (!onceSpecial)
+      return;
+    onceSpecial = false;
+    printf("ADDING SPECIAL PROPS TO LIGHT\n");
+    RegisterProperty<REAL>("X",
+          &Light::setX,
+          nullptr);
+    RegisterProperty<REAL>("Y",
+          &Light::setY,
+          nullptr);
+    RegisterProperty<REAL>("Z",
+          &Light::setZ,
+          nullptr);
+  }
 
   /// Returns a ray from this light to the given position pos.
   virtual Ray getRay(const glm::vec4& pos) const = 0;
 
   /// Returns the color of this light.
   virtual const Color& getColor() const {
-    return _color;
+    return m_color;
   }
 
   /// Sets the color of this light.
   virtual void setLightColor(const Color& color) {
-    _color = color;
+    m_color = color;
   }
 
   /// Returns the number of samples a material should use to determine if
   /// it's lit by this light.
   virtual size_t numberOfSamples() const { return 1; }
 
+  /// Name of the shape used to serialize/deserialize.
+  static const char* name;
+
+  static const char* parent;
+
  private:
   /// The color of the light.
-  Color _color;
+  Color m_color;
+  static bool onceSpecial;
 };
 
 #endif  // RAYTRACERLIB_LIGHTS_LIGHT_H_

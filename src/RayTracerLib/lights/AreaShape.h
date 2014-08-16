@@ -29,6 +29,7 @@ SOFTWARE.
 
 #include <glm/glm.hpp>
 #include <ctime>
+#include <cstdio>
 #include <limits>
 #include <utility>
 #include "../Constants.h"
@@ -61,6 +62,7 @@ class AreaShape : public T, public ImportantShape {
   template<typename... Args>
   AreaShape(Args... args) : T(std::forward<Args>(args)...) { }  // NOLINT
 
+  explicit AreaShape(const T& other) : T(other) { }
   /// We override this here, so we can set the boolean
   /// importantShape to true.
   virtual IntersectionInfo getIntersectionInfo(const Ray& ray,

@@ -40,7 +40,26 @@ double StringCastHelper<double>::fromString(const std::string& value) {
   return std::stod(value);
 }
 
-// Specializations for StringCastHelper.
+template <>
+std::string StringCastHelper<float>::toString(const float& value) {
+  return std::to_string(value);
+}
+
+template <>
+float StringCastHelper<float>::fromString(const std::string& value) {
+  return std::stod(value);
+}
+
+template <>
+std::string StringCastHelper<bool>::toString(const bool& value) {
+  return std::to_string(value);
+}
+
+template <>
+bool StringCastHelper<bool>::fromString(const std::string& value) {
+  return std::stoi(value) == 1;
+}
+
 template <>
 std::string StringCastHelper<Material const*>::toString(
       const Material* const & value) {

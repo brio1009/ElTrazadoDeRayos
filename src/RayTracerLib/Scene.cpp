@@ -229,7 +229,6 @@ void cgCube(vector<Shape*>* shapes,
   Shape* shpa = Factory<Shape>::Create("Ellipsoid");
   shpa->setFromString("RadiusX", "100.0");
   shapes->push_back(shpa);
-
   // Lights.
   int numLights = 1;
   int lightsPerDimension = static_cast<int>(sqrt(numLights / 2.0));
@@ -533,7 +532,7 @@ Scene::Scene() {
   // testMap.emplace("asd", 1);
   */
   // monteCarloScene(&_shapes, &_lights, &m_Cameras, this);
-  pathTraceGlobal(&_shapes, &_lights, &m_Cameras, this);
+  // pathTraceGlobal(&_shapes, &_lights, &m_Cameras, this);
   // openHemisphereScene(&m_Cameras, this);
   // defaultScene();
   // cgCube();

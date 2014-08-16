@@ -27,10 +27,13 @@ SOFTWARE.
 
 #include <glm/glm.hpp>
 #include <glm/gtc/random.hpp>
-#include "../samplers/AdaptiveSampler.h"
-#include "../shapes/Rectangle.h"
-#include "../shapes/Ellipsoid.h"
-#include "../IntersectionInfo.h"
+#include "samplers/AdaptiveSampler.h"
+#include "shapes/Rectangle.h"
+#include "shapes/Ellipsoid.h"
+#include "shapes/Plane.h"
+#include "shapes/Box.h"
+#include "shapes/CompoundShape.h"
+#include "./IntersectionInfo.h"
 
 
 // Implementation for Rectangle.
@@ -87,3 +90,59 @@ float AreaShape<Ellipsoid>::area() const {
                                      1.0f / p);
 }
 
+// Implementation for Box.
+// _____________________________________________________________________________
+template<>
+size_t AreaShape<Box>::numSamples() const {
+  return 0;
+}
+
+// _____________________________________________________________________________
+template<>
+glm::vec4 AreaShape<Box>::getSample(const size_t sampleNr) const {
+  return glm::vec4(0);
+}
+
+// _____________________________________________________________________________
+template<>
+float AreaShape<Box>::area() const {
+  return 1.0f;
+}
+
+// Implementation for Plane
+// _____________________________________________________________________________
+template<>
+size_t AreaShape<Plane>::numSamples() const {
+  return 0;
+}
+
+// _____________________________________________________________________________
+template<>
+glm::vec4 AreaShape<Plane>::getSample(const size_t sampleNr) const {
+  return glm::vec4(0);
+}
+
+// _____________________________________________________________________________
+template<>
+float AreaShape<Plane>::area() const {
+  return 1.0f;
+}
+
+// Implementation for CompoundShape
+// _____________________________________________________________________________
+template<>
+size_t AreaShape<CompoundShape>::numSamples() const {
+  return 0;
+}
+
+// _____________________________________________________________________________
+template<>
+glm::vec4 AreaShape<CompoundShape>::getSample(const size_t sampleNr) const {
+  return glm::vec4(0);
+}
+
+// _____________________________________________________________________________
+template<>
+float AreaShape<CompoundShape>::area() const {
+  return 1.0f;
+}

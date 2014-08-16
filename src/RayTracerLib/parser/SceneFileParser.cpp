@@ -42,7 +42,7 @@ SOFTWARE.
 #include "shapes/Shape.h"
 // REMOVE ME!!!!
 #include "cameras/PerspectiveCamera.h"
-#include "materials/MonteCarloMaterial.h"
+#include "materials/ColorMaterial.h"
 #include "factories/Property.h"
 // UP TO HERE!!!
 
@@ -106,8 +106,15 @@ void SceneFileParser::parseGroupSpecial<Shape>(
   rapidxml::xml_node<>* child = node;
   while (child) {
     // add this child.
-    // TODO(bauschp, Fr 8. Aug 23:28:39 CEST 2014): check if pointer alreadt ex.
-    Shape* shape = Factory<Shape>::Create(child->name());
+    rapidxml::xml_attribute<>* tmpAttr = child->first_attribute("Light");
+    Shape* shape;
+    if (tmpAttr && strcmp(tmpAttr->value(), "1") == 0) {
+      shape = Factory<Shape>::CreateImportant(child->name());
+      printf("Created an ImportantShape\n");
+      shape->setMaterialPtr(new ColorMaterial(Color(1, 1, 1)));
+    } else {
+      shape = Factory<Shape>::Create(child->name());
+    }
     // call all the needed atributes.
     for (rapidxml::xml_attribute<>* attr = child->first_attribute();
          attr; attr = attr->next_attribute()) {

@@ -39,7 +39,9 @@ SOFTWARE.
 class Rectangle : public Shape,
       private Factory<Shape>::register_specialized<Rectangle>  {
   // Create properties (also generates getter and setter).
-  PROPERTIES(Rectangle, )
+  PROPERTIES(Rectangle,
+        REAL, m_Extent.x, ExtentX,
+        REAL, m_Extent.y, ExtentY)
 
  public:
   /// Default constructor. Normal is y-up.
@@ -61,19 +63,51 @@ class Rectangle : public Shape,
   /// Getter for m_ClipBackplane.
   bool clipBackplane() const { return m_ClipBackplane; }
 
+  /// Getter for extent.
+  const glm::vec2& extent() const { return m_Extent; }
+
+  static void createSpecialProperties() {
+    if (!onceSpecial)
+      return;
+    onceSpecial = false;
+    printf("ADDING SPECIAL PROPS TO RECTANGLE\n");
+    RegisterProperty<float>("nX", &Rectangle::setNormalX, nullptr);
+    RegisterProperty<float>("nY", &Rectangle::setNormalY, nullptr);
+    RegisterProperty<float>("nZ", &Rectangle::setNormalZ, nullptr);
+    RegisterProperty<bool>("NoBack", &Rectangle::setClipBackplane, nullptr);
+  }
+  // ################### SPECIAL PROPERTIES #######################
+  /// sets the X compnent of the normal.
+  void setNormalX(float x) {
+    setNormal(glm::vec3(x, m_Normal.y, m_Normal.z));
+  }
+
+  /// sets the Y compnent of the normal.
+  void setNormalY(float y) {
+    setNormal(glm::vec3(m_Normal.x, y, m_Normal.z));
+  }
+
+  /// sets the Z compnent of the normal.
+  void setNormalZ(float z) {
+    setNormal(glm::vec3(m_Normal.x, m_Normal.y, z));
+  }
+  // ################### SPECIAL PROPERTIES END ###################
   /// The class name. Needed for the Factory creating the object.
   static const char* name;
   static const char* parent;
 
-  /// Getter for extent.
-  const glm::vec2& extent() const { return m_Extent; }
+  void setNormal(const glm::vec3& normal);
+
 
  private:
   /// Extent int x- and z-direction.
   glm::vec2 m_Extent;
 
+  glm::vec3 m_Normal;
+
   /// Signals if the the rectangle should be rendered from the back.
   bool m_ClipBackplane;
+  static bool onceSpecial;
 };
 
 

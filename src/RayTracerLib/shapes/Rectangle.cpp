@@ -40,7 +40,8 @@ SOFTWARE.
 using std::vector;
 
 const char* Rectangle::name = "Rectangle";
-const char* Rectangle::parent = "none";
+const char* Rectangle::parent = "Shape";
+bool Rectangle::onceSpecial = true;
 
 // ___________________________________________________________________________
 Rectangle::Rectangle(const glm::vec3& normal, const glm::vec2& extent)
@@ -48,17 +49,23 @@ Rectangle::Rectangle(const glm::vec3& normal, const glm::vec2& extent)
       m_ClipBackplane(false) {
   // Rotate vector so normal is up.
   // Get the tangent.
+  setNormal(normal);
+}
+// ___________________________________________________________________________
+void Rectangle::setNormal(const glm::vec3& normal) {
+  m_Normal = normal;
   glm::vec3 tangent(1, 0, 0);
-
+  glm::vec3 normNormal = glm::normalize(normal);
   glm::vec3 up(0, 1, 0);
-  glm::vec3 diff = glm::abs(normal) - up;
+  glm::vec3 diff = glm::abs(normNormal) - up;
 
   if (!solve::isZero(glm::dot(diff, diff))) {
-    tangent = glm::cross(normal, up);
+    tangent = glm::cross(normNormal, up);
   }
-  float angle = glm::orientedAngle(normal, up, tangent);
-  transform(glm::rotate(glm::mat4(1), angle, -tangent));  // NOLINT
-  glm::vec4 normal2 = _transformation * glm::vec4(0, 1, 0, 0);
+  float angle = glm::orientedAngle(normNormal, up, tangent);
+  // we dont want to lose the translation when we rotate the Rectangle.
+  glm::mat4 trans = glm::translate(glm::mat4(1), glm::vec3(getPosition()));
+  transform(glm::rotate(trans, angle, -tangent));  // NOLINT
 }
 
 // ___________________________________________________________________________
