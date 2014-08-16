@@ -33,7 +33,7 @@ configuration "Release"
   targetdir "../bin/release"
 
 configuration { "gmake",  "release" }
-    buildoptions { "-fopenmp" }
+    buildoptions { "-fopenmp" , "-DDISABLELITERALSTRING"}
     links { "gomp" }
 
 configuration "Debug"
@@ -56,7 +56,7 @@ configuration { "gmake",  "Profile" }
 
 -- Enable openmp for visual studio project files.
 configuration { "vs*",  "release" }
-  buildoptions { "/openmp" }
+  buildoptions { "/openmp", "/DDISABLELITERALSTRING"}
 
 -- Projects.
 project "ElTrazadoDeRayosLib"
