@@ -142,6 +142,7 @@ class GenericFactory {
   /// This is the map that holds all registered properties.
   static std::map<std::string, Property<Base>*>& properyMap();
 
+  /*
   template<
         typename C,
         typename OkCase<decltype(&C::registerProperties)>::type = 0>
@@ -149,14 +150,38 @@ class GenericFactory {
 
   template<typename C>
   static void helpRegisterProperties(BasicCase b);
+  */
+
+  // Definitions to register the classes and properties.
+  template<
+        typename C,
+        typename OkCase<decltype(&C::registerProperties)>::type = 0>
+  static void helpRegisterProperties(SpecialCase s) {
+    // call register Properties.
+    C::registerProperties();
+    printf("%zu after calling %s::registerProperties().\n", properyMap().size(), C::name);
+  }
+
+  template<typename C>
+  static void helpRegisterProperties(BasicCase b) {
+    fprintf(stderr, "Couldn't find static void C::registerProperties()\n");
+  }
+
+  //
   template<
         typename C,
         typename OkCase<decltype(C::name)>::type = 0,
         typename OkCase<decltype(&C::create)>::type = 0>
-  static void helpRegisterClass(SpecialCase s);
-  // Dont register if u cant find the name.
+  static void helpRegisterClass(SpecialCase s) {
+    registerClassWithName<C>(C::name);
+  }
+
   template<typename C>
-  static void helpRegisterClass(BasicCase b);
+  static void helpRegisterClass(BasicCase b) {
+    fprintf(stderr, "(%s) is missing the static field with the reflection "
+        "name or Base* create() const member. Make sure u add them!!.\n",
+        typeid(C).name());
+  }
 
   template<typename C>
   static void registerClassWithName(const char* const name);
@@ -193,22 +218,7 @@ std::map<std::string, Property<Base>*>& GenericFactory<Base>::properyMap() {
   static HelperPointerMap<std::string, Property<Base> > m_PropMap;
   return m_PropMap.map();
 }
-// Definitions to register the classes and properties.
-template<typename Base>
-template<
-      typename C,
-      typename OkCase<decltype(&C::registerProperties)>::type>
-void GenericFactory<Base>::helpRegisterProperties(SpecialCase) {
-  // call register Properties.
-  C::registerProperties();
-  printf("%zu after calling %s::registerProperties().\n", properyMap().size(), C::name);
-}
 
-template<typename Base>
-template<typename C>
-void GenericFactory<Base>::helpRegisterProperties(BasicCase) {
-  fprintf(stderr, "Couldn't find static void C::registerProperties()\n");
-}
 template<typename Base>
 template<typename C, typename Type>
 void GenericFactory<Base>::registerProperty(
@@ -243,23 +253,6 @@ typename std::enable_if<
   helpRegisterClass<C>(SpecialCase());
   // TODO(bauschp, Fr 15. Aug 14:16:50 CEST 2014): register all properties.
   GenericFactory<Base>::helpRegisterProperties<C>(SpecialCase());
-}
-
-template<typename Base>
-template<
-      typename C,
-      typename OkCase<decltype(C::name)>::type,
-      typename OkCase<decltype(&C::create)>::type>
-void GenericFactory<Base>::helpRegisterClass(SpecialCase) {
-  registerClassWithName<C>(C::name);
-}
-
-template<typename Base>
-template<typename C>
-void GenericFactory<Base>::helpRegisterClass(BasicCase) {
-  fprintf(stderr, "(%s) is missing the static field with the reflection "
-      "name or Base* create() const member. Make sure u add them!!.\n",
-      typeid(C).name());
 }
 
 #ifndef DISABLELITERALSTRING
