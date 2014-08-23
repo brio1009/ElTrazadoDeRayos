@@ -29,6 +29,7 @@ SOFTWARE.
 
 #include <glm/glm.hpp>
 #include <memory>
+#include <string>
 #include "./Constants.h"
 #include "./Color.h"
 #include "materials/Material.h"
@@ -75,18 +76,21 @@ class MonteCarloMaterial : public Material {
     if (!m_lock)
       return;
     m_lock = false;
-    genfactory::GenericFactory<Material>::registerProperty(
-        "R",
-        &MonteCarloMaterial::setR,
-        &MonteCarloMaterial::getR);
-    genfactory::GenericFactory<Material>::registerProperty(
-        "G",
-        &MonteCarloMaterial::setG,
-        &MonteCarloMaterial::getG);
-    genfactory::GenericFactory<Material>::registerProperty(
-        "B",
-        &MonteCarloMaterial::setB,
-        &MonteCarloMaterial::getB);
+    genfactory::GenericFactory<Material>::
+        registerProperty<MonteCarloMaterial, REAL>(
+          "R",
+          &MonteCarloMaterial::setR,
+          &MonteCarloMaterial::getR);
+    genfactory::GenericFactory<Material>::
+        registerProperty<MonteCarloMaterial, REAL>(
+          "G",
+          &MonteCarloMaterial::setG,
+          &MonteCarloMaterial::getG);
+    genfactory::GenericFactory<Material>::
+        registerProperty<MonteCarloMaterial, REAL>(
+          "B",
+          &MonteCarloMaterial::setB,
+          &MonteCarloMaterial::getB);
   }
 
  private:

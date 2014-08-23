@@ -91,27 +91,27 @@ class Rectangle : public Shape {
     if (!m_lock)
       return;
     m_lock = false;
-    genfactory::GenericFactory<Shape>::registerProperty(
+    genfactory::GenericFactory<Shape>::registerProperty<Rectangle, float>(
         "nX",
         &Rectangle::setNormalX,
         &Rectangle::noGet);
-    genfactory::GenericFactory<Shape>::registerProperty(
+    genfactory::GenericFactory<Shape>::registerProperty<Rectangle, float>(
         "nY",
         &Rectangle::setNormalY,
         &Rectangle::noGet);
-    genfactory::GenericFactory<Shape>::registerProperty(
+    genfactory::GenericFactory<Shape>::registerProperty<Rectangle, float>(
         "nZ",
         &Rectangle::setNormalZ,
         &Rectangle::noGet);
-    genfactory::GenericFactory<Shape>::registerProperty(
+    genfactory::GenericFactory<Shape>::registerProperty<Rectangle, float>(
         "ExtentX",
         &Rectangle::setExtentX,
         &Rectangle::noGet);
-    genfactory::GenericFactory<Shape>::registerProperty(
+    genfactory::GenericFactory<Shape>::registerProperty<Rectangle, float>(
         "ExtentY",
         &Rectangle::setExtentY,
         &Rectangle::noGet);
-    genfactory::GenericFactory<Shape>::registerProperty(
+    genfactory::GenericFactory<Shape>::registerProperty<Rectangle, bool>(
         "NoBack",
         &Rectangle::setClipBackplane,
         &Rectangle::noGet);

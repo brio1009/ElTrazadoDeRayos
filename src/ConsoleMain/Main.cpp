@@ -54,7 +54,7 @@ void renderTestScene(const char* fileName, size_t chunks, size_t chunkNr) {
   Scene scene;
   // Load the desired Scene.
   SceneFileParser sceneParser;
-  sceneParser.parse("testScene.xml", &scene);
+  sceneParser.parse("../../scenes/testScene.xml", &scene);
   // Render all the images.
   scene.render(chunks, chunkNr);
 
