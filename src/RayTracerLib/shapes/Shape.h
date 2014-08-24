@@ -121,7 +121,7 @@ inline std::string StringCastHelper<float>::toString(const float& value) {
 
 template <>
 inline float StringCastHelper<float>::fromString(const std::string& value) {
-  return std::stod(value);
+  return std::stof(value);
 }
 
 template <>

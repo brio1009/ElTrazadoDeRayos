@@ -50,7 +50,7 @@ class PropertyInterface {
           propertyName,
           dynamic_cast<BaseClass*>(this));
   }
- 
+
   virtual BaseClass* create() const { return nullptr; }
 
   template<typename Type>

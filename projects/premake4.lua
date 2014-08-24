@@ -2,7 +2,10 @@ solution "ElTrazadoDeRayos"
 
 language "C++"
 location("./" .. _ACTION)  -- Where to put the project files.
-includedirs {"../include", "../include/glm", "../include/rapidxml", "../src/RayTracerLib"}
+includedirs {"../include",
+             "../include/glm",
+             "../include/rapidxml",
+             "../src/RayTracerLib" }
 libdirs {"../lib"}
 flags {"StaticRuntime"}
 
@@ -21,7 +24,13 @@ elseif os.get() == "macosx" then
 end
 
 -- Configurations.
-configurations {"Release", "Debug", "Profile"}
+-- Make the profile config only for linux.
+if os.get() == "linux" then
+  configurations { "Release", "Debug", "Profile" }
+else
+  configurations { "Release", "Debug" }
+end
+
 
 -- Platforms
 platforms { "native", "universal" }
@@ -33,7 +42,7 @@ configuration "Release"
   targetdir "../bin/release"
 
 configuration { "gmake",  "release" }
-    buildoptions { "-fopenmp" , "-DDISABLELITERALSTRING"}
+    buildoptions { "-fopenmp" , "-DDISABLELITERALSTRING" }
     links { "gomp" }
 
 configuration "Debug"
@@ -44,19 +53,26 @@ configuration "Debug"
 configuration { "gmake",  "Debug" }
   links { "gomp" }
 
-configuration "Profile"
-  defines {"PROF", "PASTEL_ENABLE_OMP"}
-  flags {"Symbols", "Optimize"}
-  targetdir "../bin/prof"
-  
-configuration { "gmake",  "Profile" }
-  buildoptions{ "-pg", "-fopenmp" }
-  links { "gomp" }
-  linkoptions( "-pg" )
+-- Make the profile config only for linux.
+if os.get() == "linux" then 
+  configuration "Profile"
+    defines {"PROF", "PASTEL_ENABLE_OMP"}
+    flags {"Symbols", "Optimize"}
+    targetdir "../bin/prof"
+    
+  configuration { "gmake",  "Profile" }
+    buildoptions{ "-pg", "-fopenmp" }
+    links { "gomp" }
+    linkoptions( "-pg" )
+end
 
 -- Enable openmp for visual studio project files.
 configuration { "vs*",  "release" }
-  buildoptions { "/openmp", "/DDISABLELITERALSTRING"}
+  buildoptions { "/openmp", "/DDISABLELITERALSTRING" }
+  
+-- Disable literal string for debug vs build.
+configuration { "vs*",  "debug" }
+  buildoptions { "/DDISABLELITERALSTRING" }
 
 -- Projects.
 project "ElTrazadoDeRayosLib"
@@ -67,7 +83,6 @@ project "ElTrazadoDeRayosLib"
   elseif os.get() == "linux" then 
     postbuildcommands { "-@python2 ../cpplintHelper.py --root=src ../../src/RayTracerLib > /dev/null" }
   end
-
   -- This is nice to have so VS always uses the same uuids in its project files.
   -- Generated via http://www.uuidgenerator.net
   uuid("f2a30267-2beb-426c-9fc1-cc24c4ba9d21")

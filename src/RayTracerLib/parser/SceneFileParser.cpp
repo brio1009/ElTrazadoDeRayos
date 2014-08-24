@@ -114,7 +114,8 @@ void SceneFileParser::parseGroupSpecial<Shape>(
     rapidxml::xml_attribute<>* tmpAttr = child->first_attribute("Light");
     Shape* shape;
     if (tmpAttr && strcmp(tmpAttr->value(), "1") == 0) {
-      shape = genfactory::GenericFactory<Shape>::create(std::string(child->name()) + "Important");
+      shape = genfactory::GenericFactory<Shape>::create(
+                                std::string(child->name()) + "Important");
       shape->setMaterialPtr(new ColorMaterial(Color(1, 1, 1)));
     } else {
       shape = genfactory::GenericFactory<Shape>::create(child->name());
@@ -137,7 +138,8 @@ void SceneFileParser::parseGroupSpecial<Shape>(
       }
       shape->setFromString(
           Material::name,
-          genfactory::StringCastHelper<const Material*>::toString(map_entry->second));
+          genfactory::StringCastHelper<const Material*>::toString(
+                                                        map_entry->second));
     }
     scene->addShape(shape);
     child = child->next_sibling();
@@ -180,7 +182,14 @@ void SceneFileParser::parse(const std::string& filename, Scene* scene) const {
 }
 // _____________________________________________________________________________
 char* SceneFileParser::getFileContents(const std::string& filename) {
+  // Open file.
+#ifdef WINDOWS
+  FILE* file = nullptr;
+  fopen_s(&file, filename.c_str(), "rb");
+#else
   FILE* file = fopen(filename.c_str(), "r");
+#endif  // WINDOWS
+
   if (!file)
     return nullptr;
   // file exists.
@@ -191,7 +200,7 @@ char* SceneFileParser::getFileContents(const std::string& filename) {
   fseek(file, 0, SEEK_SET);
   char* buffer = static_cast<char*>(malloc(sizeInBytes + 1));  // + 1 needed?
   if (fread(buffer, 1LU, sizeInBytes, file) != sizeInBytes) {
-    perror("unexpected file length\n");
+    perror("SceneFileParser::getFileContents(): Unexpected file length.\n");
     fclose(file);
     free(buffer);
     return nullptr;

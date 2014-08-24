@@ -29,6 +29,7 @@ SOFTWARE.
 #define RAYTRACERLIB_CONSTANTS_H_
 
 #include <cstdint>
+#include <ctime>
 
 // TODO(bauschp): Create a Variable for floating point precision.
 //                Maybe use #define name double/float
@@ -64,7 +65,7 @@ namespace constants {
   extern const REAL PI;
 
   /// Default number of samples Camera uses to sample each pixel.
-  extern const uint64_t DefaultSamplesPerDim;
+  extern const size_t DefaultSamplesPerDim;
 }  // namespace constants
 
 #define GETSET(type, varname, propname)\

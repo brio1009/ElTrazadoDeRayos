@@ -86,9 +86,9 @@ void pathTraceGlobal(vector<Shape*>* shapes,
   box->setMaterialPtr(new MonteCarloMaterial(Color(0.9, 0.9, 0.9)));
   box->transform(trans);
 
-  Ellipsoid* ball1 = new Ellipsoid(0.6125, 0.6125, 0.6125);
-  ball1->setMaterialPtr(new MonteCarloMaterial(Color(0.9, 0.3, 0.5)));
-  trans = glm::translate(glm::mat4(1.0), glm::vec3(-2.1125, -1.2625, 0));
+  Ellipsoid* ball1 = new Ellipsoid(0.6125f, 0.6125f, 0.6125f);
+  ball1->setMaterialPtr(new MonteCarloMaterial(Color(0.9f, 0.3f, 0.5f)));
+  trans = glm::translate(glm::mat4(1.0), glm::vec3(-2.1125f, -1.2625f, 0.0f));
   ball1->transform(trans);
   shapes->push_back(ball1);
 

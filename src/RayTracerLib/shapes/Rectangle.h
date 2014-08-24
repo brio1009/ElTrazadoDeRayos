@@ -29,6 +29,7 @@ SOFTWARE.
 
 #include <glm/glm.hpp>
 
+#include <string>
 #include <vector>
 
 #include "./Constants.h"
@@ -38,6 +39,7 @@ SOFTWARE.
 class Rectangle : public Shape {
   GETSET(float, m_Extent.x, ExtentX)
   GETSET(float, m_Extent.y, ExtentY)
+
  public:
   /// Default constructor. Normal is y-up.
   Rectangle() : Rectangle(glm::vec3(0, 1, 0), glm::vec2(1, 1)) { }
