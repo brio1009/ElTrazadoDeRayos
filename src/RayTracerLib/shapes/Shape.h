@@ -28,8 +28,7 @@ SOFTWARE.
 #define RAYTRACERLIB_SHAPES_SHAPE_H_
 
 #include <glm/glm.hpp>
-
-#include <genfactory/GenericFactory.h>
+#include <genericfactory/GenericFactory_decl.h>
 
 #include <cstdlib>
 #include <limits>
@@ -83,19 +82,19 @@ class Shape : public Spatial,
     if (!m_lock)
       return;
     m_lock = false;
-    genfactory::GenericFactory<Shape>::registerProperty<Shape, REAL>(
+    genericfactory::GenericFactory<Shape>::registerProperty<Shape, REAL>(
         "X",
         &Shape::setX,
         &Shape::noGet);
-    genfactory::GenericFactory<Shape>::registerProperty<Shape, REAL>(
+    genericfactory::GenericFactory<Shape>::registerProperty<Shape, REAL>(
         "Y",
         &Shape::setY,
         &Shape::noGet);
-    genfactory::GenericFactory<Shape>::registerProperty<Shape, REAL>(
+    genericfactory::GenericFactory<Shape>::registerProperty<Shape, REAL>(
         "Z",
         &Shape::setZ,
         &Shape::noGet);
-    genfactory::GenericFactory<Shape>::registerProperty(
+    genericfactory::GenericFactory<Shape>::registerProperty(
         "Material",
         &Shape::setMaterialPtr,
         &Shape::getMaterialPtr);
@@ -113,40 +112,4 @@ class Shape : public Spatial,
  private:
   const Material* _materialPtr;
 };
-namespace genfactory {
-template <>
-inline std::string StringCastHelper<float>::toString(const float& value) {
-  return std::to_string(value);
-}
-
-template <>
-inline float StringCastHelper<float>::fromString(const std::string& value) {
-  return std::stof(value);
-}
-
-template <>
-inline std::string StringCastHelper<double>::toString(const double& value) {
-  return std::to_string(value);
-}
-
-template <>
-inline double StringCastHelper<double>::fromString(const std::string& value) {
-  return std::stod(value);
-}
-
-template <>
-inline std::string StringCastHelper<Material const*>::toString(
-      const Material* const & value) {
-  std::string result = std::to_string(reinterpret_cast<size_t>(value));
-  return result;
-}
-
-template <>
-inline Material const* StringCastHelper<Material const*>::fromString(
-      const std::string& value) {
-  Material const* result =
-        reinterpret_cast<Material* const>(std::stoull(value));
-  return result;
-}
-}  // namespace genfactory
 #endif  // RAYTRACERLIB_SHAPES_SHAPE_H_

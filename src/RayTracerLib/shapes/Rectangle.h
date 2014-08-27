@@ -93,27 +93,27 @@ class Rectangle : public Shape {
     if (!m_lock)
       return;
     m_lock = false;
-    genfactory::GenericFactory<Shape>::registerProperty<Rectangle, float>(
+    genericfactory::GenericFactory<Shape>::registerProperty<Rectangle, float>(
         "nX",
         &Rectangle::setNormalX,
         &Rectangle::noGet);
-    genfactory::GenericFactory<Shape>::registerProperty<Rectangle, float>(
+    genericfactory::GenericFactory<Shape>::registerProperty<Rectangle, float>(
         "nY",
         &Rectangle::setNormalY,
         &Rectangle::noGet);
-    genfactory::GenericFactory<Shape>::registerProperty<Rectangle, float>(
+    genericfactory::GenericFactory<Shape>::registerProperty<Rectangle, float>(
         "nZ",
         &Rectangle::setNormalZ,
         &Rectangle::noGet);
-    genfactory::GenericFactory<Shape>::registerProperty<Rectangle, float>(
+    genericfactory::GenericFactory<Shape>::registerProperty<Rectangle, float>(
         "ExtentX",
         &Rectangle::setExtentX,
         &Rectangle::noGet);
-    genfactory::GenericFactory<Shape>::registerProperty<Rectangle, float>(
+    genericfactory::GenericFactory<Shape>::registerProperty<Rectangle, float>(
         "ExtentY",
         &Rectangle::setExtentY,
         &Rectangle::noGet);
-    genfactory::GenericFactory<Shape>::registerProperty<Rectangle, bool>(
+    genericfactory::GenericFactory<Shape>::registerProperty<Rectangle, bool>(
         "NoBack",
         &Rectangle::setClipBackplane,
         &Rectangle::noGet);
@@ -129,17 +129,6 @@ class Rectangle : public Shape {
   bool m_ClipBackplane;
 };
 
-namespace genfactory {
-template <>
-inline std::string StringCastHelper<bool>::toString(const bool& value) {
-  return std::to_string(value);
-}
-
-template <>
-inline bool StringCastHelper<bool>::fromString(const std::string& value) {
-  return std::stoi(value) == 1;
-}
-}  // namespace genfactory
 
 #endif  // RAYTRACERLIB_SHAPES_RECTANGLE_H_
 

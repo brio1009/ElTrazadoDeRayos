@@ -31,8 +31,7 @@ SOFTWARE.
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <genfactory/GenericFactory.h>
-#include <genfactory/Property.h>
+#include <genericfactory/GenericFactory_impl.h>
 
 #include <cstdarg>
 #include <cstdio>
@@ -42,6 +41,7 @@ SOFTWARE.
 
 #include "./Scene.h"
 #include "shapes/Shape.h"
+#include "./Reflection.h"
 // REMOVE ME!!!!
 #include "cameras/PerspectiveCamera.h"
 #include "materials/ColorMaterial.h"
@@ -72,7 +72,8 @@ void SceneFileParser::parseGroupSpecial<Material>(
   while (child) {
     // add this child.
     // TODO(bauschp, Fr 8. Aug 23:28:39 CEST 2014): check if pointer alreadt ex.
-    Material* mat = genfactory::GenericFactory<Material>::create(child->name());
+    Material* mat =
+        genericfactory::GenericFactory<Material>::create(child->name());
     if (!mat) {
       child = child->next_sibling();
       continue;
@@ -114,11 +115,11 @@ void SceneFileParser::parseGroupSpecial<Shape>(
     rapidxml::xml_attribute<>* tmpAttr = child->first_attribute("Light");
     Shape* shape;
     if (tmpAttr && strcmp(tmpAttr->value(), "1") == 0) {
-      shape = genfactory::GenericFactory<Shape>::create(
+      shape = genericfactory::GenericFactory<Shape>::create(
                                 std::string(child->name()) + "Important");
       shape->setMaterialPtr(new ColorMaterial(Color(1, 1, 1)));
     } else {
-      shape = genfactory::GenericFactory<Shape>::create(child->name());
+      shape = genericfactory::GenericFactory<Shape>::create(child->name());
     }
     if (!shape) {
       child = child->next_sibling();
@@ -138,7 +139,7 @@ void SceneFileParser::parseGroupSpecial<Shape>(
       }
       shape->setFromString(
           Material::name,
-          genfactory::StringCastHelper<const Material*>::toString(
+          genericfactory::StringCastHelper<const Material*>::toString(
                                                         map_entry->second));
     }
     scene->addShape(shape);

@@ -36,13 +36,6 @@ SOFTWARE.
 
 // Forward declaration.
 class BRDF;
-namespace genfactory {
-template <>
-std::string StringCastHelper<double>::toString(const double& value);
-
-template <>
-double StringCastHelper<double>::fromString(const std::string& value);
-}  // namespace genfactory
 
 /// Phong material that shades the object with the phong reflection model.
 class MonteCarloMaterial : public Material {
@@ -76,17 +69,17 @@ class MonteCarloMaterial : public Material {
     if (!m_lock)
       return;
     m_lock = false;
-    genfactory::GenericFactory<Material>::
+    genericfactory::GenericFactory<Material>::
         registerProperty<MonteCarloMaterial, REAL>(
           "R",
           &MonteCarloMaterial::setR,
           &MonteCarloMaterial::getR);
-    genfactory::GenericFactory<Material>::
+    genericfactory::GenericFactory<Material>::
         registerProperty<MonteCarloMaterial, REAL>(
           "G",
           &MonteCarloMaterial::setG,
           &MonteCarloMaterial::getG);
-    genfactory::GenericFactory<Material>::
+    genericfactory::GenericFactory<Material>::
         registerProperty<MonteCarloMaterial, REAL>(
           "B",
           &MonteCarloMaterial::setB,

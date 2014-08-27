@@ -21,13 +21,13 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-#ifndef PROPERTY_H_
-#define PROPERTY_H_
+#ifndef GENERICFACTORY_PROPERTY_H_
+#define GENERICFACTORY_PROPERTY_H_
 
 #include <cstdio>
 #include <string>
 
-namespace genfactory {
+namespace genericfactory {
 /// A property consists of getter and setter.
 template<typename Base>
 class Property {
@@ -111,5 +111,5 @@ ValueType StringCastHelper<ValueType>::fromString(const std::string&) {
   static_assert(sizeof(ValueType) != sizeof(ValueType), "Specialize a"
       "StringCastHelper for your ValueType!");
 }
-}  // namespace genfactory
-#endif  // PROPERTY_H_
+}  // namespace genericfactory
+#endif  // GENERICFACTORY_PROPERTY_H_

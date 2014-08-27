@@ -28,10 +28,10 @@ SOFTWARE.
 #define RAYTRACERLIB_PARSER_SCENEFILEPARSER_H_
 
 #include <rapidxml/rapidxml.hpp>
-#include <genfactory/GenericFactory.h>
-#include <genfactory/Property.h>
 
 #include <string>
+
+#include "parser/Reflection.h"
 
 class Scene;
 // class Material;
@@ -73,25 +73,5 @@ rapidxml::xml_node<>* SceneFileParser::parseGroup(
     return node->first_node();
   return nullptr;
 }
-
-// Some specializations for StringCastHelper.
-namespace genfactory {
-
-
-
-template<>
-inline char GenericFactory<Shape>::registerAllForBase() {
-  GenericFactory<Shape>::registerClass<Shape>();
-  GenericFactory<Shape>::registerClass<Rectangle>();
-  GenericFactory<Shape>::registerClass<AreaShape<Rectangle> >();
-  return '1';
-}
-template<>
-inline char GenericFactory<Material>::registerAllForBase() {
-  GenericFactory<Material>::registerClass<Material>();
-  GenericFactory<Material>::registerClass<MonteCarloMaterial>();
-  return '1';
-}
-}  // namespace genfactory
 
 #endif  // RAYTRACERLIB_PARSER_SCENEFILEPARSER_H_
