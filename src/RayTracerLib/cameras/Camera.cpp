@@ -44,12 +44,17 @@ SOFTWARE.
 
 using std::vector;
 
+const char* Camera::name = "Camera";
+
 // _____________________________________________________________________________
 Camera::Camera(const int width, const int height)
     : _image(width, height),
       m_UsePostProcessing(true) {
   m_Sampler = std::make_shared<RegularSampler>(constants::DefaultSamplesPerDim);
   m_PostProcessor = std::make_shared<GammaCorrector>(2.2f);
+}
+void Camera::setRegularSampleSize(size_t samplesPerDim) {
+  m_Sampler = std::make_shared<RegularSampler>(samplesPerDim);
 }
 
 // _____________________________________________________________________________

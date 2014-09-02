@@ -35,6 +35,10 @@ SOFTWARE.
 
 // A Primitive is a Shape that is defined in its own.
 class Box : public Shape {
+  GETSET(REAL, _rX, DimX)
+  GETSET(REAL, _rY, DimY)
+  GETSET(REAL, _rZ, DimZ)
+
  public:
   // Default constructor. Dimensions are 1, 1, 1.
   Box() : Box(1.0, 1.0, 1.0) { }
@@ -55,13 +59,32 @@ class Box : public Shape {
     return new Box();
   }
 
+  static void registerProperties() {
+    static bool m_lock(true);
+    if (!m_lock)
+      return;
+    m_lock = false;
+    genericfactory::GenericFactory<Shape>::registerProperty<Box, REAL>(
+        "dX",
+        &Box::setDimX,
+        &Box::noGet);
+    genericfactory::GenericFactory<Shape>::registerProperty<Box, REAL>(
+        "dY",
+        &Box::setDimY,
+        &Box::noGet);
+    genericfactory::GenericFactory<Shape>::registerProperty<Box, REAL>(
+        "dZ",
+        &Box::setDimZ,
+        &Box::noGet);
+  }
+
  protected:
   /// Return normal.
   virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
 
- protected:
   /// Returns the min. position.
   glm::vec4 getMinPosition() const;
+
   /// Returns the max. position.
   glm::vec4 getMaxPosition() const;
 

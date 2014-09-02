@@ -28,14 +28,19 @@ SOFTWARE.
 #include "./Ray.h"
 
 using std::vector;
+const char* PerspectiveCamera::name = "PerspectiveCamera";
+
 // _____________________________________________________________________________
 PerspectiveCamera::PerspectiveCamera(const int width,
       const int height,
       const REAL& fovAngleInRad) : Camera(width, height) {
-  // TODO(bauschp): Insert right formula.
-  _focalLength = width / fovAngleInRad;
+  setFOV(fovAngleInRad);
 }
 
+// _____________________________________________________________________________
+void PerspectiveCamera::setFOV(REAL fieldOfView) {
+  _focalLength = _image.getWidth() / fieldOfView;
+}
 // _____________________________________________________________________________
 PerspectiveCamera::~PerspectiveCamera() { }
 // _____________________________________________________________________________

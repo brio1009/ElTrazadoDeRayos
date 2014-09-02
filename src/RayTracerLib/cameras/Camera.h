@@ -27,10 +27,14 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_CAMERAS_CAMERA_H_
 #define RAYTRACERLIB_CAMERAS_CAMERA_H_
 
+
+#include <genericfactory/GenericFactory_decl.h>
+
 #include <memory>
 
 #include "./Image.h"
 #include "./Spatial.h"
+#include "factories/PropertyInterface.h"
 
 // Foward declaration.
 class Ray;
@@ -39,7 +43,8 @@ class Sampler;
 class PostProcessor;
 
 /// Camera class.
-class Camera : public Spatial {
+class Camera : public Spatial,
+               public PropertyInterface<Camera> {
  public:
   /// Constructor.
   Camera(const int width, const int height);
@@ -82,6 +87,54 @@ class Camera : public Spatial {
   /// Getter for m_UsePostProcessing.
   bool usePostProcessing() const { return m_UsePostProcessing; }
 
+  void setWidth(size_t width) {
+    _image = Image(width, _image.getHeight());
+  }
+
+  void setHeight(size_t height) {
+    _image = Image(_image.getWidth(), height);
+  }
+
+  void setRegularSampleSize(size_t samplesPerDim);
+
+  static const char* name;
+
+  static void registerProperties() {
+    static bool m_lock(true);
+    if (!m_lock)
+      return;
+    m_lock = false;
+    genericfactory::GenericFactory<Camera>::registerProperty<Camera, REAL>(
+        "X",
+        &Camera::setX,
+        &Camera::noGet);
+    genericfactory::GenericFactory<Camera>::registerProperty<Camera, REAL>(
+        "Y",
+        &Camera::setY,
+        &Camera::noGet);
+    genericfactory::GenericFactory<Camera>::registerProperty<Camera, REAL>(
+        "Z",
+        &Camera::setZ,
+        &Camera::noGet);
+    genericfactory::GenericFactory<Camera>::registerProperty<Camera, glm::vec4>(
+        "Rotate",
+        &Camera::rotate,
+        &Camera::noGet);
+    genericfactory::GenericFactory<Camera>::registerProperty<Camera, size_t>(
+        "W",
+        &Camera::setWidth,
+        &Camera::noGet);
+    genericfactory::GenericFactory<Camera>::registerProperty<Camera, size_t>(
+        "H",
+        &Camera::setHeight,
+        &Camera::noGet);
+    // TODO(bauschp, Di 2. Sep 20:21:00 CEST 2014):
+    // be able to change the sampler.
+    genericfactory::GenericFactory<Camera>::registerProperty<Camera, size_t>(
+        "SamplesPerDim",
+        &Camera::setRegularSampleSize,
+        &Camera::noGet);
+  }
  protected:
   /// Sampler used by this camera.
   std::shared_ptr<Sampler> m_Sampler;

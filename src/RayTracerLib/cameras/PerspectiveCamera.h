@@ -31,6 +31,9 @@ SOFTWARE.
 
 class PerspectiveCamera : public Camera {
  public:
+  // Default Constructor.
+  PerspectiveCamera() : PerspectiveCamera(256, 256, 1.48352986f) { }
+
   // Constructor.
   PerspectiveCamera(const int width,
       const int height,
@@ -45,6 +48,26 @@ class PerspectiveCamera : public Camera {
 
   // Destructor.
   virtual ~PerspectiveCamera();
+
+  void setFOV(REAL fieldOfView);
+
+  static const char* name;
+
+  PerspectiveCamera* create() const {
+    return new PerspectiveCamera();
+  }
+
+  static void registerProperties() {
+    static bool m_lock(true);
+    if (!m_lock)
+      return;
+    m_lock = false;
+    genericfactory::GenericFactory<Camera>::
+          registerProperty<PerspectiveCamera, REAL>(
+        "FOV",
+        &PerspectiveCamera::setFOV,
+        &PerspectiveCamera::noGet);
+  }
 
  private:
   /// Variables to store the field of view angle.

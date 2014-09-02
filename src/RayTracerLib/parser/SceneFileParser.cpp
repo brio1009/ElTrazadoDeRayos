@@ -148,6 +148,39 @@ void SceneFileParser::parseGroupSpecial<Shape>(
 }
 
 // _____________________________________________________________________________
+template<>
+void SceneFileParser::parseGroupSpecial<Camera>(
+      rapidxml::xml_node<>* node, ...) const {
+  // Get the material map from the variadic
+  va_list ap;
+  // Read needed stuff.
+  va_start(ap, node);
+  Scene* scene = reinterpret_cast<Scene*>(va_arg(ap, void*));
+  va_end(ap);
+
+  // Read the cam and add it to the map.
+  rapidxml::xml_node<>* child = node;
+  while (child) {
+    // add this child.
+    Camera* cam = genericfactory::GenericFactory<Camera>::create(child->name());
+    if (!cam) {
+      child = child->next_sibling();
+      continue;
+    }
+    // call all the needed atributes.
+    for (rapidxml::xml_attribute<>* attr = child->first_attribute();
+         attr; attr = attr->next_attribute()) {
+      if (strcmp(attr->name(), Material::name) != 0) {
+        cam->setFromString(attr->name(), attr->value());
+        continue;
+      }
+    }
+    cam->setUsePostProcessing(false);
+    scene->cameras().push_back(cam);
+    child = child->next_sibling();
+  }
+}
+// _____________________________________________________________________________
 void SceneFileParser::parse(const std::string& filename, Scene* scene) const {
   rapidxml::xml_document<> doc;    // character type defaults to char
   char* text = getFileContents(filename);
@@ -168,16 +201,10 @@ void SceneFileParser::parse(const std::string& filename, Scene* scene) const {
   // now add the shapes.
   groupStart = parseGroup<Shape>(&doc);
   parseGroupSpecial<Shape>(groupStart, &materialMap, scene);
-  // TODO(bauschp, Sa 9. Aug 09:08:20 CEST 2014): Read the cams from the file.
-  float angle = glm::pi<float>() * 2.0f;
-  glm::mat4 trans = glm::rotate(glm::mat4(1.0),
-      (angle / 20) * (-1), glm::vec3(0, 1, 0));
-  trans = glm::translate(trans, glm::vec3(0, 0, 23));
-  PerspectiveCamera* cam = new PerspectiveCamera(1280, 720,
-                                                 glm::radians(85.0f));
-  cam->transform(trans);
-  cam->setUsePostProcessing(false);
-  scene->cameras().push_back(cam);
+
+  // add all cameras.
+  groupStart = parseGroup<Camera>(&doc);
+  parseGroupSpecial<Camera>(groupStart, scene);
   // Don`t forget to free the memory!
   free(text);
 }

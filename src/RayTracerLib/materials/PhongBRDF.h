@@ -44,7 +44,7 @@ class PhongBRDF : public BRDF {
                 m_rohDiffuse(rohDiffuse),
                 m_rohSpecular(rohSpecular) { }
   /// Constructor.
-  PhongBRDF() : PhongBRDF(0.2f, 0.8f, 20.0f) { }
+  PhongBRDF() : PhongBRDF(0.8f, 0.2f, 20.0f) { }
   /// Destructor.
   ~PhongBRDF() { }
 

@@ -31,13 +31,16 @@ SOFTWARE.
 
 #include <string>
 
+#include "cameras/Camera.h"
 #include "shapes/Shape.h"
 #include "materials/Material.h"
 
 // ALL DECLARATIONS NEED TO BE INCLUDED HERE.
 // TODO(Mi 27. Aug 16:26:28 CEST 2014, bauschp): move to cpp.
 #include "shapes/Rectangle.h"
+#include "shapes/Box.h"
 #include "materials/MonteCarloMaterial.h"
+#include "cameras/PerspectiveCamera.h"
 #include "lights/AreaShape.h"
 
 namespace genericfactory {
@@ -71,6 +74,50 @@ inline double StringCastHelper<double>::fromString(const std::string& value) {
 }
 
 template <>
+inline std::string StringCastHelper<size_t>::toString(const size_t& value) {
+  return std::to_string(value);
+}
+
+template <>
+inline size_t StringCastHelper<size_t>::fromString(const std::string& value) {
+  return std::stoul(value);
+}
+
+template <>
+inline std::string StringCastHelper<glm::vec4>::toString(
+      const glm::vec4& value) {
+  char buffer[255];
+#ifdef WINDOWS
+  size_t length = _snprintf_s(buffer, sizeof(buffer), "%.4f,%.4f,%.4f,%.4f",
+#else
+  size_t length = snprintf(buffer, sizeof(buffer), "%.4f,%.4f,%.4f,%.4f",
+#endif
+      value[0],
+      value[1],
+      value[2],
+      value[3]);
+  return std::string(buffer, 0, length);
+}
+
+template <>
+inline glm::vec4 StringCastHelper<glm::vec4>::fromString(
+      const std::string& value) {
+  size_t comma = value.find(",");
+  size_t start = 0;
+  glm::vec4 out;
+  out.x = std::stof(value.substr(start, comma - start));
+  start = comma + 1;
+  comma = value.find(",", start);
+  out.y = std::stof(value.substr(start, comma - start));
+  start = comma + 1;
+  comma = value.find(",", start);
+  out.z = std::stof(value.substr(start, comma - start));
+  start = comma + 1;
+  out[3] = std::stof(value.substr(start));
+  return out;
+}
+
+template <>
 inline std::string StringCastHelper<Material const*>::toString(
       const Material* const & value) {
   std::string result = std::to_string(reinterpret_cast<size_t>(value));
@@ -88,6 +135,7 @@ template<>
 inline char GenericFactory<Shape>::registerAllForBase() {
   GenericFactory<Shape>::registerClass<Shape>();
   GenericFactory<Shape>::registerClass<Rectangle>();
+  GenericFactory<Shape>::registerClass<Box>();
   GenericFactory<Shape>::registerClass<AreaShape<Rectangle> >();
   return '1';
 }
@@ -97,9 +145,16 @@ inline char GenericFactory<Material>::registerAllForBase() {
   GenericFactory<Material>::registerClass<MonteCarloMaterial>();
   return '1';
 }
+template<>
+inline char GenericFactory<Camera>::registerAllForBase() {
+  GenericFactory<Camera>::registerClass<Camera>();
+  GenericFactory<Camera>::registerClass<PerspectiveCamera>();
+  return '1';
+}
 
 // Instantiate GenericFactory.
 template class GenericFactory<Shape>;
 template class GenericFactory<Material>;
+template class GenericFactory<Camera>;
 }  // namespace genericfactory
 #endif  // RAYTRACERLIB_PARSER_REFLECTION_H_

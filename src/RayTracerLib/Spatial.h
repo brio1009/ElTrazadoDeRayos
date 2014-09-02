@@ -44,6 +44,14 @@ class Spatial {
   /// Get the position of the object.
   const glm::vec4& getPosition() const { return _transformation[3]; }
 
+  /// Rotate
+  virtual void rotate(const glm::vec3& axis, const float rad);
+
+  /// Rotate by vec4.
+  /// rotates the transformation around the
+  /// first 3 entries by the 4th entry in rad.
+  virtual void rotate(const glm::vec4 value);
+
   /// Set the position of the object.
   void setPosition(const glm::vec4& position) {
     _transformation[3] = position;

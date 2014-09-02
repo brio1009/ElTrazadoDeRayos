@@ -94,6 +94,10 @@ class Shape : public Spatial,
         "Z",
         &Shape::setZ,
         &Shape::noGet);
+    genericfactory::GenericFactory<Shape>::registerProperty<Shape, glm::vec4>(
+        "Rotate",
+        &Shape::rotate,
+        &Shape::noGet);
     genericfactory::GenericFactory<Shape>::registerProperty(
         "Material",
         &Shape::setMaterialPtr,

@@ -25,10 +25,22 @@ SOFTWARE.
 
 #include "./Spatial.h"
 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <cstdio>
 
 // _____________________________________________________________________________
 void Spatial::transform(const glm::mat4& matrix) {  //NOLINT misstaken for std::tr
   _transformation = matrix;
   _inverseTransform = glm::inverse(_transformation);
+}
+
+void Spatial::rotate(const glm::vec3& axis, const float rad) {
+  transform(glm::rotate(_transformation, rad, axis));  // NOLINT
+}
+
+void Spatial::rotate(const glm::vec4 value) {
+  rotate(glm::vec3(value), value[3]);
 }
