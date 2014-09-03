@@ -36,6 +36,18 @@ template<typename T> class Property;
 struct BasicCase { };
 struct SpecialCase : BasicCase { };
 template<typename> struct OkCase { typedef int type; };
+
+/// This helper class is used to delete the pointers of the static
+/// map when the programm terminates. (Composite)
+template<typename Key, typename Value>
+class HelperPointerMap {
+ public:
+  ~HelperPointerMap();
+  std::map<Key, Value*>& map();
+ private:
+  std::map<Key, Value*> m_Map;
+};
+
 /// This class provides a simple interface to create and modify classes that
 /// provide the nessesary components to be modified. Below this definition
 /// there will be MACROS to help creating such classes.
@@ -86,9 +98,12 @@ class GenericFactory {
  private:
   /// We dont want anyone to create this.
   GenericFactory();
+
+  static HelperPointerMap<std::string, Property<Base> > m_PropMap;
   /// This is the map that holds all the registered classes.
   static std::map<std::string, Base*>& reflectionMap();
 
+  static HelperPointerMap<std::string, Base> m_ReflMap;
   /// This is the map that holds all registered properties.
   static std::map<std::string, Property<Base>*>& properyMap();
 

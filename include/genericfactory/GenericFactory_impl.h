@@ -60,21 +60,17 @@ Base* creationHelper(
 /// This helper class is used to delete the pointers of the static
 /// map when the programm terminates. (Composite)
 template<typename Key, typename Value>
-class HelperPointerMap {
- public:
-  ~HelperPointerMap() {
-    auto it = m_Map.begin();
-    auto endIt = m_Map.end();
-    for (; it != endIt; ++it) {
-      delete it->second;
-    }
+HelperPointerMap<Key, Value>::~HelperPointerMap() {
+  auto it = m_Map.begin();
+  auto endIt = m_Map.end();
+  for (; it != endIt; ++it) {
+    delete it->second;
   }
-  std::map<Key, Value*>& map() {
-    return m_Map;
-  }
- private:
-  std::map<Key, Value*> m_Map;
-};
+}
+template<typename Key, typename Value>
+std::map<Key, Value*>& HelperPointerMap<Key, Value>::map() {
+  return m_Map;
+}
 
 // HELPER END
 // #########################DEFINITIONS#########################################
@@ -90,18 +86,20 @@ char GenericFactory<Base>::registerAllForBase() {
   return 'n';
 }
 
+template<typename Base>
+HelperPointerMap<std::string, Property<Base> > GenericFactory<Base>::m_PropMap;
 // Definitions to access the static maps.
 template<typename Base>
 std::map<std::string, Base*>& GenericFactory<Base>::reflectionMap() {
-  static HelperPointerMap<std::string, Base> m_ReflMap;
   return m_ReflMap.map();
 }
-
+template<typename Base>
+HelperPointerMap<std::string, Base> GenericFactory<Base>::m_ReflMap;
 template<typename Base>
 std::map<std::string, Property<Base>*>& GenericFactory<Base>::properyMap() {
-  static HelperPointerMap<std::string, Property<Base> > m_PropMap;
   return m_PropMap.map();
 }
+
 template<typename Base>
 template<typename C, typename Type>
 void GenericFactory<Base>::registerProperty(

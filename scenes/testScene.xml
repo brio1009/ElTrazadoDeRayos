@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cameras>
-  <PerspectiveCamera Rotate="0,1,0,0.0" Z="20" X="0" W="1280" H="720" FOV="1.6205" SamplesPerDim="5" />
+  <!-- PerspectiveCamera Rotate="0,1,0,0.0" Z="20" X="0" W="1280" H="720" FOV="1.6205" SamplesPerDim="15" /i-->
+  <PerspectiveCamera Rotate="0,1,0,0.0" Z="20" X="0" W="200" H="200" FOV="1.6205" SamplesPerDim="5" />
 </cameras>
 <materials>
   <!-- CASE SENSITIVE ATTRIBUTES -->
@@ -11,7 +12,7 @@
 <shapes>
   <!-- CASE SENSITIVE ATTRIBUTES -->
   <!-- a 6x6x6 box with white color and rotated around x axis by 45Degree -->
-  <Box Rotate="1, 0, 0, 0.81035" dX="6" dY="6" dZ="6" Material="white" />
+  <Box Rotate="1, 0, 0, 0.81035" dX="6" dY="6" dZ="6" X="-5" Y="-5" Z="-5" Material="white" />
   <!-- BOTTOM -->
   <Rectangle ExtentX="10" ExtentY="10" nX="0" nY="1" nZ="0" Y="-10" NoBack="1" Material="white"/>
   <!-- TOP -->
@@ -25,5 +26,5 @@
   <!-- RIGHT -->
   <Rectangle ExtentX="10" ExtentY="10" nX="-1" nY="0" nZ="0" X="10" NoBack="1" Material="green"/>
   <!-- TOPLIGHT -->
-  <Rectangle ExtentX="4" ExtentY="4" nX="0" nY="-1" nZ="0" Y="9.99" NoBack="1" Light="1" />
+  <Rectangle ExtentX="2" ExtentY="2" nX="0" nY="-1" nZ="0" Y="9.99" NoBack="1" Light="1" />
 </shapes>
