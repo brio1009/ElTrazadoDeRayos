@@ -127,7 +127,7 @@ class GenericFactory {
   template<
         typename C,
         typename OkCase<decltype(C::name)>::type = 0,
-        typename OkCase<decltype(C::create)*>::type = 0>
+        typename OkCase<decltype(&C::create)>::type = 0>
   static void helpRegisterClass(SpecialCase s);
   // Dont register if u cant find the name.
   template<typename C>
