@@ -37,7 +37,7 @@ namespace genericfactory {
 /// There two are helper functions to check wheter or not the base has a create
 /// method. This is important, cause all stored pointers are of this type and
 /// create has to exist in order to create objects of subclasses.
-template<typename Base, typename OkCase<decltype(&Base::create)>::type = 0>
+template<typename Base, typename OkCase<decltype(Base::create)*>::type = 0>
 Base* creationHelper(
       const std::string& name,
       std::map<std::string, Base*> reflectionMap,
@@ -137,7 +137,7 @@ template<typename Base>
 template<
       typename C,
       typename OkCase<decltype(C::name)>::type,
-      typename OkCase<decltype(&C::create)>::type>
+      typename OkCase<decltype(C::create)*>::type>
 void GenericFactory<Base>::helpRegisterClass(SpecialCase) {
   std::string name = nameOf(C::name);
   // This is used to register them automaticly.
