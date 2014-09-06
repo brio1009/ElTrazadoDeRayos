@@ -33,9 +33,6 @@ class literal_str_list;
 
 namespace genericfactory {
 template<typename T> class Property;
-struct BasicCase { };
-struct SpecialCase : BasicCase { };
-template<typename> struct OkCase { typedef int type; };
 
 /// This helper class is used to delete the pointers of the static
 /// map when the programm terminates. (Composite)
@@ -79,13 +76,13 @@ class GenericFactory {
   /// And if C has a pure member. (abstract).
   template<typename C, typename std::enable_if<
       !std::is_abstract<C>::value
-      && std::is_constructible<C>::value, int>::type = 0>
+      && std::is_default_constructible<C>::value, int>::type = 0>
   static void registerClass();
   /// Registers just the properties but doesnt add the class to the
   /// constructables.
   template<typename C, typename std::enable_if<
       std::is_abstract<C>::value
-      || !std::is_constructible<C>::value, int>::type = 0>
+      || !std::is_default_constructible<C>::value, int>::type = 0>
   static void registerClass();
   /// Registers a method of C to be called by the name methodName.
   /// Use callMethod(...) to call the method on a object.
@@ -107,31 +104,18 @@ class GenericFactory {
   /// This is the map that holds all registered properties.
   static std::map<std::string, Property<Base>*>& properyMap();
 
-  // TODO(Mi 27. Aug 14:28:59 CEST 2014, bauschp): Think of a way to move this
-  // currently needed for cv++.
-  template<
-        typename C,
-        typename OkCase<decltype(C::registerProperties)*>::type = 0>
-  static void helpRegisterProperties(SpecialCase s) {
-    // call register Properties.
-    C::registerProperties();
-    printf("%zu after calling %s::registerProperties().\n", properyMap().size(),
-      nameOf(C::name).c_str());
-  }
+  template<typename C>
+  static void helpRegisterProperties(
+        decltype(&C::registerProperties) p);
 
   template<typename C>
-  static void helpRegisterProperties(BasicCase b) {
-    fprintf(stderr, "Couldn't find static void C::registerProperties()\n");
-  }
+  static void helpRegisterProperties(...);
 
-  template<
-        typename C,
-        typename OkCase<decltype(C::name)>::type = 0,
-        typename OkCase<decltype(std::declval<C>().create())>::type = 0>
-  static void helpRegisterClass(SpecialCase s);
+  template<typename C>
+  static void helpRegisterClass(decltype(C::name) name, decltype(&C::create) p);
   // Dont register if u cant find the name.
   template<typename C>
-  static void helpRegisterClass(BasicCase b);
+  static void helpRegisterClass(...);
 
   // Helper to get the name in a uniform way.
   static std::string nameOf(const char* const name);

@@ -37,12 +37,11 @@ namespace genericfactory {
 /// There two are helper functions to check wheter or not the base has a create
 /// method. This is important, cause all stored pointers are of this type and
 /// create has to exist in order to create objects of subclasses.
-template<typename Base,
-    typename OkCase<decltype(std::declval<Base>().create())>::type = 0>
+template<typename Base>
 Base* creationHelper(
       const std::string& name,
       std::map<std::string, Base*> reflectionMap,
-      SpecialCase) {
+      decltype(&Base::create) p) {
   Base* creator = reflectionMap[name];
   if (!creator)
     return nullptr;
@@ -53,7 +52,7 @@ template<typename Base>
 Base* creationHelper(
       const std::string&,
       std::map<std::string, Base*>,
-      BasicCase) {
+      ...) {
   printf("WHY :(.\n");
   return nullptr;
 }
@@ -102,6 +101,20 @@ std::map<std::string, Property<Base>*>& GenericFactory<Base>::properyMap() {
 }
 
 template<typename Base>
+template<typename C>
+void GenericFactory<Base>::helpRegisterProperties(
+      decltype(&C::registerProperties) p) {
+  C::registerProperties();
+  printf("%zu after calling %s::registerProperties().\n", properyMap().size(),
+    nameOf(C::name).c_str());
+}
+
+template<typename Base>
+template<typename C>
+void GenericFactory<Base>::helpRegisterProperties(...) {
+  fprintf(stderr, "Couldn't find static void C::registerProperties()\n");
+}
+template<typename Base>
 template<typename C, typename Type>
 void GenericFactory<Base>::registerProperty(
       const std::string& methodName,
@@ -117,29 +130,28 @@ void GenericFactory<Base>::registerProperty(
 template<typename Base>
 template<typename C, typename std::enable_if<
       !std::is_abstract<C>::value
-      && std::is_constructible<C>::value, int>::type>
+      && std::is_default_constructible<C>::value, int>::type>
 void GenericFactory<Base>::registerClass() {
   // perform some checks so we dont run into a mess later on.
   static_assert(std::is_base_of<Base, C>::value,
         "C dosn`t have base Base\n");
-  helpRegisterClass<C>(SpecialCase());
-  GenericFactory<Base>::helpRegisterProperties<C>(SpecialCase());
+  helpRegisterClass<C>("", nullptr);
+  GenericFactory<Base>::helpRegisterProperties<C>(nullptr);
 }
 template<typename Base>
 template<typename C, typename std::enable_if<
       std::is_abstract<C>::value
-      || !std::is_constructible<C>::value, int>::type>
+      || !std::is_default_constructible<C>::value, int>::type>
 void GenericFactory<Base>::registerClass() {
   printf("Can't create this class. Adding Properties...\n");
-  GenericFactory<Base>::helpRegisterProperties<C>(SpecialCase());
+  GenericFactory<Base>::helpRegisterProperties<C>(nullptr);
 }
 
 template<typename Base>
-template<
-      typename C,
-      typename OkCase<decltype(C::name)>::type,
-      typename OkCase<decltype(std::declval<C>().create())>::type>
-void GenericFactory<Base>::helpRegisterClass(SpecialCase) {
+template<typename C>
+void GenericFactory<Base>::helpRegisterClass(
+      decltype(C::name) n,
+      decltype(&C::create) p) {
   std::string name = nameOf(C::name);
   // This is used to register them automaticly.
   if (sizeof(helpInit) != sizeof(helpInit) && helpInit)
@@ -156,7 +168,7 @@ void GenericFactory<Base>::helpRegisterClass(SpecialCase) {
 
 template<typename Base>
 template<typename C>
-void GenericFactory<Base>::helpRegisterClass(BasicCase) {
+void GenericFactory<Base>::helpRegisterClass(...) {
   fprintf(stderr, "(%s) is missing the static field with the reflection "
       "name or Base* create() const member. Make sure you add them!!.\n",
       typeid(C).name());
@@ -191,7 +203,7 @@ std::string GenericFactory<Base>::getProperty(
 template<typename Base>
 Base* GenericFactory<Base>::create(const std::string& name) {
   // Thanks to registerClass only constructable objects will be called here.
-  return creationHelper(name, reflectionMap(), SpecialCase());
+  return creationHelper(name, reflectionMap(), nullptr);
 }
 
 template<typename Base>
