@@ -96,11 +96,9 @@ class GenericFactory {
   /// We dont want anyone to create this.
   GenericFactory();
 
-  static HelperPointerMap<std::string, Property<Base> > m_PropMap;
   /// This is the map that holds all the registered classes.
   static std::map<std::string, Base*>& reflectionMap();
 
-  static HelperPointerMap<std::string, Base> m_ReflMap;
   /// This is the map that holds all registered properties.
   static std::map<std::string, Property<Base>*>& properyMap();
 

@@ -86,17 +86,15 @@ char GenericFactory<Base>::registerAllForBase() {
   return 'n';
 }
 
-template<typename Base>
-HelperPointerMap<std::string, Property<Base> > GenericFactory<Base>::m_PropMap;
 // Definitions to access the static maps.
 template<typename Base>
 std::map<std::string, Base*>& GenericFactory<Base>::reflectionMap() {
+  static HelperPointerMap<std::string, Base> m_ReflMap;
   return m_ReflMap.map();
 }
 template<typename Base>
-HelperPointerMap<std::string, Base> GenericFactory<Base>::m_ReflMap;
-template<typename Base>
 std::map<std::string, Property<Base>*>& GenericFactory<Base>::properyMap() {
+  static HelperPointerMap<std::string, Property<Base>> m_PropMap;
   return m_PropMap.map();
 }
 
