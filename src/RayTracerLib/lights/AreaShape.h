@@ -84,6 +84,8 @@ class AreaShape : public T, public ImportantShape {
   }
 
   static const char* name;
+
+  AreaShape<T>* create() const;
 };
 // Implementations of template class functions.
 template<class T>
@@ -95,6 +97,11 @@ IntersectionInfo AreaShape<T>::getIntersectionInfo(const Ray& ray,
                                                  maximumT);
   info.hitImportantShape = true;
   return info;
+}
+
+template<typename T>
+AreaShape<T>* AreaShape<T>::create() const {
+  return new AreaShape<T>();
 }
 
 #endif  // RAYTRACERLIB_LIGHTS_AREASHAPE_H_
