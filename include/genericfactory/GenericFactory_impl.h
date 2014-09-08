@@ -103,8 +103,8 @@ template<typename C>
 void GenericFactory<Base>::helpRegisterProperties(
       decltype(&C::registerProperties) p) {
   C::registerProperties();
-  printf("%zu after calling %s::registerProperties().\n", properyMap().size(),
-    nameOf(C::name).c_str());
+  // printf("%zu after calling %s::registerProperties().\n", properyMap().size(),
+  //   nameOf(C::name).c_str());
 }
 
 template<typename Base>

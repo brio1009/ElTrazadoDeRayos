@@ -89,7 +89,8 @@ void SceneFileParser::parseGroupSpecial<Material>(
     }
     child = child->next_sibling();
   }
-  printf("Map now contains %zu elements.\n", materialMap->size());
+  printf("Map now contains %d elements.\n",
+         static_cast<int>(materialMap->size()));
 }
 
 // _____________________________________________________________________________
