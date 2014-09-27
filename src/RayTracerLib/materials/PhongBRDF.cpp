@@ -54,6 +54,7 @@ float PhongBRDF::evaluateBRDF(
   float overallBRDFValue = m_rohDiffuse / constants::PI;
   // Specular Term
   float dot = std::max(0.0f, glm::dot(-directionIn, directionOut));
-  overallBRDFValue += m_rohSpecular * pow(dot, m_shiny);
+  overallBRDFValue += m_rohSpecular * (m_shiny + 2) / (2 * constants::PI)*
+      pow(dot, m_shiny);
   return overallBRDFValue;
 }
