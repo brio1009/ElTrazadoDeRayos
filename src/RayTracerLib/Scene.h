@@ -32,12 +32,15 @@ SOFTWARE.
 #include "./Color.h"
 
 // Forward declaration.
-class Ray;
-class Shape;
-class Light;
-struct IntersectionInfo;
 class Camera;
 class ImportantShape;
+class Light;
+class Ray;
+class Shape;
+struct IntersectionInfo;
+namespace accelerationstructures {
+class AbstractDataStructure;
+}
 
 /// Holds the scene objects.
 class Scene {
@@ -75,7 +78,7 @@ class Scene {
 
  private:
   /// Holds the renderable objects.
-  std::vector<Shape*> _shapes;
+  accelerationstructures::AbstractDataStructure* m_Shapes;
 
   /// Holds the the important shapes that should be sampled
   /// with the area form of the rendering equation.

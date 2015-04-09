@@ -33,30 +33,34 @@ SOFTWARE.
 #include <limits>
 #include <vector>
 
-#include "./cameras/Camera.h"
-#include "./cameras/PerspectiveCamera.h"
+#include "./Color.h"
 #include "./Constants.h"
 #include "./IntersectionInfo.h"
-#include "./Scene.h"
 #include "./Ray.h"
-#include "./Color.h"
+#include "./Scene.h"
+#include "./accelerationstructures/AbstractDataStructure.h"
+#include "./accelerationstructures/VectorDataStructure.h"
+#include "./cameras/Camera.h"
+#include "./cameras/PerspectiveCamera.h"
+#include "./lights/AreaLight.h"
+#include "./lights/AreaShape.h"
+#include "./lights/PointLight.h"
+#include "./materials/ColorMaterial.h"
+#include "./materials/DoubleMaterial.h"
+#include "./materials/GlassMaterial.h"
+#include "./materials/MonteCarloMaterial.h"
+#include "./materials/PhongMaterial.h"
+#include "./materials/ShadowMaterial.h"
 #include "./shapes/Box.h"
 #include "./shapes/CompoundShape.h"
 #include "./shapes/Ellipsoid.h"
 #include "./shapes/Plane.h"
 #include "./shapes/Rectangle.h"
 #include "./shapes/Shape.h"
-#include "./materials/ColorMaterial.h"
-#include "./materials/PhongMaterial.h"
-#include "./materials/ShadowMaterial.h"
-#include "./materials/DoubleMaterial.h"
-#include "./materials/MonteCarloMaterial.h"
-#include "./materials/GlassMaterial.h"
-#include "./lights/PointLight.h"
-#include "./lights/AreaLight.h"
-#include "./lights/AreaShape.h"
 
 using std::vector;
+using accelerationstructures::AbstractDataStructure;
+using accelerationstructures::VectorDataStructure;
 
 
 // _____________________________________________________________________________
@@ -531,13 +535,15 @@ Scene::Scene() {
   // openHemisphereScene(&m_Cameras, this);
   // defaultScene();
   // cgCube();
+
+  // Create the acceleration data structure.
+  m_Shapes = new VectorDataStructure();
 }
 
 // _____________________________________________________________________________
 Scene::~Scene() {
-  // TODO(allofus, Sun May 11 15:33:16 CEST 2014): Think of how to clean up here
-  for (auto it = _shapes.begin(); it != _shapes.end(); ++it)
-    delete *it;
+  if (m_Shapes)
+    delete m_Shapes;
   for (auto it = _lights.begin(); it != _lights.end(); ++it)
     delete *it;
   for (auto it = m_Cameras.begin(); it != m_Cameras.end(); ++it)
@@ -546,7 +552,7 @@ Scene::~Scene() {
 
 // _____________________________________________________________________________
 void Scene::addShape(Shape* shapePtr) {
-  _shapes.push_back(shapePtr);
+  m_Shapes->addShape(shapePtr);
   /// Check if this is an important shape.
   if (ImportantShape* importantPtr = dynamic_cast<ImportantShape*>(shapePtr)) {
     m_ImportantShapes.push_back(importantPtr);
@@ -555,17 +561,7 @@ void Scene::addShape(Shape* shapePtr) {
 
 // _____________________________________________________________________________
 IntersectionInfo Scene::traceRay(const Ray& ray) const {
-  REAL smallestT = std::numeric_limits<REAL>::max();
-  IntersectionInfo info;
-  // Loop over all objects.
-  for (size_t i = 0; i < _shapes.size(); ++i) {
-    IntersectionInfo tmpInfo = _shapes.at(i)->getIntersectionInfo(ray);
-    if (tmpInfo.materialPtr && tmpInfo.t < smallestT) {
-      smallestT = tmpInfo.t;
-      info = tmpInfo;
-    }
-  }
-  return info;
+  return m_Shapes->traceRay(ray);
 }
 
 // _____________________________________________________________________________
