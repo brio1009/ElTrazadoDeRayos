@@ -38,6 +38,10 @@ SOFTWARE.
 
 template<>
 const char* AreaShape<Rectangle>::name = "RectangleImportant";
+template<>
+const char* AreaShape<Ellipsoid>::name = "EllipsoidImportant";
+template<>
+const char* AreaShape<Box>::name = "BoxImportant";
 // Implementation for Rectangle.
 // _____________________________________________________________________________
 template<>

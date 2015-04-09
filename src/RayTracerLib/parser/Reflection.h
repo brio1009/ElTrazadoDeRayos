@@ -39,6 +39,7 @@ SOFTWARE.
 // TODO(Mi 27. Aug 16:26:28 CEST 2014, bauschp): move to cpp.
 #include "shapes/Rectangle.h"
 #include "shapes/Box.h"
+#include "shapes/Ellipsoid.h"
 #include "materials/MonteCarloMaterial.h"
 #include "cameras/PerspectiveCamera.h"
 #include "lights/AreaShape.h"
@@ -133,22 +134,34 @@ inline Material const* StringCastHelper<Material const*>::fromString(
 }
 template<>
 inline char GenericFactory<Shape>::registerAllForBase() {
+  printf("Adding Shapes\n");
   GenericFactory<Shape>::registerClass<Shape>();
+  // rectangles.
   GenericFactory<Shape>::registerClass<Rectangle>();
-  GenericFactory<Shape>::registerClass<Box>();
   GenericFactory<Shape>::registerClass<AreaShape<Rectangle> >();
+  // Ellipsoids.
+  GenericFactory<Shape>::registerClass<Ellipsoid>();
+  GenericFactory<Shape>::registerClass<AreaShape<Ellipsoid> >();
+  // Boxes.
+  GenericFactory<Shape>::registerClass<Box>();
+  GenericFactory<Shape>::registerClass<AreaShape<Box> >();
+  printf("Done adding Shapes\n");
   return '1';
 }
 template<>
 inline char GenericFactory<Material>::registerAllForBase() {
+  printf("Adding Materials\n");
   GenericFactory<Material>::registerClass<Material>();
   GenericFactory<Material>::registerClass<MonteCarloMaterial>();
+  printf("Done adding Materials\n");
   return '1';
 }
 template<>
 inline char GenericFactory<Camera>::registerAllForBase() {
+  printf("Adding Cameras\n");
   GenericFactory<Camera>::registerClass<Camera>();
   GenericFactory<Camera>::registerClass<PerspectiveCamera>();
+  printf("Done adding Cameras\n");
   return '1';
 }
 
