@@ -52,6 +52,12 @@ class Box : public Shape {
   /// Intersection test.
   virtual std::vector<REAL> intersect(const Ray& ray) const;
 
+  /// Returns the min. position.
+  glm::vec4 getMinPosition() const;
+
+  /// Returns the max. position.
+  glm::vec4 getMaxPosition() const;
+
   /// The class name. Needed for the Factory creating the object.
   static const char* name;
 
@@ -81,12 +87,6 @@ class Box : public Shape {
  protected:
   /// Return normal.
   virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
-
-  /// Returns the min. position.
-  glm::vec4 getMinPosition() const;
-
-  /// Returns the max. position.
-  glm::vec4 getMaxPosition() const;
 
  private:
   REAL _rX;
