@@ -27,12 +27,15 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_ACCELERATIONSTRUCTURES_KDTREE_H_
 #define RAYTRACERLIB_ACCELERATIONSTRUCTURES_KDTREE_H_
 
+#include <glm/glm.hpp>
+
 #include <vector>
+
 #include "./AbstractDataStructure.h"
+#include "../Constants.h"
 
 class Shape;
-class Material;
-class Triangle;
+class Mesh;
 
 namespace accelerationstructures {
 /// This class
@@ -44,6 +47,9 @@ class KDTree : public AbstractDataStructure {
   virtual void addShape(Shape* shape) override;
   /// Returns the number of shapes in this structure.
   virtual size_t size() const override;
+  /// Initializes the data structure.
+  /// (All shapes/Meshes should already been added)
+  void initialize();
 
  private:
   // Inspired by Ingo Wald.
@@ -51,7 +57,7 @@ class KDTree : public AbstractDataStructure {
     /// This unsigned int consists of:
     /// 31 bits offset for contained items.    : 0 .. 30
     /// 1 bit to distinquish leaf and inner.   : 31
-    unsigned int flagOffset;
+    unsigned int flag;
     /// The ammount of items in this node.
     unsigned int numItems;
   };
@@ -60,7 +66,7 @@ class KDTree : public AbstractDataStructure {
     /// 2 bits for splitting direction (x,y,z) : 0 .. 1
     /// 27 bits offset for the first child.    : 2 .. 30
     /// 1 bit to distinquish leaf and inner.   : 31
-    unsigned int flagDimOffset;
+    unsigned int flag;
     /// Coordinate of the spliting plane.
     float splitCoordinate;
   };
@@ -71,8 +77,8 @@ class KDTree : public AbstractDataStructure {
 
   struct KDTriangleItem {
     char type;
-    Material* mat;
-    Triangle* triangle;
+    Mesh* mat;
+    glm::vec3* vertices;
   };
   struct KDShapeItem {
     char type;
@@ -83,12 +89,20 @@ class KDTree : public AbstractDataStructure {
     KDTriangleItem triangle;
     KDShapeItem shape;
   } KDTreeItem;
+
+  static REAL computeMedianOfAxis(unsigned int axis,
+    const std::vector<KDTreeItem>& shapes);
+  static REAL centroidOfItem(unsigned int axis,
+    const accelerationstructures::KDTree::KDTreeItem& shape);
+
+  std::vector<KDTreeItem> shapesToKDItems() const;
   /// Contains all the Nodes in the KD-Tree.
   std::vector<KDTreeNode> m_Nodes;
   /// Containes all added Shapes.
   std::vector<Shape*> m_Shapes;
   /// Contains the Leaf->Child list.
   std::vector<KDTreeItem> m_ItemList;
+  bool m_Initialized;
 };
 }  // namespace accelerationstructures
 #endif  // RAYTRACERLIB_ACCELERATIONSTRUCTURES_KDTREE_H_

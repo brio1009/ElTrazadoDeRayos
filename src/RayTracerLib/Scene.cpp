@@ -393,37 +393,37 @@ void monteCarloScene(vector<Shape*>* shapes,
   Rectangle* front = new Rectangle(glm::vec3(0, 0, -1), glm::vec2(10, 10));
   front->setPosition(glm::vec4(0, 0, 10, 1));
   front->setClipBackplane(true);
-  shapes->push_back(front);
+  scenePtr->addShape(front);
 
   // Back wall.
   Rectangle* back = new Rectangle(glm::vec3(0, 0, 1), glm::vec2(10, 10));
   back->setPosition(glm::vec4(0, 0, -10, 1));
   back->setClipBackplane(true);
-  shapes->push_back(back);
+  scenePtr->addShape(back);
 
   // Left wall.
   Rectangle* left = new Rectangle(glm::vec3(1, 0, 0), glm::vec2(10, 10));
   left->setPosition(glm::vec4(-10, 0, 0, 1));
   left->setClipBackplane(true);
-  shapes->push_back(left);
+  scenePtr->addShape(left);
 
   // Right wall.
   Rectangle* right = new Rectangle(glm::vec3(-1, 0, 0), glm::vec2(10, 10));
   right->setPosition(glm::vec4(10, 0, 0, 1));
   right->setClipBackplane(true);
-  shapes->push_back(right);
+  scenePtr->addShape(right);
 
   // Bottom floor.
   Rectangle* bottom = new Rectangle(glm::vec3(0, 1, 0), glm::vec2(10, 10));
   bottom->setPosition(glm::vec4(0, -10, 0, 1));
   bottom->setClipBackplane(true);
-  shapes->push_back(bottom);
+  scenePtr->addShape(bottom);
 
   // Top ceiling.
   Rectangle* top = new Rectangle(glm::vec3(0, -1, 0), glm::vec2(10, 10));
   top->setPosition(glm::vec4(0, 10, 0, 1));
   top->setClipBackplane(true);
-  shapes->push_back(top);
+  scenePtr->addShape(top);
 
   // Set material of the walls.
   front->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
@@ -452,14 +452,14 @@ void monteCarloScene(vector<Shape*>* shapes,
 
   /*
   Ellipsoid* ball2 = new Ellipsoid(2, 2, 2);
-  shapes->push_back(ball2);
+  scenePtr->addShape(ball2);
   ball2->setPosition(glm::vec4(4, -3, -4, 1));
   ball2->setMaterialPtr(new GlassMaterial(RefractiveIndex::mirror));
   */
 
   // Create the box in the room.
   Box* box = new Box(5, 5, 5);
-  shapes->push_back(box);
+  scenePtr->addShape(box);
   glm::mat4 trans(glm::translate(glm::mat4(1.0), glm::vec3(4, -7.5, -4)));
   trans = glm::rotate(trans, glm::radians(-25.0f), glm::vec3(0, 1, 0));
   box->setMaterialPtr(new MonteCarloMaterial(Color(1, 1, 1)));
@@ -480,8 +480,9 @@ void monteCarloScene(vector<Shape*>* shapes,
         (angle / imgCount) * i, glm::vec3(0, 1, 0));
     // trans = glm::rotate(trans, glm::radians(20.0f), glm::vec3(-1, 0, 0));
     // trans = glm::rotate(trans, glm::radians(45.0f), glm::vec3(0, 1, 0));
-    PerspectiveCamera* cam = new PerspectiveCamera(1280, 720,
+    PerspectiveCamera* cam = new PerspectiveCamera(400, 400,
                                                    glm::radians(85.0f));
+    cam->setRegularSampleSize(40);
     cam->transform(glm::translate(trans, glm::vec3(0, 0, 23)));
     cam->setUsePostProcessing(false);
     cameras->push_back(cam);
@@ -530,7 +531,6 @@ Scene::Scene() {
   printf("map value: %s\n", typeid(*(PropertyManager::classProperties["CompoundShape"])).name());
   // testMap.emplace("asd", 1);
   */
-  // monteCarloScene(&_shapes, &_lights, &m_Cameras, this);
   // pathTraceGlobal(&_shapes, &_lights, &m_Cameras, this);
   // openHemisphereScene(&m_Cameras, this);
   // defaultScene();
@@ -538,6 +538,7 @@ Scene::Scene() {
 
   // Create the acceleration data structure.
   m_Shapes = new VectorDataStructure();
+  // monteCarloScene(nullptr, &_lights, &m_Cameras, this);
 }
 
 // _____________________________________________________________________________

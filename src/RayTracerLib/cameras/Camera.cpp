@@ -30,6 +30,8 @@ SOFTWARE.
 
 // C++ Header.
 #include <algorithm>
+#include <chrono>
+#include <ratio>
 #include <vector>
 #include <memory>
 
@@ -86,6 +88,7 @@ void Camera::render(const Scene& scene,
   // Send rays.
   size_t progress(0);
   int amountPixels = endPixel - startPixel;
+  auto start = std::chrono::high_resolution_clock::now();
 #ifdef BENICE
   // Keeps one core free for other stuff.
   omp_set_num_threads(std::max(omp_get_max_threads() - 1, 1));
@@ -105,7 +108,16 @@ void Camera::render(const Scene& scene,
           m_Sampler->getSampledColor(borders, scene));
     // Print progress (only if we are in first thread).
     if (omp_get_thread_num() == 0) {
-      printf("Progress: %.2f%%\r", (100.0f * (i - startPixel)) / amountPixels);
+      auto now = std::chrono::high_resolution_clock::now();
+      float fraction = static_cast<float>(i - startPixel) / amountPixels;
+      auto duration =
+        std::chrono::duration_cast<std::chrono::seconds>(now - start);
+      float invFraction = 1.0f / fraction;
+      auto estimatedTime = duration * invFraction;
+      estimatedTime -= duration;
+      printf("Progress: %.2f%% Estimated:%dseconds       \r",
+          100.0f * fraction,
+          static_cast<unsigned int>(estimatedTime.count()));
     }
   }
 
