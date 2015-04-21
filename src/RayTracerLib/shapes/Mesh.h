@@ -1,8 +1,8 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2015 CantTouchDis <bauschp@informatik.uni-freiburg.de>
-Copyright (c) 2015 brio1009 <christoph1009@gmail.com>
+Copyright (c) 2014 CantTouchDis <bauschp@informatik.uni-freiburg.de>
+Copyright (c) 2014 brio1009 <christoph1009@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,33 +24,32 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_FUNCTIONTRAITS_H_
-#define RAYTRACERLIB_FUNCTIONTRAITS_H_
+#ifndef RAYTRACERLIB_SHAPES_MESH_H_
+#define RAYTRACERLIB_SHAPES_MESH_H_
 
-#include <cstdlib>
-#include <tuple>
-#include <functional>
-#include <type_traits>
+// C
+#include <glm/glm.hpp>
+// C++
+#include <vector>
+#include <string>
 
-template <typename T>
-struct function_traits
-    : public function_traits<decltype(&T::operator())> {
+// Project
+#include "./Shape.h"
+#include "./Constants.h"
+
+class Mesh : public Shape {
+ public:
+  Mesh();
+
+  void loadObjFromFile(const std::string& filename);
+  /// Intersection test.
+  virtual std::vector<REAL> intersect(const Ray& ray) const override;
+ private:
+  std::vector<glm::vec3> m_Vertices;
+  std::vector<glm::vec3> m_Normals;
+  std::vector<glm::vec2> m_UVCoords;
 };
 
-template <typename ReturnType, typename... Args>
-struct function_traits<ReturnType(&)(Args...)> {
-// we specialize for pointers to member function
-    enum { arity = sizeof...(Args) };
-    // arity is the number of arguments.
+#endif  // RAYTRACERLIB_SHAPES_MESH_H_
 
-    typedef ReturnType result_type;
 
-    template <size_t i>
-    struct arg {
-        typedef typename std::tuple_element<i, std::tuple<Args...>>::type type;
-        // the i-th argument is equivalent to the i-th tuple element of a tuple
-        // composed of those arguments.
-    };
-};
-
-#endif  // RAYTRACERLIB_FUNCTIONTRAITS_H_

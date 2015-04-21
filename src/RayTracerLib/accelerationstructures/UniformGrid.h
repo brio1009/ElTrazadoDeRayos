@@ -23,22 +23,53 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef RAYTRACERLIB_ACCELERATIONSTRUCTURES_AABB_H_
-#define RAYTRACERLIB_ACCELERATIONSTRUCTURES_AABB_H_
+
+#pragma once
+#ifndef RAYTRACERLIB_ACCELERATIONSTRUCTURES_UNIFORMGRID_H_
+#define RAYTRACERLIB_ACCELERATIONSTRUCTURES_UNIFORMGRID_H_
 
 #include <glm/glm.hpp>
+#include <unordered_map>
+#include <tuple>
+#include <vector>
+#include <cstdint>
+#include <utility>
 
-// Forwards.
+#include "./AbstractDataStructure.h"
+
 class Shape;
+
+struct SmartHash {
+  size_t operator()(const glm::ivec3& vec) const {
+    return 0;
+  }
+};
 
 namespace accelerationstructures {
 
-struct AABB {
-  glm::vec3 min;
-  glm::vec3 max;
-};
+struct AABB;
 
-AABB aabbFromShape(const Shape& shape);
+class UniformGrid : public AbstractDataStructure {
+ public:
+  virtual ~UniformGrid() override;
+  /// see AbstractDataStructure.
+  virtual IntersectionInfo traceRay(const Ray& ray) const override;
+  /// see AbstractDataStructure.
+  virtual void addShape(Shape* shape) override;
+  /// Returns the number of shapes contained in this structure.
+  virtual size_t size() const override;
+ private:
+  void insertShapeIntoMatchingCells(const AABB& aabb, Shape* shape);
+  /// contains a map cellHash -> primitives. If the tuples shape is a Mesh
+  /// the second element provides the offset to the first triangle in the list
+  /// of vertices.
+  typedef std::vector<std::pair<Shape*, uint64_t> > cellList;
+  std::unordered_map<glm::ivec3,
+    cellList, SmartHash> m_Shapes;
+  /// The dimensionality of a cell. (All cells are cubical)
+  float m_CellSize;
+};
 }  // namespace accelerationstructures
 
-#endif  // RAYTRACERLIB_ACCELERATIONSTRUCTURES_AABB_H_
+#endif  // RAYTRACERLIB_ACCELERATIONSTRUCTURES_UNIFORMGRID_H_
+

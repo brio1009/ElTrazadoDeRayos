@@ -41,7 +41,7 @@ class Box : public Shape {
 
  public:
   // Default constructor. Dimensions are 1, 1, 1.
-  Box() : Box(1.0, 1.0, 1.0) { }
+  Box() : Box(2.0, 2.0, 2.0) { }
 
   /// Constructor with given dimensions. Rotation must be done with
   /// a transformation.

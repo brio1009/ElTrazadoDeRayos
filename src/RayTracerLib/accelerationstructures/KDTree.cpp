@@ -35,6 +35,7 @@ SOFTWARE.
 #include "../shapes/Shape.h"
 #include "../IntersectionInfo.h"
 #include "../Constants.h"
+#include "./AABB.h"
 
 
 // #define ISLEAF(n) (n.flag & (unsigned int) (1<<31))
