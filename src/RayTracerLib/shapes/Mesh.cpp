@@ -25,12 +25,15 @@ SOFTWARE.
 
 #include "./Mesh.h"
 
+#include <cassert>
 #include <string>
 #include <vector>
+#include <limits>
 
 #include "../Ray.h"
 #include "../Solver.h"
 #include "../parser/ObjParser.h"
+#include "./Triangle.h"
 
 using std::string;
 using std::vector;
@@ -47,6 +50,51 @@ void Mesh::loadObjFromFile(const string& filename) {
       &m_Normals,
       &m_UVCoords);
 }
+IntersectionInfo Mesh::getIntersectionInfo(
+    const Ray& ray,
+    const REAL minimumT,
+    const REAL maximumT) const {
+  REAL smallestT = std::numeric_limits<REAL>::max();
+  size_t smallestTriangleHit = m_Vertices.size();
+  vector<size_t> hitTriangles;
+  // Test the object for a hit.
+  Ray transformedRay = _inverseTransform * ray;
+  vector<REAL> hits = intersectTriangles(
+        transformedRay,
+        m_Vertices,
+        0,
+        m_Vertices.size(),
+        &hitTriangles);
+  bool hit(false);
+  // Loop over
+  for (size_t j = 0; j < hits.size(); ++j) {
+    if (hits.at(j) >= minimumT
+        && hits.at(j) < smallestT
+        && hits.at(j) <= maximumT) {
+      smallestT = hits.at(j);
+      smallestTriangleHit = hitTriangles.at(j);
+      hit = true;
+    }
+  }
+  if (hit) {
+    glm::vec4 position = ray.origin()
+                         + static_cast<float>(smallestT) * ray.direction();
+    // Return the Intersectioninfo.
+    // TODO(bauschp): modify to use texture coordinates and normals.
+    return IntersectionInfo(smallestT,
+                            position,
+                            position,
+                            getMaterialPtr(),
+                            getTextureCoord(position));
+  }
+  // Else.
+  return IntersectionInfo();
+}
+
+// _____________________________________________________________________________
+glm::vec4 Mesh::getNormalAt(const glm::vec4& p) const {
+  return p;
+}
 
 // _____________________________________________________________________________
 vector<REAL> Mesh::intersect(const Ray& ray) const {
@@ -56,29 +104,6 @@ vector<REAL> Mesh::intersect(const Ray& ray) const {
   // This is the slab method.
   const glm::vec4& rayDir = transRay.direction();
   glm::vec4 invRayDir;
-  //
-  //   invRayDir.x = (!solve::isZero(rayDir.x)) ? (1.0f / rayDir.x)
-  //                                   : std::numeric_limits<float>::max();
-  //   invRayDir.y = (!solve::isZero(rayDir.y)) ? (1.0f / rayDir.y)
-  //                                   : std::numeric_limits<float>::max();
-  //   invRayDir.z = (!solve::isZero(rayDir.z)) ? (1.0f / rayDir.z)
-  //                                   : std::numeric_limits<float>::max();
-  //   invRayDir.w = 0.0f;
-  //
-  //   glm::vec4 t1 = (getMinPosition() - transRay.origin()) * invRayDir;
-  //   glm::vec4 t2 = (getMaxPosition() - transRay.origin()) * invRayDir;
-  //
-  //   glm::vec4 tMin = glm::min(t1, t2);
-  //   glm::vec4 tMax = glm::max(t1, t2);
-  //
-  //   vector<REAL> hits(2);
-  //
-  //   hits[0] = std::max(tMin.x, std::max(tMin.y, tMin.z));
-  //   hits[1] = std::min(tMax.x, std::min(tMax.y, tMax.z));
-  //
-  //   if (hits[1] >= hits[0])
-  //     return hits;
-  //
-  // Else.
+  // Should never be called.
   return vector<REAL>();
 }

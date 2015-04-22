@@ -24,39 +24,18 @@ SOFTWARE.
 */
 
 #pragma once
-#ifndef RAYTRACERLIB_SHAPES_MESH_H_
-#define RAYTRACERLIB_SHAPES_MESH_H_
+#ifndef RAYTRACERLIB_SHAPES_TRIANGLE_H_
+#define RAYTRACERLIB_SHAPES_TRIANGLE_H_
 
-// C
 #include <glm/glm.hpp>
-// C++
 #include <vector>
-#include <string>
-
-// Project
-#include "./Shape.h"
 #include "./Constants.h"
 
-class Mesh : public Shape {
- public:
-  Mesh();
+struct Ray;
 
-  void loadObjFromFile(const std::string& filename);
-  IntersectionInfo getIntersectionInfo(
-      const Ray& ray,
-      const REAL minimumT,
-      const REAL maximumT) const override;
-  /// Intersection test.
-  virtual std::vector<REAL> intersect(const Ray& ray) const override;
-
- protected:
-  virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
- private:
-  std::vector<glm::vec3> m_Vertices;
-  std::vector<glm::vec3> m_Normals;
-  std::vector<glm::vec2> m_UVCoords;
-};
-
-#endif  // RAYTRACERLIB_SHAPES_MESH_H_
-
-
+std::vector<REAL> intersectTriangles(
+    const Ray& ray,
+    const std::vector<glm::vec3>& vertices,
+    const size_t& begin, const size_t& end,
+    std::vector<size_t>* hitTriangles);
+#endif  // RAYTRACERLIB_SHAPES_TRIANGLE_H_

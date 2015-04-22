@@ -54,7 +54,7 @@ class Ray {
   /// Getter for origin as vec3.
   glm::vec3 originVec3() const { return glm::vec3(_origin); }
   /// Getter for direction as vec3.
-  glm::vec3 directionVec3() const { return glm::vec3(_origin); }
+  glm::vec3 directionVec3() const { return glm::vec3(_direction); }
 
   /// *-operator turned around for Ray.
   template<class T>
