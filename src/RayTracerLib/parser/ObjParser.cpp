@@ -67,22 +67,22 @@ void addQuad(
   vIndices->push_back(vInd[1]);
   vIndices->push_back(vInd[2]);
   vIndices->push_back(vInd[2]);
-  vIndices->push_back(vInd[1]);
   vIndices->push_back(vInd[3]);
+  vIndices->push_back(vInd[0]);
   // normal indices
   nIndices->push_back(nInd[0]);
   nIndices->push_back(nInd[1]);
   nIndices->push_back(nInd[2]);
   nIndices->push_back(nInd[2]);
-  nIndices->push_back(nInd[1]);
   nIndices->push_back(nInd[3]);
+  nIndices->push_back(nInd[0]);
   // uv Indices
   uvIndices->push_back(uvInd[0]);
   uvIndices->push_back(uvInd[1]);
   uvIndices->push_back(uvInd[2]);
   uvIndices->push_back(uvInd[2]);
-  uvIndices->push_back(uvInd[1]);
   uvIndices->push_back(uvInd[3]);
+  uvIndices->push_back(uvInd[0]);
 }
 
 void addTriangle(

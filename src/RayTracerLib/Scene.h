@@ -56,6 +56,8 @@ class Scene {
                                                              0.7f,
                                                              0.88f); }
   /// Returnes a reference to all the lights in the scene.
+  std::vector<Light*>& lights() { return _lights; }
+  /// Returnes a const reference to all the lights in the scene.
   const std::vector<Light*>& lights() const { return _lights; }
 
   /// Returnes a reference to all the cameras in the scene.

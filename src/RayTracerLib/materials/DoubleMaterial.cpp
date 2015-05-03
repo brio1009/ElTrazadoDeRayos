@@ -33,6 +33,11 @@ SOFTWARE.
 #include "./Ray.h"
 
 // _____________________________________________________________________________
+bool linesInU(const glm::vec2& coords) {
+  return (static_cast<int>(floor(coords.x)) % 2 == 0);
+}
+
+// _____________________________________________________________________________
 Color DoubleMaterial::getColor(const IntersectionInfo& intersectionInfo,
                                      const Ray& incomingRay,
                                      const Scene& scene) const {
@@ -51,8 +56,8 @@ bool DoubleMaterial::expandingSquares(const glm::vec2& coords) const {
 
 // _____________________________________________________________________________
 bool DoubleMaterial::checkerBoard(const glm::vec2& coords) const {
-  return !(static_cast<int>(abs(coords.x) / _uSize + 0.5) % 2 == 0)
-         != !(static_cast<int>(abs(coords.y) / _vSize + 0.5) % 2 == 0);
+  return (static_cast<int>(floor(coords.x / _uSize)) % 2 == 0)
+         && (static_cast<int>(floor(coords.y / _vSize)) % 2 == 0);
 }
 
 // _____________________________________________________________________________

@@ -80,10 +80,13 @@ IntersectionInfo Mesh::getIntersectionInfo(
     glm::vec4 position = ray.origin()
                          + static_cast<float>(smallestT) * ray.direction();
     // Return the Intersectioninfo.
-    // TODO(bauschp): modify to use texture coordinates and normals.
+    // TODO(bauschp): modify to use texture coordinates.
     return IntersectionInfo(smallestT,
                             position,
-                            position,
+                            glm::vec4(
+                              (m_Normals[smallestTriangleHit]
+                              + m_Normals[smallestTriangleHit + 1]
+                              + m_Normals[smallestTriangleHit + 2]) / 3.0f, 0.0f),
                             getMaterialPtr(),
                             getTextureCoord(position));
   }
