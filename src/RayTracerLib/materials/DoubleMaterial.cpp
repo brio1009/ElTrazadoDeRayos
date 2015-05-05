@@ -56,8 +56,8 @@ bool DoubleMaterial::expandingSquares(const glm::vec2& coords) const {
 
 // _____________________________________________________________________________
 bool DoubleMaterial::checkerBoard(const glm::vec2& coords) const {
-  return (static_cast<int>(nearbyint(coords.x / _uSize)) % 2 == 0)
-         && (static_cast<int>(nearbyint(coords.y / _vSize)) % 2 == 0);
+  return !(static_cast<int>(nearbyint(coords.x / _uSize)) % 2 == 0)
+         != !(static_cast<int>(nearbyint(coords.y / _vSize)) % 2 == 0);
 }
 
 // _____________________________________________________________________________

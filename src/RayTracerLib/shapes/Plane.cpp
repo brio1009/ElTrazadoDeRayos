@@ -32,6 +32,7 @@ SOFTWARE.
 #include "./Constants.h"
 #include "./Ray.h"
 #include "./Solver.h"
+#include "./ProjectorFunctions.h"
 
 using std::vector;
 
@@ -60,4 +61,40 @@ vector<REAL> Plane::intersect(const Ray& ray) const {
 // ___________________________________________________________________________
 glm::vec4 Plane::getNormalAt(const glm::vec4& p) const {
   return _transformation * glm::vec4(_nX, _nY, _nZ, 0);
+}
+
+// ___________________________________________________________________________
+Plane::Plane(REAL nX, REAL nY, REAL nZ) : _nX(nX), _nY(nY), _nZ(nZ), m_d() {
+  // mit gram-schmidt 2 orthogonale
+  static std::vector<glm::vec3> e = {
+    {1.0f, 0.0f, 0.0f},
+    {0.0f, 1.0f, 0.0f},
+    {0.0f, 0.0f, 1.0f}};
+  glm::vec3 normal {nX, nY, nZ};
+  glm::normalize(normal);
+  m_d.resize(2);
+  std::vector<glm::vec3> directions;
+  directions.resize(3);
+  for (int i = 0; i < 3; ++i) {
+    directions[i] = e[i];
+    // add the projected vectors.
+    for (int j = 0; j <= i; ++j) {
+      const glm::vec3& u = j == 0 ? normal : directions[j-1];
+      directions[i] -= (glm::dot(e[i], u) / glm::dot(u, u)) * u;
+    }
+  }
+  // add the right directions.
+  int j = 0;
+  for (int i = 0; j < 2 && i < 3; ++i) {
+    if (directions[i].length() < 1e-5)
+      continue;
+    m_d[j] = glm::vec4(directions[i], 0.0f);
+    ++j;
+  }
+}
+// _____________________________________________________________________________
+glm::vec2 Plane::getTextureCoord(const glm::vec4& p) const {
+  glm::vec4 trans = _inverseTransform * p;
+  // get two axis.
+  return ProjectorFunctions::textureProjectionPlane(trans, m_d);
 }

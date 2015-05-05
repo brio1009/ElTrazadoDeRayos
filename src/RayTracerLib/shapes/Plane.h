@@ -41,7 +41,7 @@ class Plane : public Shape {
   Plane() : Plane(0.0, 1.0, 0.0) { }
 
   /// Constructor with given normal axis.
-  Plane(REAL nX, REAL nY, REAL nZ) : _nX(nX), _nY(nY), _nZ(nZ) { }
+  Plane(REAL nX, REAL nY, REAL nZ);
   /// Constructor with given normal axis.
   explicit Plane(const glm::vec3& normal)
     : Plane(normal.x, normal.y, normal.z) { }
@@ -52,6 +52,9 @@ class Plane : public Shape {
   virtual std::vector<REAL> intersect(const Ray& ray) const;
   /// Get the normal at a world position p.
   virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
+
+  /// uv coords will always be oriented.
+  virtual glm::vec2 getTextureCoord(const glm::vec4& p) const override;
 
   /// The class name. Needed for the Factory creating the object.
   static const char* name;
@@ -64,6 +67,8 @@ class Plane : public Shape {
   REAL _nX;
   REAL _nY;
   REAL _nZ;
+  // These variables will store two directions that whos span is the plane.
+  std::vector<glm::vec4> m_d;
 };
 
 
