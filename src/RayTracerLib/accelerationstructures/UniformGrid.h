@@ -37,11 +37,17 @@ SOFTWARE.
 
 #include "./AbstractDataStructure.h"
 
+
+#define PRIME1 73856093
+#define PRIME2 19349663
+#define PRIME3 83492791
+#define HASHTABLESIZE 786433
+
 class Shape;
 
 struct SmartHash {
   size_t operator()(const glm::ivec3& vec) const {
-    return 0;
+    return ((vec.x * PRIME1) ^ (vec.y * PRIME2) ^ (vec.z * PRIME3)) % HASHTABLESIZE;
   }
 };
 
@@ -51,6 +57,7 @@ struct AABB;
 
 class UniformGrid : public AbstractDataStructure {
  public:
+  UniformGrid(const float& cellSize);
   virtual ~UniformGrid() override;
   /// see AbstractDataStructure.
   virtual IntersectionInfo traceRay(const Ray& ray) const override;
@@ -60,6 +67,9 @@ class UniformGrid : public AbstractDataStructure {
   virtual size_t size() const override;
  private:
   void insertShapeIntoMatchingCells(const AABB& aabb, Shape* shape);
+  void intersectCellShapes(const glm::ivec3& index,
+      const Ray& ray,
+      std::vector<IntersectionInfo>* intersections) const;
   /// contains a map cellHash -> primitives. If the tuples shape is a Mesh
   /// the second element provides the offset to the first triangle in the list
   /// of vertices.

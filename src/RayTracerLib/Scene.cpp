@@ -40,6 +40,7 @@ SOFTWARE.
 #include "./Scene.h"
 #include "./accelerationstructures/AbstractDataStructure.h"
 #include "./accelerationstructures/VectorDataStructure.h"
+#include "./accelerationstructures/UniformGrid.h"
 #include "./cameras/Camera.h"
 #include "./cameras/PerspectiveCamera.h"
 #include "./lights/AreaLight.h"
@@ -537,7 +538,8 @@ Scene::Scene() {
   // cgCube();
 
   // Create the acceleration data structure.
-  m_Shapes = new VectorDataStructure();
+  m_Shapes = new accelerationstructures::UniformGrid(0.5f);
+  // m_Shapes = new accelerationstructures::VectorDataStructure();
   // monteCarloScene(nullptr, &_lights, &m_Cameras, this);
 }
 

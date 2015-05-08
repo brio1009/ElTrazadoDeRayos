@@ -41,6 +41,14 @@ using std::vector;
 // _____________________________________________________________________________
 Mesh::Mesh() {
 }
+// _____________________________________________________________________________
+const std::vector<glm::vec3>& Mesh::getVertices() const {
+  return m_Vertices;
+}
+// _____________________________________________________________________________
+const std::vector<glm::vec3>& Mesh::getNormals() const {
+  return m_Normals;
+}
 
 // _____________________________________________________________________________
 void Mesh::loadObjFromFile(const string& filename) {

@@ -48,6 +48,8 @@ class Mesh : public Shape {
       const REAL maximumT) const override;
   /// Intersection test.
   virtual std::vector<REAL> intersect(const Ray& ray) const override;
+  const std::vector<glm::vec3>& getVertices() const;
+  const std::vector<glm::vec3>& getNormals() const;
 
  protected:
   virtual glm::vec4 getNormalAt(const glm::vec4& p) const;

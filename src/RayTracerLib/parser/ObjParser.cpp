@@ -342,7 +342,8 @@ bool parseObjFile(
   uvCoords->reserve(numIndices);
   for (size_t i = 0; i < numIndices; ++i) {
     vertices->push_back(tmpVertices[vIndices[i] - 1]);
-    normals->push_back(tmpNormals[nIndices[i] - 1]);
+    if (tmpNormals.size() > nIndices[i] - 1)
+      normals->push_back(tmpNormals[nIndices[i] - 1]);
     // If file has no tex coordinates defined ignore them!
     if (uvIndices[i] != 0)
       uvCoords->push_back(tmpUVCoords[uvIndices[i] - 1]);

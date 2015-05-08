@@ -114,11 +114,15 @@ AABB ellipsoidAABB(const Ellipsoid& ellipsoid) {
   // Return a AABB with the minimal and maximal positions.
   return {vec3(minPos), vec3(maxPos)};
 }
+
+AABB fallbackAABB(const Shape& shape) {
+  return AABB();
+}
 }  // namespace
 
 namespace accelerationstructures {
 // _____________________________________________________________________________
 AABB aabbFromShape(const Shape& shape) {
-  return dispatcher(shape, boxAABB, ellipsoidAABB);
+  return dispatcher(shape, boxAABB, ellipsoidAABB, fallbackAABB);
 }
 }  // accelerationstructures
