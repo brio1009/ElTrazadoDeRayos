@@ -32,6 +32,7 @@ SOFTWARE.
 #include <unordered_map>
 #include <tuple>
 #include <vector>
+#include <set>
 #include <cstdint>
 #include <utility>
 
@@ -76,6 +77,11 @@ class UniformGrid : public AbstractDataStructure {
   typedef std::vector<std::pair<Shape*, uint64_t> > cellList;
   std::unordered_map<glm::ivec3,
     cellList, SmartHash> m_Shapes;
+  /// A list of all added Shapes.
+  std::set<Shape*> m_ShapeList;
+  /// A list of all infinite shapes.
+  std::set<Shape*> m_InfShapeList;
+
   /// The dimensionality of a cell. (All cells are cubical)
   float m_CellSize;
 };

@@ -29,6 +29,7 @@ SOFTWARE.
 
 #include "../shapes/Shape.h"
 #include "../shapes/Box.h"
+#include "../shapes/Plane.h"
 #include "../shapes/Ellipsoid.h"
 #include "../FunctionTraits.h"
 
@@ -44,26 +45,26 @@ template <typename Func>
 using arg0 = typename function_traits<Func>::template arg<0>;
 
 // _____________________________________________________________________________
-template<typename Func>
-AABB dispatcher(const Shape& shape, Func&& f) {
+template<typename Ret, typename Func>
+Ret dispatcher(const Shape& shape, Func&& f) {
   try {
     typename arg0<Func>::type t =
       dynamic_cast<typename arg0<Func>::type>(shape);
     return f(t);
   } catch (std::bad_cast error) {
-    return AABB();
+    return Ret();
   }
 }
 
 // _____________________________________________________________________________
-template<typename Func, typename... Args>
-AABB dispatcher(const Shape& shape, Func&& f, Args&&... args) {
+template<typename Ret, typename Func, typename... Args>
+Ret dispatcher(const Shape& shape, Func&& f, Args&&... args) {
   try {
     typename arg0<Func>::type t =
       dynamic_cast<typename arg0<Func>::type>(shape);
     return f(t);
   } catch (std::bad_cast error) {
-    return dispatcher<Args...>(shape, std::forward<Args>(args)...);
+    return dispatcher<Ret, Args...>(shape, std::forward<Args>(args)...);
   }
 }
 // Returns the surrounding min and max pos of the boxes
@@ -118,11 +119,23 @@ AABB ellipsoidAABB(const Ellipsoid& ellipsoid) {
 AABB fallbackAABB(const Shape& shape) {
   return AABB();
 }
+
+bool planeInfinite(const Plane& plane) {
+  return true;
+}
+
+bool fallbackInfinite(const Shape& shape) {
+  return false;
+}
 }  // namespace
 
 namespace accelerationstructures {
 // _____________________________________________________________________________
 AABB aabbFromShape(const Shape& shape) {
-  return dispatcher(shape, boxAABB, ellipsoidAABB, fallbackAABB);
+  return dispatcher<AABB>(shape, boxAABB, ellipsoidAABB, fallbackAABB);
+}
+// ____________________________________________________________________________
+bool aabbOfShapeInfinite(const Shape& shape) {
+  return dispatcher<bool>(shape, planeInfinite, fallbackInfinite);
 }
 }  // accelerationstructures

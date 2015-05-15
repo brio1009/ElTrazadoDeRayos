@@ -40,6 +40,8 @@ class Spatial {
 
   /// Getter for the transformation matrix.
   const glm::mat4& getTransformMatrix() const { return _transformation; }
+  /// Getter for the inverse transformation matrix.
+  const glm::mat4& getInverseTransformMatrix() const { return _inverseTransform; }
 
   /// Get the position of the object.
   const glm::vec4& getPosition() const { return _transformation[3]; }

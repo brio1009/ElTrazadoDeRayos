@@ -38,6 +38,7 @@ SOFTWARE.
 
 using glm::ivec3;
 using glm::vec3;
+using glm::vec4;
 
 namespace {
 using accelerationstructures::AABB;
@@ -52,10 +53,13 @@ vec3 posOfIndex(const ivec3& index, const float& cellSize) {
   return vec3(cellSize * index.x, cellSize * index.y, cellSize * index.z);
 }
 
-AABB aabbOfTriangle(const std::vector<vec3>& vertices, const size_t& pos) {
-  const vec3& v1 = vertices.at(pos);
-  const vec3& v2 = vertices.at(pos + 1);
-  const vec3& v3 = vertices.at(pos + 2);
+AABB aabbOfTriangle(
+    const std::vector<vec3>& vertices,
+    const size_t& pos,
+    const glm::mat4& trans) {
+  const vec3& v1 = vec3(trans * vec4(vertices.at(pos), 1.0f));
+  const vec3& v2 = vec3(trans * vec4(vertices.at(pos + 1), 1.0f));
+  const vec3& v3 = vec3(trans * vec4(vertices.at(pos + 2), 1.0f));
   vec3 minVec(
       std::min(std::min(v1.x, v2.x), v3.x),
       std::min(std::min(v1.y, v2.y), v3.y),
@@ -83,9 +87,17 @@ int sgn(T val) {
 
 namespace accelerationstructures {
 // _____________________________________________________________________________
-UniformGrid::UniformGrid(const float& cellSize) : m_CellSize(cellSize) {}
+UniformGrid::UniformGrid(const float& cellSize) :
+    m_ShapeList(),
+    m_CellSize(cellSize) {}
+
 // _____________________________________________________________________________
 UniformGrid::~UniformGrid() {
+  auto end = m_ShapeList.end();
+  // Free all the shapes.
+  for (auto it = m_ShapeList.begin(); it != end; ++it) {
+    delete *it;
+  }
 }
 // _____________________________________________________________________________
 void UniformGrid::intersectCellShapes(const glm::ivec3& index,
@@ -98,8 +110,9 @@ void UniformGrid::intersectCellShapes(const glm::ivec3& index,
       const std::pair<Shape*, uint64_t>& current = it->second.at(i);
       Mesh* mesh;
       if ((mesh = dynamic_cast<Mesh*>(current.first))) {
+        Ray transformedRay = mesh->getInverseTransformMatrix() * ray;
         std::vector<size_t> hits;
-        std::vector<REAL> t = intersectTriangles(ray,
+        std::vector<REAL> t = intersectTriangles(transformedRay,
             mesh->getVertices(),
             current.second, current.second + 3, &hits);
         if (t.size() == 0) {
@@ -111,10 +124,10 @@ void UniformGrid::intersectCellShapes(const glm::ivec3& index,
         const std::vector<vec3>& normals = mesh->getNormals();
         intersections->push_back(IntersectionInfo(tVal,
             position,
-            glm::vec4(
+            glm::normalize(mesh->getTransformMatrix() * glm::vec4(
               (normals[current.second]
               + normals[current.second + 1]
-              + normals[current.second + 2]) / 3.0f, 0.0f),
+              + normals[current.second + 2]) / 3.0f, 0.0f)),
             mesh->getMaterialPtr(),
             glm::vec2(0.0f)));
       } else {
@@ -125,6 +138,18 @@ void UniformGrid::intersectCellShapes(const glm::ivec3& index,
 }
 // _____________________________________________________________________________
 IntersectionInfo UniformGrid::traceRay(const Ray& ray) const {
+  REAL smallestT = std::numeric_limits<REAL>::max();
+  // Always check infinit intersection objects.
+  // Contains the smallest intersection with a infinite object.
+  IntersectionInfo info;
+  auto end = m_InfShapeList.end();
+  for (auto it = m_InfShapeList.begin(); it != end; ++it) {
+    IntersectionInfo tmpInfo = (*it)->getIntersectionInfo(ray);
+    if (tmpInfo.materialPtr && tmpInfo.t < smallestT) {
+      smallestT = tmpInfo.t;
+      info = tmpInfo;
+    }
+  }
   // initialize the indices.
   const glm::vec4& dir = ray.direction();
   const glm::vec4& origin = ray.origin();
@@ -144,11 +169,10 @@ IntersectionInfo UniformGrid::traceRay(const Ray& ray) const {
       dir.y < 0 ? -1 : 1,
       dir.z < 0 ? -1 : 1);
   vec3 deltaTValue = m_CellSize / vec3(fabs(dir.x), fabs(dir.y), fabs(dir.z));
-  // printf("(%.2f, %.2f, %.2f) (%.2f, %.2f, %.2f)\n",
-  //     deltaTValue.x, deltaTValue.y, deltaTValue.z,
-  //     dir.x, dir.y, dir.z);
-  
 
+  // Intersect every infinite object first.
+
+  IntersectionInfo* out = NULL;
   // maximal number of cells allowed.
   for (size_t i = 0; i < 2 * 1e2; ++i) {
     float minT = std::min(std::min(maxTVal.x, maxTVal.y), maxTVal.z);
@@ -156,14 +180,16 @@ IntersectionInfo UniformGrid::traceRay(const Ray& ray) const {
     std::vector<IntersectionInfo> intersections;
     intersectCellShapes(index, ray, &intersections);
     auto endIt = intersections.end();
-    IntersectionInfo* out = NULL;
+    // Check for all intersections inside of the cell.
     for (auto it = intersections.begin(); it != endIt; ++it) {
-      // printf("Found intersections in (%d, %d, %d) t: %.4f/%.4f\n", index.x, index.y, index.z, it->t, minT);
       if (it->t < minT) {
-        // printf("Found real intersections in (%d, %d, %d)\n", index.x, index.y, index.z);
         out = &(*it);
         minT = it->t;
       }
+    }
+    if (smallestT < minT) {
+      out = &info;
+      minT = smallestT;
     }
     if (out) {
       return *out;
@@ -203,19 +229,19 @@ void UniformGrid::insertShapeIntoMatchingCells(const AABB& aabb, Shape* shape) {
     // For meshs we loop multiple times.
     const std::vector<vec3>& vertices = mesh->getVertices();
     const size_t vertCount = vertices.size();
+    const glm::mat4& transformation = mesh->getTransformMatrix();
     minMaxIndices.reserve(vertCount / 3);
     // loop over all the faces.
     for (size_t i = 0; i < vertCount; i += 3) {
       // Get the indices of this face.
       getIndecesForAABBInGrid(
-          aabbOfTriangle(vertices, i),
+          aabbOfTriangle(vertices, i, transformation),
           &minCellIndex,
           &maxCellIndex,
           m_CellSize);
       
       // add the indices.
       minMaxIndices.push_back(std::make_pair(minCellIndex, maxCellIndex));
-      // printf("Adding minMax (%d,%d,%d)(%d,%d,%d)\n", minCellIndex.x, minCellIndex.y, minCellIndex.z
     }
   } else {
     // Calculate the indeces.
@@ -249,15 +275,20 @@ void UniformGrid::insertShapeIntoMatchingCells(const AABB& aabb, Shape* shape) {
       }
     }
   }
-  for (auto it = m_Shapes.begin(); it != m_Shapes.end(); ++it) {
-    printf("Key: (%d %d %d), Num elem: %lu)\n", it->first.x, it->first.y, it->first.z, it->second.size());
-  }
 }
 // _____________________________________________________________________________
 void UniformGrid::addShape(Shape* shape) {
+  // Some implicit shapes are infinite. Store them in a vector.
+  bool isInfinite = aabbOfShapeInfinite(*shape);
   // The shape will be added to all cells that intersect its aabb.
   AABB aabb = aabbFromShape(*shape);
-  insertShapeIntoMatchingCells(aabb, shape);
+  // Insert infinit objects into a set and 
+  if (!isInfinite)
+    insertShapeIntoMatchingCells(aabb, shape);
+  else
+    m_InfShapeList.insert(shape);
+  // all shapes will be stored in a vector as well to handle the deletion.
+  m_ShapeList.insert(shape);
 }
 // _____________________________________________________________________________
 size_t UniformGrid::size() const {

@@ -39,6 +39,8 @@ struct AABB {
 };
 
 AABB aabbFromShape(const Shape& shape);
+
+bool aabbOfShapeInfinite(const Shape& shape);
 }  // namespace accelerationstructures
 
 #endif  // RAYTRACERLIB_ACCELERATIONSTRUCTURES_AABB_H_
