@@ -29,6 +29,7 @@ SOFTWARE.
 
 #include "./Material.h"
 #include "./Constants.h"
+#include "../Color.h"
 
 /// GLass-like materials.
 class GlassMaterial : public Material {
@@ -36,8 +37,8 @@ class GlassMaterial : public Material {
   /// Constructor.
   explicit GlassMaterial(const float refractiveIndex)
     : _refractiveIndex(refractiveIndex),
-      _transparencyFactor(0.0f),
-      _color(1.0, 0.0, 0.0) { }
+      _color(1.0, 0.0, 0.0),
+      _transparencyFactor(0.0f) {}
 
   /// Returns the color for the given position, normal and ray direction.
   virtual Color getColor(const IntersectionInfo& intersectionInfo,

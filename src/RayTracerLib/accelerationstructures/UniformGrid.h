@@ -48,7 +48,10 @@ class Shape;
 
 struct SmartHash {
   size_t operator()(const glm::ivec3& vec) const {
-    return ((vec.x * PRIME1) ^ (vec.y * PRIME2) ^ (vec.z * PRIME3)) % HASHTABLESIZE;
+    return ((vec.x * PRIME1)
+        ^ (vec.y * PRIME2)
+        ^ (vec.z * PRIME3))
+      % HASHTABLESIZE;
   }
 };
 
@@ -58,7 +61,7 @@ struct AABB;
 
 class UniformGrid : public AbstractDataStructure {
  public:
-  UniformGrid(const float& cellSize);
+  explicit UniformGrid(const float& cellSize);
   virtual ~UniformGrid() override;
   /// see AbstractDataStructure.
   virtual IntersectionInfo traceRay(const Ray& ray) const override;
@@ -66,6 +69,7 @@ class UniformGrid : public AbstractDataStructure {
   virtual void addShape(Shape* shape) override;
   /// Returns the number of shapes contained in this structure.
   virtual size_t size() const override;
+
  private:
   void insertShapeIntoMatchingCells(const AABB& aabb, Shape* shape);
   void intersectCellShapes(const glm::ivec3& index,

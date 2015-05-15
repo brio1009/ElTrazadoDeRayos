@@ -50,8 +50,8 @@ const char* Camera::name = "Camera";
 
 // _____________________________________________________________________________
 Camera::Camera(const int width, const int height)
-    : _image(width, height),
-      m_UsePostProcessing(true) {
+    : m_UsePostProcessing(true),
+      _image(width, height) {
   m_Sampler = std::make_shared<RegularSampler>(constants::DefaultSamplesPerDim);
   m_PostProcessor = std::make_shared<GammaCorrector>(2.2f);
 }
@@ -61,10 +61,10 @@ void Camera::setRegularSampleSize(size_t samplesPerDim) {
 
 // _____________________________________________________________________________
 Camera::Camera(const Camera& camera)
-  : _image(camera._image),
-    m_Sampler(camera.m_Sampler),
+  : m_Sampler(camera.m_Sampler),
     m_PostProcessor(camera.m_PostProcessor),
-    m_UsePostProcessing(camera.m_UsePostProcessing) {
+    m_UsePostProcessing(camera.m_UsePostProcessing),
+    _image(camera._image) {
 }
 
 // _____________________________________________________________________________
@@ -86,7 +86,6 @@ void Camera::render(const Scene& scene,
       const size_t& startPixel,
       const size_t& endPixel) {
   // Send rays.
-  size_t progress(0);
   int amountPixels = endPixel - startPixel;
   auto start = std::chrono::high_resolution_clock::now();
 #ifdef BENICE

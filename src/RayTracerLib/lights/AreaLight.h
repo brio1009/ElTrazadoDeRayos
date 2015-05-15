@@ -36,8 +36,8 @@ class AreaLight : public Light {
  public:
   /// Constructor of a Area Light. The sphere radius of the light must be given.
   AreaLight(const glm::vec4& position, REAL sphereRadius)
-    : m_SphereRadius(sphereRadius),
-      m_NumSamples(10) {
+    : m_NumSamples(10),
+      m_SphereRadius(sphereRadius) {
     setPosition(position);
     setLightColor(Color(1, 1, 1));
   }

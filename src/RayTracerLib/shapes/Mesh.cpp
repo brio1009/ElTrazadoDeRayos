@@ -94,7 +94,8 @@ IntersectionInfo Mesh::getIntersectionInfo(
                             glm::vec4(
                               (m_Normals[smallestTriangleHit]
                               + m_Normals[smallestTriangleHit + 1]
-                              + m_Normals[smallestTriangleHit + 2]) / 3.0f, 0.0f),
+                              + m_Normals[smallestTriangleHit + 2])
+                                / 3.0f, 0.0f),
                             getMaterialPtr(),
                             getTextureCoord(position));
   }
@@ -109,12 +110,6 @@ glm::vec4 Mesh::getNormalAt(const glm::vec4& p) const {
 
 // _____________________________________________________________________________
 vector<REAL> Mesh::intersect(const Ray& ray) const {
-  // TODO(bauschp): Calculate intersection with ever triangle.
-  // Bring vector to unit space.
-  Ray transRay = _inverseTransform * ray;
-  // This is the slab method.
-  const glm::vec4& rayDir = transRay.direction();
-  glm::vec4 invRayDir;
   // Should never be called.
   return vector<REAL>();
 }

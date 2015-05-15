@@ -28,8 +28,8 @@ SOFTWARE.
 #define RAYTRACERLIB_SHAPES_PROJECTORFUNCTIONS_H_
 
 #include <glm/glm.hpp>
-#include "../Constants.h"
 #include <vector>
+#include "../Constants.h"
 
 /// These are some basic projector functions to map a point to a texture
 /// coordinate.

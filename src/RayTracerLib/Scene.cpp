@@ -341,11 +341,11 @@ void defaultScene(vector<Shape*>* shapes,
   shapes->push_back(ell3);
 
   // ell3->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
-//  Ellipsoid* ell2 = new Ellipsoid(5, 5, 5);
-//  _shapes.push_back(ell2);
+  // Ellipsoid* ell2 = new Ellipsoid(5, 5, 5);
+  // _shapes.push_back(ell2);
   // Compound test
-  Box* b1 = new Box(10, 10, 10);
-  Ellipsoid* e1 = new Ellipsoid(5, 20, 5);
+  // Box* b1 = new Box(10, 10, 10);
+  // Ellipsoid* e1 = new Ellipsoid(5, 20, 5);
 
   // Glass ball.
   Ellipsoid* ball = new Ellipsoid(10, 10, 10);

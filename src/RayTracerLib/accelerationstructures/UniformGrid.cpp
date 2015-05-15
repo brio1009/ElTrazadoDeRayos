@@ -28,6 +28,10 @@ SOFTWARE.
 #include <glm/glm.hpp>
 
 #include <unordered_map>
+#include <limits>
+#include <utility>
+#include <algorithm>
+#include <vector>
 
 #include "../IntersectionInfo.h"
 #include "../shapes/Shape.h"
@@ -239,7 +243,7 @@ void UniformGrid::insertShapeIntoMatchingCells(const AABB& aabb, Shape* shape) {
           &minCellIndex,
           &maxCellIndex,
           m_CellSize);
-      
+
       // add the indices.
       minMaxIndices.push_back(std::make_pair(minCellIndex, maxCellIndex));
     }
@@ -282,7 +286,7 @@ void UniformGrid::addShape(Shape* shape) {
   bool isInfinite = aabbOfShapeInfinite(*shape);
   // The shape will be added to all cells that intersect its aabb.
   AABB aabb = aabbFromShape(*shape);
-  // Insert infinit objects into a set and 
+  // Insert infinit objects into a set and
   if (!isInfinite)
     insertShapeIntoMatchingCells(aabb, shape);
   else

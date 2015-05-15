@@ -35,7 +35,7 @@ using std::vector;
 
 // _____________________________________________________________________________
 Image::Image(const int width, const int height)
-  : _width(width), _height(height) {
+  : _height(height), _width(width) {
   // We need to be sure, that width and height are both > 0.
   assert(_width > 0);
   assert(_height > 0);
@@ -94,11 +94,12 @@ void Image::saveAsBMP(const std::string& filePath) const {
   }
 
   unsigned char* img = NULL;
-  int filesize = 54 + 3 * _width * _height;
+  int imgSize = 3 * _width * _height;
+  int filesize = 54 + imgSize;
   if (img)
     free(img);
-  img = (unsigned char*)malloc(3 * _width * _height);
-  memset(img, 0, sizeof(img));
+  img = (unsigned char*)malloc(imgSize);
+  memset(img, 0, imgSize);
 
   for (int i = 0; i < _width; ++i) {
     for (int j = 0; j < _height; ++j) {

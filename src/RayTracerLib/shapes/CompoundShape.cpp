@@ -42,8 +42,8 @@ const char* CompoundShape::name = "CompoundShape";
 
 // _____________________________________________________________________________
 CompoundShape::CompoundShape()
-  : _passTransformation(true),
-    _useChildMaterials(true),
+  : _useChildMaterials(true),
+    _passTransformation(true),
     _operator(CompoundShape::Operator::minusOp) {
 }
 
@@ -51,8 +51,8 @@ CompoundShape::CompoundShape()
 CompoundShape::CompoundShape(Shape* leftShapePtr, Shape* rightShapePtr)
   : _leftShapePtr(leftShapePtr),
     _rightShapePtr(rightShapePtr),
-    _passTransformation(true),
     _useChildMaterials(true),
+    _passTransformation(true),
     _operator(CompoundShape::Operator::minusOp) {
 }
 

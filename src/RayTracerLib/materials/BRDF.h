@@ -27,8 +27,8 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_MATERIALS_BRDF_H_
 #define RAYTRACERLIB_MATERIALS_BRDF_H_
 
-#include <cstdint>
 #include <glm/glm.hpp>
+#include <cstdint>
 // Forward declaration.
 struct IntersectionInfo;
 class Ray;

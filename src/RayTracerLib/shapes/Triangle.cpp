@@ -26,7 +26,7 @@ SOFTWARE.
 #include "./Triangle.h"
 
 #include <glm/glm.hpp>
-#include <glm/gtx/fast_square_root.hpp> // fastNormalize
+#include <glm/gtx/fast_square_root.hpp>  // fastNormalize
 #include <cstdio>
 #include <vector>
 #include "../Constants.h"
