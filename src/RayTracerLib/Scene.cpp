@@ -527,9 +527,11 @@ void openHemisphereScene(vector<Camera*>* cameras,
 
 // _____________________________________________________________________________
 Scene::Scene() {
+  m_Background = Color(0.5f, 0.7f, 0.88f);
   /*
   PROPERTYCLASS(CompoundShape);
-  printf("map value: %s\n", typeid(*(PropertyManager::classProperties["CompoundShape"])).name());
+  printf("map value: %s\n",
+  typeid(*(PropertyManager::classProperties["CompoundShape"])).name());
   // testMap.emplace("asd", 1);
   */
   // pathTraceGlobal(&_shapes, &_lights, &m_Cameras, this);

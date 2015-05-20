@@ -52,9 +52,7 @@ class Scene {
   /// Traces a ray through the scene.
   IntersectionInfo traceRay(const Ray& ray) const;
   /// Returns a color for the scene background.
-  Color backgroundColor(const Ray& ray) const { return Color(0.5f,
-                                                             0.7f,
-                                                             0.88f); }
+  Color backgroundColor(const Ray& ray) const { return m_Background; }
   /// Returnes a reference to all the lights in the scene.
   std::vector<Light*>& lights() { return _lights; }
   /// Returnes a const reference to all the lights in the scene.
@@ -78,6 +76,10 @@ class Scene {
     return m_ImportantShapes;
   }
 
+  void setBackgroundColor(const Color& c) {
+    m_Background = c;
+  }
+
  private:
   /// Holds the renderable objects.
   accelerationstructures::AbstractDataStructure* m_Shapes;
@@ -91,6 +93,9 @@ class Scene {
 
   /// Holds the cameras in this scene.
   std::vector<Camera*> m_Cameras;
+
+  /// The background color.
+  Color m_Background;
 };
 
 #endif  // RAYTRACERLIB_SCENE_H_

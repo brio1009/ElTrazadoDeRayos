@@ -31,6 +31,7 @@ SOFTWARE.
 #include "../shapes/Box.h"
 #include "../shapes/Plane.h"
 #include "../shapes/Ellipsoid.h"
+#include "../shapes/Rectangle.h"
 #include "../FunctionTraits.h"
 
 using std::function;
@@ -124,6 +125,10 @@ bool planeInfinite(const Plane& plane) {
   return true;
 }
 
+bool RectangleInfinite(const Rectangle& plane) {
+  return true;
+}
+
 bool fallbackInfinite(const Shape& shape) {
   return false;
 }
@@ -136,6 +141,9 @@ AABB aabbFromShape(const Shape& shape) {
 }
 // ____________________________________________________________________________
 bool aabbOfShapeInfinite(const Shape& shape) {
-  return dispatcher<bool>(shape, planeInfinite, fallbackInfinite);
+  return dispatcher<bool>(shape,
+      planeInfinite,
+      RectangleInfinite,
+      fallbackInfinite);
 }
-}  // accelerationstructures
+}  // namespace accelerationstructures

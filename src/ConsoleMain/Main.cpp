@@ -32,9 +32,16 @@ SOFTWARE.
 #include <Scene.h>
 #include <cameras/PerspectiveCamera.h>
 #include <materials/Material.h>
+#include <materials/ColorMaterial.h>
+#include <materials/PhongMaterial.h>
+#include <materials/DoubleMaterial.h>
+#include <materials/GlassMaterial.h>
+#include <materials/PhongBRDF.h>
+#include <lights/PointLight.h>
 #include <parser/SceneFileParser.h>
-#include <shapes/Ellipsoid.h>
 #include <shapes/Plane.h>
+#include <shapes/Mesh.h>
+#include <accelerationstructures/AABB.h>
 // C Header.
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -53,11 +60,55 @@ void renderTestScene(const char* fileName, size_t chunks, size_t chunkNr) {
   // Create the scene. This also adds all the objects.
   Scene scene;
   // Load the desired Scene.
-  SceneFileParser sceneParser;
-  sceneParser.parse("../../scenes/testScene.xml", &scene);
+  // SceneFileParser sceneParser;
+  // sceneParser.parse("../../scenes/testScene.xml", &scene);
+  std::vector<Material*> mats;
+  mats.push_back(new ColorMaterial(Color(0.0f, 0.0f, 0.0f)));
+  mats.push_back(new ColorMaterial(Color(0.0f, 0.0f, 1.0f)));
+  mats.push_back(new DoubleMaterial(mats[0], mats[1], 1, 1));
+  mats.push_back(new MonteCarloMaterial(Color(1.0f, 0.0f, 0.0f), std::make_shared<PhongBRDF>(0.0, 0.1, 10.0f)));
+  mats.push_back(new GlassMaterial(RefractiveIndex::glass));
+  mats.push_back(new ColorMaterial(Color(1.0f, 1.0f, 1.0f)));
+  Plane* p = new Plane(0, 0, 1);
+  p->transform(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -10.5)));
+  p->setMaterialPtr(mats[2]);
+  scene.addShape(p);
+  Mesh* m = new Mesh();
+  // m->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
+  m->setMaterialPtr(mats[3]);
+  m->loadObjFromFile("../../scenes/FinalBaseMesh.obj");
+  glm::mat4 trans =
+    glm::rotate(
+        glm::mat4(1.0f),
+        3.14150f * 0.25f,
+        glm::vec3(0, 1.0f, 0));
+  m->transform(glm::translate(trans, glm::vec3(0, -5.0f, 0.0f)));
+
+  Rectangle* areaLight = new Rectangle(
+      glm::vec3(0, 0, -1), glm::vec2(10, 10));
+  areaLight->setMaterialPtr(mats[5]);
+  areaLight->transform(glm::translate(glm::mat4(1.0f),
+        glm::vec3(-5.0f, 0.0f, 21.0f)));
+  scene.addShape(areaLight);
+  scene.addShape(m);
+  scene.lights().push_back(new PointLight(glm::vec4(0, 10, 20, 1)));
+  scene.lights().back()->setLightColor(Color(1.0f, 1.0f, 1.0f));
+  // PerspectiveCamera* cam = new PerspectiveCamera(1920, 1080,
+  //                                                glm::radians(85.0f));
+  PerspectiveCamera* cam = new PerspectiveCamera(400, 400,
+                                                 glm::radians(85.0f));
+  cam->setRegularSampleSize(25);
+  scene.setBackgroundColor(Color(0, 0, 0));
+  trans = glm::mat4(1.0);
+  trans = glm::rotate(trans, 3.14150f * 0.25f, glm::vec3(0, 1.0f, 0));
+  cam->transform(glm::translate(trans, glm::vec3(0.001, 10.00001, 19.99999)));
+  cam->setUsePostProcessing(true);
+  scene.cameras().push_back(cam);
   // Render all the images.
   scene.render(chunks, chunkNr);
-
+  // Remove This as well.
+  for (auto it = mats.begin(); it != mats.end(); ++it)
+    delete *it;
   // Get the cameras and save the images.
   for (size_t i = 0; i < scene.cameras().size(); ++i) {
     // Save the image under different names.

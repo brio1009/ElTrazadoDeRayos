@@ -102,6 +102,7 @@ std::string StringCastHelper<ValueType>::toString(const ValueType&) {
   // exception.
   static_assert(sizeof(ValueType) != sizeof(ValueType), "Specialize a"
       "StringCastHelper for your ValueType!");
+  return "";
 }
 
 template<typename ValueType>

@@ -116,9 +116,11 @@ void UniformGrid::intersectCellShapes(const glm::ivec3& index,
       if ((mesh = dynamic_cast<Mesh*>(current.first))) {
         Ray transformedRay = mesh->getInverseTransformMatrix() * ray;
         std::vector<size_t> hits;
+        std::vector<float> b1;
+        std::vector<float> b2;
         std::vector<REAL> t = intersectTriangles(transformedRay,
             mesh->getVertices(),
-            current.second, current.second + 3, &hits);
+            current.second, current.second + 3, &hits, &b1, &b2);
         if (t.size() == 0) {
           continue;
         }
@@ -126,12 +128,16 @@ void UniformGrid::intersectCellShapes(const glm::ivec3& index,
         glm::vec4 position = ray.origin()
                          + static_cast<float>(tVal) * ray.direction();
         const std::vector<vec3>& normals = mesh->getNormals();
+        float beta = b1[0];
+        float gamma = b2[0];
+        float alpha = 1 - beta - gamma;
+        // printf("alpha/beta/gamma(%.2f/%.2f/%.2f)\n", alpha, beta, gamma);
         intersections->push_back(IntersectionInfo(tVal,
             position,
             glm::normalize(mesh->getTransformMatrix() * glm::vec4(
-              (normals[current.second]
-              + normals[current.second + 1]
-              + normals[current.second + 2]) / 3.0f, 0.0f)),
+              ((alpha * normals[current.second])
+              + (beta * normals[current.second + 1])
+              + (gamma * normals[current.second + 2])), 0.0f)),
             mesh->getMaterialPtr(),
             glm::vec2(0.0f)));
       } else {
@@ -186,7 +192,7 @@ IntersectionInfo UniformGrid::traceRay(const Ray& ray) const {
     auto endIt = intersections.end();
     // Check for all intersections inside of the cell.
     for (auto it = intersections.begin(); it != endIt; ++it) {
-      if (it->t < minT) {
+      if (it->materialPtr && it->t < minT && it->t > constants::TEPSILON) {
         out = &(*it);
         minT = it->t;
       }
@@ -221,7 +227,7 @@ IntersectionInfo UniformGrid::traceRay(const Ray& ray) const {
       }
     }
   }
-  return IntersectionInfo();
+  return info;
 }
 // _____________________________________________________________________________
 void UniformGrid::insertShapeIntoMatchingCells(const AABB& aabb, Shape* shape) {

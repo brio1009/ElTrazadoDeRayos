@@ -39,9 +39,9 @@ class BRDF;
 
 /// Phong material that shades the object with the phong reflection model.
 class MonteCarloMaterial : public Material {
-  GETSET(REAL, m_color.r(), R)
-  GETSET(REAL, m_color.g(), G)
-  GETSET(REAL, m_color.b(), B)
+  GETSET(REAL, m_Color.r(), R)
+  GETSET(REAL, m_Color.g(), G)
+  GETSET(REAL, m_Color.b(), B)
 
  public:
   /// Constructor. Randoms a color.
@@ -50,12 +50,15 @@ class MonteCarloMaterial : public Material {
   /// Constructor.
   explicit MonteCarloMaterial(const Color& color);
 
+  /// Constructor.
+  MonteCarloMaterial(const Color& color, std::shared_ptr<BRDF> brdf);
+
   /// Returns the color for the given position, normal and ray direction.
   virtual Color getColor(const IntersectionInfo& intersectionInfo,
                          const Ray& incomingRay,
                          const Scene& scene) const;
   virtual void setColor(const float r, const float g, const float b) {
-    m_color = Color(r, g, b);
+    m_Color = Color(r, g, b);
   }
 
   /// Name of the material used to serialize/deserialize.
@@ -88,7 +91,7 @@ class MonteCarloMaterial : public Material {
 
  private:
   std::shared_ptr<BRDF> m_BRDF;
-  Color m_color;
+  Color m_Color;
 };
 
 #endif  // RAYTRACERLIB_MATERIALS_MONTECARLOMATERIAL_H_

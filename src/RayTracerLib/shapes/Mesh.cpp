@@ -65,6 +65,8 @@ IntersectionInfo Mesh::getIntersectionInfo(
   REAL smallestT = std::numeric_limits<REAL>::max();
   size_t smallestTriangleHit = m_Vertices.size();
   vector<size_t> hitTriangles;
+  vector<float> b1;
+  vector<float> b2;
   // Test the object for a hit.
   Ray transformedRay = _inverseTransform * ray;
   vector<REAL> hits = intersectTriangles(
@@ -72,7 +74,8 @@ IntersectionInfo Mesh::getIntersectionInfo(
         m_Vertices,
         0,
         m_Vertices.size(),
-        &hitTriangles);
+        &hitTriangles,
+        &b1, &b2);
   bool hit(false);
   // Loop over
   for (size_t j = 0; j < hits.size(); ++j) {
@@ -89,15 +92,17 @@ IntersectionInfo Mesh::getIntersectionInfo(
                          + static_cast<float>(smallestT) * ray.direction();
     // Return the Intersectioninfo.
     // TODO(bauschp): modify to use texture coordinates.
+    float beta = b1[smallestTriangleHit];
+    float gamma = b2[smallestTriangleHit];
+    float alpha = 1 - beta - gamma;
     return IntersectionInfo(smallestT,
-                            position,
-                            glm::vec4(
-                              (m_Normals[smallestTriangleHit]
-                              + m_Normals[smallestTriangleHit + 1]
-                              + m_Normals[smallestTriangleHit + 2])
-                                / 3.0f, 0.0f),
-                            getMaterialPtr(),
-                            getTextureCoord(position));
+            position,
+            glm::normalize(getTransformMatrix() * glm::vec4(
+              ((alpha * m_Normals[smallestTriangleHit])
+              + (beta * m_Normals[smallestTriangleHit + 1])
+              + (gamma * m_Normals[smallestTriangleHit + 2])), 0.0f)),
+            getMaterialPtr(),
+            glm::vec2(0.0f));
   }
   // Else.
   return IntersectionInfo();

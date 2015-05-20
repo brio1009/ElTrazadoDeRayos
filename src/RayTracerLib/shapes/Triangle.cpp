@@ -39,7 +39,9 @@ std::vector<REAL> intersectTriangles(
     const Ray& ray,
     const std::vector<glm::vec3>& vertices,
     const size_t& begin, const size_t& end,
-    std::vector<size_t>* hitTriangles) {
+    std::vector<size_t>* hitTriangles,
+    std::vector<float>* barycentricOne,
+    std::vector<float>* barycentricTwo) {
   vector<REAL> result;
   // Check if begin and end are a multiple of 3.
   if (end <= begin || (end - begin) % 3 != 0) {
@@ -49,6 +51,8 @@ std::vector<REAL> intersectTriangles(
   // begin and end are valid.
   // clear the hit triangle vector.
   hitTriangles->clear();
+  barycentricOne->clear();
+  barycentricTwo->clear();
   // Loop over all the triangles.
   for (size_t i = begin; i < end; i += 3) {
     vec3 e1 = vertices.at(i + 1) - vertices.at(i);
@@ -71,6 +75,8 @@ std::vector<REAL> intersectTriangles(
     if (b1 > 0.0f && b2 > 0.0f && b1 + b2 < 1.0f) {
       // Intersection!!!!
       hitTriangles->push_back(i);
+      barycentricOne->push_back(b1);
+      barycentricTwo->push_back(b2);
       // TODO(bauschp): what???
       result.push_back(t);
     }

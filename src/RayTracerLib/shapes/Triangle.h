@@ -37,5 +37,7 @@ std::vector<REAL> intersectTriangles(
     const Ray& ray,
     const std::vector<glm::vec3>& vertices,
     const size_t& begin, const size_t& end,
-    std::vector<size_t>* hitTriangles);
+    std::vector<size_t>* hitTriangles,
+    std::vector<float>* barycentricOne,
+    std::vector<float>* barycentricTwo);
 #endif  // RAYTRACERLIB_SHAPES_TRIANGLE_H_
