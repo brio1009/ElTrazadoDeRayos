@@ -54,6 +54,14 @@ class RayInfo {
     _refractiveIndex.push(value);
   }
 
+  std::stack<float> copyStack() const {
+    return _refractiveIndex;
+  }
+
+  void setRefractionStack(const std::stack<float>& stack) {
+    _refractiveIndex = stack;
+  }
+
   /// The number of the ray since the camera. This helps us to prevent
   /// too long recursive ray traversal. The first ray has therefore depth
   /// 0.

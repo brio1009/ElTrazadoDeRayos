@@ -54,7 +54,7 @@ class BRDF {
   virtual float getPDFOfX(const glm::vec2& sample) const = 0;
   /// Returnes the value of the BRDF at given position with given omegas.
   virtual float evaluateBRDF(
-          const glm::vec4& position,
+          const IntersectionInfo& info,
           const glm::vec4& directionIn,
           const glm::vec4& directionOut) const = 0;
 };

@@ -59,7 +59,7 @@ class PhongBRDF : public BRDF {
   float getPDFOfX(const glm::vec2& sample) const;
 
   /// Returnes the value of the BRDF at given position with given omegas.
-  float evaluateBRDF(const glm::vec4& position,
+  float evaluateBRDF(const IntersectionInfo& info,
                      const glm::vec4& directionIn,
                      const glm::vec4& directionOut) const;
 

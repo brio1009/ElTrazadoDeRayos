@@ -63,10 +63,10 @@ void renderTestScene(const char* fileName, size_t chunks, size_t chunkNr) {
   // SceneFileParser sceneParser;
   // sceneParser.parse("../../scenes/testScene.xml", &scene);
   std::vector<Material*> mats;
-  mats.push_back(new ColorMaterial(Color(0.0f, 0.0f, 0.0f)));
-  mats.push_back(new ColorMaterial(Color(0.0f, 0.0f, 1.0f)));
+  mats.push_back(new ColorMaterial(Color(0.2f, 0.2f, 0.2f)));
+  mats.push_back(new ColorMaterial(Color(1.0f, 1.0f, 1.0f)));
   mats.push_back(new DoubleMaterial(mats[0], mats[1], 1, 1));
-  mats.push_back(new MonteCarloMaterial(Color(1.0f, 0.0f, 0.0f), std::make_shared<PhongBRDF>(0.0, 0.1, 10.0f)));
+  mats.push_back(new MonteCarloMaterial(Color(1.0f, 0.0f, 0.0f), std::make_shared<PhongBRDF>(0.2, 0.8, 20.0f)));
   mats.push_back(new GlassMaterial(RefractiveIndex::glass));
   mats.push_back(new ColorMaterial(Color(1.0f, 1.0f, 1.0f)));
   Plane* p = new Plane(0, 0, 1);
@@ -75,14 +75,15 @@ void renderTestScene(const char* fileName, size_t chunks, size_t chunkNr) {
   scene.addShape(p);
   Mesh* m = new Mesh();
   // m->setMaterialPtr(new GlassMaterial(RefractiveIndex::glass));
-  m->setMaterialPtr(mats[3]);
-  m->loadObjFromFile("../../scenes/FinalBaseMesh.obj");
-  glm::mat4 trans =
+  m->setMaterialPtr(mats[4]);
+  m->loadObjFromFile("../../scenes/Boxes.obj");
+  glm::mat4 trans = glm::mat4(1.0f);
+  trans =
     glm::rotate(
         glm::mat4(1.0f),
-        3.14150f * 0.25f,
+        3.14150f * 0.5f,
         glm::vec3(0, 1.0f, 0));
-  m->transform(glm::translate(trans, glm::vec3(0, -5.0f, 0.0f)));
+  m->transform(glm::translate(trans, glm::vec3(0, 10.0f, 0.0f)));
 
   Rectangle* areaLight = new Rectangle(
       glm::vec3(0, 0, -1), glm::vec2(10, 10));
@@ -97,11 +98,11 @@ void renderTestScene(const char* fileName, size_t chunks, size_t chunkNr) {
   //                                                glm::radians(85.0f));
   PerspectiveCamera* cam = new PerspectiveCamera(400, 400,
                                                  glm::radians(85.0f));
-  cam->setRegularSampleSize(25);
+  cam->setRegularSampleSize(20);
   scene.setBackgroundColor(Color(0, 0, 0));
   trans = glm::mat4(1.0);
-  trans = glm::rotate(trans, 3.14150f * 0.25f, glm::vec3(0, 1.0f, 0));
-  cam->transform(glm::translate(trans, glm::vec3(0.001, 10.00001, 19.99999)));
+  trans = glm::rotate(trans, 3.14150f * 0.1f, glm::vec3(1.0f, 0.0f, 0));
+  cam->transform(glm::translate(trans, glm::vec3(0.001, 10.00001, 10.99999)));
   cam->setUsePostProcessing(true);
   scene.cameras().push_back(cam);
   // Render all the images.

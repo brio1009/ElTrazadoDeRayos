@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include <algorithm>
 #include "../Constants.h"
+#include "../IntersectionInfo.h"
 
 // _____________________________________________________________________________
 glm::vec2 PhongBRDF::generateHemisphereSample(
@@ -47,14 +48,16 @@ float PhongBRDF::getPDFOfX(const glm::vec2& sample) const {
 
 // _____________________________________________________________________________
 float PhongBRDF::evaluateBRDF(
-        const glm::vec4& position,
+        const IntersectionInfo& info,
         const glm::vec4& directionIn,
         const glm::vec4& directionOut) const {
   // Diffuse Term
   float overallBRDFValue = m_rohDiffuse / constants::PI;
   // Specular Term
-  float dot = std::max(0.0f, glm::dot(-directionIn, directionOut));
-  overallBRDFValue += m_rohSpecular * (m_shiny + 2) / (2 * constants::PI)*
+  float lXn = glm::dot(-directionIn, info.normal);
+  glm::vec4 reflectionDir = 2.0f * lXn * info.normal + directionIn;
+  float dot = std::max(0.0f, glm::dot(reflectionDir, directionOut));
+  overallBRDFValue += m_rohSpecular * (m_shiny + 2) / (2 * constants::PI) *
       pow(dot, m_shiny);
   return overallBRDFValue;
 }

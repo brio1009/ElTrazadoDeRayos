@@ -36,9 +36,9 @@ class GlassMaterial : public Material {
  public:
   /// Constructor.
   explicit GlassMaterial(const float refractiveIndex)
-    : _refractiveIndex(refractiveIndex),
-      _color(1.0, 0.0, 0.0),
-      _transparencyFactor(0.0f) {}
+    : m_refractiveIndex(refractiveIndex),
+      m_color(1, 0.0, 0.0),
+      m_transparencyFactor(5.0f) {}
 
   /// Returns the color for the given position, normal and ray direction.
   virtual Color getColor(const IntersectionInfo& intersectionInfo,
@@ -53,16 +53,17 @@ class GlassMaterial : public Material {
       const glm::vec4& position,
       const unsigned char currentDepth,
       const float& colorContribution,
-      const Scene& scene) const;
+      const Scene& scene,
+      float* distance) const;
 
   /// Defines the refractive index which we use to compute the ray directions.
-  float _refractiveIndex;
+  float m_refractiveIndex;
   /// Defines the material color. Together with the transparency factor this is
   /// is used to "fog" the material with distance.
-  Color _color;
+  Color m_color;
 
   /// Material transparency factor.
-  REAL _transparencyFactor;
+  REAL m_transparencyFactor;
 };
 
 #endif  // RAYTRACERLIB_MATERIALS_GLASSMATERIAL_H_
