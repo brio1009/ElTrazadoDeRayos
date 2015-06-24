@@ -105,18 +105,35 @@ void addTriangle(
   uvIndices->push_back(uvInd[1]);
   uvIndices->push_back(uvInd[2]);
 }
+void toPositiveIndice(
+    size_t numVertices,
+    int (&vertices)[4],
+    unsigned int (&positiveVertices)[4]) {
+  for (int i = 0; i < 4; ++i) {
+    positiveVertices[i] =
+      vertices[i] >= 0 ? vertices[i] : numVertices + vertices[i] + 1;
+  }
+  // printf("NumVertices: %li\nVertices: %d %d %d %d\nPositiveVertices: %d %d %d %d\n",
+  //     numVertices, vertices[0], vertices[1], vertices[2], vertices[3],
+  //     positiveVertices[0], positiveVertices[1], positiveVertices[2], positiveVertices[3]);
+  // exit(1);
+}
 
 void addFace(
     const vector<char>& buffer,
     vector<unsigned int>* vIndices,
     vector<unsigned int>* nIndices,
-    vector<unsigned int>* uvIndices) {
+    vector<unsigned int>* uvIndices,
+    const size_t numVertices,
+    const size_t numNormals,
+    const size_t numUVs) {
   // Faces can either be:
   // 1. vertices only
   // 2. vertices + texture
   // 3. vertices + normal + texture
   // Four Vertices 3.
-  unsigned int vInd[4], nInd[4], uvInd[4];
+  int vInd[4], nInd[4], uvInd[4];
+  unsigned int vpInd[4], npInd[4], uvpInd[4];
   int numMatches = sscanf(buffer.data(), "%*s"
       " %d/%d/%d"
       " %d/%d/%d"
@@ -128,7 +145,10 @@ void addFace(
       &vInd[3], &uvInd[3], &nInd[3]);
   if (numMatches == 12) {
     // Parsed correctly a quad.
-    addQuad(vInd, nInd, uvInd, vIndices, nIndices, uvIndices);
+    toPositiveIndice(numVertices, vInd, vpInd);
+    toPositiveIndice(numNormals, nInd, npInd);
+    toPositiveIndice(numUVs, uvInd, uvpInd);
+    addQuad(vpInd, npInd, uvpInd, vIndices, nIndices, uvIndices);
     return;
   }
   numMatches = sscanf(buffer.data(), "%*s"
@@ -146,7 +166,10 @@ void addFace(
   uvInd[3] = 0;
   if (numMatches == 8) {
     // Parsed correctly a quad.
-    addQuad(vInd, nInd, uvInd, vIndices, nIndices, uvIndices);
+    toPositiveIndice(numVertices, vInd, vpInd);
+    toPositiveIndice(numNormals, nInd, npInd);
+    toPositiveIndice(numUVs, uvInd, uvpInd);
+    addQuad(vpInd, npInd, uvpInd, vIndices, nIndices, uvIndices);
     return;
   }
   numMatches = sscanf(buffer.data(), "%*s"
@@ -164,7 +187,10 @@ void addFace(
   nInd[3] = 0;
   if (numMatches == 8) {
     // Parsed correctly a quad.
-    addQuad(vInd, nInd, uvInd, vIndices, nIndices, uvIndices);
+    toPositiveIndice(numVertices, vInd, vpInd);
+    toPositiveIndice(numNormals, nInd, npInd);
+    toPositiveIndice(numUVs, uvInd, uvpInd);
+    addQuad(vpInd, npInd, uvpInd, vIndices, nIndices, uvIndices);
     return;
   }
   numMatches = sscanf(buffer.data(), "%*s"
@@ -182,7 +208,10 @@ void addFace(
   uvInd[3] = 0;
   if (numMatches == 4) {
     // Parsed correctly a quad.
-    addQuad(vInd, nInd, uvInd, vIndices, nIndices, uvIndices);
+    toPositiveIndice(numVertices, vInd, vpInd);
+    toPositiveIndice(numNormals, nInd, npInd);
+    toPositiveIndice(numUVs, uvInd, uvpInd);
+    addQuad(vpInd, npInd, uvpInd, vIndices, nIndices, uvIndices);
     return;
   }
   // Triangle Vertices+Texture+Normal
@@ -195,7 +224,10 @@ void addFace(
       &vInd[2], &uvInd[2], &nInd[2]);
   if (numMatches == 9) {
     // Parsed correctly a quad.
-    addTriangle(vInd, nInd, uvInd, vIndices, nIndices, uvIndices);
+    toPositiveIndice(numVertices, vInd, vpInd);
+    toPositiveIndice(numNormals, nInd, npInd);
+    toPositiveIndice(numUVs, uvInd, uvpInd);
+    addTriangle(vpInd, npInd, uvpInd, vIndices, nIndices, uvIndices);
     return;
   }
 
@@ -213,7 +245,10 @@ void addFace(
   uvInd[3] = 0;
   if (numMatches == 6) {
     // Parsed correctly a quad.
-    addTriangle(vInd, nInd, uvInd, vIndices, nIndices, uvIndices);
+    toPositiveIndice(numVertices, vInd, vpInd);
+    toPositiveIndice(numNormals, nInd, npInd);
+    toPositiveIndice(numUVs, uvInd, uvpInd);
+    addTriangle(vpInd, npInd, uvpInd, vIndices, nIndices, uvIndices);
     return;
   }
 
@@ -231,7 +266,10 @@ void addFace(
   nInd[3] = 0;
   if (numMatches == 6) {
     // Parsed correctly a quad.
-    addTriangle(vInd, nInd, uvInd, vIndices, nIndices, uvIndices);
+    toPositiveIndice(numVertices, vInd, vpInd);
+    toPositiveIndice(numNormals, nInd, npInd);
+    toPositiveIndice(numUVs, uvInd, uvpInd);
+    addTriangle(vpInd, npInd, uvpInd, vIndices, nIndices, uvIndices);
     return;
   }
 
@@ -247,9 +285,12 @@ void addFace(
   uvInd[1] = 0;
   uvInd[2] = 0;
   uvInd[3] = 0;
-  if (numMatches == 6) {
+  if (numMatches == 3) {
     // Parsed correctly a quad.
-    addTriangle(vInd, nInd, uvInd, vIndices, nIndices, uvIndices);
+    toPositiveIndice(numVertices, vInd, vpInd);
+    toPositiveIndice(numNormals, nInd, npInd);
+    toPositiveIndice(numUVs, uvInd, uvpInd);
+    addTriangle(vpInd, npInd, uvpInd, vIndices, nIndices, uvIndices);
     return;
   }
   return;
@@ -283,8 +324,9 @@ void interpretLine(
     sscanf(buffer.data(), "%*s %f %f", &uv.x, &uv.y);
     uvCoords->push_back(uv);
   }
-  if (strncmp(buffer.data(), "f  ", 2) == 0) {
-    addFace(buffer, vIndices, nIndices, uvIndices);
+  if (strncmp(buffer.data(), "f ", 2) == 0) {
+    addFace(buffer, vIndices, nIndices, uvIndices,
+        vertices->size(), normals->size(), uvCoords->size());
   }
 }
 }  // namespace
