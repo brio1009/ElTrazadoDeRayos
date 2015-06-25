@@ -25,8 +25,10 @@ SOFTWARE.
 
 #include "./AABB.h"
 
+#include <cmath>
 #include <limits>
 
+#include "../Ray.h"
 #include "../shapes/Shape.h"
 #include "../shapes/Box.h"
 #include "../shapes/Plane.h"
@@ -136,10 +138,41 @@ bool fallbackInfinite(const Shape& shape) {
 
 namespace accelerationstructures {
 // _____________________________________________________________________________
+bool intersectAABB(const AABB& aabb, const Ray& ray, REAL* t) {
+  // for each axis.
+  const glm::vec4& dir = ray.direction();
+  const glm::vec4& origin = ray.origin();
+  // compute the 6 tvalues to reach the slabs.
+  vec3 tToMin = (aabb.min - vec3(origin)) / vec3(dir);
+  vec3 tToMax = (aabb.max - vec3(origin)) / vec3(dir);
+
+  REAL minTValue = std::min(
+      std::min(
+        std::max(tToMin.x, tToMax.x),
+        std::max(tToMin.y, tToMax.y)),
+      std::max(tToMin.z, tToMax.z));
+  REAL maxTValue = std::max(
+      std::max(
+        std::min(tToMin.x, tToMax.x),
+        std::min(tToMin.y, tToMax.y)),
+      std::min(tToMin.z, tToMax.z));
+  // Behind us.
+  if (maxTValue < 0.0f) {
+    *t = maxTValue;
+    return false;
+  }
+  if (minTValue > maxTValue) {
+    *t = maxTValue;
+    return false;
+  }
+  *t = minTValue;
+  return true;
+}
+// _____________________________________________________________________________
 AABB aabbFromShape(const Shape& shape) {
   return dispatcher<AABB>(shape, boxAABB, ellipsoidAABB, fallbackAABB);
 }
-// ____________________________________________________________________________
+// _____________________________________________________________________________
 bool aabbOfShapeInfinite(const Shape& shape) {
   return dispatcher<bool>(shape,
       planeInfinite,

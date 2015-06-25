@@ -28,8 +28,11 @@ SOFTWARE.
 
 #include <glm/glm.hpp>
 
+#include <Constants.h>
+
 // Forwards.
 class Shape;
+class Ray;
 
 namespace accelerationstructures {
 
@@ -39,6 +42,7 @@ struct AABB {
 };
 
 AABB aabbFromShape(const Shape& shape);
+bool intersectAABB(const AABB& aabb, const Ray& ray, REAL* t);
 
 bool aabbOfShapeInfinite(const Shape& shape);
 }  // namespace accelerationstructures
