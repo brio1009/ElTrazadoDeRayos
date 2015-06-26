@@ -155,6 +155,7 @@ Color GlassMaterial::getColor(const IntersectionInfo& intersectionInfo,
   if (!inside)
     transmission = Color(1, 1, 1);
   tmpColor *= refl * transmission;
+  outColor += tmpColor;
 
   return outColor;
 }
