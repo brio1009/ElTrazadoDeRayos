@@ -93,7 +93,8 @@ namespace accelerationstructures {
 // _____________________________________________________________________________
 UniformGrid::UniformGrid(const float& cellSize) :
     m_ShapeList(),
-    m_CellSize(cellSize) {}
+    m_CellSize(cellSize),
+    m_AABB() {}
 
 // _____________________________________________________________________________
 UniformGrid::~UniformGrid() {
@@ -164,6 +165,14 @@ IntersectionInfo UniformGrid::traceRay(const Ray& ray) const {
   const glm::vec4& dir = ray.direction();
   const glm::vec4& origin = ray.origin();
   // current cell index.
+  REAL t = 0.0f;
+  // if (!intersectAABB(m_AABB, ray, &t)) {
+  //   return info;
+  // }
+  // // Intersect grid.
+  // // printf("intersecting Grid");
+  // ivec3 index = cellIndexOf(ray.originVec3()
+  //     + static_cast<float>(t) * vec3(dir), m_CellSize);
   ivec3 index = cellIndexOf(ray.originVec3(), m_CellSize);
   // The end of the cell.
   vec3 maxTVal = (
@@ -184,7 +193,7 @@ IntersectionInfo UniformGrid::traceRay(const Ray& ray) const {
 
   IntersectionInfo* out = NULL;
   // maximal number of cells allowed.
-  for (size_t i = 0; i < 2 * 1e2; ++i) {
+  for (size_t i = 0; i < 2 * 1e3; ++i) {
     float minT = std::min(std::min(maxTVal.x, maxTVal.y), maxTVal.z);
     // Check for intersection.
     std::vector<IntersectionInfo> intersections;
@@ -235,6 +244,12 @@ void UniformGrid::insertShapeIntoMatchingCells(const AABB& aabb, Shape* shape) {
   ivec3 maxCellIndex;
   Mesh* mesh;
   std::vector<std::pair<ivec3, ivec3> > minMaxIndices;
+  m_AABB.min.x = std::min(m_AABB.min.x, aabb.min.x);
+  m_AABB.min.y = std::min(m_AABB.min.y, aabb.min.y);
+  m_AABB.min.z = std::min(m_AABB.min.z, aabb.min.z);
+  m_AABB.max.x = std::max(m_AABB.max.x, aabb.max.x);
+  m_AABB.max.y = std::max(m_AABB.max.y, aabb.max.y);
+  m_AABB.max.z = std::max(m_AABB.max.z, aabb.max.z);
   if ((mesh = dynamic_cast<Mesh*>(shape))) {
     // For meshs we loop multiple times.
     const std::vector<vec3>& vertices = mesh->getVertices();
@@ -244,8 +259,15 @@ void UniformGrid::insertShapeIntoMatchingCells(const AABB& aabb, Shape* shape) {
     // loop over all the faces.
     for (size_t i = 0; i < vertCount; i += 3) {
       // Get the indices of this face.
+      AABB triangleAABB = aabbOfTriangle(vertices, i, transformation);
+      m_AABB.min.x = std::min(m_AABB.min.x, triangleAABB.min.x);
+      m_AABB.min.y = std::min(m_AABB.min.y, triangleAABB.min.y);
+      m_AABB.min.z = std::min(m_AABB.min.z, triangleAABB.min.z);
+      m_AABB.max.x = std::max(m_AABB.max.x, triangleAABB.max.x);
+      m_AABB.max.y = std::max(m_AABB.max.y, triangleAABB.max.y);
+      m_AABB.max.z = std::max(m_AABB.max.z, triangleAABB.max.z);
       getIndecesForAABBInGrid(
-          aabbOfTriangle(vertices, i, transformation),
+          triangleAABB,
           &minCellIndex,
           &maxCellIndex,
           m_CellSize);
@@ -285,6 +307,9 @@ void UniformGrid::insertShapeIntoMatchingCells(const AABB& aabb, Shape* shape) {
       }
     }
   }
+  printf("GridAABB: (%.2f,%.2f,%.2f,%.2f,%.2f,%.2f)\n",
+      m_AABB.min.x, m_AABB.min.y, m_AABB.min.z,
+      m_AABB.max.x, m_AABB.max.y, m_AABB.max.z);
 }
 // _____________________________________________________________________________
 void UniformGrid::addShape(Shape* shape) {

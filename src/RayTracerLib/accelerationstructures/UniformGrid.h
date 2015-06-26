@@ -38,6 +38,8 @@ SOFTWARE.
 
 #include "./AbstractDataStructure.h"
 
+#include <accelerationstructures/AABB.h>
+
 
 #define PRIME1 73856093
 #define PRIME2 19349663
@@ -56,8 +58,6 @@ struct SmartHash {
 };
 
 namespace accelerationstructures {
-
-struct AABB;
 
 class UniformGrid : public AbstractDataStructure {
  public:
@@ -88,6 +88,7 @@ class UniformGrid : public AbstractDataStructure {
 
   /// The dimensionality of a cell. (All cells are cubical)
   float m_CellSize;
+  AABB m_AABB;
 };
 }  // namespace accelerationstructures
 

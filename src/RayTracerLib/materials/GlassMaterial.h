@@ -37,8 +37,8 @@ class GlassMaterial : public Material {
   /// Constructor.
   explicit GlassMaterial(const float refractiveIndex)
     : m_refractiveIndex(refractiveIndex),
-      m_color(1, 0.0, 0.0),
-      m_transparencyFactor(5.0f) {}
+      m_color(0.0f, 1.0, 1.0),
+      m_transparencyFactor(10.0f) {}
 
   /// Returns the color for the given position, normal and ray direction.
   virtual Color getColor(const IntersectionInfo& intersectionInfo,
