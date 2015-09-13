@@ -114,7 +114,7 @@ void Camera::render(const Scene& scene,
       float invFraction = 1.0f / fraction;
       auto estimatedTime = duration * invFraction;
       estimatedTime -= duration;
-      printf("Progress: %.2f%% Estimated:%dseconds       \r",
+      printf("Progress: %.2f%% Estimated: %dseconds       \r",
           100.0f * fraction,
           static_cast<unsigned int>(estimatedTime.count()));
     }
