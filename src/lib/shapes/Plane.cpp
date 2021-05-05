@@ -30,9 +30,10 @@ SOFTWARE.
 #include <vector>
 
 #include "./Constants.h"
+#include "./ProjectorFunctions.h"
 #include "./Ray.h"
 #include "./Solver.h"
-#include "./ProjectorFunctions.h"
+
 
 using std::vector;
 
@@ -67,10 +68,8 @@ glm::vec4 Plane::getNormalAt(const glm::vec4& p) const {
 Plane::Plane(REAL nX, REAL nY, REAL nZ) : _nX(nX), _nY(nY), _nZ(nZ), m_d() {
   // mit gram-schmidt 2 orthogonale
   static std::vector<glm::vec3> e = {
-    {1.0f, 0.0f, 0.0f},
-    {0.0f, 1.0f, 0.0f},
-    {0.0f, 0.0f, 1.0f}};
-  glm::vec3 normal {nX, nY, nZ};
+      {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}};
+  glm::vec3 normal{nX, nY, nZ};
   glm::normalize(normal);
   m_d.resize(2);
   std::vector<glm::vec3> directions;
@@ -79,7 +78,7 @@ Plane::Plane(REAL nX, REAL nY, REAL nZ) : _nX(nX), _nY(nY), _nZ(nZ), m_d() {
     directions[i] = e[i];
     // add the projected vectors.
     for (int j = 0; j <= i; ++j) {
-      const glm::vec3& u = j == 0 ? normal : directions[j-1];
+      const glm::vec3& u = j == 0 ? normal : directions[j - 1];
       directions[i] -= (glm::dot(e[i], u) / glm::dot(u, u)) * u;
     }
   }

@@ -23,27 +23,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-
 #ifndef RAYTRACERLIB_PARSER_OBJPARSER_H_
 #define RAYTRACERLIB_PARSER_OBJPARSER_H_
 
 #include <glm/glm.hpp>
 
-#include <vector>
 #include <string>
-
+#include <vector>
 
 namespace parser {
 
 /// This function parses a file given by filename.
 /// the return value indicates if the file parsed correctly.
 /// The three pointers will be set with the data contained in the file.
-bool parseObjFile(
-    const std::string& filename,
-    std::vector<glm::vec3>* vertices,
-    std::vector<glm::vec3>* normals,
-    std::vector<glm::vec2>* uvCoords);
+bool parseObjFile(const std::string& filename,
+                  std::vector<glm::vec3>* vertices,
+                  std::vector<glm::vec3>* normals,
+                  std::vector<glm::vec2>* uvCoords);
 
 }  // namespace parser
 #endif  // RAYTRACERLIB_PARSER_OBJPARSER_H_
-

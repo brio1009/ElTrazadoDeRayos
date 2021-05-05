@@ -25,17 +25,18 @@ SOFTWARE.
 
 #include "./ShadowMaterial.h"
 
-#include <glm/glm.hpp>
 #include <algorithm>
 #include <cassert>
 #include <cmath>
+#include <glm/glm.hpp>
 #include <vector>
 #include "./Color.h"
 #include "./Constants.h"
 #include "./IntersectionInfo.h"
+#include "./Ray.h"
 #include "./Scene.h"
 #include "lights/Light.h"
-#include "./Ray.h"
+
 
 // _____________________________________________________________________________
 Color ShadowMaterial::getColor(const IntersectionInfo& intersectionInfo,
@@ -66,12 +67,11 @@ Color ShadowMaterial::getColor(const IntersectionInfo& intersectionInfo,
       diff = intersectionInfo.hitPoint - hitInfo.hitPoint;
       float distanceToHit = glm::dot(diff, diff);
       if (!hitInfo.materialPtr || distanceToLight < distanceToHit) {
-        sumIntensity += diffuseTerm(lightColor,
-                                    -lightRay.direction(),
-                                    normNormal,
-                                    kd);
-        sumIntensity += specularTerm(lightColor, -lightRay.direction(),
-            normNormal, -incomingRay.direction(), ks, 10);
+        sumIntensity +=
+            diffuseTerm(lightColor, -lightRay.direction(), normNormal, kd);
+        sumIntensity +=
+            specularTerm(lightColor, -lightRay.direction(), normNormal,
+                         -incomingRay.direction(), ks, 10);
       }
     }
   }

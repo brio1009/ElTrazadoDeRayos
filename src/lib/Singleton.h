@@ -42,14 +42,10 @@ class Singleton {
 
  protected:
   /// Default constructor.
-  Singleton() {
-    _TPtr = nullptr;
-  }
+  Singleton() { _TPtr = nullptr; }
 
   /// Default destructor.
-  virtual ~Singleton() {
-    delete _TPtr;
-  }
+  virtual ~Singleton() { delete _TPtr; }
 
  private:
   /// The static pointer to the singleton object.

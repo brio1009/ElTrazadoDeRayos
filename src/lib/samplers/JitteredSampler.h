@@ -35,19 +35,18 @@ class JitteredSampler : public Sampler {
  public:
   /// Creates a new JitteredSampler with given SampleSize
   explicit JitteredSampler(const size_t& sampleDimension)
-      : _sampleDimension(sampleDimension) { }
+      : _sampleDimension(sampleDimension) {}
   /// Virtual destructor. (Override).
-  virtual ~JitteredSampler() { }
+  virtual ~JitteredSampler() {}
+
  protected:
   /// (Override)
-  virtual std::vector<float> getLambdasForSample(
-      const size_t& size) const;
+  virtual std::vector<float> getLambdasForSample(const size_t& size) const;
   /// (Override)
-  virtual Color reconstructColor(
-      const std::vector<Color>& colors,
-      const std::vector<float>& lambdas) const;
+  virtual Color reconstructColor(const std::vector<Color>& colors,
+                                 const std::vector<float>& lambdas) const;
+
  private:
   const size_t _sampleDimension;
 };
 #endif  // RAYTRACERLIB_SAMPLERS_JITTEREDSAMPLER_H_
-

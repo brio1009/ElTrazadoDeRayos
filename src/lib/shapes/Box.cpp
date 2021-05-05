@@ -33,17 +33,17 @@ SOFTWARE.
 #include <utility>
 #include <vector>
 
-#include "./Constants.h"
 #include "../Solver.h"
+#include "./Constants.h"
 #include "./Ray.h"
+
 
 using std::vector;
 
 const char* Box::name = "Box";
 
 // _____________________________________________________________________________
-Box::Box(REAL x, REAL y, REAL z) : _rX(x), _rY(y), _rZ(z) {
-}
+Box::Box(REAL x, REAL y, REAL z) : _rX(x), _rY(y), _rZ(z) {}
 
 // _____________________________________________________________________________
 vector<REAL> Box::intersect(const Ray& ray) const {
@@ -54,11 +54,11 @@ vector<REAL> Box::intersect(const Ray& ray) const {
   glm::vec4 invRayDir;
 
   invRayDir.x = (!solve::isZero(rayDir.x)) ? (1.0f / rayDir.x)
-                                  : std::numeric_limits<float>::max();
+                                           : std::numeric_limits<float>::max();
   invRayDir.y = (!solve::isZero(rayDir.y)) ? (1.0f / rayDir.y)
-                                  : std::numeric_limits<float>::max();
+                                           : std::numeric_limits<float>::max();
   invRayDir.z = (!solve::isZero(rayDir.z)) ? (1.0f / rayDir.z)
-                                  : std::numeric_limits<float>::max();
+                                           : std::numeric_limits<float>::max();
   invRayDir.w = 0.0f;
 
   glm::vec4 t1 = (getMinPosition() - transRay.origin()) * invRayDir;
@@ -111,7 +111,6 @@ glm::vec4 Box::getNormalAt(const glm::vec4& p) const {
   }
   return glm::normalize(_transformation * out);
 }
-
 
 // _____________________________________________________________________________
 glm::vec4 Box::getMinPosition() const {

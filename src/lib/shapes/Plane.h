@@ -38,16 +38,16 @@ SOFTWARE.
 class Plane : public Shape {
  public:
   /// Default constructor. Normal is y-up.
-  Plane() : Plane(0.0, 1.0, 0.0) { }
+  Plane() : Plane(0.0, 1.0, 0.0) {}
 
   /// Constructor with given normal axis.
   Plane(REAL nX, REAL nY, REAL nZ);
   /// Constructor with given normal axis.
   explicit Plane(const glm::vec3& normal)
-    : Plane(normal.x, normal.y, normal.z) { }
+      : Plane(normal.x, normal.y, normal.z) {}
 
   /// Destructor.
-  virtual ~Plane() { }
+  virtual ~Plane() {}
   /// Test for intersections.
   virtual std::vector<REAL> intersect(const Ray& ray) const;
   /// Get the normal at a world position p.
@@ -59,9 +59,7 @@ class Plane : public Shape {
   /// The class name. Needed for the Factory creating the object.
   static const char* name;
 
-  Plane* create() const {
-    return new Plane();
-  }
+  Plane* create() const { return new Plane(); }
 
  private:
   REAL _nX;
@@ -71,6 +69,4 @@ class Plane : public Shape {
   std::vector<glm::vec4> m_d;
 };
 
-
 #endif  // RAYTRACERLIB_SHAPES_PLANE_H_
-

@@ -27,6 +27,6 @@ SOFTWARE.
 
 #include <string>
 
-std::unordered_map<
-    std::string, BasicClassProperties*> PropertyManager::classProperties =
+std::unordered_map<std::string, BasicClassProperties*>
+    PropertyManager::classProperties =
         std::unordered_map<std::string, BasicClassProperties*>();

@@ -27,17 +27,15 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_PROPERTYMANAGER_H_
 #define RAYTRACERLIB_PROPERTYMANAGER_H_
 
-#include <unordered_map>
 #include <string>
+#include <unordered_map>
 #include "./Singleton.h"
+
 
 /// Simple struct that holds all the necessary data for one property.
 struct Property {
-  Property() { }
-  Property(void* getter, void* setter)
-    : getterPtr(getter),
-      setterPtr(setter) {
-  }
+  Property() {}
+  Property(void* getter, void* setter) : getterPtr(getter), setterPtr(setter) {}
   void* getterPtr;
   void* setterPtr;
 };
@@ -46,9 +44,9 @@ struct Property {
 class BasicClassProperties {
  public:
   /// Default constructor.
-  BasicClassProperties() { }
+  BasicClassProperties() {}
   /// Destructor.
-  virtual ~BasicClassProperties() { }
+  virtual ~BasicClassProperties() {}
 
  protected:
   std::unordered_map<std::string, Property> properties;
@@ -59,12 +57,10 @@ template <class T>
 class ClassProperties : public BasicClassProperties {
  public:
   /// Constructor.
-  ClassProperties() : BasicClassProperties() {
-    T::addProperties(&properties);
-  }
+  ClassProperties() : BasicClassProperties() { T::addProperties(&properties); }
 
   /// Destructor.
-  virtual ~ClassProperties() { }
+  virtual ~ClassProperties() {}
 };
 
 ///
@@ -78,19 +74,18 @@ class PropertyManager : public Singleton<PropertyManager> {
   static std::unordered_map<std::string, BasicClassProperties*> classProperties;
 
   ///
-  static void insertTestMap(
-        const std::string& name,
-        BasicClassProperties* ptr) {
+  static void insertTestMap(const std::string& name,
+                            BasicClassProperties* ptr) {
     classProperties.emplace(name, ptr);
   }
 
  private:
   /// Private default constructor.
-  PropertyManager() { }
+  PropertyManager() {}
 };
 
 /// Macro.
 #define PROPERTYCLASS(x) \
-  PropertyManager::insertTestMap(#x, new ClassProperties<x>()); \
+  PropertyManager::insertTestMap(#x, new ClassProperties<x>());
 
 #endif  // RAYTRACERLIB_PROPERTYMANAGER_H_

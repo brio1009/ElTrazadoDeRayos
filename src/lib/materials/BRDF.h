@@ -27,8 +27,9 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_MATERIALS_BRDF_H_
 #define RAYTRACERLIB_MATERIALS_BRDF_H_
 
-#include <glm/glm.hpp>
 #include <cstdint>
+#include <glm/glm.hpp>
+
 // Forward declaration.
 struct IntersectionInfo;
 class Ray;
@@ -40,23 +41,21 @@ class Ray;
 /// non-uniform samples.
 class BRDF {
  public:
-  virtual ~BRDF() { }
+  virtual ~BRDF() {}
   /// generates a theta and phi for given position. (position not used yet, but
   /// there could be uses for it when creating subsurfacescattering materials.
   virtual glm::vec2 generateHemisphereSample(
-        const Ray& incomingRay,
-        const IntersectionInfo& intersectionInfo,
-        const size_t& num) const = 0;
+      const Ray& incomingRay,
+      const IntersectionInfo& intersectionInfo,
+      const size_t& num) const = 0;
 
   /// Returnes how many samples should be generated for a point on the surface.
   virtual size_t getSampleCount() const { return 1; }
   /// Returnes the value p(X_i) that is used in the rendering equation.
   virtual float getPDFOfX(const glm::vec2& sample) const = 0;
   /// Returnes the value of the BRDF at given position with given omegas.
-  virtual float evaluateBRDF(
-          const IntersectionInfo& info,
-          const glm::vec4& directionIn,
-          const glm::vec4& directionOut) const = 0;
+  virtual float evaluateBRDF(const IntersectionInfo& info,
+                             const glm::vec4& directionIn,
+                             const glm::vec4& directionOut) const = 0;
 };
 #endif  // RAYTRACERLIB_MATERIALS_BRDF_H_
-

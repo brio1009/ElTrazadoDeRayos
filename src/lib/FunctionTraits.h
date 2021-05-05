@@ -28,29 +28,28 @@ SOFTWARE.
 #define RAYTRACERLIB_FUNCTIONTRAITS_H_
 
 #include <cstdlib>
-#include <tuple>
 #include <functional>
+#include <tuple>
 #include <type_traits>
 
+
 template <typename T>
-struct function_traits
-    : public function_traits<decltype(&T::operator())> {
-};
+struct function_traits : public function_traits<decltype(&T::operator())> {};
 
 template <typename ReturnType, typename... Args>
-struct function_traits<ReturnType(&)(Args...)> {
-// we specialize for pointers to member function
-    enum { arity = sizeof...(Args) };
-    // arity is the number of arguments.
+struct function_traits<ReturnType (&)(Args...)> {
+  // we specialize for pointers to member function
+  enum { arity = sizeof...(Args) };
+  // arity is the number of arguments.
 
-    typedef ReturnType result_type;
+  typedef ReturnType result_type;
 
-    template <size_t i>
-    struct arg {
-        typedef typename std::tuple_element<i, std::tuple<Args...>>::type type;
-        // the i-th argument is equivalent to the i-th tuple element of a tuple
-        // composed of those arguments.
-    };
+  template <size_t i>
+  struct arg {
+    typedef typename std::tuple_element<i, std::tuple<Args...>>::type type;
+    // the i-th argument is equivalent to the i-th tuple element of a tuple
+    // composed of those arguments.
+  };
 };
 
 #endif  // RAYTRACERLIB_FUNCTIONTRAITS_H_

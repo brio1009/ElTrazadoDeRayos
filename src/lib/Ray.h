@@ -34,7 +34,7 @@ SOFTWARE.
 class Ray {
  public:
   /// Constructor. Constructs ray with origin (0, 0, 0) and direction (1, 0, 0).
-  Ray() : _origin(0, 0, 0, 1), _direction(1, 0, 0, 0) { }
+  Ray() : _origin(0, 0, 0, 1), _direction(1, 0, 0, 0) {}
 
   /// Copy constructor. Copies the ray info.
   Ray(const Ray& ray);
@@ -57,7 +57,7 @@ class Ray {
   glm::vec3 directionVec3() const { return glm::vec3(_direction); }
 
   /// *-operator turned around for Ray.
-  template<class T>
+  template <class T>
   friend inline Ray operator*(const T& lhs, const Ray& rhs) {
     Ray returnRay;
     returnRay.setDirection(lhs * rhs.direction());
@@ -65,7 +65,7 @@ class Ray {
     return returnRay;
   }
   /// *-operator turned around for Ray.
-  template<class T>
+  template <class T>
   friend inline Ray operator*(const Ray& lhs, const T& rhs) {
     Ray returnRay;
     returnRay.setDirection(lhs.direction() * rhs);
@@ -94,15 +94,9 @@ class Ray {
 };
 
 struct RayComp {
-  size_t operator()(const Ray& a, const Ray& b) const {
-    return &a == &b;
-  }
+  size_t operator()(const Ray& a, const Ray& b) const { return &a == &b; }
 };
 struct RayHasher {
-  size_t operator()(const Ray& k) const {
-    return reinterpret_cast<size_t>(&k);
-  }
+  size_t operator()(const Ray& k) const { return reinterpret_cast<size_t>(&k); }
 };
 #endif  // RAYTRACERLIB_RAY_H_
-
-

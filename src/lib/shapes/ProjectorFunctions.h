@@ -34,26 +34,26 @@ SOFTWARE.
 /// These are some basic projector functions to map a point to a texture
 /// coordinate.
 namespace ProjectorFunctions {
-  /// Texture coords projection function plane.
-  inline glm::vec2 textureProjectionPlaneXZ(const glm::vec4& localPoint) {
-    return glm::vec2(localPoint.x, localPoint.z);
-  }
-  /// Texture coords projection function plane.
-  inline glm::vec2 textureProjectionPlane(const glm::vec4& localPoint,
-      const std::vector<glm::vec4>& directions) {
-    return glm::vec2(
-        glm::dot(localPoint, directions[0]),
-        glm::dot(localPoint, directions[1]));
-  }
+/// Texture coords projection function plane.
+inline glm::vec2 textureProjectionPlaneXZ(const glm::vec4& localPoint) {
+  return glm::vec2(localPoint.x, localPoint.z);
+}
+/// Texture coords projection function plane.
+inline glm::vec2 textureProjectionPlane(
+    const glm::vec4& localPoint,
+    const std::vector<glm::vec4>& directions) {
+  return glm::vec2(glm::dot(localPoint, directions[0]),
+                   glm::dot(localPoint, directions[1]));
+}
 
-  /// Texture coords projection function sphere.
-  inline glm::vec2 textureProjectionSphere(const glm::vec4& localPoint) {
-    // Get the unit vector to the position.
-    glm::vec3 d(-localPoint);
-    glm::normalize(d);
-    return glm::vec2(0.5 + (atan2(d.z, d.x) / (2.0 * constants::PI)),
-                      0.5 - (asin(d.y) / constants::PI));
-  }
+/// Texture coords projection function sphere.
+inline glm::vec2 textureProjectionSphere(const glm::vec4& localPoint) {
+  // Get the unit vector to the position.
+  glm::vec3 d(-localPoint);
+  glm::normalize(d);
+  return glm::vec2(0.5 + (atan2(d.z, d.x) / (2.0 * constants::PI)),
+                   0.5 - (asin(d.y) / constants::PI));
+}
 }  // namespace ProjectorFunctions
 
 #endif  // RAYTRACERLIB_SHAPES_PROJECTORFUNCTIONS_H_

@@ -39,11 +39,11 @@ SOFTWARE.
 class Ellipsoid : public Shape {
  public:
   /// Default Ellipsoid constructor.
-  Ellipsoid() : Ellipsoid(1.0f, 1.0f, 1.0f) { }
+  Ellipsoid() : Ellipsoid(1.0f, 1.0f, 1.0f) {}
   /// Constructor with given radii in every axis-direction.
   Ellipsoid(REAL x, REAL y, REAL z);
   /// Destructor.
-  virtual ~Ellipsoid() { }
+  virtual ~Ellipsoid() {}
 
   /// Returns intersections.
   virtual std::vector<REAL> intersect(const Ray& ray) const;
@@ -54,9 +54,7 @@ class Ellipsoid : public Shape {
   /// The class name. Needed for the Factory creating the object.
   static const char* name;
 
-  Ellipsoid* create() const {
-    return new Ellipsoid();
-  }
+  Ellipsoid* create() const { return new Ellipsoid(); }
 
  protected:
   /// Override.

@@ -23,7 +23,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-
 #include "./GlassMaterial.h"
 
 #define GLM_FORCE_RADIANS
@@ -32,11 +31,10 @@ SOFTWARE.
 
 #include <cmath>
 
-#include "../Ray.h"
-#include "../IntersectionInfo.h"
-#include "../Scene.h"
 #include "../Color.h"
-
+#include "../IntersectionInfo.h"
+#include "../Ray.h"
+#include "../Scene.h"
 
 // _____________________________________________________________________________
 Color GlassMaterial::getColor(const IntersectionInfo& intersectionInfo,
@@ -66,7 +64,6 @@ Color GlassMaterial::getColor(const IntersectionInfo& intersectionInfo,
   // The axis to rotate around.
   glm::vec3 axis = glm::cross(glm::vec3(normNormal), glm::vec3(normView));
 
-
   // Set the refraction index for the materials.
   float n1, n2;
   if (inside) {
@@ -85,10 +82,9 @@ Color GlassMaterial::getColor(const IntersectionInfo& intersectionInfo,
   // Calculate the reflection direction.
   // TODO(bauschp, Di 23. Jun 10:15:34 CEST 2015): Is there a more efficient
   // way to do this?
-  glm::vec4 reflectionDirection =
-    glm::rotate(normNormal, -tau1, axis);
+  glm::vec4 reflectionDirection = glm::rotate(normNormal, -tau1, axis);
   glm::vec4 refractionDirection =
-    glm::rotate(normNormal, glm::pi<float>() + tau2, axis);
+      glm::rotate(normNormal, glm::pi<float>() + tau2, axis);
 
   // At this point the graphic from wikipedias Snell's Law Article describes
   // our problem precisely.
@@ -107,15 +103,14 @@ Color GlassMaterial::getColor(const IntersectionInfo& intersectionInfo,
     Ray refractionRay;
     refractionRay.setOrigin(intersectionInfo.hitPoint);
     refractionRay.setDirection(refractionDirection);
-    refractionRay.rayInfo().setRefractionStack(
-        oldRayInfo.copyStack());
+    refractionRay.rayInfo().setRefractionStack(oldRayInfo.copyStack());
     // When we refract, we have to modify our refraction stack.
     if (inside)  // This fails if materials intersect each other.
       refractionRay.rayInfo().popRefractiveIndex();
     else
       refractionRay.rayInfo().pushRefractiveIndex(n2);
-    refractionRay.rayInfo().colorContribution = oldRayInfo.colorContribution
-        * (1 - refl);
+    refractionRay.rayInfo().colorContribution =
+        oldRayInfo.colorContribution * (1 - refl);
     IntersectionInfo info = scene.traceRay(refractionRay);
     if (info.materialPtr) {
       distance = info.t;
@@ -124,11 +119,9 @@ Color GlassMaterial::getColor(const IntersectionInfo& intersectionInfo,
       outColor = scene.backgroundColor(refractionRay);
     outColor *= 1 - refl;
     if (!inside)
-      outColor *= 
-        Color(
-          expf(m_transparencyFactor * m_color.r() * -distance),
-          expf(m_transparencyFactor * m_color.g() * -distance),
-          expf(m_transparencyFactor * m_color.b() * -distance));
+      outColor *= Color(expf(m_transparencyFactor * m_color.r() * -distance),
+                        expf(m_transparencyFactor * m_color.g() * -distance),
+                        expf(m_transparencyFactor * m_color.b() * -distance));
   } else {
     // Total refraction!
     refl = 1.0f;
@@ -137,21 +130,19 @@ Color GlassMaterial::getColor(const IntersectionInfo& intersectionInfo,
   Ray reflectionRay;
   reflectionRay.setOrigin(intersectionInfo.hitPoint);
   reflectionRay.setDirection(reflectionDirection);
-  reflectionRay.rayInfo().setRefractionStack(
-      oldRayInfo.copyStack());
-  reflectionRay.rayInfo().colorContribution = oldRayInfo.colorContribution
-      * refl;
+  reflectionRay.rayInfo().setRefractionStack(oldRayInfo.copyStack());
+  reflectionRay.rayInfo().colorContribution =
+      oldRayInfo.colorContribution * refl;
   IntersectionInfo info = scene.traceRay(reflectionRay);
   Color tmpColor;
   if (info.materialPtr) {
     distance = info.t;
     tmpColor = info.materialPtr->getColor(info, reflectionRay, scene);
   } else
-    tmpColor= scene.backgroundColor(reflectionRay);
-  Color transmission(
-      expf(m_transparencyFactor * m_color.r() * -distance),
-      expf(m_transparencyFactor * m_color.g() * -distance),
-      expf(m_transparencyFactor * m_color.b() * -distance));
+    tmpColor = scene.backgroundColor(reflectionRay);
+  Color transmission(expf(m_transparencyFactor * m_color.r() * -distance),
+                     expf(m_transparencyFactor * m_color.g() * -distance),
+                     expf(m_transparencyFactor * m_color.b() * -distance));
   if (!inside)
     transmission = Color(1, 1, 1);
   tmpColor *= refl * transmission;

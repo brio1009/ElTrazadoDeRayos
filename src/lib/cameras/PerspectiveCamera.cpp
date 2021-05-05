@@ -32,8 +32,9 @@ const char* PerspectiveCamera::name = "PerspectiveCamera";
 
 // _____________________________________________________________________________
 PerspectiveCamera::PerspectiveCamera(const int width,
-      const int height,
-      const REAL& fovAngleInRad) : Camera(width, height) {
+                                     const int height,
+                                     const REAL& fovAngleInRad)
+    : Camera(width, height) {
   setFOV(fovAngleInRad);
 }
 
@@ -42,11 +43,10 @@ void PerspectiveCamera::setFOV(REAL fieldOfView) {
   _focalLength = _image.getWidth() / fieldOfView;
 }
 // _____________________________________________________________________________
-PerspectiveCamera::~PerspectiveCamera() { }
+PerspectiveCamera::~PerspectiveCamera() {}
 // _____________________________________________________________________________
-Ray PerspectiveCamera::createPixelCornerRay(
-    const size_t& px,
-    const size_t& py) const {
+Ray PerspectiveCamera::createPixelCornerRay(const size_t& px,
+                                            const size_t& py) const {
   REAL startX = _image.getWidth() / 2.0;
   REAL startY = _image.getHeight() / 2.0;
   glm::vec4 direction(-startX + px, startY - py, -_focalLength, 0);
@@ -58,8 +58,7 @@ Ray PerspectiveCamera::createPixelCornerRay(
 // _____________________________________________________________________________
 void PerspectiveCamera::transform(const glm::mat4& matrix) {
   // transform as Object does.
-  Spatial::transform(matrix); // NOLINT gets confused with std::transform
+  Spatial::transform(matrix);  // NOLINT gets confused with std::transform
   // recalculate the Image plane directions.
   // _position = _transformation * glm::vec4(0, 0, 0, 1);
 }
-

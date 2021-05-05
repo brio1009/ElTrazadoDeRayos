@@ -28,47 +28,43 @@ SOFTWARE.
 #include <algorithm>
 #include <cstdio>
 #include <functional>
-#include <vector>
 #include <stack>
 #include <utility>
+#include <vector>
 
-#include "../shapes/Shape.h"
-#include "../IntersectionInfo.h"
 #include "../Constants.h"
+#include "../IntersectionInfo.h"
+#include "../shapes/Shape.h"
 #include "./AABB.h"
-
 
 // #define ISLEAF(n) (n.flag & (unsigned int) (1<<31))
 #define ISLEAF(n) (n.flag & 0x80000000)
 #define OFFSET(n) (n.flag & 0x7FFFFFFC)
 #define DIM(n) (n.flag & 0x00000003)
 
-
 using std::vector;
 
-namespace {
-
-}  // namespace
+namespace {}  // namespace
 
 namespace accelerationstructures {
 // _____________________________________________________________________________
-REAL KDTree::centroidOfItem(unsigned int axis,
+REAL KDTree::centroidOfItem(
+    unsigned int axis,
     const accelerationstructures::KDTree::KDTreeItem& item) {
   // TODO(bauschp): fix this for CompoundShapes and Meshs.
   return item.shape.shape->getPosition()[axis];
 }
 
 // _____________________________________________________________________________
-REAL KDTree::computeMedianOfAxis(unsigned int axis,
+REAL KDTree::computeMedianOfAxis(
+    unsigned int axis,
     const vector<accelerationstructures::KDTree::KDTreeItem>& items) {
   size_t numElements = items.size();
   vector<REAL> centroids(numElements);
-  std::transform(items.begin(), items.end(),
-      centroids.begin(),
-      std::bind(centroidOfItem, axis, std::placeholders::_1));
-  std::nth_element(centroids.begin(),
-      centroids.begin() + numElements / 2,
-      centroids.end());
+  std::transform(items.begin(), items.end(), centroids.begin(),
+                 std::bind(centroidOfItem, axis, std::placeholders::_1));
+  std::nth_element(centroids.begin(), centroids.begin() + numElements / 2,
+                   centroids.end());
   return centroids[numElements / 2];
 }
 
@@ -76,7 +72,7 @@ REAL KDTree::computeMedianOfAxis(unsigned int axis,
 IntersectionInfo KDTree::traceRay(const Ray& ray) const {
   IntersectionInfo info;
   if (!m_Initialized) {
-     perror("Initialize after adding Shapes!\n");
+    perror("Initialize after adding Shapes!\n");
     return info;
   }
 
@@ -105,7 +101,6 @@ void KDTree::initialize() {
   //          axis   is a inner   the next node is right after this.
   root.inner.flag = axis ^ 0x80000000 ^ sizeof(KDTreeNode);
   m_Nodes.push_back(root);
-
 
   m_Initialized = true;
 }

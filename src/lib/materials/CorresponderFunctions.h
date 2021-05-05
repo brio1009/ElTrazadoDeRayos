@@ -32,10 +32,10 @@ SOFTWARE.
 /// These are some simple corresponder functions for texture coordinates
 /// like clamp, mirror etc.
 namespace CorresponderFunctions {
-  /// Just clamps the fiven values in the 0, 1 range.
-  inline glm::vec2 clamp(const glm::vec2& uv) {
-    return glm::clamp(uv, glm::vec2(0, 0), glm::vec2(1, 1));
-  }
+/// Just clamps the fiven values in the 0, 1 range.
+inline glm::vec2 clamp(const glm::vec2& uv) {
+  return glm::clamp(uv, glm::vec2(0, 0), glm::vec2(1, 1));
+}
 }  // namespace CorresponderFunctions
 
 #endif  // RAYTRACERLIB_MATERIALS_CORRESPONDERFUNCTIONS_H_

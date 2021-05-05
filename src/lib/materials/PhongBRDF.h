@@ -37,23 +37,19 @@ class Ray;
 
 class PhongBRDF : public BRDF {
  public:
-  PhongBRDF(const float rohDiffuse,
-            const float rohSpecular,
-            const float shiny)
-              : m_shiny(shiny),
-                m_rohDiffuse(rohDiffuse),
-                m_rohSpecular(rohSpecular) { }
+  PhongBRDF(const float rohDiffuse, const float rohSpecular, const float shiny)
+      : m_shiny(shiny), m_rohDiffuse(rohDiffuse), m_rohSpecular(rohSpecular) {}
   /// Constructor.
-  PhongBRDF() : PhongBRDF(0.8f, 0.2f, 20.0f) { }
+  PhongBRDF() : PhongBRDF(0.8f, 0.2f, 20.0f) {}
   /// Destructor.
-  ~PhongBRDF() { }
+  ~PhongBRDF() {}
 
   /// generates a theta and phi for given position. (position not used yet, but
   /// there could be uses for it when creating subsurfacescattering materials.
   virtual glm::vec2 generateHemisphereSample(
-        const Ray& incomingRay,
-        const IntersectionInfo& intersectionInfo,
-        const size_t& num) const;
+      const Ray& incomingRay,
+      const IntersectionInfo& intersectionInfo,
+      const size_t& num) const;
 
   /// Returnes the value p(X_i) that is used in the rendering equation.
   float getPDFOfX(const glm::vec2& sample) const;

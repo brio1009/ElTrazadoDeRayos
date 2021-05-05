@@ -37,16 +37,17 @@ class Scene;
 // class Material;
 
 // delete
-#include "shapes/Shape.h"
-#include "shapes/Rectangle.h"
 #include "lights/AreaShape.h"
 #include "materials/Material.h"
 #include "materials/MonteCarloMaterial.h"
+#include "shapes/Rectangle.h"
+#include "shapes/Shape.h"
+
 
 class SceneFileParser {
  public:
   /// Default Constructor
-  SceneFileParser() { }
+  SceneFileParser() {}
   /// parses the file and fills the scene.
   void parse(const std::string& filename, Scene* scene) const;
 
@@ -55,17 +56,16 @@ class SceneFileParser {
   /// IMPORTANT!!! free the memory!!!!!!!
   static char* getFileContents(const std::string& filename);
 
-  template<class T>
+  template <class T>
   rapidxml::xml_node<>* parseGroup(rapidxml::xml_document<>* doc) const;
 
-  template<class T>
+  template <class T>
   void parseGroupSpecial(rapidxml::xml_node<>* node, ...) const;
 };
 
-
-template<class T>
+template <class T>
 rapidxml::xml_node<>* SceneFileParser::parseGroup(
-      rapidxml::xml_document<>* doc) const {
+    rapidxml::xml_document<>* doc) const {
   std::string groupName(T::name);
   groupName.append("s");
   rapidxml::xml_node<>* node = doc->first_node(groupName.c_str(), 0, false);

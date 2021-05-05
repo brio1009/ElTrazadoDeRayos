@@ -29,9 +29,8 @@ SOFTWARE.
 
 using std::vector;
 // _____________________________________________________________________________
-bool AdaptiveSampler::addNextLambdasToList(
-      const std::vector<Color>& color,
-      std::vector<float>* lambdas) const {
+bool AdaptiveSampler::addNextLambdasToList(const std::vector<Color>& color,
+                                           std::vector<float>* lambdas) const {
   // Check if we need to send more Samples.
   if (color.size() > 4 && calculateVariance(color) < 1e-2)
     return false;
@@ -49,12 +48,11 @@ float AdaptiveSampler::calculateVariance(const vector<Color>& colors) {
     sumSquared += cv * cv;
   }
   glm::vec3 variance =
-        (sumSquared - (sum * sum) * (1.0f / n)) * (1.0f / (n - 1));
+      (sumSquared - (sum * sum) * (1.0f / n)) * (1.0f / (n - 1));
   return variance[0] + variance[1] + variance[2];
 }
 // _____________________________________________________________________________
-vector<float> AdaptiveSampler::getLambdasForSample(
-      const size_t& index) const {
+vector<float> AdaptiveSampler::getLambdasForSample(const size_t& index) const {
   // Don't produce more then requested.
   if (index >= _maxSamples)
     return vector<float>();
@@ -65,9 +63,7 @@ vector<float> AdaptiveSampler::getLambdasForSample(
   return lambdas;
 }
 // _____________________________________________________________________________
-float AdaptiveSampler::generateHalton(
-      const size_t& index,
-      const size_t& base) {
+float AdaptiveSampler::generateHalton(const size_t& index, const size_t& base) {
   float ret = 0;
   float f = 1.0f / base;
   int i = index;
@@ -81,8 +77,8 @@ float AdaptiveSampler::generateHalton(
 // #define ShowSampleCount
 // _____________________________________________________________________________
 Color AdaptiveSampler::reconstructColor(
-      const std::vector<Color>& colors,
-      const std::vector<float>& lambdas) const {
+    const std::vector<Color>& colors,
+    const std::vector<float>& lambdas) const {
   Color out(0, 0, 0);
   for (size_t i = 0; i < colors.size(); ++i)
     out += colors.at(i);

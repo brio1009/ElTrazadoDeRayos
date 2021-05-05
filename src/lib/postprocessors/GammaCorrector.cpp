@@ -34,8 +34,8 @@ void GammaCorrector::doPostProcess(Image* imagePtr,
                                    const size_t& startPixel,
                                    const size_t& endPixel) const {
   float invGamma = 1.0f / m_Gamma;
-  // Loop over all pixels and correct them.
-  #pragma omp parallel for schedule(dynamic, 100)
+// Loop over all pixels and correct them.
+#pragma omp parallel for schedule(dynamic, 100)
   for (int i = startPixel; i < static_cast<int>(endPixel); ++i) {
     // Get the pixel coordinates from i.
     int x = i % imagePtr->getWidth();
@@ -43,10 +43,8 @@ void GammaCorrector::doPostProcess(Image* imagePtr,
     // Get the color.
     const Color& color = imagePtr->getPixel(x, y);
     // Set the corrected color.
-    Color correctedColor(pow(color.r(), invGamma),
-                         pow(color.g(), invGamma),
+    Color correctedColor(pow(color.r(), invGamma), pow(color.g(), invGamma),
                          pow(color.b(), invGamma));
     imagePtr->setPixel(x, y, correctedColor);
   }
 }
-

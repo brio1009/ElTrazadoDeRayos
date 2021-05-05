@@ -40,23 +40,22 @@ class PropertyInterface {
   void setFromString(const std::string& propertyName,
                      const std::string& value) {
     genericfactory::GenericFactory<BaseClass>::setProperty(
-          propertyName,
-          dynamic_cast<BaseClass*>(this),
-          value);
+        propertyName, dynamic_cast<BaseClass*>(this), value);
   }
   ///
   std::string getValueAsString(const std::string& propertyName) const {
     return genericfactory::GenericFactory<BaseClass>::getProperty(
-          propertyName,
-          dynamic_cast<BaseClass*>(this));
+        propertyName, dynamic_cast<BaseClass*>(this));
   }
 
   virtual BaseClass* create() const { return nullptr; }
 
-  template<typename Type>
-  Type noGet() const { return Type(); }
-  template<typename Type>
-  void noSet(Type t) { }
+  template <typename Type>
+  Type noGet() const {
+    return Type();
+  }
+  template <typename Type>
+  void noSet(Type t) {}
 };
 
 #endif  // RAYTRACERLIB_FACTORIES_PROPERTYINTERFACE_H_

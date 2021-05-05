@@ -29,15 +29,14 @@ SOFTWARE.
 
 #include <cstdio>
 #include <cstring>
-#include <vector>
 #include <string>
-
+#include <vector>
 
 using std::string;
 using std::vector;
 
-using glm::vec3;
 using glm::vec2;
+using glm::vec3;
 
 namespace {
 // reads a line of the file to the buffer vector. Returns the last character.
@@ -46,8 +45,7 @@ int readLine(FILE* file, vector<char>* buffer) {
   buffer->clear();
   int character = EOF;
   // read as long as we are allowed to.
-  while ((character = fgetc(file)) != EOF
-      && character != '\n') {
+  while ((character = fgetc(file)) != EOF && character != '\n') {
     buffer->push_back(static_cast<char>(character));
   }
   // append 0 to ensure buffer.data works like a cstring.
@@ -55,13 +53,12 @@ int readLine(FILE* file, vector<char>* buffer) {
   return character;
 }
 
-void addQuad(
-    unsigned int (&vInd)[4],
-    unsigned int (&nInd)[4],
-    unsigned int (&uvInd)[4],
-    vector<unsigned int>* vIndices,
-    vector<unsigned int>* nIndices,
-    vector<unsigned int>* uvIndices) {
+void addQuad(unsigned int (&vInd)[4],
+             unsigned int (&nInd)[4],
+             unsigned int (&uvInd)[4],
+             vector<unsigned int>* vIndices,
+             vector<unsigned int>* nIndices,
+             vector<unsigned int>* uvIndices) {
   // vertex indices
   vIndices->push_back(vInd[0]);
   vIndices->push_back(vInd[1]);
@@ -85,13 +82,12 @@ void addQuad(
   uvIndices->push_back(uvInd[0]);
 }
 
-void addTriangle(
-    unsigned int (&vInd)[4],
-    unsigned int (&nInd)[4],
-    unsigned int (&uvInd)[4],
-    vector<unsigned int>* vIndices,
-    vector<unsigned int>* nIndices,
-    vector<unsigned int>* uvIndices) {
+void addTriangle(unsigned int (&vInd)[4],
+                 unsigned int (&nInd)[4],
+                 unsigned int (&uvInd)[4],
+                 vector<unsigned int>* vIndices,
+                 vector<unsigned int>* nIndices,
+                 vector<unsigned int>* uvIndices) {
   // vertex indices
   vIndices->push_back(vInd[0]);
   vIndices->push_back(vInd[1]);
@@ -105,28 +101,28 @@ void addTriangle(
   uvIndices->push_back(uvInd[1]);
   uvIndices->push_back(uvInd[2]);
 }
-void toPositiveIndice(
-    size_t numVertices,
-    int (&vertices)[4],
-    unsigned int (&positiveVertices)[4]) {
+void toPositiveIndice(size_t numVertices,
+                      int (&vertices)[4],
+                      unsigned int (&positiveVertices)[4]) {
   for (int i = 0; i < 4; ++i) {
     positiveVertices[i] =
-      vertices[i] >= 0 ? vertices[i] : numVertices + vertices[i] + 1;
+        vertices[i] >= 0 ? vertices[i] : numVertices + vertices[i] + 1;
   }
-  // printf("NumVertices: %li\nVertices: %d %d %d %d\nPositiveVertices: %d %d %d %d\n",
+  // printf("NumVertices: %li\nVertices: %d %d %d %d\nPositiveVertices: %d %d %d
+  // %d\n",
   //     numVertices, vertices[0], vertices[1], vertices[2], vertices[3],
-  //     positiveVertices[0], positiveVertices[1], positiveVertices[2], positiveVertices[3]);
+  //     positiveVertices[0], positiveVertices[1], positiveVertices[2],
+  //     positiveVertices[3]);
   // exit(1);
 }
 
-void addFace(
-    const vector<char>& buffer,
-    vector<unsigned int>* vIndices,
-    vector<unsigned int>* nIndices,
-    vector<unsigned int>* uvIndices,
-    const size_t numVertices,
-    const size_t numNormals,
-    const size_t numUVs) {
+void addFace(const vector<char>& buffer,
+             vector<unsigned int>* vIndices,
+             vector<unsigned int>* nIndices,
+             vector<unsigned int>* uvIndices,
+             const size_t numVertices,
+             const size_t numNormals,
+             const size_t numUVs) {
   // Faces can either be:
   // 1. vertices only
   // 2. vertices + texture
@@ -134,15 +130,15 @@ void addFace(
   // Four Vertices 3.
   int vInd[4], nInd[4], uvInd[4];
   unsigned int vpInd[4], npInd[4], uvpInd[4];
-  int numMatches = sscanf(buffer.data(), "%*s"
-      " %d/%d/%d"
-      " %d/%d/%d"
-      " %d/%d/%d"
-      " %d/%d/%d",
-      &vInd[0], &uvInd[0], &nInd[0],
-      &vInd[1], &uvInd[1], &nInd[1],
-      &vInd[2], &uvInd[2], &nInd[2],
-      &vInd[3], &uvInd[3], &nInd[3]);
+  int numMatches =
+      sscanf(buffer.data(),
+             "%*s"
+             " %d/%d/%d"
+             " %d/%d/%d"
+             " %d/%d/%d"
+             " %d/%d/%d",
+             &vInd[0], &uvInd[0], &nInd[0], &vInd[1], &uvInd[1], &nInd[1],
+             &vInd[2], &uvInd[2], &nInd[2], &vInd[3], &uvInd[3], &nInd[3]);
   if (numMatches == 12) {
     // Parsed correctly a quad.
     toPositiveIndice(numVertices, vInd, vpInd);
@@ -151,15 +147,14 @@ void addFace(
     addQuad(vpInd, npInd, uvpInd, vIndices, nIndices, uvIndices);
     return;
   }
-  numMatches = sscanf(buffer.data(), "%*s"
-      " %d//%d"
-      " %d//%d"
-      " %d//%d"
-      " %d//%d",
-      &vInd[0], &nInd[0],
-      &vInd[1], &nInd[1],
-      &vInd[2], &nInd[2],
-      &vInd[3], &nInd[3]);
+  numMatches = sscanf(buffer.data(),
+                      "%*s"
+                      " %d//%d"
+                      " %d//%d"
+                      " %d//%d"
+                      " %d//%d",
+                      &vInd[0], &nInd[0], &vInd[1], &nInd[1], &vInd[2],
+                      &nInd[2], &vInd[3], &nInd[3]);
   uvInd[0] = 0;
   uvInd[1] = 0;
   uvInd[2] = 0;
@@ -172,15 +167,14 @@ void addFace(
     addQuad(vpInd, npInd, uvpInd, vIndices, nIndices, uvIndices);
     return;
   }
-  numMatches = sscanf(buffer.data(), "%*s"
-      " %d/%d"
-      " %d/%d"
-      " %d/%d"
-      " %d/%d",
-      &vInd[0], &uvInd[0],
-      &vInd[1], &uvInd[1],
-      &vInd[2], &uvInd[2],
-      &vInd[3], &uvInd[3]);
+  numMatches = sscanf(buffer.data(),
+                      "%*s"
+                      " %d/%d"
+                      " %d/%d"
+                      " %d/%d"
+                      " %d/%d",
+                      &vInd[0], &uvInd[0], &vInd[1], &uvInd[1], &vInd[2],
+                      &uvInd[2], &vInd[3], &uvInd[3]);
   nInd[0] = 0;
   nInd[1] = 0;
   nInd[2] = 0;
@@ -193,15 +187,13 @@ void addFace(
     addQuad(vpInd, npInd, uvpInd, vIndices, nIndices, uvIndices);
     return;
   }
-  numMatches = sscanf(buffer.data(), "%*s"
-      " %d"
-      " %d"
-      " %d"
-      " %d",
-      &vInd[0],
-      &vInd[1],
-      &vInd[2],
-      &vInd[3]);
+  numMatches = sscanf(buffer.data(),
+                      "%*s"
+                      " %d"
+                      " %d"
+                      " %d"
+                      " %d",
+                      &vInd[0], &vInd[1], &vInd[2], &vInd[3]);
   uvInd[0] = 0;
   uvInd[1] = 0;
   uvInd[2] = 0;
@@ -215,13 +207,13 @@ void addFace(
     return;
   }
   // Triangle Vertices+Texture+Normal
-  numMatches = sscanf(buffer.data(), "%*s"
-      " %d/%d/%d"
-      " %d/%d/%d"
-      " %d/%d/%d",
-      &vInd[0], &uvInd[0], &nInd[0],
-      &vInd[1], &uvInd[1], &nInd[1],
-      &vInd[2], &uvInd[2], &nInd[2]);
+  numMatches = sscanf(buffer.data(),
+                      "%*s"
+                      " %d/%d/%d"
+                      " %d/%d/%d"
+                      " %d/%d/%d",
+                      &vInd[0], &uvInd[0], &nInd[0], &vInd[1], &uvInd[1],
+                      &nInd[1], &vInd[2], &uvInd[2], &nInd[2]);
   if (numMatches == 9) {
     // Parsed correctly a quad.
     toPositiveIndice(numVertices, vInd, vpInd);
@@ -232,13 +224,13 @@ void addFace(
   }
 
   // Triangle Vertices+Normal
-  numMatches = sscanf(buffer.data(), "%*s"
-      " %d//%d"
-      " %d//%d"
-      " %d//%d",
-      &vInd[0], &nInd[0],
-      &vInd[1], &nInd[1],
-      &vInd[2], &nInd[2]);
+  numMatches =
+      sscanf(buffer.data(),
+             "%*s"
+             " %d//%d"
+             " %d//%d"
+             " %d//%d",
+             &vInd[0], &nInd[0], &vInd[1], &nInd[1], &vInd[2], &nInd[2]);
   uvInd[0] = 0;
   uvInd[1] = 0;
   uvInd[2] = 0;
@@ -253,13 +245,13 @@ void addFace(
   }
 
   // Triangle Vertices+Texture
-  numMatches = sscanf(buffer.data(), "%*s"
-      " %d/%d"
-      " %d/%d"
-      " %d/%d",
-      &vInd[0], &uvInd[0],
-      &vInd[1], &uvInd[1],
-      &vInd[2], &uvInd[2]);
+  numMatches =
+      sscanf(buffer.data(),
+             "%*s"
+             " %d/%d"
+             " %d/%d"
+             " %d/%d",
+             &vInd[0], &uvInd[0], &vInd[1], &uvInd[1], &vInd[2], &uvInd[2]);
   nInd[0] = 0;
   nInd[1] = 0;
   nInd[2] = 0;
@@ -274,13 +266,12 @@ void addFace(
   }
 
   // Triangle Vertices only
-  numMatches = sscanf(buffer.data(), "%*s"
-      " %d"
-      " %d"
-      " %d",
-      &vInd[0],
-      &vInd[1],
-      &vInd[2]);
+  numMatches = sscanf(buffer.data(),
+                      "%*s"
+                      " %d"
+                      " %d"
+                      " %d",
+                      &vInd[0], &vInd[1], &vInd[2]);
   uvInd[0] = 0;
   uvInd[1] = 0;
   uvInd[2] = 0;
@@ -296,14 +287,13 @@ void addFace(
   return;
 }
 
-void interpretLine(
-    const vector<char>& buffer,
-    vector<vec3>* vertices,
-    vector<vec3>* normals,
-    vector<vec2>* uvCoords,
-    vector<unsigned int>* vIndices,
-    vector<unsigned int>* nIndices,
-    vector<unsigned int>* uvIndices) {
+void interpretLine(const vector<char>& buffer,
+                   vector<vec3>* vertices,
+                   vector<vec3>* normals,
+                   vector<vec2>* uvCoords,
+                   vector<unsigned int>* vIndices,
+                   vector<unsigned int>* nIndices,
+                   vector<unsigned int>* uvIndices) {
   if (strncmp(buffer.data(), "v ", 2) == 0) {
     // This line contains vertex data.
     vec3 vertex;
@@ -325,8 +315,8 @@ void interpretLine(
     uvCoords->push_back(uv);
   }
   if (strncmp(buffer.data(), "f ", 2) == 0) {
-    addFace(buffer, vIndices, nIndices, uvIndices,
-        vertices->size(), normals->size(), uvCoords->size());
+    addFace(buffer, vIndices, nIndices, uvIndices, vertices->size(),
+            normals->size(), uvCoords->size());
   }
 }
 }  // namespace
@@ -334,11 +324,10 @@ void interpretLine(
 namespace parser {
 
 // _____________________________________________________________________________
-bool parseObjFile(
-    const string& filename,
-    vector<vec3>* vertices,
-    vector<vec3>* normals,
-    vector<vec2>* uvCoords) {
+bool parseObjFile(const string& filename,
+                  vector<vec3>* vertices,
+                  vector<vec3>* normals,
+                  vector<vec2>* uvCoords) {
   // opengl-tutorial.org like obj parser.
 
   // Open the file.
@@ -365,12 +354,12 @@ bool parseObjFile(
   // Read the file line by line into buffer.
   while (readLine(file, &buffer) != EOF) {
     // The line is now stored in buffer.
-    interpretLine(buffer, &tmpVertices, &tmpNormals, &tmpUVCoords,
-        &vIndices, &nIndices, &uvIndices);
+    interpretLine(buffer, &tmpVertices, &tmpNormals, &tmpUVCoords, &vIndices,
+                  &nIndices, &uvIndices);
   }
   // Last line of the file is parsed here.
-  interpretLine(buffer, &tmpVertices, &tmpNormals, &tmpUVCoords,
-      &vIndices, &nIndices, &uvIndices);
+  interpretLine(buffer, &tmpVertices, &tmpNormals, &tmpUVCoords, &vIndices,
+                &nIndices, &uvIndices);
   // We are done reading the file.
   fclose(file);
   // Now we remove the indeces and store every face in the output vectors.

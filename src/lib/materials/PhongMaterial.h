@@ -28,8 +28,9 @@ SOFTWARE.
 #define RAYTRACERLIB_MATERIALS_PHONGMATERIAL_H_
 
 #include <glm/glm.hpp>
-#include "./Material.h"
 #include "./Color.h"
+#include "./Material.h"
+
 
 /// Phong material that shades the object with the phong reflection model.
 class PhongMaterial : public Material {
@@ -39,7 +40,7 @@ class PhongMaterial : public Material {
 
   /// Constructor.
   explicit PhongMaterial(const Color& color)
-                  : PhongMaterial(color, 0.6f, 0.4f, 0.0f, 20.0f) { }
+      : PhongMaterial(color, 0.6f, 0.4f, 0.0f, 20.0f) {}
 
   /// Constructor
   PhongMaterial(const Color& color,
@@ -47,11 +48,7 @@ class PhongMaterial : public Material {
                 const float ks,
                 const float ka,
                 const float shiny)
-                  : m_color(color),
-                  m_shiny(shiny),
-                  m_kd(kd),
-                  m_ks(ks),
-                  m_ka(ka) { }
+      : m_color(color), m_shiny(shiny), m_kd(kd), m_ks(ks), m_ka(ka) {}
 
   /// Returns the color for the given position, normal and ray direction.
   virtual Color getColor(const IntersectionInfo& intersectionInfo,
@@ -68,16 +65,16 @@ class PhongMaterial : public Material {
   Color ambientTerm(const Color& color, const float skalar) const;
   /// Helper to compute the diffuse color.
   Color diffuseTerm(const Color& color,
-      const glm::vec4& lightDir,
-      const glm::vec4& normal,
-      const float skalar) const;
+                    const glm::vec4& lightDir,
+                    const glm::vec4& normal,
+                    const float skalar) const;
   /// Helper to compute the specular color.
   Color specularTerm(const Color& color,
-      const glm::vec4& lightDir,
-      const glm::vec4& normal,
-      const glm::vec4& viewer,
-      const float skalar,
-      const float shininess = 5.0f) const;
+                     const glm::vec4& lightDir,
+                     const glm::vec4& normal,
+                     const glm::vec4& viewer,
+                     const float skalar,
+                     const float shininess = 5.0f) const;
 
  private:
   /// Color member.
@@ -89,5 +86,3 @@ class PhongMaterial : public Material {
 };
 
 #endif  // RAYTRACERLIB_MATERIALS_PHONGMATERIAL_H_
-
-

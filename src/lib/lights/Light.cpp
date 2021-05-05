@@ -25,5 +25,4 @@ SOFTWARE.
 
 #include "lights/Light.h"
 
-
 const char* Light::name = "Light";

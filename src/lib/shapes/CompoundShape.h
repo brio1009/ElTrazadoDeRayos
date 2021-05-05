@@ -39,39 +39,31 @@ SOFTWARE.
 class Ray;
 
 ///
-class CompoundShape : public Shape
-{
-public:
+class CompoundShape : public Shape {
+ public:
   /// Enum to define how the child shapes are combined.
-  enum class Operator
-  {
-    unionOp,
-    intersectionOp,
-    minusOp
-  };
+  enum class Operator { unionOp, intersectionOp, minusOp };
 
   /// Default constructor.
   CompoundShape();
 
   /// Constructor.
-  CompoundShape(Shape *leftShapePtr, Shape *rightShapePtr);
+  CompoundShape(Shape* leftShapePtr, Shape* rightShapePtr);
 
   /// Destructor.
   virtual ~CompoundShape() {}
 
   /// TODO(all, 05/17/2014): Find the right epsilon.
-  virtual IntersectionInfo getIntersectionInfo(const Ray &ray,
-                                               const REAL minimumT = constants::TEPSILON,
-                                               const REAL maximumT = std::numeric_limits<REAL>::max()) const;
+  virtual IntersectionInfo getIntersectionInfo(
+      const Ray& ray,
+      const REAL minimumT = constants::TEPSILON,
+      const REAL maximumT = std::numeric_limits<REAL>::max()) const;
 
   /// Setter for operator.
-  void setOperator(const CompoundShape::Operator &op)
-  {
-    _operator = op;
-  }
+  void setOperator(const CompoundShape::Operator& op) { _operator = op; }
 
   /// Getter for operator.
-  const CompoundShape::Operator &getOperator() const { return _operator; }
+  const CompoundShape::Operator& getOperator() const { return _operator; }
 
   /// Getter for _useChildMaterials.
   const bool useChildMaterials() const { return _useChildMaterials; }
@@ -86,37 +78,34 @@ public:
   void setPassTransformation(bool val) { _passTransformation = val; }
 
   /// Set the left object.
-  void setLeftShapePtr(const Shape *shapePtr) { _leftShapePtr = shapePtr; }
+  void setLeftShapePtr(const Shape* shapePtr) { _leftShapePtr = shapePtr; }
 
   /// Set the right object.
-  void setRightShapePtr(const Shape *shapePtr) { _rightShapePtr = shapePtr; }
+  void setRightShapePtr(const Shape* shapePtr) { _rightShapePtr = shapePtr; }
 
   /// The class name. Needed for the Factory creating the object.
-  static const char *name;
+  static const char* name;
 
-  CompoundShape *create() const
-  {
-    return new CompoundShape();
-  }
+  CompoundShape* create() const { return new CompoundShape(); }
 
-protected:
+ protected:
   ///
-  void getIntersects(const Ray &ray,
-                     std::vector<REAL> *leftHits,
-                     std::vector<REAL> *rightHits) const;
+  void getIntersects(const Ray& ray,
+                     std::vector<REAL>* leftHits,
+                     std::vector<REAL>* rightHits) const;
   /// Intersection test. Not used here.
-  virtual std::vector<REAL> intersect(const Ray &ray) const;
+  virtual std::vector<REAL> intersect(const Ray& ray) const;
   /// Return normal. Not used here.
-  virtual glm::vec4 getNormalAt(const glm::vec4 &p) const;
+  virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
 
-private:
+ private:
   /// Adapts the material pointer according to _useChildMaterials;
-  void adaptInstersectionInfo(IntersectionInfo *infoPtr) const;
+  void adaptInstersectionInfo(IntersectionInfo* infoPtr) const;
 
   /// Pointer to the left(in the sense of the operator) shape.
-  const Shape *_leftShapePtr;
+  const Shape* _leftShapePtr;
   /// Pointer to the right(in the sense of the operator) shape.
-  const Shape *_rightShapePtr;
+  const Shape* _rightShapePtr;
   /// Boolean to define if the child shapes use their own material or if always
   /// the compound shapes material is used.
   bool _useChildMaterials;
@@ -127,4 +116,4 @@ private:
   Operator _operator;
 };
 
-#endif // RAYTRACERLIB_SHAPES_COMPOUNDSHAPE_H_
+#endif  // RAYTRACERLIB_SHAPES_COMPOUNDSHAPE_H_

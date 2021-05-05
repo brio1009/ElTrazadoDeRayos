@@ -38,42 +38,38 @@ typedef double REAL;
 
 /// Refraction indices we know.
 namespace RefractiveIndex {
-  extern const float glass;
-  extern const float water;
-  extern const float air;
-  extern const float diamond;
-  extern const float mirror;
-};
+extern const float glass;
+extern const float water;
+extern const float air;
+extern const float diamond;
+extern const float mirror;
+};  // namespace RefractiveIndex
 
 namespace constants {
-  // This defines how precise a floating point variable has to be to be
-  // approximatly the value.
-  // e.g. check for zero:
-  // bool isZero(float f) { return (f < EPSILON) && (f > -EPSILON); }
-  extern const double EPSILON;
+// This defines how precise a floating point variable has to be to be
+// approximatly the value.
+// e.g. check for zero:
+// bool isZero(float f) { return (f < EPSILON) && (f > -EPSILON); }
+extern const double EPSILON;
 
-  /// Smallest T-epsilon.
-  extern const double TEPSILON;
+/// Smallest T-epsilon.
+extern const double TEPSILON;
 
-  /// Maximal depth a ray can travel.
-  extern const unsigned char maxDepth;
+/// Maximal depth a ray can travel.
+extern const unsigned char maxDepth;
 
-  /// Minimal color contribution needed for ray.
-  extern const REAL minColorContribution;
+/// Minimal color contribution needed for ray.
+extern const REAL minColorContribution;
 
-  /// Pi.
-  extern const REAL PI;
+/// Pi.
+extern const REAL PI;
 
-  /// Default number of samples Camera uses to sample each pixel.
-  extern const size_t DefaultSamplesPerDim;
+/// Default number of samples Camera uses to sample each pixel.
+extern const size_t DefaultSamplesPerDim;
 }  // namespace constants
 
-#define GETSET(type, varname, propname)\
-public:\
-void set##propname(type value) {\
-varname = value; \
-}\
-type get##propname() const {\
-return varname;\
-}
+#define GETSET(type, varname, propname)               \
+ public:                                              \
+  void set##propname(type value) { varname = value; } \
+  type get##propname() const { return varname; }
 #endif  // RAYTRACERLIB_CONSTANTS_H_

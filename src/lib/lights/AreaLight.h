@@ -27,22 +27,22 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_LIGHTS_AREALIGHT_H_
 #define RAYTRACERLIB_LIGHTS_AREALIGHT_H_
 
-#include <glm/glm.hpp>
 #include <ctime>
+#include <glm/glm.hpp>
 #include "./Light.h"
+
 
 /// A simple area light that varies its position in a sphere.
 class AreaLight : public Light {
  public:
   /// Constructor of a Area Light. The sphere radius of the light must be given.
   AreaLight(const glm::vec4& position, REAL sphereRadius)
-    : m_NumSamples(10),
-      m_SphereRadius(sphereRadius) {
+      : m_NumSamples(10), m_SphereRadius(sphereRadius) {
     setPosition(position);
     setLightColor(Color(1, 1, 1));
   }
   /// Destructor.
-  virtual ~AreaLight() { }
+  virtual ~AreaLight() {}
 
   /// Returns the ray from the light source to the given point. The area light
   /// always varies its position in a sphere.
@@ -56,8 +56,8 @@ class AreaLight : public Light {
   /// color.
   void setNumberOfSamples(size_t numSamples) {
     // First rescale the light.
-    Light::setLightColor((static_cast<float>(numberOfSamples()) * getColor())
-                         * (1.0 / numberOfSamples()));
+    Light::setLightColor((static_cast<float>(numberOfSamples()) * getColor()) *
+                         (1.0 / numberOfSamples()));
     // Set the number of samples.
     m_NumSamples = numSamples;
   }

@@ -26,25 +26,24 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_CAMERAS_PERSPECTIVECAMERA_H_
 #define RAYTRACERLIB_CAMERAS_PERSPECTIVECAMERA_H_
 
-#include "./Constants.h"
 #include "./Camera.h"
+#include "./Constants.h"
+
 
 class PerspectiveCamera : public Camera {
  public:
   // Default Constructor.
-  PerspectiveCamera() : PerspectiveCamera(256, 256, 1.48352986f) { }
+  PerspectiveCamera() : PerspectiveCamera(256, 256, 1.48352986f) {}
 
   // Constructor.
   PerspectiveCamera(const int width,
-      const int height,
-      const REAL& fovAngleInRad);
+                    const int height,
+                    const REAL& fovAngleInRad);
 
   /// This overrides Object::transform(...)
-  virtual void transform(const glm::mat4& matrix);  //NOLINT mistaken for std
+  virtual void transform(const glm::mat4& matrix);  // NOLINT mistaken for std
   /// This defines Camera::create...
-  virtual Ray createPixelCornerRay(
-      const size_t& px,
-      const size_t& py) const;
+  virtual Ray createPixelCornerRay(const size_t& px, const size_t& py) const;
 
   // Destructor.
   virtual ~PerspectiveCamera();
@@ -53,20 +52,16 @@ class PerspectiveCamera : public Camera {
 
   static const char* name;
 
-  PerspectiveCamera* create() const {
-    return new PerspectiveCamera();
-  }
+  PerspectiveCamera* create() const { return new PerspectiveCamera(); }
 
   static void registerProperties() {
     static bool m_lock(true);
     if (!m_lock)
       return;
     m_lock = false;
-    genericfactory::GenericFactory<Camera>::
-          registerProperty<PerspectiveCamera, REAL>(
-        "FOV",
-        &PerspectiveCamera::setFOV,
-        &PerspectiveCamera::noGet);
+    genericfactory::GenericFactory<Camera>::registerProperty<PerspectiveCamera,
+                                                             REAL>(
+        "FOV", &PerspectiveCamera::setFOV, &PerspectiveCamera::noGet);
   }
 
  private:

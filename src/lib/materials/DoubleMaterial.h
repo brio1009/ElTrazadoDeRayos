@@ -28,8 +28,9 @@ SOFTWARE.
 #define RAYTRACERLIB_MATERIALS_DOUBLEMATERIAL_H_
 
 #include <glm/glm.hpp>
-#include "./Material.h"
 #include "../Constants.h"
+#include "./Material.h"
+
 
 // Forward declaration.
 struct IntersectionInfo;
@@ -44,12 +45,11 @@ class DoubleMaterial : public Material {
                  const Material* mat2,
                  const REAL uSize,
                  const REAL vSize)
-    : Material(),
-  _material1Ptr(mat1),
-  _material2Ptr(mat2),
-  _uSize(uSize),
-  _vSize(vSize)
-  { }
+      : Material(),
+        _material1Ptr(mat1),
+        _material2Ptr(mat2),
+        _uSize(uSize),
+        _vSize(vSize) {}
 
   /// Returns the color for the given intersection point & normal.
   virtual Color getColor(const IntersectionInfo& intersectionInfo,
@@ -75,4 +75,3 @@ class DoubleMaterial : public Material {
 };
 
 #endif  // RAYTRACERLIB_MATERIALS_DOUBLEMATERIAL_H_
-

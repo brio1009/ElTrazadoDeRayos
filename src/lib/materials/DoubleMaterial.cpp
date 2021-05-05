@@ -25,12 +25,13 @@ SOFTWARE.
 
 #include "./DoubleMaterial.h"
 
-#include <glm/glm.hpp>
 #include <cmath>
+#include <glm/glm.hpp>
 #include "./Color.h"
 #include "./IntersectionInfo.h"
-#include "./Scene.h"
 #include "./Ray.h"
+#include "./Scene.h"
+
 
 // _____________________________________________________________________________
 bool linesInU(const glm::vec2& coords) {
@@ -39,8 +40,8 @@ bool linesInU(const glm::vec2& coords) {
 
 // _____________________________________________________________________________
 Color DoubleMaterial::getColor(const IntersectionInfo& intersectionInfo,
-                                     const Ray& incomingRay,
-                                     const Scene& scene) const {
+                               const Ray& incomingRay,
+                               const Scene& scene) const {
   if (checkerBoard(intersectionInfo.texCoord)) {
     return _material1Ptr->getColor(intersectionInfo, incomingRay, scene);
   } else {
@@ -50,18 +51,20 @@ Color DoubleMaterial::getColor(const IntersectionInfo& intersectionInfo,
 
 // _____________________________________________________________________________
 bool DoubleMaterial::expandingSquares(const glm::vec2& coords) const {
-  return static_cast<int>(abs(coords.x) / _uSize
-                       + abs(coords.y) / _vSize + 0.5) % 2 == 0;
+  return static_cast<int>(abs(coords.x) / _uSize + abs(coords.y) / _vSize +
+                          0.5) %
+             2 ==
+         0;
 }
 
 // _____________________________________________________________________________
 bool DoubleMaterial::checkerBoard(const glm::vec2& coords) const {
-  return !(static_cast<int>(nearbyint(coords.x / _uSize)) % 2 == 0)
-         != !(static_cast<int>(nearbyint(coords.y / _vSize)) % 2 == 0);
+  return !(static_cast<int>(nearbyint(coords.x / _uSize)) % 2 == 0) !=
+         !(static_cast<int>(nearbyint(coords.y / _vSize)) % 2 == 0);
 }
 
 // _____________________________________________________________________________
 bool DoubleMaterial::dotBoard(const glm::vec2& coords) const {
-  return static_cast<int>(abs(coords.x) / _uSize + 0.5) % 2 == 0
-          && static_cast<int>(abs(coords.y) / _vSize + 0.5) % 2 == 0;
+  return static_cast<int>(abs(coords.x) / _uSize + 0.5) % 2 == 0 &&
+         static_cast<int>(abs(coords.y) / _vSize + 0.5) % 2 == 0;
 }

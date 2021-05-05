@@ -43,8 +43,7 @@ const char* Rectangle::name = "Rectangle";
 
 // ___________________________________________________________________________
 Rectangle::Rectangle(const glm::vec3& normal, const glm::vec2& extent)
-    : m_Extent(extent),
-      m_ClipBackplane(false) {
+    : m_Extent(extent), m_ClipBackplane(false) {
   // Rotate vector so normal is up.
   // Get the tangent.
   setNormal(normal);
@@ -85,10 +84,10 @@ vector<REAL> Rectangle::intersect(const Ray& ray) const {
   // Loop over the solutions and test if they are valid.
   vector<REAL> out;
   for (size_t i = 0; i < solutions.size(); ++i) {
-    glm::vec4 hitPoint = transPos
-                         + transDir * static_cast<float>(solutions.at(i));
-    if (std::abs(hitPoint.x) <= m_Extent.x
-        && std::abs(hitPoint.z) <= m_Extent.y) {
+    glm::vec4 hitPoint =
+        transPos + transDir * static_cast<float>(solutions.at(i));
+    if (std::abs(hitPoint.x) <= m_Extent.x &&
+        std::abs(hitPoint.z) <= m_Extent.y) {
       out.push_back(solutions.at(i));
     }
   }

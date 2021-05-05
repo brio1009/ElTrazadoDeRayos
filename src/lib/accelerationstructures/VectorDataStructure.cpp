@@ -29,18 +29,16 @@ SOFTWARE.
 #include <vector>
 
 #include "../IntersectionInfo.h"
-#include "../shapes/Shape.h"
 #include "../Ray.h"
+#include "../shapes/Shape.h"
+
 
 namespace accelerationstructures {
 // _____________________________________________________________________________
-VectorDataStructure::VectorDataStructure(std::vector<Shape*>&& shapes) :
-  m_Shapes(shapes) {
-}
+VectorDataStructure::VectorDataStructure(std::vector<Shape*>&& shapes)
+    : m_Shapes(shapes) {}
 // _____________________________________________________________________________
-VectorDataStructure::VectorDataStructure() :
-  m_Shapes() {
-}
+VectorDataStructure::VectorDataStructure() : m_Shapes() {}
 // _____________________________________________________________________________
 VectorDataStructure::~VectorDataStructure() {
   for (auto it = m_Shapes.begin(); it != m_Shapes.end(); ++it)

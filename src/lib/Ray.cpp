@@ -56,4 +56,3 @@ void Ray::setDirection(const glm::vec4& direction) {
   _direction[3] = 0.0;
   _direction = glm::normalize(_direction);
 }
-

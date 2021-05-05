@@ -23,11 +23,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "./JitteredSampler.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/random.hpp>
-#include "./JitteredSampler.h"
-#include "./Sampler.h"
 #include "./Ray.h"
+#include "./Sampler.h"
+
 /*
 // _____________________________________________________________________________
 Ray JitteredSampler::getSample(const size_t& index) {

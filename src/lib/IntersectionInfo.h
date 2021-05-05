@@ -41,33 +41,33 @@ struct IntersectionInfo {
   glm::vec2 texCoord;
   bool hitImportantShape;
   const Material* materialPtr;
-  IntersectionInfo() : t(std::numeric_limits<REAL>::max()),
-                       hitPoint(0),
-                       normal(0),
-                       texCoord(0, 0),
-                       hitImportantShape(false),
-                       materialPtr(nullptr) {}
+  IntersectionInfo()
+      : t(std::numeric_limits<REAL>::max()),
+        hitPoint(0),
+        normal(0),
+        texCoord(0, 0),
+        hitImportantShape(false),
+        materialPtr(nullptr) {}
   IntersectionInfo(const REAL t,
                    const glm::vec4& hitPoint,
                    const glm::vec4& normal,
                    const Material* materialPtr,
                    const glm::vec2& texCoord = glm::vec2(0, 0))
-  : t(t),
-    hitPoint(hitPoint),
-    normal(normal),
-    texCoord(texCoord),
-    hitImportantShape(false),
-    materialPtr(materialPtr) {}
+      : t(t),
+        hitPoint(hitPoint),
+        normal(normal),
+        texCoord(texCoord),
+        hitImportantShape(false),
+        materialPtr(materialPtr) {}
 
   /// Copy constructor.
   IntersectionInfo(const IntersectionInfo& i)
-    : t(i.t),
-      hitPoint(i.hitPoint),
-      normal(i.normal),
-      texCoord(i.texCoord),
-      hitImportantShape(i.hitImportantShape),
-      materialPtr(i.materialPtr)
-  { }
+      : t(i.t),
+        hitPoint(i.hitPoint),
+        normal(i.normal),
+        texCoord(i.texCoord),
+        hitImportantShape(i.hitImportantShape),
+        materialPtr(i.materialPtr) {}
 };
 
 #endif  // RAYTRACERLIB_INTERSECTIONINFO_H_

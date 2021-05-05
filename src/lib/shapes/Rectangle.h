@@ -42,13 +42,13 @@ class Rectangle : public Shape {
 
  public:
   /// Default constructor. Normal is y-up.
-  Rectangle() : Rectangle(glm::vec3(0, 1, 0), glm::vec2(1, 1)) { }
+  Rectangle() : Rectangle(glm::vec3(0, 1, 0), glm::vec2(1, 1)) {}
 
   /// Constructor with given normal axis.
   Rectangle(const glm::vec3& normal, const glm::vec2& extent);
 
   /// Destructor.
-  virtual ~Rectangle() { }
+  virtual ~Rectangle() {}
   /// Test for intersections.
   virtual std::vector<REAL> intersect(const Ray& ray) const;
   /// Get the normal at a world position p.
@@ -65,28 +65,20 @@ class Rectangle : public Shape {
 
   // ################### SPECIAL PROPERTIES #######################
   /// sets the X compnent of the normal.
-  void setNormalX(float x) {
-    setNormal(glm::vec3(x, m_Normal.y, m_Normal.z));
-  }
+  void setNormalX(float x) { setNormal(glm::vec3(x, m_Normal.y, m_Normal.z)); }
 
   /// sets the Y compnent of the normal.
-  void setNormalY(float y) {
-    setNormal(glm::vec3(m_Normal.x, y, m_Normal.z));
-  }
+  void setNormalY(float y) { setNormal(glm::vec3(m_Normal.x, y, m_Normal.z)); }
 
   /// sets the Z compnent of the normal.
-  void setNormalZ(float z) {
-    setNormal(glm::vec3(m_Normal.x, m_Normal.y, z));
-  }
+  void setNormalZ(float z) { setNormal(glm::vec3(m_Normal.x, m_Normal.y, z)); }
   // ################### SPECIAL PROPERTIES END ###################
   /// The class name. Needed for the Factory creating the object.
   static const char* name;
 
   void setNormal(const glm::vec3& normal);
 
-  Rectangle* create() const {
-    return new Rectangle();
-  }
+  Rectangle* create() const { return new Rectangle(); }
 
   static void registerProperties() {
     static bool m_lock(true);
@@ -94,29 +86,17 @@ class Rectangle : public Shape {
       return;
     m_lock = false;
     genericfactory::GenericFactory<Shape>::registerProperty<Rectangle, float>(
-        "nX",
-        &Rectangle::setNormalX,
-        &Rectangle::noGet);
+        "nX", &Rectangle::setNormalX, &Rectangle::noGet);
     genericfactory::GenericFactory<Shape>::registerProperty<Rectangle, float>(
-        "nY",
-        &Rectangle::setNormalY,
-        &Rectangle::noGet);
+        "nY", &Rectangle::setNormalY, &Rectangle::noGet);
     genericfactory::GenericFactory<Shape>::registerProperty<Rectangle, float>(
-        "nZ",
-        &Rectangle::setNormalZ,
-        &Rectangle::noGet);
+        "nZ", &Rectangle::setNormalZ, &Rectangle::noGet);
     genericfactory::GenericFactory<Shape>::registerProperty<Rectangle, float>(
-        "ExtentX",
-        &Rectangle::setExtentX,
-        &Rectangle::noGet);
+        "ExtentX", &Rectangle::setExtentX, &Rectangle::noGet);
     genericfactory::GenericFactory<Shape>::registerProperty<Rectangle, float>(
-        "ExtentY",
-        &Rectangle::setExtentY,
-        &Rectangle::noGet);
+        "ExtentY", &Rectangle::setExtentY, &Rectangle::noGet);
     genericfactory::GenericFactory<Shape>::registerProperty<Rectangle, bool>(
-        "NoBack",
-        &Rectangle::setClipBackplane,
-        &Rectangle::noGet);
+        "NoBack", &Rectangle::setClipBackplane, &Rectangle::noGet);
   }
 
  private:
@@ -129,6 +109,4 @@ class Rectangle : public Shape {
   bool m_ClipBackplane;
 };
 
-
 #endif  // RAYTRACERLIB_SHAPES_RECTANGLE_H_
-

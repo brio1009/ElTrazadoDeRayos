@@ -35,18 +35,17 @@ class OrthogonalCamera : public Camera {
  public:
   /// Constructor.
   OrthogonalCamera(const int width,
-      const int height,
-      const REAL unitsPerPixel = 1.0) : Camera(width, height) {
+                   const int height,
+                   const REAL unitsPerPixel = 1.0)
+      : Camera(width, height) {
     _unitsPerPixel = unitsPerPixel;
   }
   /// This overrides Object::transform(...)
-  virtual void transform(const glm::mat4& matrix);  //NOLINT mistaken for std
+  virtual void transform(const glm::mat4& matrix);  // NOLINT mistaken for std
   /// This defines Camera::create...
-  virtual Ray createPixelCornerRay(
-      const size_t& px,
-      const size_t& py) const;
+  virtual Ray createPixelCornerRay(const size_t& px, const size_t& py) const;
   /// Destructor
-  virtual ~OrthogonalCamera() { }
+  virtual ~OrthogonalCamera() {}
 
  private:
   REAL _unitsPerPixel;

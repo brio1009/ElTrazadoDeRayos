@@ -29,11 +29,10 @@ SOFTWARE.
 #include "../Image.h"
 
 // _____________________________________________________________________________
-PostProcessor::~PostProcessor() {
-}
+PostProcessor::~PostProcessor() {}
 
 // _____________________________________________________________________________
 void PostProcessor::doPostProcess(Image* imagePtr) const {
-    int amountPixels = imagePtr->getWidth() * imagePtr->getHeight();
-    doPostProcess(imagePtr, 0, amountPixels);
-  }
+  int amountPixels = imagePtr->getWidth() * imagePtr->getHeight();
+  doPostProcess(imagePtr, 0, amountPixels);
+}

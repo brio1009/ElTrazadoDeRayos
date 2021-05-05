@@ -36,7 +36,7 @@ class Image;
 class ImageNormalizer : public PostProcessor {
  public:
   /// Default constructor.
-  ImageNormalizer() { }
+  ImageNormalizer() {}
 
   /// Postprocesses only a range of pixels.
   virtual void doPostProcess(Image* imagePtr,

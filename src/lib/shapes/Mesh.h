@@ -30,22 +30,23 @@ SOFTWARE.
 // C
 #include <glm/glm.hpp>
 // C++
-#include <vector>
 #include <string>
+#include <vector>
+
 
 // Project
-#include "./Shape.h"
 #include "./Constants.h"
+#include "./Shape.h"
+
 
 class Mesh : public Shape {
  public:
   Mesh();
 
   void loadObjFromFile(const std::string& filename);
-  IntersectionInfo getIntersectionInfo(
-      const Ray& ray,
-      const REAL minimumT,
-      const REAL maximumT) const override;
+  IntersectionInfo getIntersectionInfo(const Ray& ray,
+                                       const REAL minimumT,
+                                       const REAL maximumT) const override;
   /// Intersection test.
   virtual std::vector<REAL> intersect(const Ray& ray) const override;
   const std::vector<glm::vec3>& getVertices() const;
@@ -53,6 +54,7 @@ class Mesh : public Shape {
 
  protected:
   virtual glm::vec4 getNormalAt(const glm::vec4& p) const;
+
  private:
   std::vector<glm::vec3> m_Vertices;
   std::vector<glm::vec3> m_Normals;
@@ -60,5 +62,3 @@ class Mesh : public Shape {
 };
 
 #endif  // RAYTRACERLIB_SHAPES_MESH_H_
-
-

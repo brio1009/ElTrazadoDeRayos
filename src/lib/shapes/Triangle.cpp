@@ -25,23 +25,24 @@ SOFTWARE.
 
 #include "./Triangle.h"
 
+#include <cstdio>
 #include <glm/glm.hpp>
 #include <glm/gtx/fast_square_root.hpp>  // fastNormalize
-#include <cstdio>
 #include <vector>
 #include "../Constants.h"
 #include "../Ray.h"
 
-using std::vector;
-using glm::vec3;
 
-std::vector<REAL> intersectTriangles(
-    const Ray& ray,
-    const std::vector<glm::vec3>& vertices,
-    const size_t& begin, const size_t& end,
-    std::vector<size_t>* hitTriangles,
-    std::vector<float>* barycentricOne,
-    std::vector<float>* barycentricTwo) {
+using glm::vec3;
+using std::vector;
+
+std::vector<REAL> intersectTriangles(const Ray& ray,
+                                     const std::vector<glm::vec3>& vertices,
+                                     const size_t& begin,
+                                     const size_t& end,
+                                     std::vector<size_t>* hitTriangles,
+                                     std::vector<float>* barycentricOne,
+                                     std::vector<float>* barycentricTwo) {
   vector<REAL> result;
   // Check if begin and end are a multiple of 3.
   if (end <= begin || (end - begin) % 3 != 0) {

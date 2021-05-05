@@ -48,6 +48,7 @@ class VectorDataStructure : public AbstractDataStructure {
   virtual void addShape(Shape* shape) override;
   /// Returns the number of shapes in this structure.
   virtual size_t size() const override;
+
  private:
   std::vector<Shape*> m_Shapes;
 };

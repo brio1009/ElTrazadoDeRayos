@@ -27,12 +27,13 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_LIGHTS_AREASHAPE_H_
 #define RAYTRACERLIB_LIGHTS_AREASHAPE_H_
 
-#include <glm/glm.hpp>
-#include <ctime>
 #include <cstdio>
+#include <ctime>
+#include <glm/glm.hpp>
 #include <limits>
 #include <utility>
 #include "../Constants.h"
+
 
 #include "../IntersectionInfo.h"
 /// Forward declaration.
@@ -55,19 +56,20 @@ class ImportantShape {
 };
 
 ///
-template<class T>
+template <class T>
 class AreaShape : public T, public ImportantShape {
  public:
   /// Constructor calls the constructor of the base class.
-  template<typename... Args>
-  AreaShape(Args... args) : T(std::forward<Args>(args)...) { }  // NOLINT
+  template <typename... Args>
+  AreaShape(Args... args) : T(std::forward<Args>(args)...) {}  // NOLINT
 
-  explicit AreaShape(const T& other) : T(other) { }
+  explicit AreaShape(const T& other) : T(other) {}
   /// We override this here, so we can set the boolean
   /// importantShape to true.
-  virtual IntersectionInfo getIntersectionInfo(const Ray& ray,
-    const REAL minimumT = constants::TEPSILON,
-    const REAL maximumT = std::numeric_limits<REAL>::max()) const;
+  virtual IntersectionInfo getIntersectionInfo(
+      const Ray& ray,
+      const REAL minimumT = constants::TEPSILON,
+      const REAL maximumT = std::numeric_limits<REAL>::max()) const;
 
   /// Returns the number of samples.
   size_t numSamples() const;
@@ -88,18 +90,16 @@ class AreaShape : public T, public ImportantShape {
   AreaShape<T>* create() const;
 };
 // Implementations of template class functions.
-template<class T>
+template <class T>
 IntersectionInfo AreaShape<T>::getIntersectionInfo(const Ray& ray,
                                                    const REAL minimumT,
                                                    const REAL maximumT) const {
-  IntersectionInfo info = T::getIntersectionInfo(ray,
-                                                 minimumT,
-                                                 maximumT);
+  IntersectionInfo info = T::getIntersectionInfo(ray, minimumT, maximumT);
   info.hitImportantShape = true;
   return info;
 }
 
-template<typename T>
+template <typename T>
 AreaShape<T>* AreaShape<T>::create() const {
   return new AreaShape<T>();
 }

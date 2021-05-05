@@ -37,10 +37,10 @@ class DirectionalLight : public Light {
 
  public:
   /// Constructor of a Directional Light.
-  explicit DirectionalLight(const glm::vec4& dir) :
-      _direction(glm::normalize(dir)) { }
+  explicit DirectionalLight(const glm::vec4& dir)
+      : _direction(glm::normalize(dir)) {}
   /// Destructor.
-  virtual ~DirectionalLight() { }
+  virtual ~DirectionalLight() {}
   /// Overrides
   virtual Ray getRay(const glm::vec4& pos) const;
 };

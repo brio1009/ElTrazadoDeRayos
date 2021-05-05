@@ -40,10 +40,10 @@ class Scene;
 class Material : public PropertyInterface<Material> {
  public:
   /// Destructor.
-  virtual ~Material() { }
+  virtual ~Material() {}
 
   /// Adds the special properties of Shape.
-  static void createSpecialProperties() { }
+  static void createSpecialProperties() {}
 
   /// Returns the color for the given positition and normal.
   virtual Color getColor(const IntersectionInfo& intersectionInfo,

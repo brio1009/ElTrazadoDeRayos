@@ -25,27 +25,27 @@ SOFTWARE.
 
 #include "./OrthogonalCamera.h"
 
-#include <glm/glm.hpp>
 #include <cstdio>
+#include <glm/glm.hpp>
 #include "./Constants.h"
 #include "./IntersectionInfo.h"
 #include "./Ray.h"
 #include "./Scene.h"
 #include "materials/Material.h"
 
+
 // _____________________________________________________________________________
-Ray OrthogonalCamera::createPixelCornerRay(
-      const size_t& px,
-      const size_t& py) const {
-  return Ray(_imagePlaneTopLeftCorner
-      + static_cast<float>(px) * _imagePlaneX
-      + static_cast<float>(py) * _imagePlaneY,
-      _viewingDirection);
+Ray OrthogonalCamera::createPixelCornerRay(const size_t& px,
+                                           const size_t& py) const {
+  return Ray(_imagePlaneTopLeftCorner + static_cast<float>(px) * _imagePlaneX +
+                 static_cast<float>(py) * _imagePlaneY,
+             _viewingDirection);
 }
 // _____________________________________________________________________________
 void OrthogonalCamera::transform(const glm::mat4& matrix) {
   // transform as Object does.
-  Spatial::transform(matrix); // NOLINT linter gets confused with std::transform
+  Spatial::transform(
+      matrix);  // NOLINT linter gets confused with std::transform
   // recalculate the Image plane directions.
   _imagePlaneX = glm::vec4(_unitsPerPixel, 0, 0, 0);
   _imagePlaneY = glm::vec4(0, -_unitsPerPixel, 0, 0);
@@ -56,9 +56,7 @@ void OrthogonalCamera::transform(const glm::mat4& matrix) {
   REAL startX = _image.getWidth() * 0.5 * _unitsPerPixel;
   REAL startY = _image.getHeight() * 0.5 * _unitsPerPixel;
   _imagePlaneTopLeftCorner = glm::vec4(-startX + _unitsPerPixel * 0.5,
-                     startY + _unitsPerPixel * 0.5,
-                     0,
-                     1);
+                                       startY + _unitsPerPixel * 0.5, 0, 1);
   _imagePlaneTopLeftCorner = _transformation * _imagePlaneTopLeftCorner;
   _viewingDirection = _transformation * glm::vec4(0, 0, -1, 0);
 }

@@ -36,10 +36,10 @@ class Image;
 class GammaCorrector : public PostProcessor {
  public:
   /// Default constructor. Uses gamma = 1.0f;
-  GammaCorrector() : m_Gamma(1.0f) { }
+  GammaCorrector() : m_Gamma(1.0f) {}
 
   /// Constructor with given gamma value.
-  explicit GammaCorrector(const float gamma) : m_Gamma(gamma) { }
+  explicit GammaCorrector(const float gamma) : m_Gamma(gamma) {}
 
   /// Postprocesses only a range of pixels.
   virtual void doPostProcess(Image* imagePtr,

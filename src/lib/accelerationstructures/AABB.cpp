@@ -28,19 +28,20 @@ SOFTWARE.
 #include <cmath>
 #include <limits>
 
-#include "../Ray.h"
-#include "../shapes/Shape.h"
-#include "../shapes/Box.h"
-#include "../shapes/Plane.h"
-#include "../shapes/Ellipsoid.h"
-#include "../shapes/Rectangle.h"
 #include "../FunctionTraits.h"
+#include "../Ray.h"
+#include "../shapes/Box.h"
+#include "../shapes/Ellipsoid.h"
+#include "../shapes/Plane.h"
+#include "../shapes/Rectangle.h"
+#include "../shapes/Shape.h"
 
-using std::function;
+
+using accelerationstructures::AABB;
+using glm::mat4;
 using glm::vec3;
 using glm::vec4;
-using glm::mat4;
-using accelerationstructures::AABB;
+using std::function;
 
 namespace {
 // _____________________________________________________________________________
@@ -48,11 +49,11 @@ template <typename Func>
 using arg0 = typename function_traits<Func>::template arg<0>;
 
 // _____________________________________________________________________________
-template<typename Ret, typename Func>
+template <typename Ret, typename Func>
 Ret dispatcher(const Shape& shape, Func&& f) {
   try {
     typename arg0<Func>::type t =
-      dynamic_cast<typename arg0<Func>::type>(shape);
+        dynamic_cast<typename arg0<Func>::type>(shape);
     return f(t);
   } catch (std::bad_cast error) {
     return Ret();
@@ -60,11 +61,11 @@ Ret dispatcher(const Shape& shape, Func&& f) {
 }
 
 // _____________________________________________________________________________
-template<typename Ret, typename Func, typename... Args>
+template <typename Ret, typename Func, typename... Args>
 Ret dispatcher(const Shape& shape, Func&& f, Args&&... args) {
   try {
     typename arg0<Func>::type t =
-      dynamic_cast<typename arg0<Func>::type>(shape);
+        dynamic_cast<typename arg0<Func>::type>(shape);
     return f(t);
   } catch (std::bad_cast error) {
     return dispatcher<Ret, Args...>(shape, std::forward<Args>(args)...);
@@ -72,11 +73,10 @@ Ret dispatcher(const Shape& shape, Func&& f, Args&&... args) {
 }
 // Returns the surrounding min and max pos of the boxes
 // extent centered around (0/0/0) transformed by trans.
-inline void minMaxOfTransformedSymetricBox(
-    const vec4& pos,
-    vec4* maxPos,
-    vec4* minPos,
-    const mat4& trans) {
+inline void minMaxOfTransformedSymetricBox(const vec4& pos,
+                                           vec4* maxPos,
+                                           vec4* minPos,
+                                           const mat4& trans) {
   for (int i = 0; i < 8; ++i) {
     vec4 ithPos;
     ithPos.w = 1.0f;
@@ -147,14 +147,10 @@ bool intersectAABB(const AABB& aabb, const Ray& ray, REAL* t) {
   vec3 tToMax = (aabb.max - vec3(origin)) / vec3(dir);
 
   REAL minTValue = std::min(
-      std::min(
-        std::max(tToMin.x, tToMax.x),
-        std::max(tToMin.y, tToMax.y)),
+      std::min(std::max(tToMin.x, tToMax.x), std::max(tToMin.y, tToMax.y)),
       std::max(tToMin.z, tToMax.z));
   REAL maxTValue = std::max(
-      std::max(
-        std::min(tToMin.x, tToMax.x),
-        std::min(tToMin.y, tToMax.y)),
+      std::max(std::min(tToMin.x, tToMax.x), std::min(tToMin.y, tToMax.y)),
       std::min(tToMin.z, tToMax.z));
   // Behind us.
   if (maxTValue < 0.0f) {
@@ -174,9 +170,7 @@ AABB aabbFromShape(const Shape& shape) {
 }
 // _____________________________________________________________________________
 bool aabbOfShapeInfinite(const Shape& shape) {
-  return dispatcher<bool>(shape,
-      planeInfinite,
-      RectangleInfinite,
-      fallbackInfinite);
+  return dispatcher<bool>(shape, planeInfinite, RectangleInfinite,
+                          fallbackInfinite);
 }
 }  // namespace accelerationstructures

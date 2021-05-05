@@ -29,14 +29,11 @@ SOFTWARE.
 #include <limits>
 
 // _____________________________________________________________________________
-Color::Color(const Color &color) : _r(color.r()),
-                                   _g(color.g()),
-                                   _b(color.b()),
-                                   _a(color.a()) {}
+Color::Color(const Color& color)
+    : _r(color.r()), _g(color.g()), _b(color.b()), _a(color.a()) {}
 
 // _____________________________________________________________________________
-Color &Color::operator+=(const Color &rhs)
-{
+Color& Color::operator+=(const Color& rhs) {
   setR(_r + rhs.r());
   setG(_g + rhs.g());
   setB(_b + rhs.b());
@@ -44,16 +41,14 @@ Color &Color::operator+=(const Color &rhs)
 }
 
 // _____________________________________________________________________________
-Color Color::operator+(const Color &rhs)
-{
-  Color newColor(*this); // Copy constructed.
+Color Color::operator+(const Color& rhs) {
+  Color newColor(*this);  // Copy constructed.
   newColor += rhs;
   return newColor;
 }
 
 // _____________________________________________________________________________
-Color &Color::operator*=(const Color &rhs)
-{
+Color& Color::operator*=(const Color& rhs) {
   setR(rhs._r * _r);
   setG(rhs._g * _g);
   setB(rhs._b * _b);
@@ -61,16 +56,14 @@ Color &Color::operator*=(const Color &rhs)
 }
 
 // _____________________________________________________________________________
-Color Color::operator*(const Color &rhs)
-{
-  Color newColor(*this); // Copy constructed.
+Color Color::operator*(const Color& rhs) {
+  Color newColor(*this);  // Copy constructed.
   newColor *= rhs;
   return newColor;
 }
 
 // _____________________________________________________________________________
-Color &Color::operator*=(const float &rhs)
-{
+Color& Color::operator*=(const float& rhs) {
   setR(rhs * _r);
   setG(rhs * _g);
   setB(rhs * _b);
@@ -78,16 +71,14 @@ Color &Color::operator*=(const float &rhs)
 }
 
 // _____________________________________________________________________________
-Color Color::operator*(const float &rhs)
-{
-  Color newColor(*this); // Copy constructed.
+Color Color::operator*(const float& rhs) {
+  Color newColor(*this);  // Copy constructed.
   newColor *= rhs;
   return newColor;
 }
 
 // _____________________________________________________________________________
-Color &Color::operator*=(const double &rhs)
-{
+Color& Color::operator*=(const double& rhs) {
   setR(static_cast<float>(rhs) * _r);
   setG(static_cast<float>(rhs) * _g);
   setB(static_cast<float>(rhs) * _b);
@@ -95,93 +86,77 @@ Color &Color::operator*=(const double &rhs)
 }
 
 // _____________________________________________________________________________
-Color Color::operator*(const double &rhs)
-{
-  Color newColor(*this); // Copy constructed.
+Color Color::operator*(const double& rhs) {
+  Color newColor(*this);  // Copy constructed.
   newColor *= rhs;
   return newColor;
 }
 
 // _____________________________________________________________________________
-Color Color::outOfRangeColor() const
-{
+Color Color::outOfRangeColor() const {
   // Just scale it to the max value.
   double invMax = 1.0 / std::max(_r, std::max(_g, _b));
   return invMax * (*this);
 }
 
 // _____________________________________________________________________________
-void Color::setR(const float r)
-{
+void Color::setR(const float r) {
   _r = r;
 }
 
 // _____________________________________________________________________________
-void Color::setG(const float g)
-{
+void Color::setG(const float g) {
   _g = g;
 }
 
 // _____________________________________________________________________________
-void Color::setB(const float b)
-{
+void Color::setB(const float b) {
   _b = b;
 }
 
 // _____________________________________________________________________________
-void Color::setA(const float a)
-{
+void Color::setA(const float a) {
   _a = a;
 }
 
 // _____________________________________________________________________________
-int Color::getRAsInt() const
-{
-  if (isOutOfRange())
-  {
+int Color::getRAsInt() const {
+  if (isOutOfRange()) {
     return floatToInt(outOfRangeColor().r());
   }
   return floatToInt(_r);
 }
 
 // _____________________________________________________________________________
-int Color::getGAsInt() const
-{
-  if (isOutOfRange())
-  {
+int Color::getGAsInt() const {
+  if (isOutOfRange()) {
     return floatToInt(outOfRangeColor().g());
   }
   return floatToInt(_g);
 }
 
 // _____________________________________________________________________________
-int Color::getBAsInt() const
-{
-  if (isOutOfRange())
-  {
+int Color::getBAsInt() const {
+  if (isOutOfRange()) {
     return floatToInt(outOfRangeColor().b());
   }
   return floatToInt(_b);
 }
 
 // _____________________________________________________________________________
-int Color::getAAsInt() const
-{
-  if (isOutOfRange())
-  {
+int Color::getAAsInt() const {
+  if (isOutOfRange()) {
     return floatToInt(outOfRangeColor().a());
   }
   return floatToInt(_a);
 }
 
 // _____________________________________________________________________________
-bool Color::isOutOfRange() const
-{
+bool Color::isOutOfRange() const {
   return (_r > 1.0f || _g > 1.0f || _b > 1.0f || _a > 1.0f);
 }
 
 // _____________________________________________________________________________
-int Color::floatToInt(const float val) const
-{
+int Color::floatToInt(const float val) const {
   return std::min(255, std::max(0, static_cast<int>(val * 255)));
 }

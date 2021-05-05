@@ -27,18 +27,19 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_MATERIALS_GLASSMATERIAL_H_
 #define RAYTRACERLIB_MATERIALS_GLASSMATERIAL_H_
 
-#include "./Material.h"
-#include "./Constants.h"
 #include "../Color.h"
+#include "./Constants.h"
+#include "./Material.h"
+
 
 /// GLass-like materials.
 class GlassMaterial : public Material {
  public:
   /// Constructor.
   explicit GlassMaterial(const float refractiveIndex)
-    : m_refractiveIndex(refractiveIndex),
-      m_color(0.0f, 1.0, 1.0),
-      m_transparencyFactor(10.0f) {}
+      : m_refractiveIndex(refractiveIndex),
+        m_color(0.0f, 1.0, 1.0),
+        m_transparencyFactor(10.0f) {}
 
   /// Returns the color for the given position, normal and ray direction.
   virtual Color getColor(const IntersectionInfo& intersectionInfo,
@@ -48,13 +49,13 @@ class GlassMaterial : public Material {
  protected:
   /// returns the color of the reflected part of this material.
   Color reflectionColor(const glm::vec4& normal,
-      const glm::vec3& axis,
-      const float& angle,
-      const glm::vec4& position,
-      const unsigned char currentDepth,
-      const float& colorContribution,
-      const Scene& scene,
-      float* distance) const;
+                        const glm::vec3& axis,
+                        const float& angle,
+                        const glm::vec4& position,
+                        const unsigned char currentDepth,
+                        const float& colorContribution,
+                        const Scene& scene,
+                        float* distance) const;
 
   /// Defines the refractive index which we use to compute the ray directions.
   float m_refractiveIndex;
@@ -67,4 +68,3 @@ class GlassMaterial : public Material {
 };
 
 #endif  // RAYTRACERLIB_MATERIALS_GLASSMATERIAL_H_
-

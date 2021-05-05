@@ -30,12 +30,11 @@ SOFTWARE.
 
 // _____________________________________________________________________________
 glm::vec2 PhongBRDF::generateHemisphereSample(
-      const Ray& incomingRay,
-      const IntersectionInfo& intersectionInfo,
-      const size_t& num) const {
-  glm::vec2 out(
-        rand()/static_cast<float>(RAND_MAX),   //NOLINT
-        rand()/static_cast<float>(RAND_MAX));  //NOLINT
+    const Ray& incomingRay,
+    const IntersectionInfo& intersectionInfo,
+    const size_t& num) const {
+  glm::vec2 out(rand() / static_cast<float>(RAND_MAX),   // NOLINT
+                rand() / static_cast<float>(RAND_MAX));  // NOLINT
   out.x *= 2.0f * constants::PI;
   out.y = acos(1.0f - out.y);
   return out;
@@ -47,17 +46,16 @@ float PhongBRDF::getPDFOfX(const glm::vec2& sample) const {
 }
 
 // _____________________________________________________________________________
-float PhongBRDF::evaluateBRDF(
-        const IntersectionInfo& info,
-        const glm::vec4& directionIn,
-        const glm::vec4& directionOut) const {
+float PhongBRDF::evaluateBRDF(const IntersectionInfo& info,
+                              const glm::vec4& directionIn,
+                              const glm::vec4& directionOut) const {
   // Diffuse Term
   float overallBRDFValue = m_rohDiffuse / constants::PI;
   // Specular Term
   float lXn = glm::dot(-directionIn, info.normal);
   glm::vec4 reflectionDir = 2.0f * lXn * info.normal + directionIn;
   float dot = std::max(0.0f, glm::dot(reflectionDir, directionOut));
-  overallBRDFValue += m_rohSpecular * (m_shiny + 2) / (2 * constants::PI) *
-      pow(dot, m_shiny);
+  overallBRDFValue +=
+      m_rohSpecular * (m_shiny + 2) / (2 * constants::PI) * pow(dot, m_shiny);
   return overallBRDFValue;
 }

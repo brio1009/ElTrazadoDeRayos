@@ -34,24 +34,22 @@ using std::vector;
 
 // _____________________________________________________________________________
 std::vector<float> RegularSampler::getLambdasForSample(
-      const size_t& index) const {
+    const size_t& index) const {
   if (index >= _samplesPerDimension * _samplesPerDimension)
     return vector<float>();
   size_t x = index % _samplesPerDimension;
   size_t y = (index - x) / _samplesPerDimension;
   vector<float> lambdas;
   lambdas.reserve(2);
-  lambdas.push_back(
-      static_cast<float>(x) / _samplesPerDimension + _offset);
-  lambdas.push_back(
-      static_cast<float>(y) / _samplesPerDimension + _offset);
+  lambdas.push_back(static_cast<float>(x) / _samplesPerDimension + _offset);
+  lambdas.push_back(static_cast<float>(y) / _samplesPerDimension + _offset);
   return lambdas;
 }
 
 // _____________________________________________________________________________
 Color RegularSampler::reconstructColor(
-      const std::vector<Color>& colors,
-      const std::vector<float>& lambdas) const {
+    const std::vector<Color>& colors,
+    const std::vector<float>& lambdas) const {
   assert(colors.size() == _samplesPerDimension * _samplesPerDimension);
   // calculate how much a colors weight is. (RegularSampler = same for all)
   float scale = 1.0f / (_samplesPerDimension * _samplesPerDimension);

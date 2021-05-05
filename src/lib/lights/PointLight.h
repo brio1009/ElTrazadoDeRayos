@@ -36,7 +36,7 @@ class PointLight : public Light {
   /// Constructor of a Directional Light.
   explicit PointLight(const glm::vec4& position) { setPosition(position); }
   /// Destructor.
-  virtual ~PointLight() { }
+  virtual ~PointLight() {}
   /// Overrides.
   virtual Ray getRay(const glm::vec4& pos) const;
 };

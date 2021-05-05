@@ -32,17 +32,19 @@ SOFTWARE.
 #include <string>
 
 #include "cameras/Camera.h"
-#include "shapes/Shape.h"
 #include "materials/Material.h"
+#include "shapes/Shape.h"
+
 
 // ALL DECLARATIONS NEED TO BE INCLUDED HERE.
 // TODO(Mi 27. Aug 16:26:28 CEST 2014, bauschp): move to cpp.
-#include "shapes/Rectangle.h"
-#include "shapes/Box.h"
-#include "shapes/Ellipsoid.h"
-#include "materials/MonteCarloMaterial.h"
 #include "cameras/PerspectiveCamera.h"
 #include "lights/AreaShape.h"
+#include "materials/MonteCarloMaterial.h"
+#include "shapes/Box.h"
+#include "shapes/Ellipsoid.h"
+#include "shapes/Rectangle.h"
+
 
 namespace genericfactory {
 template <>
@@ -86,23 +88,20 @@ inline size_t StringCastHelper<size_t>::fromString(const std::string& value) {
 
 template <>
 inline std::string StringCastHelper<glm::vec4>::toString(
-      const glm::vec4& value) {
+    const glm::vec4& value) {
   char buffer[255];
 #ifdef WINDOWS
   size_t length = _snprintf_s(buffer, sizeof(buffer), "%.4f,%.4f,%.4f,%.4f",
 #else
   size_t length = snprintf(buffer, sizeof(buffer), "%.4f,%.4f,%.4f,%.4f",
 #endif
-      value[0],
-      value[1],
-      value[2],
-      value[3]);
+                              value[0], value[1], value[2], value[3]);
   return std::string(buffer, 0, length);
 }
 
 template <>
 inline glm::vec4 StringCastHelper<glm::vec4>::fromString(
-      const std::string& value) {
+    const std::string& value) {
   size_t comma = value.find(",");
   size_t start = 0;
   glm::vec4 out;
@@ -120,19 +119,19 @@ inline glm::vec4 StringCastHelper<glm::vec4>::fromString(
 
 template <>
 inline std::string StringCastHelper<Material const*>::toString(
-      const Material* const & value) {
+    const Material* const& value) {
   std::string result = std::to_string(reinterpret_cast<size_t>(value));
   return result;
 }
 
 template <>
 inline Material const* StringCastHelper<Material const*>::fromString(
-      const std::string& value) {
+    const std::string& value) {
   Material const* result =
-        reinterpret_cast<Material* const>(std::stoull(value));
+      reinterpret_cast<Material* const>(std::stoull(value));
   return result;
 }
-template<>
+template <>
 inline char GenericFactory<Shape>::registerAllForBase() {
   printf("Adding Shapes\n");
   GenericFactory<Shape>::registerClass<Shape>();
@@ -148,7 +147,7 @@ inline char GenericFactory<Shape>::registerAllForBase() {
   printf("Done adding Shapes\n");
   return '1';
 }
-template<>
+template <>
 inline char GenericFactory<Material>::registerAllForBase() {
   printf("Adding Materials\n");
   GenericFactory<Material>::registerClass<Material>();
@@ -156,7 +155,7 @@ inline char GenericFactory<Material>::registerAllForBase() {
   printf("Done adding Materials\n");
   return '1';
 }
-template<>
+template <>
 inline char GenericFactory<Camera>::registerAllForBase() {
   printf("Adding Cameras\n");
   GenericFactory<Camera>::registerClass<Camera>();

@@ -35,25 +35,23 @@ class AdaptiveSampler : public Sampler {
  public:
   /// Creates a new AdaptiveSampler with fiven maximum Samples.
   explicit AdaptiveSampler(const size_t& maxSamples)
-      : _maxSamples(maxSamples) { }
+      : _maxSamples(maxSamples) {}
   /// Virtual destructor. (Override).
-  virtual ~AdaptiveSampler() { }
+  virtual ~AdaptiveSampler() {}
   static float generateHalton(const size_t& index, const size_t& base);
   static float calculateVariance(const std::vector<Color>& colors);
+
  protected:
   /// (Override)
-  virtual std::vector<float> getLambdasForSample(
-      const size_t& size) const;
+  virtual std::vector<float> getLambdasForSample(const size_t& size) const;
   /// (Override)
-  virtual bool addNextLambdasToList(
-      const std::vector<Color>& color,
-      std::vector<float>* lambdas) const;
+  virtual bool addNextLambdasToList(const std::vector<Color>& color,
+                                    std::vector<float>* lambdas) const;
   /// (Override)
-  virtual Color reconstructColor(
-      const std::vector<Color>& colors,
-      const std::vector<float>& lambdas) const;
+  virtual Color reconstructColor(const std::vector<Color>& colors,
+                                 const std::vector<float>& lambdas) const;
+
  private:
   const size_t _maxSamples;
 };
 #endif  // RAYTRACERLIB_SAMPLERS_ADAPTIVESAMPLER_H_
-

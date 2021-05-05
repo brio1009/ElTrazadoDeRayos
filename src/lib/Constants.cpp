@@ -30,28 +30,28 @@ SOFTWARE.
 #include <limits>
 
 namespace RefractiveIndex {
-  const float glass = 1.52f;
-  const float water = 1.333f;
-  const float air = 1.00293f;
-  const float diamond = 2.42f;
-  const float mirror = std::numeric_limits<float>::max();
-};
+const float glass = 1.52f;
+const float water = 1.333f;
+const float air = 1.00293f;
+const float diamond = 2.42f;
+const float mirror = std::numeric_limits<float>::max();
+};  // namespace RefractiveIndex
 
 namespace constants {
-  // ___________________________________________________________________________
-  const double EPSILON = 1e-8;
+// ___________________________________________________________________________
+const double EPSILON = 1e-8;
 
-  // ___________________________________________________________________________
-  const double TEPSILON = 1e-2;
+// ___________________________________________________________________________
+const double TEPSILON = 1e-2;
 
-  // ___________________________________________________________________________
-  const unsigned char maxDepth = 4;
+// ___________________________________________________________________________
+const unsigned char maxDepth = 4;
 
-  // ___________________________________________________________________________
-  const REAL minColorContribution = 0.001;
+// ___________________________________________________________________________
+const REAL minColorContribution = 0.001;
 
-  // ___________________________________________________________________________
-  const REAL PI = 3.1415926535897932;
-  // ___________________________________________________________________________
-  const size_t DefaultSamplesPerDim = 2;
+// ___________________________________________________________________________
+const REAL PI = 3.1415926535897932;
+// ___________________________________________________________________________
+const size_t DefaultSamplesPerDim = 2;
 }  // namespace constants

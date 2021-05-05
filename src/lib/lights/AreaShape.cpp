@@ -27,39 +27,38 @@ SOFTWARE.
 
 #include <glm/glm.hpp>
 #include <glm/gtc/random.hpp>
+#include "./IntersectionInfo.h"
 #include "samplers/AdaptiveSampler.h"
-#include "shapes/Rectangle.h"
-#include "shapes/Ellipsoid.h"
-#include "shapes/Plane.h"
 #include "shapes/Box.h"
 #include "shapes/CompoundShape.h"
-#include "./IntersectionInfo.h"
+#include "shapes/Ellipsoid.h"
+#include "shapes/Plane.h"
+#include "shapes/Rectangle.h"
 
-
-template<>
+template <>
 const char* AreaShape<Rectangle>::name = "RectangleImportant";
-template<>
+template <>
 const char* AreaShape<Ellipsoid>::name = "EllipsoidImportant";
-template<>
+template <>
 const char* AreaShape<Box>::name = "BoxImportant";
 // Implementation for Rectangle.
 // _____________________________________________________________________________
-template<>
+template <>
 size_t AreaShape<Rectangle>::numSamples() const {
   return 1;
 }
 
 // _____________________________________________________________________________
-template<>
+template <>
 glm::vec4 AreaShape<Rectangle>::getSample(const size_t sampleNr) const {
   glm::vec2 randVal = glm::linearRand(glm::vec2(-0.5f), glm::vec2(0.5f));
-  glm::vec3 rectPoint = randVal.x * glm::vec3(2.0f * extent().x, 0, 0)
-                        + randVal.y * glm::vec3(0, 0, 2.0f * extent().y);
+  glm::vec3 rectPoint = randVal.x * glm::vec3(2.0f * extent().x, 0, 0) +
+                        randVal.y * glm::vec3(0, 0, 2.0f * extent().y);
   return getTransformMatrix() * glm::vec4(rectPoint, 1);
 }
 
 // _____________________________________________________________________________
-template<>
+template <>
 float AreaShape<Rectangle>::area() const {
   // Times 4 because extent is radius.
   return this->extent().x * this->extent().y * 4;
@@ -67,22 +66,22 @@ float AreaShape<Rectangle>::area() const {
 
 // Implementation for Ellipsoid.
 // _____________________________________________________________________________
-template<>
+template <>
 size_t AreaShape<Ellipsoid>::numSamples() const {
   return 1;
 }
 
 // _____________________________________________________________________________
-template<>
+template <>
 glm::vec4 AreaShape<Ellipsoid>::getSample(const size_t sampleNr) const {
   // TODO(bauschp, Mon Jul 28 11:33:37 CEST 2014): fix so ellipsoids are sampled
   // the right way.
   return getTransformMatrix() *
-        glm::vec4(glm::sphericalRand(this->radii().x), 1.0f);
+         glm::vec4(glm::sphericalRand(this->radii().x), 1.0f);
 }
 
 // _____________________________________________________________________________
-template<>
+template <>
 float AreaShape<Ellipsoid>::area() const {
   // Approximated according to
   // http://en.wikipedia.org/wiki/Ellipsoid#Surface_area
@@ -90,65 +89,66 @@ float AreaShape<Ellipsoid>::area() const {
   float a = this->radii().x;
   float b = this->radii().y;
   float c = this->radii().z;
-  return 4.0f * constants::PI * pow((((pow(a, p) * pow(b, p))
-                                       + (pow(a, p) * pow(c, p))
-                                       + (pow(b, p) * pow(c, p))) / 3.0f),
-                                     1.0f / p);
+  return 4.0f * constants::PI *
+         pow((((pow(a, p) * pow(b, p)) + (pow(a, p) * pow(c, p)) +
+               (pow(b, p) * pow(c, p))) /
+              3.0f),
+             1.0f / p);
 }
 
 // Implementation for Box.
 // _____________________________________________________________________________
-template<>
+template <>
 size_t AreaShape<Box>::numSamples() const {
   return 0;
 }
 
 // _____________________________________________________________________________
-template<>
+template <>
 glm::vec4 AreaShape<Box>::getSample(const size_t sampleNr) const {
   return glm::vec4(0);
 }
 
 // _____________________________________________________________________________
-template<>
+template <>
 float AreaShape<Box>::area() const {
   return 1.0f;
 }
 
 // Implementation for Plane
 // _____________________________________________________________________________
-template<>
+template <>
 size_t AreaShape<Plane>::numSamples() const {
   return 0;
 }
 
 // _____________________________________________________________________________
-template<>
+template <>
 glm::vec4 AreaShape<Plane>::getSample(const size_t sampleNr) const {
   return glm::vec4(0);
 }
 
 // _____________________________________________________________________________
-template<>
+template <>
 float AreaShape<Plane>::area() const {
   return 1.0f;
 }
 
 // Implementation for CompoundShape
 // _____________________________________________________________________________
-template<>
+template <>
 size_t AreaShape<CompoundShape>::numSamples() const {
   return 0;
 }
 
 // _____________________________________________________________________________
-template<>
+template <>
 glm::vec4 AreaShape<CompoundShape>::getSample(const size_t sampleNr) const {
   return glm::vec4(0);
 }
 
 // _____________________________________________________________________________
-template<>
+template <>
 float AreaShape<CompoundShape>::area() const {
   return 1.0f;
 }

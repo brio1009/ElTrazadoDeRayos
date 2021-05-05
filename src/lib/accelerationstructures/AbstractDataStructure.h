@@ -39,7 +39,7 @@ namespace accelerationstructures {
 /// The structure.
 class AbstractDataStructure {
  public:
-  virtual ~AbstractDataStructure() { }
+  virtual ~AbstractDataStructure() {}
   /// Traverses through the data structure and returns the IntersectionInfo.
   virtual IntersectionInfo traceRay(const Ray& ray) const = 0;
   ///

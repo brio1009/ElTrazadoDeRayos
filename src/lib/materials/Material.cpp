@@ -38,6 +38,6 @@ Color Material::stoppingColor() const {
 
 // _____________________________________________________________________________
 bool Material::stoppingCriteriaMet(const Ray& ray) const {
-  return ray.rayInfo().depth >= constants::maxDepth
-         || ray.rayInfo().colorContribution <= constants::minColorContribution;
+  return ray.rayInfo().depth >= constants::maxDepth ||
+         ray.rayInfo().colorContribution <= constants::minColorContribution;
 }

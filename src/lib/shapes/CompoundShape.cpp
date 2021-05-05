@@ -42,24 +42,22 @@ const char* CompoundShape::name = "CompoundShape";
 
 // _____________________________________________________________________________
 CompoundShape::CompoundShape()
-  : _useChildMaterials(true),
-    _passTransformation(true),
-    _operator(CompoundShape::Operator::minusOp) {
-}
+    : _useChildMaterials(true),
+      _passTransformation(true),
+      _operator(CompoundShape::Operator::minusOp) {}
 
 // _____________________________________________________________________________
 CompoundShape::CompoundShape(Shape* leftShapePtr, Shape* rightShapePtr)
-  : _leftShapePtr(leftShapePtr),
-    _rightShapePtr(rightShapePtr),
-    _useChildMaterials(true),
-    _passTransformation(true),
-    _operator(CompoundShape::Operator::minusOp) {
-}
+    : _leftShapePtr(leftShapePtr),
+      _rightShapePtr(rightShapePtr),
+      _useChildMaterials(true),
+      _passTransformation(true),
+      _operator(CompoundShape::Operator::minusOp) {}
 
 // _____________________________________________________________________________
 IntersectionInfo CompoundShape::getIntersectionInfo(const Ray& ray,
-    const REAL minimumT,
-    const REAL maximumT) const {
+                                                    const REAL minimumT,
+                                                    const REAL maximumT) const {
   // Just get the closest intersection.
   if (!_leftShapePtr || !_rightShapePtr) {
     return IntersectionInfo();
@@ -81,17 +79,15 @@ IntersectionInfo CompoundShape::getIntersectionInfo(const Ray& ray,
   // Find the smallest T in both vectors.
   REAL smallestT = std::numeric_limits<REAL>::max();
   for (size_t i = 0; i < rightHits.size(); ++i) {
-    if (rightHits.at(i) <= smallestT
-        && rightHits.at(i) >= minimumT
-        && rightHits.at(i) <= maximumT) {
+    if (rightHits.at(i) <= smallestT && rightHits.at(i) >= minimumT &&
+        rightHits.at(i) <= maximumT) {
       smallestT = rightHits.at(i);
       hitRight = true;
     }
   }
   for (size_t i = 0; i < leftHits.size(); ++i) {
-    if (leftHits.at(i) <= smallestT
-        && leftHits.at(i) >= minimumT
-        && leftHits.at(i) <= maximumT) {
+    if (leftHits.at(i) <= smallestT && leftHits.at(i) >= minimumT &&
+        leftHits.at(i) <= maximumT) {
       smallestT = leftHits.at(i);
       hitRight = false;
       hitLeft = true;
@@ -99,9 +95,9 @@ IntersectionInfo CompoundShape::getIntersectionInfo(const Ray& ray,
   }
   // Check if we hit something.
   if (hitRight) {
-    IntersectionInfo info = _rightShapePtr->getIntersectionInfo(newRay,
-                              smallestT - 2.0 * constants::TEPSILON,
-                              smallestT + 2.0 * constants::TEPSILON);
+    IntersectionInfo info = _rightShapePtr->getIntersectionInfo(
+        newRay, smallestT - 2.0 * constants::TEPSILON,
+        smallestT + 2.0 * constants::TEPSILON);
     adaptInstersectionInfo(&info);
     if (getOperator() == CompoundShape::Operator::minusOp) {
       info.normal = -info.normal;
@@ -109,9 +105,9 @@ IntersectionInfo CompoundShape::getIntersectionInfo(const Ray& ray,
     return info;
   }
   if (hitLeft) {
-    IntersectionInfo info = _leftShapePtr->getIntersectionInfo(newRay,
-                               smallestT - 2.0 * constants::TEPSILON,
-                               smallestT + 2.0 * constants::TEPSILON);
+    IntersectionInfo info = _leftShapePtr->getIntersectionInfo(
+        newRay, smallestT - 2.0 * constants::TEPSILON,
+        smallestT + 2.0 * constants::TEPSILON);
     adaptInstersectionInfo(&info);
     return info;
   }
@@ -120,8 +116,7 @@ IntersectionInfo CompoundShape::getIntersectionInfo(const Ray& ray,
 }
 
 // _____________________________________________________________________________
-void CompoundShape::adaptInstersectionInfo(
-    IntersectionInfo* infoPtr) const {
+void CompoundShape::adaptInstersectionInfo(IntersectionInfo* infoPtr) const {
   // Adapt material ptr.
   if (infoPtr->materialPtr && !useChildMaterials()) {
     infoPtr->materialPtr = this->getMaterialPtr();

@@ -35,8 +35,7 @@ using std::vector;
 
 // _____________________________________________________________________________
 Image::Image(const int width, const int height)
-    : _height(height), _width(width)
-{
+    : _height(height), _width(width) {
   // We need to be sure, that width and height are both > 0.
   assert(_width > 0);
   assert(_height > 0);
@@ -45,32 +44,26 @@ Image::Image(const int width, const int height)
 }
 
 // _____________________________________________________________________________
-Image::~Image()
-{
-}
+Image::~Image() {}
 
 // _____________________________________________________________________________
-void Image::saveAsPPM(const std::string &filePath) const
-{
+void Image::saveAsPPM(const std::string& filePath) const {
   // Open file.
 #ifdef WINDOWS
-  FILE *f;
+  FILE* f;
   fopen_s(&f, filePath.c_str(), "wb");
 #else
-  FILE *f = fopen(filePath.c_str(), "wb");
-#endif // WINDOWS
-  if (!f)
-  {
+  FILE* f = fopen(filePath.c_str(), "wb");
+#endif  // WINDOWS
+  if (!f) {
     // Could not open file.
     return;
   }
   fprintf(f, "P6 \n");
   fprintf(f, "%d %d \n255\n", _width, _height);
-  for (int j = 0; j < _height; ++j)
-  {
-    for (int i = 0; i < _width; ++i)
-    {
-      const Color &tmpPixel = getPixel(i, j);
+  for (int j = 0; j < _height; ++j) {
+    for (int i = 0; i < _width; ++i) {
+      const Color& tmpPixel = getPixel(i, j);
       unsigned char color = static_cast<unsigned char>(tmpPixel.getRAsInt());
       fwrite(&color, sizeof(unsigned char), 1, f);
       color = static_cast<unsigned char>(tmpPixel.getGAsInt());
@@ -83,40 +76,36 @@ void Image::saveAsPPM(const std::string &filePath) const
 }
 
 // _____________________________________________________________________________
-void Image::saveAsBMP(const std::string &filePath) const
-{
+void Image::saveAsBMP(const std::string& filePath) const {
   // Code from
   // http://stackoverflow.com/questions/2654480/writing-bmp-image-in-pure-c-c-without-other-libraries
 
   // Open file.
 #ifdef WINDOWS
-  FILE *f;
+  FILE* f;
   fopen_s(&f, filePath.c_str(), "wb");
 #else
-  FILE *f = fopen(filePath.c_str(), "wb");
-#endif // WINDOWS
-  if (!f)
-  {
+  FILE* f = fopen(filePath.c_str(), "wb");
+#endif  // WINDOWS
+  if (!f) {
     // Could not open file.
     return;
   }
 
-  unsigned char *img = NULL;
+  unsigned char* img = NULL;
   int imgSize = 3 * _width * _height;
   int filesize = 54 + imgSize;
   if (img)
     free(img);
-  img = (unsigned char *)malloc(imgSize);
+  img = (unsigned char*)malloc(imgSize);
   memset(img, 0, imgSize);
 
-  for (int i = 0; i < _width; ++i)
-  {
-    for (int j = 0; j < _height; ++j)
-    {
+  for (int i = 0; i < _width; ++i) {
+    for (int j = 0; j < _height; ++j) {
       int x = i;
       // TODO(cgissler, 09/05/2014): Do we really want to flip the image?
       int y = j;
-      const Color &tmpPixel = getPixel(x, y);
+      const Color& tmpPixel = getPixel(x, y);
       img[(x + y * _width) * 3 + 2] =
           static_cast<unsigned char>(tmpPixel.getRAsInt());
       img[(x + y * _width) * 3 + 1] =
@@ -126,10 +115,10 @@ void Image::saveAsBMP(const std::string &filePath) const
     }
   }
 
-  unsigned char bmpfileheader[14] = {'B', 'M',
-                                     0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 0};
-  unsigned char bmpinfoheader[40] = {40, 0, 0,
-                                     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 24, 0};
+  unsigned char bmpfileheader[14] = {'B', 'M', 0, 0,  0, 0, 0,
+                                     0,   0,   0, 54, 0, 0, 0};
+  unsigned char bmpinfoheader[40] = {40, 0, 0, 0, 0, 0, 0,  0,
+                                     0,  0, 0, 0, 1, 0, 24, 0};
   unsigned char bmppad[3] = {0, 0, 0};
 
   bmpfileheader[2] = (unsigned char)(filesize);
@@ -148,8 +137,7 @@ void Image::saveAsBMP(const std::string &filePath) const
 
   fwrite(bmpfileheader, 1, 14, f);
   fwrite(bmpinfoheader, 1, 40, f);
-  for (int i = 0; i < _height; ++i)
-  {
+  for (int i = 0; i < _height; ++i) {
     fwrite(img + (_width * (_height - i - 1) * 3), 3, _width, f);
     fwrite(bmppad, 1, (4 - (_width * 3) % 4) % 4, f);
   }
@@ -158,20 +146,17 @@ void Image::saveAsBMP(const std::string &filePath) const
 }
 
 // _____________________________________________________________________________
-Color *Image::operator()(const int x, const int y)
-{
+Color* Image::operator()(const int x, const int y) {
   return &(_data[x + _width * y]);
 }
 
 // _____________________________________________________________________________
-const Color &Image::getPixel(const int x, const int y) const
-{
+const Color& Image::getPixel(const int x, const int y) const {
   return _data.at(x + _width * y);
 }
 
 // _____________________________________________________________________________
-void Image::setPixel(const int x, const int y, const Color &color)
-{
+void Image::setPixel(const int x, const int y, const Color& color) {
   assert(x >= 0 && x < _width);
   assert(y >= 0 && y < _height);
 

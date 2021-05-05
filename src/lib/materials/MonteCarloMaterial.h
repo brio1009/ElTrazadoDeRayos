@@ -30,9 +30,10 @@ SOFTWARE.
 #include <glm/glm.hpp>
 #include <memory>
 #include <string>
-#include "./Constants.h"
 #include "./Color.h"
+#include "./Constants.h"
 #include "materials/Material.h"
+
 
 // Forward declaration.
 class BRDF;
@@ -64,29 +65,21 @@ class MonteCarloMaterial : public Material {
   /// Name of the material used to serialize/deserialize.
   static const char* name;
 
-  MonteCarloMaterial* create() const {
-    return new MonteCarloMaterial();
-  }
+  MonteCarloMaterial* create() const { return new MonteCarloMaterial(); }
   static void registerProperties() {
     static bool m_lock(true);
     if (!m_lock)
       return;
     m_lock = false;
-    genericfactory::GenericFactory<Material>::
-        registerProperty<MonteCarloMaterial, REAL>(
-          "R",
-          &MonteCarloMaterial::setR,
-          &MonteCarloMaterial::getR);
-    genericfactory::GenericFactory<Material>::
-        registerProperty<MonteCarloMaterial, REAL>(
-          "G",
-          &MonteCarloMaterial::setG,
-          &MonteCarloMaterial::getG);
-    genericfactory::GenericFactory<Material>::
-        registerProperty<MonteCarloMaterial, REAL>(
-          "B",
-          &MonteCarloMaterial::setB,
-          &MonteCarloMaterial::getB);
+    genericfactory::GenericFactory<Material>::registerProperty<
+        MonteCarloMaterial, REAL>("R", &MonteCarloMaterial::setR,
+                                  &MonteCarloMaterial::getR);
+    genericfactory::GenericFactory<Material>::registerProperty<
+        MonteCarloMaterial, REAL>("G", &MonteCarloMaterial::setG,
+                                  &MonteCarloMaterial::getG);
+    genericfactory::GenericFactory<Material>::registerProperty<
+        MonteCarloMaterial, REAL>("B", &MonteCarloMaterial::setB,
+                                  &MonteCarloMaterial::getB);
   }
 
  private:
@@ -95,5 +88,3 @@ class MonteCarloMaterial : public Material {
 };
 
 #endif  // RAYTRACERLIB_MATERIALS_MONTECARLOMATERIAL_H_
-
-

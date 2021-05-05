@@ -27,13 +27,15 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_SHAPES_SHAPE_H_
 #define RAYTRACERLIB_SHAPES_SHAPE_H_
 
-#include <glm/glm.hpp>
 #include <genericfactory/GenericFactory_decl.h>
+#include <glm/glm.hpp>
+
 
 #include <cstdlib>
 #include <limits>
-#include <vector>
 #include <string>
+#include <vector>
+
 
 #include "./Color.h"
 #include "./Constants.h"
@@ -46,8 +48,7 @@ SOFTWARE.
 class Ray;
 
 // This abstract class is used to define essencial parts to render a "Shape"
-class Shape : public Spatial,
-              public PropertyInterface<Shape> {
+class Shape : public Spatial, public PropertyInterface<Shape> {
  public:
   /// Constructor.
   Shape();
@@ -57,9 +58,10 @@ class Shape : public Spatial,
 
   ///
   /// TODO(all, 05/17/2014): Find the right epsilon.
-  virtual IntersectionInfo getIntersectionInfo(const Ray& ray,
-    const REAL minimumT = constants::TEPSILON,
-    const REAL maximumT = std::numeric_limits<REAL>::max()) const;
+  virtual IntersectionInfo getIntersectionInfo(
+      const Ray& ray,
+      const REAL minimumT = constants::TEPSILON,
+      const REAL maximumT = std::numeric_limits<REAL>::max()) const;
 
   // Intersects the Ray with this Shape and returns the values for t
   // rPos + rDir * t that intersect the surface of this Shape.
@@ -68,7 +70,8 @@ class Shape : public Spatial,
   /// Setter for the material pointer. Be careful, the old material is not
   /// automatically deleted!
   void setMaterialPtr(const Material* materialPtr) {
-    if (_materialPtr) delete _materialPtr;
+    if (_materialPtr)
+      delete _materialPtr;
     _materialPtr = materialPtr;
   }
 
@@ -83,26 +86,17 @@ class Shape : public Spatial,
       return;
     m_lock = false;
     genericfactory::GenericFactory<Shape>::registerProperty<Shape, REAL>(
-        "X",
-        &Shape::setX,
-        &Shape::noGet);
+        "X", &Shape::setX, &Shape::noGet);
     genericfactory::GenericFactory<Shape>::registerProperty<Shape, REAL>(
-        "Y",
-        &Shape::setY,
-        &Shape::noGet);
+        "Y", &Shape::setY, &Shape::noGet);
     genericfactory::GenericFactory<Shape>::registerProperty<Shape, REAL>(
-        "Z",
-        &Shape::setZ,
-        &Shape::noGet);
+        "Z", &Shape::setZ, &Shape::noGet);
     genericfactory::GenericFactory<Shape>::registerProperty<Shape, glm::vec4>(
-        "Rotate",
-        &Shape::rotate,
-        &Shape::noGet);
+        "Rotate", &Shape::rotate, &Shape::noGet);
     genericfactory::GenericFactory<Shape>::registerProperty(
-        "Material",
-        &Shape::setMaterialPtr,
-        &Shape::getMaterialPtr);
+        "Material", &Shape::setMaterialPtr, &Shape::getMaterialPtr);
   }
+
  protected:
   // Returnes the appearence of the surface Point p
   // if p isn't on the surface everything can happen.
@@ -111,7 +105,6 @@ class Shape : public Spatial,
 
   /// Uv coordinates.
   virtual glm::vec2 getTextureCoord(const glm::vec4& p) const;
-
 
  private:
   const Material* _materialPtr;

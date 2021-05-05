@@ -28,17 +28,17 @@ SOFTWARE.
 #include <glm/glm.hpp>
 #include <vector>
 
+#include "./IntersectionInfo.h"
 #include "./Ray.h"
 #include "./Scene.h"
-#include "./IntersectionInfo.h"
 #include "materials/Material.h"
+
 
 using std::vector;
 
 // _____________________________________________________________________________
-Color Sampler::getSampledColor(
-      const std::vector<Ray>& borders,
-      const Scene& scene) const {
+Color Sampler::getSampledColor(const std::vector<Ray>& borders,
+                               const Scene& scene) const {
   vector<float> lambdas;
   vector<Color> colors;
   size_t startLambda = lambdas.size();
@@ -49,9 +49,7 @@ Color Sampler::getSampledColor(
     // Get the color for given sample Ray.
     IntersectionInfo info = scene.traceRay(sample);
     if (info.materialPtr) {
-      colors.push_back(info.materialPtr->getColor(info,
-        sample,
-        scene));
+      colors.push_back(info.materialPtr->getColor(info, sample, scene));
     } else {
       colors.push_back(scene.backgroundColor(sample));
     }
@@ -60,48 +58,40 @@ Color Sampler::getSampledColor(
   return reconstructColor(colors, lambdas);
 }
 // _____________________________________________________________________________
-bool Sampler::addNextLambdasToList(
-      const std::vector<Color>& color,
-      std::vector<float>* lambdas) const {
+bool Sampler::addNextLambdasToList(const std::vector<Color>& color,
+                                   std::vector<float>* lambdas) const {
   // This creation only works for two lambdas.
   assert(lambdas->size() % 2 == 0);
   size_t nextSampleIndex = lambdas->size() / 2;
   // Get the next lambdas.
   vector<float> nextLambdas = getLambdasForSample(nextSampleIndex);
-  if (nextLambdas.size() ==0)
+  if (nextLambdas.size() == 0)
     return false;
   // Append the lambdas to the list
   lambdas->insert(lambdas->end(), nextLambdas.begin(), nextLambdas.end());
   return true;
 }
 // _____________________________________________________________________________
-Ray Sampler::createRayByLambdas(
-      const std::vector<float>& lambdas,
-      const size_t& start,
-      const size_t& end,
-      const std::vector<Ray>& borders) const {
+Ray Sampler::createRayByLambdas(const std::vector<float>& lambdas,
+                                const size_t& start,
+                                const size_t& end,
+                                const std::vector<Ray>& borders) const {
   assert(borders.size() == 4);
   assert(end - start == 1);
   assert(lambdas.size() > end);
   // Interpolate between origin and the other
   // TODO(bauschp, Tue Jun 10 20:46:33 CEST 2014): This is fugly.
   glm::vec4 nextSampleDir =
-      borders.at(0).direction()
-        * (1.0f - lambdas.at(start)) * (1.0f - lambdas.at(end))
-      + borders.at(1).direction()
-        * lambdas.at(start) * (1.0f - lambdas.at(end))
-      + borders.at(2).direction()
-        * (1.0f - lambdas.at(start)) * lambdas.at(end)
-      + borders.at(3).direction()
-        * lambdas.at(start) * lambdas.at(end);
+      borders.at(0).direction() * (1.0f - lambdas.at(start)) *
+          (1.0f - lambdas.at(end)) +
+      borders.at(1).direction() * lambdas.at(start) * (1.0f - lambdas.at(end)) +
+      borders.at(2).direction() * (1.0f - lambdas.at(start)) * lambdas.at(end) +
+      borders.at(3).direction() * lambdas.at(start) * lambdas.at(end);
   glm::vec4 nextSamplePos =
-      borders.at(0).origin()
-        * (1.0f - lambdas.at(start)) * (1.0f - lambdas.at(end))
-      + borders.at(1).origin()
-        * lambdas.at(start) * (1.0f - lambdas.at(end))
-      + borders.at(2).origin()
-        * (1.0f - lambdas.at(start)) * lambdas.at(end)
-      + borders.at(3).origin()
-        * lambdas.at(start) * lambdas.at(end);
+      borders.at(0).origin() * (1.0f - lambdas.at(start)) *
+          (1.0f - lambdas.at(end)) +
+      borders.at(1).origin() * lambdas.at(start) * (1.0f - lambdas.at(end)) +
+      borders.at(2).origin() * (1.0f - lambdas.at(start)) * lambdas.at(end) +
+      borders.at(3).origin() * lambdas.at(start) * lambdas.at(end);
   return Ray(nextSamplePos, nextSampleDir);
 }

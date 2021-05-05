@@ -28,9 +28,10 @@ SOFTWARE.
 #define RAYTRACERLIB_MATERIALS_SHADOWMATERIAL_H_
 
 #include <glm/glm.hpp>
-#include "./PhongMaterial.h"
-#include "./Material.h"
 #include "./Color.h"
+#include "./Material.h"
+#include "./PhongMaterial.h"
+
 
 // Forward declaration.
 struct IntersectionInfo;
@@ -39,10 +40,10 @@ struct IntersectionInfo;
 class ShadowMaterial : public PhongMaterial {
  public:
   /// Constructor. Randoms a color.
-  ShadowMaterial() : PhongMaterial() { }
+  ShadowMaterial() : PhongMaterial() {}
 
   /// Constructor.
-  explicit ShadowMaterial(const Color& color) : PhongMaterial(color) { }
+  explicit ShadowMaterial(const Color& color) : PhongMaterial(color) {}
 
   /// Returns the color for the given position, normal and ray direction.
   virtual Color getColor(const IntersectionInfo& intersectionInfo,

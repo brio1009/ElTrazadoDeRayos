@@ -41,13 +41,13 @@ class Box : public Shape {
 
  public:
   // Default constructor. Dimensions are 1, 1, 1.
-  Box() : Box(2.0, 2.0, 2.0) { }
+  Box() : Box(2.0, 2.0, 2.0) {}
 
   /// Constructor with given dimensions. Rotation must be done with
   /// a transformation.
   Box(REAL x, REAL y, REAL z);
   /// Destructor.
-  virtual ~Box() { }
+  virtual ~Box() {}
 
   /// Intersection test.
   virtual std::vector<REAL> intersect(const Ray& ray) const;
@@ -61,9 +61,7 @@ class Box : public Shape {
   /// The class name. Needed for the Factory creating the object.
   static const char* name;
 
-  Box* create() const {
-    return new Box();
-  }
+  Box* create() const { return new Box(); }
 
   static void registerProperties() {
     static bool m_lock(true);
@@ -71,17 +69,11 @@ class Box : public Shape {
       return;
     m_lock = false;
     genericfactory::GenericFactory<Shape>::registerProperty<Box, REAL>(
-        "dX",
-        &Box::setDimX,
-        &Box::noGet);
+        "dX", &Box::setDimX, &Box::noGet);
     genericfactory::GenericFactory<Shape>::registerProperty<Box, REAL>(
-        "dY",
-        &Box::setDimY,
-        &Box::noGet);
+        "dY", &Box::setDimY, &Box::noGet);
     genericfactory::GenericFactory<Shape>::registerProperty<Box, REAL>(
-        "dZ",
-        &Box::setDimZ,
-        &Box::noGet);
+        "dZ", &Box::setDimZ, &Box::noGet);
   }
 
  protected:

@@ -40,8 +40,7 @@ using std::vector;
 const char* Ellipsoid::name = "Ellipsoid";
 
 // _____________________________________________________________________________
-Ellipsoid::Ellipsoid(REAL x, REAL y, REAL z) : _rX(x), _rY(y), _rZ(z) {
-}
+Ellipsoid::Ellipsoid(REAL x, REAL y, REAL z) : _rX(x), _rY(y), _rZ(z) {}
 
 // _____________________________________________________________________________
 vector<REAL> Ellipsoid::intersect(const Ray& ray) const {
@@ -62,16 +61,15 @@ vector<REAL> Ellipsoid::intersect(const Ray& ray) const {
   invRY *= invRY;
   invRZ *= invRZ;
   // Create variables to use the solver helper.
-  REAL c = (transPos[0] * transPos[0]) * invRX
-           + (transPos[1] * transPos[1]) * invRY
-           + (transPos[2] * transPos[2]) * invRZ
-           - 1.0;
-  REAL b = (2 * transPos[0] * transDir[0]) * invRX
-           + (2 * transPos[1] * transDir[1]) * invRY
-           + (2 * transPos[2] * transDir[2]) * invRZ;
-  REAL a = transDir[0] * transDir[0] * invRX
-           + transDir[1] * transDir[1] * invRY
-           + transDir[2] * transDir[2] * invRZ;
+  REAL c = (transPos[0] * transPos[0]) * invRX +
+           (transPos[1] * transPos[1]) * invRY +
+           (transPos[2] * transPos[2]) * invRZ - 1.0;
+  REAL b = (2 * transPos[0] * transDir[0]) * invRX +
+           (2 * transPos[1] * transDir[1]) * invRY +
+           (2 * transPos[2] * transDir[2]) * invRZ;
+  REAL a = transDir[0] * transDir[0] * invRX +
+           transDir[1] * transDir[1] * invRY +
+           transDir[2] * transDir[2] * invRZ;
   vector<REAL> out;
   solve::solveQuadraticEquation(&out, a, b, c);
   return out;
@@ -79,11 +77,8 @@ vector<REAL> Ellipsoid::intersect(const Ray& ray) const {
 // _____________________________________________________________________________
 glm::vec4 Ellipsoid::getNormalAt(const glm::vec4& p) const {
   glm::vec4 trans = _inverseTransform * p;
-  trans = glm::vec4(
-      (2 * trans.x) / (_rX * _rX),
-      (2 * trans.y) / (_rY * _rY),
-      (2 * trans.z) / (_rZ * _rZ),
-      0);
+  trans = glm::vec4((2 * trans.x) / (_rX * _rX), (2 * trans.y) / (_rY * _rY),
+                    (2 * trans.z) / (_rZ * _rZ), 0);
   return glm::normalize(_transformation * trans);
 }
 
@@ -92,4 +87,3 @@ glm::vec2 Ellipsoid::getTextureCoord(const glm::vec4& p) const {
   glm::vec4 trans = _inverseTransform * p;
   return ProjectorFunctions::textureProjectionSphere(trans);
 }
-

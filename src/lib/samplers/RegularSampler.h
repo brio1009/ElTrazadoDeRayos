@@ -40,20 +40,19 @@ class RegularSampler : public Sampler {
   /// Creates a new RegularSampler with given sample ammount per dimension
   explicit RegularSampler(const size_t& samplesPerDimension)
       : _samplesPerDimension(samplesPerDimension),
-      _offset(0.5f / samplesPerDimension) { }
+        _offset(0.5f / samplesPerDimension) {}
   /// Virtual destructor. (Override).
-  virtual ~RegularSampler() { }
+  virtual ~RegularSampler() {}
+
  protected:
   /// (Override)
-  virtual std::vector<float> getLambdasForSample(
-      const size_t& size) const;
+  virtual std::vector<float> getLambdasForSample(const size_t& size) const;
   /// (Override)
-  virtual Color reconstructColor(
-      const std::vector<Color>& colors,
-      const std::vector<float>& lambdas) const;
+  virtual Color reconstructColor(const std::vector<Color>& colors,
+                                 const std::vector<float>& lambdas) const;
+
  private:
   const size_t _samplesPerDimension;
   const float _offset;
 };
 #endif  // RAYTRACERLIB_SAMPLERS_REGULARSAMPLER_H_
-

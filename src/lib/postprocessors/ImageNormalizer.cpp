@@ -33,24 +33,24 @@ SOFTWARE.
 
 // _____________________________________________________________________________
 void ImageNormalizer::doPostProcess(Image* imagePtr,
-                                   const size_t& startPixel,
-                                   const size_t& endPixel) const {
+                                    const size_t& startPixel,
+                                    const size_t& endPixel) const {
   // Loop over all pixels and correct them.
   float globalMax = -std::numeric_limits<float>::max();
-  #pragma omp parallel
+#pragma omp parallel
   {
     float tMax = -std::numeric_limits<float>::max();
-    #pragma omp for schedule(dynamic, 100)
+#pragma omp for schedule(dynamic, 100)
     for (int i = startPixel; i < static_cast<int>(endPixel); ++i) {
       // Get the pixel coordinates from i.
       int x = i % imagePtr->getWidth();
       int y = i / imagePtr->getWidth();
       // Get the color.
       const Color& color = imagePtr->getPixel(x, y);
-      tMax = std::max(std::max(tMax, color.r()),
-                      std::max(color.g(), color.b()));
+      tMax =
+          std::max(std::max(tMax, color.r()), std::max(color.g(), color.b()));
     }
-    #pragma omp critical
+#pragma omp critical
     {
       printf("max %f\n", tMax);
       globalMax = std::max(globalMax, tMax);
@@ -59,7 +59,7 @@ void ImageNormalizer::doPostProcess(Image* imagePtr,
 
   // Normalize them.
   float invMax = 1.0f / globalMax;
-  #pragma omp parallel for schedule(dynamic, 100)
+#pragma omp parallel for schedule(dynamic, 100)
   for (int i = startPixel; i < static_cast<int>(endPixel); ++i) {
     // Get the pixel coordinates from i.
     int x = i % imagePtr->getWidth();
@@ -67,10 +67,8 @@ void ImageNormalizer::doPostProcess(Image* imagePtr,
     // Get the color.
     const Color& color = imagePtr->getPixel(x, y);
     // Set the corrected color.
-    Color correctedColor(color.r() * invMax,
-                         color.g() * invMax,
+    Color correctedColor(color.r() * invMax, color.g() * invMax,
                          color.b() * invMax);
     imagePtr->setPixel(x, y, correctedColor);
   }
 }
-

@@ -32,7 +32,7 @@ SOFTWARE.
 // _____________________________________________________________________________
 Ray AreaLight::getRay(const glm::vec4& pos) const {
   // Calculate the direction.
-  glm::vec4 lightPos = glm::vec4(glm::ballRand(m_SphereRadius), 1.0)
-                       + getPosition();
+  glm::vec4 lightPos =
+      glm::vec4(glm::ballRand(m_SphereRadius), 1.0) + getPosition();
   return Ray(lightPos, pos - lightPos);
 }

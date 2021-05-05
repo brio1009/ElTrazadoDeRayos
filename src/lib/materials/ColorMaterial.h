@@ -27,11 +27,11 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_MATERIALS_COLORMATERIAL_H_
 #define RAYTRACERLIB_MATERIALS_COLORMATERIAL_H_
 
-
 #include <glm/glm.hpp>
-#include "./Material.h"
 #include "./Color.h"
 #include "./Constants.h"
+#include "./Material.h"
+
 
 // Forward declaration.
 struct IntersectionInfo;
@@ -40,7 +40,7 @@ struct IntersectionInfo;
 class ColorMaterial : public Material {
  public:
   /// Constructor.
-  explicit ColorMaterial(const Color& color) : _color(color) { }
+  explicit ColorMaterial(const Color& color) : _color(color) {}
 
   /// Returns the color for the given position, normal and ray direction.
   virtual Color getColor(const IntersectionInfo& intersectionInfo,
@@ -53,4 +53,3 @@ class ColorMaterial : public Material {
 };
 
 #endif  // RAYTRACERLIB_MATERIALS_COLORMATERIAL_H_
-

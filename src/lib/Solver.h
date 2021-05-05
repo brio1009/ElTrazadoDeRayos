@@ -41,10 +41,9 @@ inline bool isZero(REAL val) {
 
 // Returnes the roots of a linear equation:
 // val1 * x + val0 = 0
-inline void solveLinearEquation(
-    std::vector<REAL>* result,
-    REAL val1,
-    REAL val0) {
+inline void solveLinearEquation(std::vector<REAL>* result,
+                                REAL val1,
+                                REAL val0) {
   result->resize(0);
   if (!isZero(val1)) {
     result->push_back(isZero(val0) ? 0.0 : -val0 / val1);
@@ -52,11 +51,10 @@ inline void solveLinearEquation(
 }
 // Returnes the real roots of a quadratic equation:
 // val2 * x * x + val 1 * x + val0 = 0
-inline void solveQuadraticEquation(
-    std::vector<REAL>* result,
-    REAL val2,
-    REAL val1,
-    REAL val0) {
+inline void solveQuadraticEquation(std::vector<REAL>* result,
+                                   REAL val2,
+                                   REAL val1,
+                                   REAL val0) {
   if (isZero(val2)) {
     solveLinearEquation(result, val1, val0);
   } else {
@@ -75,12 +73,11 @@ inline void solveQuadraticEquation(
 }
 // Returnes the real roots of a qubic equation:
 // val3 * x * x * x + val2 * x * x + val 1 * x + val0 = 0
-inline void solveQubicEquation(
-    std::vector<REAL>* result,
-    REAL val3,
-    REAL val2,
-    REAL val1,
-    REAL val0) {
+inline void solveQubicEquation(std::vector<REAL>* result,
+                               REAL val3,
+                               REAL val2,
+                               REAL val1,
+                               REAL val0) {
   if (isZero(val2)) {
     solveQuadraticEquation(result, val2, val1, val0);
   }

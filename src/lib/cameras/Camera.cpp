@@ -31,77 +31,69 @@ SOFTWARE.
 // C++ Header.
 #include <algorithm>
 #include <chrono>
+#include <memory>
 #include <ratio>
 #include <vector>
-#include <memory>
+
 
 #include "./Constants.h"
 #include "./IntersectionInfo.h"
-#include "materials/Material.h"
 #include "./Ray.h"
 #include "./Scene.h"
-#include "samplers/RegularSampler.h"
-#include "samplers/AdaptiveSampler.h"
+#include "materials/Material.h"
 #include "postprocessors/GammaCorrector.h"
+#include "samplers/AdaptiveSampler.h"
+#include "samplers/RegularSampler.h"
+
 
 using std::vector;
 
-const char *Camera::name = "Camera";
+const char* Camera::name = "Camera";
 
 // _____________________________________________________________________________
 Camera::Camera(const int width, const int height)
-    : m_UsePostProcessing(true),
-      _image(width, height)
-{
+    : m_UsePostProcessing(true), _image(width, height) {
   m_Sampler = std::make_shared<RegularSampler>(constants::DefaultSamplesPerDim);
   m_PostProcessor = std::make_shared<GammaCorrector>(2.2f);
 }
-void Camera::setRegularSampleSize(size_t samplesPerDim)
-{
+void Camera::setRegularSampleSize(size_t samplesPerDim) {
   m_Sampler = std::make_shared<RegularSampler>(samplesPerDim);
 }
 
 // _____________________________________________________________________________
-Camera::Camera(const Camera &camera)
+Camera::Camera(const Camera& camera)
     : m_Sampler(camera.m_Sampler),
       m_PostProcessor(camera.m_PostProcessor),
       m_UsePostProcessing(camera.m_UsePostProcessing),
-      _image(camera._image)
-{
-}
+      _image(camera._image) {}
 
 // _____________________________________________________________________________
-const Image &Camera::getImage() const
-{
+const Image& Camera::getImage() const {
   return _image;
 }
 // _____________________________________________________________________________
-void Camera::setImageSize(const int width, const int height)
-{
+void Camera::setImageSize(const int width, const int height) {
   _image(width, height);
 }
 // _____________________________________________________________________________
-void Camera::render(const Scene &scene)
-{
+void Camera::render(const Scene& scene) {
   int amountPixels = _image.getWidth() * _image.getHeight();
   render(scene, 0, amountPixels);
 }
 
 // _____________________________________________________________________________
-void Camera::render(const Scene &scene,
-                    const size_t &startPixel,
-                    const size_t &endPixel)
-{
+void Camera::render(const Scene& scene,
+                    const size_t& startPixel,
+                    const size_t& endPixel) {
   // Send rays.
   int amountPixels = endPixel - startPixel;
   auto start = std::chrono::high_resolution_clock::now();
 #ifdef BENICE
   // Keeps one core free for other stuff.
   omp_set_num_threads(std::max(omp_get_max_threads() - 1, 1));
-#endif // BENICE
+#endif  // BENICE
 #pragma omp parallel for schedule(dynamic, 100)
-  for (int i = startPixel; i < static_cast<int>(endPixel); ++i)
-  {
+  for (int i = startPixel; i < static_cast<int>(endPixel); ++i) {
     // Get the pixel coordinates from i.
     int x = i % _image.getWidth();
     int y = i / _image.getWidth();
@@ -111,11 +103,9 @@ void Camera::render(const Scene &scene,
     for (unsigned char piy = 0; piy <= 1; ++piy)
       for (unsigned char pix = 0; pix <= 1; ++pix)
         borders.push_back(createPixelCornerRay(x + pix, y + piy));
-    _image.setPixel(x, y,
-                    m_Sampler->getSampledColor(borders, scene));
+    _image.setPixel(x, y, m_Sampler->getSampledColor(borders, scene));
     // Print progress (only if we are in first thread).
-    if (omp_get_thread_num() == 0)
-    {
+    if (omp_get_thread_num() == 0) {
       auto now = std::chrono::high_resolution_clock::now();
       float fraction = static_cast<float>(i - startPixel) / amountPixels;
       auto duration =

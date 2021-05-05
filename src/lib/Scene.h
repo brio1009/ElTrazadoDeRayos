@@ -27,9 +27,10 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_SCENE_H_
 #define RAYTRACERLIB_SCENE_H_
 
-#include <vector>
 #include <unordered_set>
+#include <vector>
 #include "./Color.h"
+
 
 // Forward declaration.
 class Camera;
@@ -38,30 +39,28 @@ class Light;
 class Ray;
 class Shape;
 struct IntersectionInfo;
-namespace accelerationstructures
-{
-  class AbstractDataStructure;
+namespace accelerationstructures {
+class AbstractDataStructure;
 }
 
 /// Holds the scene objects.
-class Scene
-{
-public:
+class Scene {
+ public:
   /// Constructor.
   Scene();
   /// Destructor.
   ~Scene();
   /// Traces a ray through the scene.
-  IntersectionInfo traceRay(const Ray &ray) const;
+  IntersectionInfo traceRay(const Ray& ray) const;
   /// Returns a color for the scene background.
-  Color backgroundColor(const Ray &ray) const { return m_Background; }
+  Color backgroundColor(const Ray& ray) const { return m_Background; }
   /// Returnes a reference to all the lights in the scene.
-  std::vector<Light *> &lights() { return _lights; }
+  std::vector<Light*>& lights() { return _lights; }
   /// Returnes a const reference to all the lights in the scene.
-  const std::vector<Light *> &lights() const { return _lights; }
+  const std::vector<Light*>& lights() const { return _lights; }
 
   /// Returnes a reference to all the cameras in the scene.
-  std::vector<Camera *> &cameras() { return m_Cameras; }
+  std::vector<Camera*>& cameras() { return m_Cameras; }
 
   /// Renders the scene with all cameras in the camera vector.
   void render() const;
@@ -71,38 +70,34 @@ public:
 
   /// Inserts a shape into the shape vector (and maybe also into the
   /// important area shape list (for lighing).
-  void addShape(Shape *shapePtr);
+  void addShape(Shape* shapePtr);
 
   /// Returns pinter to the shapes data structure.
-  accelerationstructures::AbstractDataStructure *shapes() { return m_Shapes; }
+  accelerationstructures::AbstractDataStructure* shapes() { return m_Shapes; }
 
   /// Returns a reference to the important shape set.
-  const std::vector<ImportantShape *> &importantShapes() const
-  {
+  const std::vector<ImportantShape*>& importantShapes() const {
     return m_ImportantShapes;
   }
 
-  void setBackgroundColor(const Color &c)
-  {
-    m_Background = c;
-  }
+  void setBackgroundColor(const Color& c) { m_Background = c; }
 
-private:
+ private:
   /// Holds the renderable objects.
-  accelerationstructures::AbstractDataStructure *m_Shapes;
+  accelerationstructures::AbstractDataStructure* m_Shapes;
 
   /// Holds the the important shapes that should be sampled
   /// with the area form of the rendering equation.
-  std::vector<ImportantShape *> m_ImportantShapes;
+  std::vector<ImportantShape*> m_ImportantShapes;
 
   /// Holds the lights in a scene.
-  std::vector<Light *> _lights;
+  std::vector<Light*> _lights;
 
   /// Holds the cameras in this scene.
-  std::vector<Camera *> m_Cameras;
+  std::vector<Camera*> m_Cameras;
 
   /// The background color.
   Color m_Background;
 };
 
-#endif // RAYTRACERLIB_SCENE_H_
+#endif  // RAYTRACERLIB_SCENE_H_

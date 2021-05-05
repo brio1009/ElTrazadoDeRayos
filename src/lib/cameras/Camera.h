@@ -27,7 +27,6 @@ SOFTWARE.
 #ifndef RAYTRACERLIB_CAMERAS_CAMERA_H_
 #define RAYTRACERLIB_CAMERAS_CAMERA_H_
 
-
 #include <genericfactory/GenericFactory_decl.h>
 
 #include <memory>
@@ -43,8 +42,7 @@ class Sampler;
 class PostProcessor;
 
 /// Camera class.
-class Camera : public Spatial,
-               public PropertyInterface<Camera> {
+class Camera : public Spatial, public PropertyInterface<Camera> {
  public:
   /// Constructor.
   Camera(const int width, const int height);
@@ -53,20 +51,18 @@ class Camera : public Spatial,
   explicit Camera(const Camera& camera);
 
   /// Virtual destructor.
-  virtual ~Camera() { }
+  virtual ~Camera() {}
 
   /// Renders the scene to the image.
-  virtual void render(
-      const Scene& scene);
+  virtual void render(const Scene& scene);
   /// Renders the scene with the camera from startPixel to endPixel - 1
   void render(const Scene& scene,
-      const size_t& startPixel,
-      const size_t& endPixel);
+              const size_t& startPixel,
+              const size_t& endPixel);
 
   /// This method creates a Ray for given px and py. (TopLeft most)
-  virtual Ray createPixelCornerRay(
-      const size_t& px,
-      const size_t& py) const = 0;
+  virtual Ray createPixelCornerRay(const size_t& px,
+                                   const size_t& py) const = 0;
   /// Returns the image.
   const Image& getImage() const;
 
@@ -87,13 +83,9 @@ class Camera : public Spatial,
   /// Getter for m_UsePostProcessing.
   bool usePostProcessing() const { return m_UsePostProcessing; }
 
-  void setWidth(size_t width) {
-    _image = Image(width, _image.getHeight());
-  }
+  void setWidth(size_t width) { _image = Image(width, _image.getHeight()); }
 
-  void setHeight(size_t height) {
-    _image = Image(_image.getWidth(), height);
-  }
+  void setHeight(size_t height) { _image = Image(_image.getWidth(), height); }
 
   void setRegularSampleSize(size_t samplesPerDim);
 
@@ -105,36 +97,23 @@ class Camera : public Spatial,
       return;
     m_lock = false;
     genericfactory::GenericFactory<Camera>::registerProperty<Camera, REAL>(
-        "X",
-        &Camera::setX,
-        &Camera::noGet);
+        "X", &Camera::setX, &Camera::noGet);
     genericfactory::GenericFactory<Camera>::registerProperty<Camera, REAL>(
-        "Y",
-        &Camera::setY,
-        &Camera::noGet);
+        "Y", &Camera::setY, &Camera::noGet);
     genericfactory::GenericFactory<Camera>::registerProperty<Camera, REAL>(
-        "Z",
-        &Camera::setZ,
-        &Camera::noGet);
+        "Z", &Camera::setZ, &Camera::noGet);
     genericfactory::GenericFactory<Camera>::registerProperty<Camera, glm::vec4>(
-        "Rotate",
-        &Camera::rotate,
-        &Camera::noGet);
+        "Rotate", &Camera::rotate, &Camera::noGet);
     genericfactory::GenericFactory<Camera>::registerProperty<Camera, size_t>(
-        "W",
-        &Camera::setWidth,
-        &Camera::noGet);
+        "W", &Camera::setWidth, &Camera::noGet);
     genericfactory::GenericFactory<Camera>::registerProperty<Camera, size_t>(
-        "H",
-        &Camera::setHeight,
-        &Camera::noGet);
+        "H", &Camera::setHeight, &Camera::noGet);
     // TODO(bauschp, Di 2. Sep 20:21:00 CEST 2014):
     // be able to change the sampler.
     genericfactory::GenericFactory<Camera>::registerProperty<Camera, size_t>(
-        "SamplesPerDim",
-        &Camera::setRegularSampleSize,
-        &Camera::noGet);
+        "SamplesPerDim", &Camera::setRegularSampleSize, &Camera::noGet);
   }
+
  protected:
   /// Sampler used by this camera.
   std::shared_ptr<Sampler> m_Sampler;

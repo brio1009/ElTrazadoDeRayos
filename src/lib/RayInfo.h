@@ -50,13 +50,9 @@ class RayInfo {
   }
 
   /// Push back a new refractive Index.
-  void pushRefractiveIndex(const float value) {
-    _refractiveIndex.push(value);
-  }
+  void pushRefractiveIndex(const float value) { _refractiveIndex.push(value); }
 
-  std::stack<float> copyStack() const {
-    return _refractiveIndex;
-  }
+  std::stack<float> copyStack() const { return _refractiveIndex; }
 
   void setRefractionStack(const std::stack<float>& stack) {
     _refractiveIndex = stack;
@@ -77,4 +73,3 @@ class RayInfo {
 };
 
 #endif  // RAYTRACERLIB_RAYINFO_H_
-

@@ -23,7 +23,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-
 #pragma once
 #ifndef RAYTRACERLIB_ACCELERATIONSTRUCTURES_KDTREE_H_
 #define RAYTRACERLIB_ACCELERATIONSTRUCTURES_KDTREE_H_
@@ -32,8 +31,8 @@ SOFTWARE.
 
 #include <vector>
 
-#include "./AbstractDataStructure.h"
 #include "../Constants.h"
+#include "./AbstractDataStructure.h"
 
 class Shape;
 class Mesh;
@@ -92,9 +91,10 @@ class KDTree : public AbstractDataStructure {
   } KDTreeItem;
 
   static REAL computeMedianOfAxis(unsigned int axis,
-    const std::vector<KDTreeItem>& shapes);
-  static REAL centroidOfItem(unsigned int axis,
-    const accelerationstructures::KDTree::KDTreeItem& shape);
+                                  const std::vector<KDTreeItem>& shapes);
+  static REAL centroidOfItem(
+      unsigned int axis,
+      const accelerationstructures::KDTree::KDTreeItem& shape);
 
   std::vector<KDTreeItem> shapesToKDItems() const;
   /// Contains all the Nodes in the KD-Tree.
