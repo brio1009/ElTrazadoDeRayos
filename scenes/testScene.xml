@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cameras>
-  <!-- PerspectiveCamera Rotate="0,1,0,0.0" Z="20" X="0" W="1280" H="720" FOV="1.6205" SamplesPerDim="15" /i-->
-  <PerspectiveCamera Rotate="0,1,0,0.0" Z="20" X="0" W="200" H="200" FOV="1.6205" SamplesPerDim="5" />
+  <PerspectiveCamera Rotate="0,1,0,0.0" Z="23" X="0" W="200" H="200" FOV="1.48353" SamplesPerDim="40" />
+  <!-- <PerspectiveCamera Rotate="0,1,0,0.0" Z="20" X="0" W="200" H="200" FOV="1.6205" SamplesPerDim="5" /> -->
 </cameras>
 <materials>
   <!-- CASE SENSITIVE ATTRIBUTES -->

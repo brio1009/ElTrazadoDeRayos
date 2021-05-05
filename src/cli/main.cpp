@@ -78,7 +78,7 @@ int main(int argc, char **argv)
 {
   const char *fileName = "Img";
   // Print usage info.
-  if (argc > 4)
+  if (argc > 5)
   {
     printf("Usage: %s <optional: output> <optional: chunks chunknr> "
            "<optional: random seed>\n",

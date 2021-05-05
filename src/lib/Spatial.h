@@ -34,11 +34,6 @@ SOFTWARE.
 class Spatial
 {
 public:
-  /// Constructor.
-  Spatial()
-  {
-    setPosition(glm::vec4(0, 0, 0, 1));
-  }
   /// Destructor.
   virtual ~Spatial() {}
   // Multiplies the matrix with the current Transformation.
@@ -95,8 +90,8 @@ public:
 
 protected:
   // the transformation of this Shape
-  glm::mat4 _transformation;
-  glm::mat4 _inverseTransform;
+  glm::mat4 _transformation = glm::mat4(1);
+  glm::mat4 _inverseTransform = glm::mat4(1);
 };
 
 #endif // RAYTRACERLIB_SPATIAL_H_

@@ -556,7 +556,7 @@ Scene::Scene()
   // Create the acceleration data structure.
   // m_Shapes = new accelerationstructures::UniformGrid(0.01f);
   m_Shapes = new accelerationstructures::VectorDataStructure();
-  monteCarloScene(nullptr, &_lights, &m_Cameras, this);
+  // monteCarloScene(nullptr, &_lights, &m_Cameras, this);
 }
 
 // _____________________________________________________________________________
