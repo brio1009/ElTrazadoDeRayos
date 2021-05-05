@@ -31,25 +31,32 @@ SOFTWARE.
 
 #include "./Constants.h"
 
-class Spatial {
- public:
+class Spatial
+{
+public:
+  /// Constructor.
+  Spatial()
+  {
+    setPosition(glm::vec4(0, 0, 0, 1));
+  }
   /// Destructor.
   virtual ~Spatial() {}
   // Multiplies the matrix with the current Transformation.
-  virtual void transform(const glm::mat4& matrix);  //NOLINT mistaken for std
+  virtual void transform(const glm::mat4 &matrix); //NOLINT mistaken for std
 
   /// Getter for the transformation matrix.
-  const glm::mat4& getTransformMatrix() const { return _transformation; }
+  const glm::mat4 &getTransformMatrix() const { return _transformation; }
   /// Getter for the inverse transformation matrix.
-  const glm::mat4& getInverseTransformMatrix() const {
+  const glm::mat4 &getInverseTransformMatrix() const
+  {
     return _inverseTransform;
   }
 
   /// Get the position of the object.
-  const glm::vec4& getPosition() const { return _transformation[3]; }
+  const glm::vec4 &getPosition() const { return _transformation[3]; }
 
   /// Rotate
-  virtual void rotate(const glm::vec3& axis, const float rad);
+  virtual void rotate(const glm::vec3 &axis, const float rad);
 
   /// Rotate by vec4.
   /// rotates the transformation around the
@@ -57,7 +64,8 @@ class Spatial {
   virtual void rotate(const glm::vec4 value);
 
   /// Set the position of the object.
-  void setPosition(const glm::vec4& position) {
+  void setPosition(const glm::vec4 &position)
+  {
     _transformation[3] = position;
     _inverseTransform = glm::inverse(_transformation);
   }
@@ -65,28 +73,30 @@ class Spatial {
   // The following 3 setters cant be created automaticly because inverse has to
   // be updated.
   /// Sets the X value of the position vector.
-  void setX(REAL x) {
+  void setX(REAL x)
+  {
     _transformation[3].x = x;
     _inverseTransform = glm::inverse(_transformation);
   }
 
   /// Sets the Y value of the position vector.
-  void setY(REAL y) {
+  void setY(REAL y)
+  {
     _transformation[3].y = y;
     _inverseTransform = glm::inverse(_transformation);
   }
 
   /// Sets the Z value of the position vector.
-  void setZ(REAL z) {
+  void setZ(REAL z)
+  {
     _transformation[3].z = z;
     _inverseTransform = glm::inverse(_transformation);
   }
 
- protected:
+protected:
   // the transformation of this Shape
   glm::mat4 _transformation;
   glm::mat4 _inverseTransform;
 };
 
-
-#endif  // RAYTRACERLIB_SPATIAL_H_
+#endif // RAYTRACERLIB_SPATIAL_H_
