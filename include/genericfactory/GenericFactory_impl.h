@@ -31,193 +31,216 @@
 #include "./Property.h"
 #ifndef DISABLELITERALSTRING
 #include "./LiteralStringList.h"
-#endif  // DISABLELITERALSTRING
-namespace genericfactory {
-// HELPER START
-/// There two are helper functions to check wheter or not the base has a create
-/// method. This is important, cause all stored pointers are of this type and
-/// create has to exist in order to create objects of subclasses.
-template<typename Base>
-Base* creationHelper(
-      const std::string& name,
-      std::map<std::string, Base*> reflectionMap,
-      decltype(&Base::create) p) {
-  Base* creator = reflectionMap[name];
-  if (!creator)
+#endif // DISABLELITERALSTRING
+namespace genericfactory
+{
+  // HELPER START
+  /// There two are helper functions to check wheter or not the base has a create
+  /// method. This is important, cause all stored pointers are of this type and
+  /// create has to exist in order to create objects of subclasses.
+  template <typename Base>
+  Base *creationHelper(
+      const std::string &name,
+      std::map<std::string, Base *> reflectionMap,
+      decltype(&Base::create) p)
+  {
+    Base *creator = reflectionMap[name];
+    if (!creator)
+      return nullptr;
+    return creator->create();
+  }
+  /// See above. this is the case if Base doesnt have create().
+  template <typename Base>
+  Base *creationHelper(
+      const std::string &,
+      std::map<std::string, Base *>,
+      ...)
+  {
+    printf("WHY :(.\n");
     return nullptr;
-  return creator->create();
-}
-/// See above. this is the case if Base doesnt have create().
-template<typename Base>
-Base* creationHelper(
-      const std::string&,
-      std::map<std::string, Base*>,
-      ...) {
-  printf("WHY :(.\n");
-  return nullptr;
-}
-
-/// This helper class is used to delete the pointers of the static
-/// map when the programm terminates. (Composite)
-template<typename Key, typename Value>
-HelperPointerMap<Key, Value>::~HelperPointerMap() {
-  auto it = m_Map.begin();
-  auto endIt = m_Map.end();
-  for (; it != endIt; ++it) {
-    delete it->second;
   }
-}
-template<typename Key, typename Value>
-std::map<Key, Value*>& HelperPointerMap<Key, Value>::map() {
-  return m_Map;
-}
 
-// HELPER END
-// #########################DEFINITIONS#########################################
-// Definitions to auto initialize the reflection maps.
-template<typename Base>
-const char GenericFactory<Base>::helpInit =
+  /// This helper class is used to delete the pointers of the static
+  /// map when the programm terminates. (Composite)
+  template <typename Key, typename Value>
+  HelperPointerMap<Key, Value>::~HelperPointerMap()
+  {
+    auto it = m_Map.begin();
+    auto endIt = m_Map.end();
+    for (; it != endIt; ++it)
+    {
+      delete it->second;
+    }
+  }
+  template <typename Key, typename Value>
+  std::map<Key, Value *> &HelperPointerMap<Key, Value>::map()
+  {
+    return m_Map;
+  }
+
+  // HELPER END
+  // #########################DEFINITIONS#########################################
+  // Definitions to auto initialize the reflection maps.
+  template <typename Base>
+  const char GenericFactory<Base>::helpInit =
       GenericFactory<Base>::registerAllForBase();
-// Used to produce compiler errors when not defined for used base.
-template<typename Base>
-char GenericFactory<Base>::registerAllForBase() {
-  static_assert(sizeof(Base) != sizeof(Base), "Specialize a"
-      "this method to register all of your used subtypes ob Base!");
-  return 'n';
-}
+  // Used to produce compiler errors when not defined for used base.
+  template <typename Base>
+  char GenericFactory<Base>::registerAllForBase()
+  {
+    static_assert(sizeof(Base) != sizeof(Base), "Specialize a"
+                                                "this method to register all of your used subtypes ob Base!");
+    return 'n';
+  }
 
-// Definitions to access the static maps.
-template<typename Base>
-std::map<std::string, Base*>& GenericFactory<Base>::reflectionMap() {
-  static HelperPointerMap<std::string, Base> m_ReflMap;
-  return m_ReflMap.map();
-}
-template<typename Base>
-std::map<std::string, Property<Base>*>& GenericFactory<Base>::properyMap() {
-  static HelperPointerMap<std::string, Property<Base>> m_PropMap;
-  return m_PropMap.map();
-}
+  // Definitions to access the static maps.
+  template <typename Base>
+  std::map<std::string, Base *> &GenericFactory<Base>::reflectionMap()
+  {
+    static HelperPointerMap<std::string, Base> m_ReflMap;
+    return m_ReflMap.map();
+  }
+  template <typename Base>
+  std::map<std::string, Property<Base> *> &GenericFactory<Base>::properyMap()
+  {
+    static HelperPointerMap<std::string, Property<Base>> m_PropMap;
+    return m_PropMap.map();
+  }
 
-template<typename Base>
-template<typename C>
-void GenericFactory<Base>::helpRegisterProperties(
-      decltype(&C::registerProperties) p) {
-  C::registerProperties();
-  // printf("%zu after calling %s::registerProperties().\n", properyMap().size(),
-  //   nameOf(C::name).c_str());
-}
+  template <typename Base>
+  template <typename C>
+  void GenericFactory<Base>::helpRegisterProperties(
+      decltype(&C::registerProperties) p)
+  {
+    C::registerProperties();
+    // printf("%zu after calling %s::registerProperties().\n", properyMap().size(),
+    //   nameOf(C::name).c_str());
+  }
 
-template<typename Base>
-template<typename C>
-void GenericFactory<Base>::helpRegisterProperties(...) {
-  fprintf(stderr, "Couldn't find static void C::registerProperties()\n");
-}
-template<typename Base>
-template<typename C, typename Type>
-void GenericFactory<Base>::registerProperty(
-      const std::string& methodName,
+  template <typename Base>
+  template <typename C>
+  void GenericFactory<Base>::helpRegisterProperties(...)
+  {
+    fprintf(stderr, "Couldn't find static void C::registerProperties() for class %s\n", nameOf(C::name).c_str());
+  }
+  template <typename Base>
+  template <typename C, typename Type>
+  void GenericFactory<Base>::registerProperty(
+      const std::string &methodName,
       void (C::*setPtr)(Type),
-      Type (C::*getPtr)() const) {
-  if (properyMap().find(methodName) != properyMap().end()) {
-    perror("There already exists a property with this name\n");
-    delete properyMap()[methodName];
+      Type (C::*getPtr)() const)
+  {
+    if (properyMap().find(methodName) != properyMap().end())
+    {
+      perror("There already exists a property with this name\n");
+      delete properyMap()[methodName];
+    }
+    properyMap()[methodName] = new TypeProperty<Base, C, Type>(setPtr, getPtr);
   }
-  properyMap()[methodName] = new TypeProperty<Base, C, Type>(setPtr, getPtr);
-}
 
-template<typename Base>
-template<typename C, typename std::enable_if<
-      !std::is_abstract<C>::value
-      && std::is_default_constructible<C>::value, int>::type>
-void GenericFactory<Base>::registerClass() {
-  // perform some checks so we dont run into a mess later on.
-  static_assert(std::is_base_of<Base, C>::value,
-        "C dosn`t have base Base\n");
-  helpRegisterClass<C>("", nullptr);
-  GenericFactory<Base>::helpRegisterProperties<C>(nullptr);
-}
-template<typename Base>
-template<typename C, typename std::enable_if<
-      std::is_abstract<C>::value
-      || !std::is_default_constructible<C>::value, int>::type>
-void GenericFactory<Base>::registerClass() {
-  printf("Can't create this class. Adding Properties...\n");
-  GenericFactory<Base>::helpRegisterProperties<C>(nullptr);
-}
+  template <typename Base>
+  template <typename C, typename std::enable_if<
+                            !std::is_abstract<C>::value && std::is_default_constructible<C>::value, int>::type>
+  void GenericFactory<Base>::registerClass()
+  {
+    // perform some checks so we dont run into a mess later on.
+    static_assert(std::is_base_of<Base, C>::value,
+                  "C dosn`t have base Base\n");
+    helpRegisterClass<C>("", nullptr);
+    GenericFactory<Base>::helpRegisterProperties<C>(nullptr);
+  }
+  template <typename Base>
+  template <typename C, typename std::enable_if<
+                            std::is_abstract<C>::value || !std::is_default_constructible<C>::value, int>::type>
+  void GenericFactory<Base>::registerClass()
+  {
+    printf("Can't create class %s. Still adding its properties.\n", nameOf(C::name).c_str());
+    GenericFactory<Base>::helpRegisterProperties<C>(nullptr);
+  }
 
-template<typename Base>
-template<typename C>
-void GenericFactory<Base>::helpRegisterClass(
+  template <typename Base>
+  template <typename C>
+  void GenericFactory<Base>::helpRegisterClass(
       decltype(C::name) n,
-      decltype(&C::create) p) {
-  std::string name = nameOf(C::name);
-  // This is used to register them automaticly.
-  if (sizeof(helpInit) != sizeof(helpInit) && helpInit)
-    return;
-  printf("REGISTERING %s.\n", name.c_str());
-  if (reflectionMap().find(name) != reflectionMap().end()) {
-    perror("There already exists a class with this name\n");
-    delete reflectionMap()[name];
+      decltype(&C::create) p)
+  {
+    std::string name = nameOf(C::name);
+    // This is used to register them automaticly.
+    if (sizeof(helpInit) != sizeof(helpInit) && helpInit)
+      return;
+    printf("REGISTERING %s.\n", name.c_str());
+    if (reflectionMap().find(name) != reflectionMap().end())
+    {
+      perror("There already exists a class with this name\n");
+      delete reflectionMap()[name];
+    }
+    // only default constructable C will land here.
+    // just construct one.
+    reflectionMap()[name] = new C();
   }
-  // only default constructable C will land here.
-  // just construct one.
-  reflectionMap()[name] = new C();
-}
 
-template<typename Base>
-template<typename C>
-void GenericFactory<Base>::helpRegisterClass(...) {
-  fprintf(stderr, "(%s) is missing the static field with the reflection "
-      "name or Base* create() const member. Make sure you add them!!.\n",
-      typeid(C).name());
-}
-
-// Definitions to access a property. (get/set).
-template<typename Base>
-void GenericFactory<Base>::setProperty(
-        const std::string& propName,
-        Base* const objPtr,
-        const std::string& value) {
-  Property<Base>* prop = properyMap()[propName];
-  if (prop) {
-    prop->set(objPtr, value);
-    return;
+  template <typename Base>
+  template <typename C>
+  void GenericFactory<Base>::helpRegisterClass(...)
+  {
+    fprintf(stderr, "(%s) is missing the static field with the reflection "
+                    "name or Base* create() const member. Make sure you add them!!.\n",
+            typeid(C).name());
   }
-  fprintf(stderr, "There is no property named %s\n", propName.c_str());
-}
 
-template<typename Base>
-std::string GenericFactory<Base>::getProperty(
-        const std::string& propName,
-        Base* const objPtr) {
-  Property<Base>* prop = properyMap()[propName];
-  if (prop)
-    return prop->get(objPtr);
-  fprintf(stderr, "There is no property named %s\n", propName.c_str());
-  return "ERROR";
-}
+  // Definitions to access a property. (get/set).
+  template <typename Base>
+  void GenericFactory<Base>::setProperty(
+      const std::string &propName,
+      Base *const objPtr,
+      const std::string &value)
+  {
+    Property<Base> *prop = properyMap()[propName];
+    if (prop)
+    {
+      prop->set(objPtr, value);
+      return;
+    }
+    fprintf(stderr, "There is no property named %s\n", propName.c_str());
+  }
 
-// Definition to create a object with given name.
-template<typename Base>
-Base* GenericFactory<Base>::create(const std::string& name) {
-  // Thanks to registerClass only constructable objects will be called here.
-  return creationHelper(name, reflectionMap(), nullptr);
-}
+  template <typename Base>
+  std::string GenericFactory<Base>::getProperty(
+      const std::string &propName,
+      Base *const objPtr)
+  {
+    Property<Base> *prop = properyMap()[propName];
+    if (prop)
+      return prop->get(objPtr);
+    fprintf(stderr, "There is no property named %s\n", propName.c_str());
+    return "ERROR";
+  }
 
-template<typename Base>
-std::string GenericFactory<Base>::nameOf(const char* const name) {
-  return std::string(name);
-}
+  // Definition to create a object with given name.
+  template <typename Base>
+  Base *GenericFactory<Base>::create(const std::string &name)
+  {
+    // Thanks to registerClass only constructable objects will be called here.
+    return creationHelper(name, reflectionMap(), nullptr);
+  }
 
-template<typename Base>
-std::string GenericFactory<Base>::nameOf(const std::string& name) {
-  return name;
-}
+  template <typename Base>
+  std::string GenericFactory<Base>::nameOf(const char *const name)
+  {
+    return std::string(name);
+  }
+
+  template <typename Base>
+  std::string GenericFactory<Base>::nameOf(const std::string &name)
+  {
+    return name;
+  }
 #ifndef DISABLELITERALSTRING
-template<typename Base>
-std::string GenericFactory<Base>::nameOf(const literal_str_list& name) {
-  return convert_to_string(name);
-}
-#endif  // DISABLELITERALSTRING
-}  // namespace genericfactory
-#endif  // GENERICFACTORY_GENERICFACTORY_IMPL_H_
+  template <typename Base>
+  std::string GenericFactory<Base>::nameOf(const literal_str_list &name)
+  {
+    return convert_to_string(name);
+  }
+#endif // DISABLELITERALSTRING
+} // namespace genericfactory
+#endif // GENERICFACTORY_GENERICFACTORY_IMPL_H_

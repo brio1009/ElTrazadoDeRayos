@@ -49,49 +49,57 @@ SOFTWARE.
 #include <vector>
 
 //
-void renderScene(const char* fileName, size_t chunks, size_t chunkNr) {
+void renderScene(const char *fileName, size_t chunks, size_t chunkNr)
+{
   // Create the scene. This also adds all the objects.
   Scene scene;
   // Load the desired Scene.
   SceneFileParser sceneParser;
-  sceneParser.parse("../../scenes/testScene.xml", &scene);
+  sceneParser.parse("testScene.xml", &scene);
   // Render all the images.
   scene.render(chunks, chunkNr);
 
   // Get the cameras and save the images.
-  for (size_t i = 0; i < scene.cameras().size(); ++i) {
+  for (size_t i = 0; i < scene.cameras().size(); ++i)
+  {
     // Save the image under different names.
     char buff[100];
 #ifdef WINDOWS
     _snprintf_s(buff, sizeof(buff), "%s%03lu.bmp", fileName, i);
 #else
     snprintf(buff, sizeof(buff), "%s%03zu.bmp", fileName, i);
-#endif  // WINDOWS
+#endif // WINDOWS
     scene.cameras().at(i)->getImage().saveAsBMP(buff);
   }
 }
 
 // The main method.
-int main(int argc, char** argv) {
-  const char* fileName = "Img";
+int main(int argc, char **argv)
+{
+  const char *fileName = "Img";
   // Print usage info.
-  if (argc > 4) {
+  if (argc > 4)
+  {
     printf("Usage: %s <optional: output> <optional: chunks chunknr> "
-           "<optional: random seed>\n", argv[0]);
+           "<optional: random seed>\n",
+           argv[0]);
     exit(EXIT_FAILURE);
   }
   // Initialize the rand function.
   unsigned int seed = static_cast<unsigned int>(time(NULL));
-  if (argc > 1) {
+  if (argc > 1)
+  {
     fileName = argv[1];
   }
   size_t chunks = 1;
   size_t chunkNr = 0;
-  if (argc > 3) {
+  if (argc > 3)
+  {
     chunks = atol(argv[2]);
     chunkNr = atol(argv[3]);
   }
-  if (argc == 5) {
+  if (argc == 5)
+  {
     seed = static_cast<unsigned int>(atoi(argv[4]));
   }
   printf("Random seed used: %u\n\n", seed);

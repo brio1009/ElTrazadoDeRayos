@@ -39,11 +39,10 @@ public:
   Color() : _r(0), _g(0), _b(0), _a(1.0f) {}
 
   /// Constructor with given colors.
-  template <typename T>
-  Color(T r,
-        T g,
-        T b,
-        T a = 1.0) : _r(r), _g(g), _b(b), _a(a) {}
+  Color(const float r,
+        const float g,
+        const float b,
+        const float a = 1.0f) : _r(r), _g(g), _b(b), _a(a) {}
 
   /// Copy constructor. Cant be explicit or else it does not compile.
   Color(const Color &color);

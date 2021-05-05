@@ -49,39 +49,46 @@ SOFTWARE.
 
 using std::string;
 
-struct cstringcomp {
-  bool operator()(const char* s1, const char* s2) {
+struct cstringcomp
+{
+  bool operator()(const char *s1, const char *s2) const
+  {
     return strcmp(s1, s2) < 0;
   }
 };
 // _____________________________________________________________________________
-template<>
+template <>
 void SceneFileParser::parseGroupSpecial<Material>(
-      rapidxml::xml_node<>* node, ...) const {
+    rapidxml::xml_node<> *node, ...) const
+{
   // Get the material map from the variadic
   va_list ap;
   // Read needed stuff.
   va_start(ap, node);
-  std::map<char*, Material*, cstringcomp>* materialMap =
-        reinterpret_cast<std::map<
-              char*,
-              Material*,
-              cstringcomp>*>(va_arg(ap, void*));
+  std::map<char *, Material *, cstringcomp> *materialMap =
+      reinterpret_cast<std::map<
+          char *,
+          Material *,
+          cstringcomp> *>(va_arg(ap, void *));
   va_end(ap);
-  rapidxml::xml_node<>* child = node;
-  while (child) {
+  rapidxml::xml_node<> *child = node;
+  while (child)
+  {
     // add this child.
     // TODO(bauschp, Fr 8. Aug 23:28:39 CEST 2014): check if pointer alreadt ex.
-    Material* mat =
+    Material *mat =
         genericfactory::GenericFactory<Material>::create(child->name());
-    if (!mat) {
+    if (!mat)
+    {
       child = child->next_sibling();
       continue;
     }
     // call all the needed atributes.
-    for (rapidxml::xml_attribute<>* attr = child->first_attribute();
-         attr; attr = attr->next_attribute()) {
-      if (strcmp(attr->name(), "id") == 0) {
+    for (rapidxml::xml_attribute<> *attr = child->first_attribute();
+         attr; attr = attr->next_attribute())
+    {
+      if (strcmp(attr->name(), "id") == 0)
+      {
         materialMap->emplace(attr->value(), mat);
         continue;
       }
@@ -94,54 +101,63 @@ void SceneFileParser::parseGroupSpecial<Material>(
 }
 
 // _____________________________________________________________________________
-template<>
+template <>
 void SceneFileParser::parseGroupSpecial<Shape>(
-      rapidxml::xml_node<>* node, ...) const {
+    rapidxml::xml_node<> *node, ...) const
+{
   // Get the material map from the variadic
   va_list ap;
   // Read needed stuff.
   va_start(ap, node);
-  std::map<char*, Material*, cstringcomp>* materialMap =
-        reinterpret_cast<std::map<
-              char*,
-              Material*,
-              cstringcomp>*>(va_arg(ap, void*));
-  Scene* scene = reinterpret_cast<Scene*>(va_arg(ap, void*));
+  std::map<char *, Material *, cstringcomp> *materialMap =
+      reinterpret_cast<std::map<
+          char *,
+          Material *,
+          cstringcomp> *>(va_arg(ap, void *));
+  Scene *scene = reinterpret_cast<Scene *>(va_arg(ap, void *));
   va_end(ap);
 
   // start working.
-  rapidxml::xml_node<>* child = node;
-  while (child) {
+  rapidxml::xml_node<> *child = node;
+  while (child)
+  {
     // add this child.
-    rapidxml::xml_attribute<>* tmpAttr = child->first_attribute("Light");
-    Shape* shape;
-    if (tmpAttr && strcmp(tmpAttr->value(), "1") == 0) {
+    rapidxml::xml_attribute<> *tmpAttr = child->first_attribute("Light");
+    Shape *shape;
+    if (tmpAttr && strcmp(tmpAttr->value(), "1") == 0)
+    {
       shape = genericfactory::GenericFactory<Shape>::create(
-                                std::string(child->name()) + "Important");
+          std::string(child->name()) + "Important");
       shape->setMaterialPtr(new ColorMaterial(Color(1, 1, 1)));
-    } else {
+    }
+    else
+    {
       shape = genericfactory::GenericFactory<Shape>::create(child->name());
     }
-    if (!shape) {
+    if (!shape)
+    {
       child = child->next_sibling();
       continue;
     }
     // call all the needed atributes.
-    for (rapidxml::xml_attribute<>* attr = child->first_attribute();
-         attr; attr = attr->next_attribute()) {
-      if (strcmp(attr->name(), Material::name) != 0) {
+    for (rapidxml::xml_attribute<> *attr = child->first_attribute();
+         attr; attr = attr->next_attribute())
+    {
+      if (strcmp(attr->name(), Material::name) != 0)
+      {
         shape->setFromString(attr->name(), attr->value());
         continue;
       }
       auto map_entry = materialMap->find(attr->value());
-      if (map_entry == materialMap->end()) {
+      if (map_entry == materialMap->end())
+      {
         perror("Material not defined above\n");
         continue;
       }
       shape->setFromString(
           Material::name,
-          genericfactory::StringCastHelper<const Material*>::toString(
-                                                        map_entry->second));
+          genericfactory::StringCastHelper<const Material *>::toString(
+              map_entry->second));
     }
     scene->addShape(shape);
     child = child->next_sibling();
@@ -149,29 +165,34 @@ void SceneFileParser::parseGroupSpecial<Shape>(
 }
 
 // _____________________________________________________________________________
-template<>
+template <>
 void SceneFileParser::parseGroupSpecial<Camera>(
-      rapidxml::xml_node<>* node, ...) const {
+    rapidxml::xml_node<> *node, ...) const
+{
   // Get the material map from the variadic
   va_list ap;
   // Read needed stuff.
   va_start(ap, node);
-  Scene* scene = reinterpret_cast<Scene*>(va_arg(ap, void*));
+  Scene *scene = reinterpret_cast<Scene *>(va_arg(ap, void *));
   va_end(ap);
 
   // Read the cam and add it to the map.
-  rapidxml::xml_node<>* child = node;
-  while (child) {
+  rapidxml::xml_node<> *child = node;
+  while (child)
+  {
     // add this child.
-    Camera* cam = genericfactory::GenericFactory<Camera>::create(child->name());
-    if (!cam) {
+    Camera *cam = genericfactory::GenericFactory<Camera>::create(child->name());
+    if (!cam)
+    {
       child = child->next_sibling();
       continue;
     }
     // call all the needed atributes.
-    for (rapidxml::xml_attribute<>* attr = child->first_attribute();
-         attr; attr = attr->next_attribute()) {
-      if (strcmp(attr->name(), Material::name) != 0) {
+    for (rapidxml::xml_attribute<> *attr = child->first_attribute();
+         attr; attr = attr->next_attribute())
+    {
+      if (strcmp(attr->name(), Material::name) != 0)
+      {
         cam->setFromString(attr->name(), attr->value());
         continue;
       }
@@ -182,21 +203,25 @@ void SceneFileParser::parseGroupSpecial<Camera>(
   }
 }
 // _____________________________________________________________________________
-void SceneFileParser::parse(const std::string& filename, Scene* scene) const {
-  rapidxml::xml_document<> doc;    // character type defaults to char
-  char* text = getFileContents(filename);
+void SceneFileParser::parse(const std::string &filename, Scene *scene) const
+{
+  rapidxml::xml_document<> doc; // character type defaults to char
+  char *text = getFileContents(filename);
   if (!text)
     return;
-  try {
-    doc.parse<0>(text);    // 0 means default parse flags
-  } catch (rapidxml::parse_error e) {
+  try
+  {
+    doc.parse<0>(text); // 0 means default parse flags
+  }
+  catch (rapidxml::parse_error e)
+  {
     printf("%s\n", e.what());
     printf("Problem: %s\n", (e.where<char>() - 5));
   }
   // now create the scene.
   // first of all create the materials in the material group.
-  std::map<char*, Material*, cstringcomp> materialMap;
-  rapidxml::xml_node<>* groupStart = parseGroup<Material>(&doc);
+  std::map<char *, Material *, cstringcomp> materialMap;
+  rapidxml::xml_node<> *groupStart = parseGroup<Material>(&doc);
   parseGroupSpecial<Material>(groupStart, &materialMap);
 
   // now add the shapes.
@@ -210,14 +235,15 @@ void SceneFileParser::parse(const std::string& filename, Scene* scene) const {
   free(text);
 }
 // _____________________________________________________________________________
-char* SceneFileParser::getFileContents(const std::string& filename) {
+char *SceneFileParser::getFileContents(const std::string &filename)
+{
   // Open file.
 #ifdef WINDOWS
-  FILE* file = nullptr;
+  FILE *file = nullptr;
   fopen_s(&file, filename.c_str(), "rb");
 #else
-  FILE* file = fopen(filename.c_str(), "r");
-#endif  // WINDOWS
+  FILE *file = fopen(filename.c_str(), "r");
+#endif // WINDOWS
 
   if (!file)
     return nullptr;
@@ -227,8 +253,9 @@ char* SceneFileParser::getFileContents(const std::string& filename) {
   // TODO(bauschp, Fr 8. Aug 22:39:05 CEST 2014): DONT TRY TO LOAD BINARY FILES!
   size_t sizeInBytes = ftell(file);
   fseek(file, 0, SEEK_SET);
-  char* buffer = static_cast<char*>(malloc(sizeInBytes + 1));  // + 1 needed?
-  if (fread(buffer, 1LU, sizeInBytes, file) != sizeInBytes) {
+  char *buffer = static_cast<char *>(malloc(sizeInBytes + 1)); // + 1 needed?
+  if (fread(buffer, 1LU, sizeInBytes, file) != sizeInBytes)
+  {
     perror("SceneFileParser::getFileContents(): Unexpected file length.\n");
     fclose(file);
     free(buffer);
