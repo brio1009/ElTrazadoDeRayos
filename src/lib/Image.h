@@ -33,8 +33,9 @@ SOFTWARE.
 
 /// This class provides an easy to use interface to write and read pixel
 /// values of an image. Its memory is x-axis-first.
-class Image {
- public:
+class Image
+{
+public:
   /// Constructor.
   Image(const int width, const int height);
 
@@ -42,24 +43,24 @@ class Image {
   ~Image();
 
   /// Saves the current image under the given name in the bmp format.
-  void saveAsBMP(const std::string& filePath) const;
+  void saveAsBMP(const std::string &filePath) const;
   /// Saves the current image under the given name in the ascii ppm format.
-  void saveAsPPM(const std::string& filePath) const;
+  void saveAsPPM(const std::string &filePath) const;
 
   /// Read and write access for a specific pixel.
-  Color* operator()(const int x, const int y);
+  Color *operator()(const int x, const int y);
 
   /// Const-getter for a pixel.
-  const Color& getPixel(const int x, const int y) const;
+  const Color &getPixel(const int x, const int y) const;
 
   /// Setter for color.
-  void setPixel(const int x, const int y, const Color& color);
+  void setPixel(const int x, const int y, const Color &color);
 
   ///
   int getWidth() const { return _width; }
   int getHeight() const { return _height; }
 
- private:
+private:
   /// Vector with pixels.
   std::vector<Color> _data;
   /// Saves the height.
@@ -68,4 +69,4 @@ class Image {
   int _width;
 };
 
-#endif  // RAYTRACERLIB_IMAGE_H_
+#endif // RAYTRACERLIB_IMAGE_H_
