@@ -23,7 +23,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-
 #pragma once
 #ifndef RAYTRACERLIB_ACCELERATIONSTRUCTURES_UNIFORMGRID_H_
 #define RAYTRACERLIB_ACCELERATIONSTRUCTURES_UNIFORMGRID_H_
@@ -38,8 +37,7 @@ SOFTWARE.
 
 #include "./AbstractDataStructure.h"
 
-#include <accelerationstructures/AABB.h>
-
+#include "./AABB.h"
 
 #define PRIME1 73856093
 #define PRIME2 19349663
@@ -48,49 +46,50 @@ SOFTWARE.
 
 class Shape;
 
-struct SmartHash {
-  size_t operator()(const glm::ivec3& vec) const {
-    return ((vec.x * PRIME1)
-        ^ (vec.y * PRIME2)
-        ^ (vec.z * PRIME3))
-      % HASHTABLESIZE;
+struct SmartHash
+{
+  size_t operator()(const glm::ivec3 &vec) const
+  {
+    return ((vec.x * PRIME1) ^ (vec.y * PRIME2) ^ (vec.z * PRIME3)) % HASHTABLESIZE;
   }
 };
 
-namespace accelerationstructures {
+namespace accelerationstructures
+{
 
-class UniformGrid : public AbstractDataStructure {
- public:
-  explicit UniformGrid(const float& cellSize);
-  virtual ~UniformGrid() override;
-  /// see AbstractDataStructure.
-  virtual IntersectionInfo traceRay(const Ray& ray) const override;
-  /// see AbstractDataStructure.
-  virtual void addShape(Shape* shape) override;
-  /// Returns the number of shapes contained in this structure.
-  virtual size_t size() const override;
+  class UniformGrid : public AbstractDataStructure
+  {
+  public:
+    explicit UniformGrid(const float &cellSize);
+    virtual ~UniformGrid() override;
+    /// see AbstractDataStructure.
+    virtual IntersectionInfo traceRay(const Ray &ray) const override;
+    /// see AbstractDataStructure.
+    virtual void addShape(Shape *shape) override;
+    /// Returns the number of shapes contained in this structure.
+    virtual size_t size() const override;
 
- private:
-  void insertShapeIntoMatchingCells(const AABB& aabb, Shape* shape);
-  void intersectCellShapes(const glm::ivec3& index,
-      const Ray& ray,
-      std::vector<IntersectionInfo>* intersections) const;
-  /// contains a map cellHash -> primitives. If the tuples shape is a Mesh
-  /// the second element provides the offset to the first triangle in the list
-  /// of vertices.
-  typedef std::vector<std::pair<Shape*, uint64_t> > cellList;
-  std::unordered_map<glm::ivec3,
-    cellList, SmartHash> m_Shapes;
-  /// A list of all added Shapes.
-  std::set<Shape*> m_ShapeList;
-  /// A list of all infinite shapes.
-  std::set<Shape*> m_InfShapeList;
+  private:
+    void insertShapeIntoMatchingCells(const AABB &aabb, Shape *shape);
+    void intersectCellShapes(const glm::ivec3 &index,
+                             const Ray &ray,
+                             std::vector<IntersectionInfo> *intersections) const;
+    /// contains a map cellHash -> primitives. If the tuples shape is a Mesh
+    /// the second element provides the offset to the first triangle in the list
+    /// of vertices.
+    typedef std::vector<std::pair<Shape *, uint64_t>> cellList;
+    std::unordered_map<glm::ivec3,
+                       cellList, SmartHash>
+        m_Shapes;
+    /// A list of all added Shapes.
+    std::set<Shape *> m_ShapeList;
+    /// A list of all infinite shapes.
+    std::set<Shape *> m_InfShapeList;
 
-  /// The dimensionality of a cell. (All cells are cubical)
-  float m_CellSize;
-  AABB m_AABB;
-};
-}  // namespace accelerationstructures
+    /// The dimensionality of a cell. (All cells are cubical)
+    float m_CellSize;
+    AABB m_AABB;
+  };
+} // namespace accelerationstructures
 
-#endif  // RAYTRACERLIB_ACCELERATIONSTRUCTURES_UNIFORMGRID_H_
-
+#endif // RAYTRACERLIB_ACCELERATIONSTRUCTURES_UNIFORMGRID_H_

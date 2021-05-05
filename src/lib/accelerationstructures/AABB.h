@@ -34,17 +34,19 @@ SOFTWARE.
 class Shape;
 class Ray;
 
-namespace accelerationstructures {
+namespace accelerationstructures
+{
 
-struct AABB {
-  glm::vec3 min;
-  glm::vec3 max;
-};
+  struct AABB
+  {
+    glm::vec3 min;
+    glm::vec3 max;
+  };
 
-AABB aabbFromShape(const Shape& shape);
-bool intersectAABB(const AABB& aabb, const Ray& ray, REAL* t);
+  AABB aabbFromShape(const Shape &shape);
+  bool intersectAABB(const AABB &aabb, const Ray &ray, REAL *t);
 
-bool aabbOfShapeInfinite(const Shape& shape);
-}  // namespace accelerationstructures
+  bool aabbOfShapeInfinite(const Shape &shape);
+} // namespace accelerationstructures
 
-#endif  // RAYTRACERLIB_ACCELERATIONSTRUCTURES_AABB_H_
+#endif // RAYTRACERLIB_ACCELERATIONSTRUCTURES_AABB_H_

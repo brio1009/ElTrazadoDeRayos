@@ -29,6 +29,7 @@
 
 # Build folder
 bin
+build
 
 # CMake, see https://github.com/github/gitignore/blob/master/CMake.gitignore
 CMakeLists.txt.user
