@@ -1,15 +1,7 @@
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// OpenGL Mathematics Copyright (c) 2005 - 2014 G-Truc Creation (www.g-truc.net)
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// Created : 2011-05-16
-// Updated : 2011-05-16
-// Licence : This source is under MIT licence
-// File    : test/gtx/rotate_vector.cpp
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-#define GLM_FORCE_RADIANS
-#include <glm/gtc/constants.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
+#include <glm/gtc/constants.hpp>
+#include <glm/ext/vector_relational.hpp>
 
 int test_rotate()
 {
