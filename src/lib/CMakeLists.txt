@@ -15,6 +15,11 @@ target_include_directories(trazado_lib PUBLIC
                            "${CMAKE_SOURCE_DIR}/include/genericfactory"
                            )
 
+find_package(OpenMP)
+if(OpenMP_CXX_FOUND)
+     target_link_libraries(trazado_lib PUBLIC OpenMP::OpenMP_CXX)
+endif()
+
 if(WIN32)
      target_compile_definitions(trazado_lib PUBLIC "WINDOWS")
 endif(WIN32)

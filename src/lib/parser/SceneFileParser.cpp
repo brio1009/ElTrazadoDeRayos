@@ -42,6 +42,7 @@ SOFTWARE.
 #include "./Scene.h"
 #include "shapes/Shape.h"
 #include "./Reflection.h"
+#include "accelerationstructures/AbstractDataStructure.h"
 // REMOVE ME!!!!
 #include "cameras/PerspectiveCamera.h"
 #include "materials/ColorMaterial.h"
@@ -96,7 +97,7 @@ void SceneFileParser::parseGroupSpecial<Material>(
     }
     child = child->next_sibling();
   }
-  printf("Map now contains %d elements.\n",
+  printf("%d materials loaded.\n",
          static_cast<int>(materialMap->size()));
 }
 
@@ -162,6 +163,8 @@ void SceneFileParser::parseGroupSpecial<Shape>(
     scene->addShape(shape);
     child = child->next_sibling();
   }
+  printf("%d shapes loaded.\n",
+         static_cast<int>(scene->shapes()->size()));
 }
 
 // _____________________________________________________________________________
