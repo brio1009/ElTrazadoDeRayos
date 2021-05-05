@@ -29,7 +29,6 @@ SOFTWARE.
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-
 #include <ctime>
 #include <limits>
 #include <vector>
@@ -59,7 +58,6 @@ SOFTWARE.
 #include "./shapes/Plane.h"
 #include "./shapes/Rectangle.h"
 #include "./shapes/Shape.h"
-
 
 using accelerationstructures::AbstractDataStructure;
 using accelerationstructures::VectorDataStructure;
