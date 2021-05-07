@@ -35,7 +35,6 @@ SOFTWARE.
 #include <ratio>
 #include <vector>
 
-
 #include "./Constants.h"
 #include "./IntersectionInfo.h"
 #include "./Ray.h"
@@ -44,7 +43,6 @@ SOFTWARE.
 #include "postprocessors/GammaCorrector.h"
 #include "samplers/AdaptiveSampler.h"
 #include "samplers/RegularSampler.h"
-
 
 using std::vector;
 
@@ -88,10 +86,12 @@ void Camera::render(const Scene& scene,
   // Send rays.
   int amountPixels = endPixel - startPixel;
   auto start = std::chrono::high_resolution_clock::now();
+
 #ifdef BENICE
   // Keeps one core free for other stuff.
   omp_set_num_threads(std::max(omp_get_max_threads() - 1, 1));
 #endif  // BENICE
+
 #pragma omp parallel for schedule(dynamic, 100)
   for (int i = startPixel; i < static_cast<int>(endPixel); ++i) {
     // Get the pixel coordinates from i.
@@ -104,6 +104,7 @@ void Camera::render(const Scene& scene,
       for (unsigned char pix = 0; pix <= 1; ++pix)
         borders.push_back(createPixelCornerRay(x + pix, y + piy));
     _image.setPixel(x, y, m_Sampler->getSampledColor(borders, scene));
+
     // Print progress (only if we are in first thread).
     if (omp_get_thread_num() == 0) {
       auto now = std::chrono::high_resolution_clock::now();
