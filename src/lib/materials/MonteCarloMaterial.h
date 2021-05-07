@@ -34,18 +34,20 @@ SOFTWARE.
 #include "./Constants.h"
 #include "materials/Material.h"
 
-
 // Forward declaration.
 class BRDF;
 
 /// Phong material that shades the object with the phong reflection model.
 class MonteCarloMaterial : public Material {
-  GETSET(REAL, m_Color.r(), R)
-  GETSET(REAL, m_Color.g(), G)
-  GETSET(REAL, m_Color.b(), B)
+  GETSET(REAL, m_ReflectionColor.r(), R)
+  GETSET(REAL, m_ReflectionColor.g(), G)
+  GETSET(REAL, m_ReflectionColor.b(), B)
+  GETSET(REAL, m_EmissionColor.r(), EmissionR)
+  GETSET(REAL, m_EmissionColor.g(), EmissionG)
+  GETSET(REAL, m_EmissionColor.b(), EmissionB)
 
  public:
-  /// Constructor. Randoms a color.
+  /// Constructor. White color.
   MonteCarloMaterial();
 
   /// Constructor.
@@ -59,7 +61,7 @@ class MonteCarloMaterial : public Material {
                          const Ray& incomingRay,
                          const Scene& scene) const;
   virtual void setColor(const float r, const float g, const float b) {
-    m_Color = Color(r, g, b);
+    m_ReflectionColor = Color(r, g, b);
   }
 
   /// Name of the material used to serialize/deserialize.
@@ -80,11 +82,24 @@ class MonteCarloMaterial : public Material {
     genericfactory::GenericFactory<Material>::registerProperty<
         MonteCarloMaterial, REAL>("B", &MonteCarloMaterial::setB,
                                   &MonteCarloMaterial::getB);
+    genericfactory::GenericFactory<Material>::registerProperty<
+        MonteCarloMaterial, REAL>("emissionR",
+                                  &MonteCarloMaterial::setEmissionR,
+                                  &MonteCarloMaterial::getEmissionR);
+    genericfactory::GenericFactory<Material>::registerProperty<
+        MonteCarloMaterial, REAL>("emissionG",
+                                  &MonteCarloMaterial::setEmissionG,
+                                  &MonteCarloMaterial::getEmissionG);
+    genericfactory::GenericFactory<Material>::registerProperty<
+        MonteCarloMaterial, REAL>("emissionB",
+                                  &MonteCarloMaterial::setEmissionB,
+                                  &MonteCarloMaterial::getEmissionB);
   }
 
  private:
   std::shared_ptr<BRDF> m_BRDF;
-  Color m_Color;
+  Color m_ReflectionColor = Color(1, 1, 1);
+  Color m_EmissionColor = Color(0, 0, 0);
 };
 
 #endif  // RAYTRACERLIB_MATERIALS_MONTECARLOMATERIAL_H_

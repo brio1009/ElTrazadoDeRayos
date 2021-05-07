@@ -110,12 +110,12 @@ void SceneFileParser::parseGroupSpecial<Shape>(rapidxml::xml_node<>* node,
   rapidxml::xml_node<>* child = node;
   while (child) {
     // add this child.
-    rapidxml::xml_attribute<>* tmpAttr = child->first_attribute("Light");
+    rapidxml::xml_attribute<>* isImportantAttr =
+        child->first_attribute("important");
     Shape* shape;
-    if (tmpAttr && strcmp(tmpAttr->value(), "1") == 0) {
+    if (isImportantAttr && strcmp(isImportantAttr->value(), "1") == 0) {
       shape = genericfactory::GenericFactory<Shape>::create(
           std::string(child->name()) + "Important");
-      shape->setMaterialPtr(new ColorMaterial(Color(1, 1, 1)));
     } else {
       shape = genericfactory::GenericFactory<Shape>::create(child->name());
     }
@@ -126,10 +126,15 @@ void SceneFileParser::parseGroupSpecial<Shape>(rapidxml::xml_node<>* node,
     // call all the needed atributes.
     for (rapidxml::xml_attribute<>* attr = child->first_attribute(); attr;
          attr = attr->next_attribute()) {
-      if (strcmp(attr->name(), Material::name) != 0) {
+      // First try to set the property if it is not a special attribute
+      // (important and material).
+      if (strcmp(attr->name(), Material::name) != 0)
+      //|| strcmp(attr->name(), "important") != 0)
+      {
         shape->setFromString(attr->name(), attr->value());
         continue;
       }
+      // Ok, it seems to be a material. ->
       auto map_entry = materialMap->find(attr->value());
       if (map_entry == materialMap->end()) {
         perror("Material not defined above\n");

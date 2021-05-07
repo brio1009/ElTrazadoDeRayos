@@ -59,11 +59,12 @@ MonteCarloMaterial::MonteCarloMaterial() {
 // _____________________________________________________________________________
 MonteCarloMaterial::MonteCarloMaterial(const Color& color,
                                        std::shared_ptr<BRDF> brdf)
-    : m_Color(color) {
+    : m_ReflectionColor(color) {
   m_BRDF = brdf;
 }
 // _____________________________________________________________________________
-MonteCarloMaterial::MonteCarloMaterial(const Color& color) : m_Color(color) {
+MonteCarloMaterial::MonteCarloMaterial(const Color& color)
+    : m_ReflectionColor(color) {
   m_BRDF = std::make_shared<PhongBRDF>();
 }
 
@@ -225,5 +226,6 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
   }
 
   // Combine and return the color.
-  return m_Color * (hemisphereColor + importantShapeColor);
+  return m_ReflectionColor * (hemisphereColor + importantShapeColor) +
+         m_EmissionColor;
 }
