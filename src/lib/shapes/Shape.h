@@ -30,12 +30,10 @@ SOFTWARE.
 #include <genericfactory/GenericFactory_decl.h>
 #include <glm/glm.hpp>
 
-
 #include <cstdlib>
 #include <limits>
 #include <string>
 #include <vector>
-
 
 #include "./Color.h"
 #include "./Constants.h"

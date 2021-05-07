@@ -97,11 +97,11 @@ class Camera : public Spatial, public PropertyInterface<Camera> {
       return;
     m_lock = false;
     genericfactory::GenericFactory<Camera>::registerProperty<Camera, REAL>(
-        "X", &Camera::setX, &Camera::noGet);
+        "X", &Camera::setX, &Camera::getX);
     genericfactory::GenericFactory<Camera>::registerProperty<Camera, REAL>(
-        "Y", &Camera::setY, &Camera::noGet);
+        "Y", &Camera::setY, &Camera::getY);
     genericfactory::GenericFactory<Camera>::registerProperty<Camera, REAL>(
-        "Z", &Camera::setZ, &Camera::noGet);
+        "Z", &Camera::setZ, &Camera::getZ);
     genericfactory::GenericFactory<Camera>::registerProperty<Camera, glm::vec4>(
         "Rotate", &Camera::rotate, &Camera::noGet);
     genericfactory::GenericFactory<Camera>::registerProperty<Camera, size_t>(

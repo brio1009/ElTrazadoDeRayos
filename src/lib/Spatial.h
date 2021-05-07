@@ -53,12 +53,12 @@ class Spatial {
 
   /// Rotate by vec4.
   /// rotates the transformation around the
-  /// first 3 entries by the 4th entry in rad.
+  /// axis defined by the first 3 entries by the 4th entry in radians.
   virtual void rotate(const glm::vec4 value);
 
   /// Set the position of the object.
-  void setPosition(const glm::vec4& position) {
-    _transformation[3] = position;
+  void setPosition(const glm::vec3& position) {
+    _transformation[3] = glm::vec4(position, 1);
     _inverseTransform = glm::inverse(_transformation);
   }
 
@@ -69,18 +69,21 @@ class Spatial {
     _transformation[3].x = x;
     _inverseTransform = glm::inverse(_transformation);
   }
+  REAL getX() const { return _transformation[3].x; }
 
   /// Sets the Y value of the position vector.
   void setY(REAL y) {
     _transformation[3].y = y;
     _inverseTransform = glm::inverse(_transformation);
   }
+  REAL getY() const { return _transformation[3].y; }
 
   /// Sets the Z value of the position vector.
   void setZ(REAL z) {
     _transformation[3].z = z;
     _inverseTransform = glm::inverse(_transformation);
   }
+  REAL getZ() const { return _transformation[3].z; }
 
  protected:
   // the transformation of this Shape
