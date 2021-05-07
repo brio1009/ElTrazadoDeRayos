@@ -42,9 +42,6 @@ class Material : public PropertyInterface<Material> {
   /// Destructor.
   virtual ~Material() {}
 
-  /// Adds the special properties of Shape.
-  static void createSpecialProperties() {}
-
   /// Returns the color for the given positition and normal.
   virtual Color getColor(const IntersectionInfo& intersectionInfo,
                          const Ray& incomingRay,
