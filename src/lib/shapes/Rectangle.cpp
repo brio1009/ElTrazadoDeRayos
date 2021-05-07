@@ -62,7 +62,7 @@ void Rectangle::setNormal(const glm::vec3& normal) {
   float angle = glm::orientedAngle(normNormal, up, tangent);
   // we dont want to lose the translation when we rotate the Rectangle.
   glm::mat4 trans = glm::translate(glm::mat4(1), glm::vec3(getPosition()));
-  transform(glm::rotate(trans, angle, -tangent));  // NOLINT
+  transform(glm::rotate(trans, angle, -tangent));
 }
 
 // ___________________________________________________________________________

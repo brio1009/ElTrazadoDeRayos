@@ -58,7 +58,7 @@ Ray PerspectiveCamera::createPixelCornerRay(const size_t& px,
 // _____________________________________________________________________________
 void PerspectiveCamera::transform(const glm::mat4& matrix) {
   // transform as Object does.
-  Spatial::transform(matrix);  // NOLINT gets confused with std::transform
+  Spatial::transform(matrix);
   // recalculate the Image plane directions.
   // _position = _transformation * glm::vec4(0, 0, 0, 1);
 }

@@ -29,7 +29,6 @@ SOFTWARE.
 #include "./Camera.h"
 #include "./Constants.h"
 
-
 class PerspectiveCamera : public Camera {
  public:
   // Default Constructor.
@@ -41,7 +40,7 @@ class PerspectiveCamera : public Camera {
                     const REAL& fovAngleInRad);
 
   /// This overrides Object::transform(...)
-  virtual void transform(const glm::mat4& matrix);  // NOLINT mistaken for std
+  virtual void transform(const glm::mat4& matrix);
   /// This defines Camera::create...
   virtual Ray createPixelCornerRay(const size_t& px, const size_t& py) const;
 

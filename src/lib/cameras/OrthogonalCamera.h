@@ -41,7 +41,7 @@ class OrthogonalCamera : public Camera {
     _unitsPerPixel = unitsPerPixel;
   }
   /// This overrides Object::transform(...)
-  virtual void transform(const glm::mat4& matrix);  // NOLINT mistaken for std
+  virtual void transform(const glm::mat4& matrix);
   /// This defines Camera::create...
   virtual Ray createPixelCornerRay(const size_t& px, const size_t& py) const;
   /// Destructor

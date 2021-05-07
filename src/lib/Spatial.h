@@ -36,7 +36,7 @@ class Spatial {
   /// Destructor.
   virtual ~Spatial() {}
   // Multiplies the matrix with the current Transformation.
-  virtual void transform(const glm::mat4& matrix);  // NOLINT mistaken for std
+  virtual void transform(const glm::mat4& matrix);
 
   /// Getter for the transformation matrix.
   const glm::mat4& getTransformMatrix() const { return _transformation; }

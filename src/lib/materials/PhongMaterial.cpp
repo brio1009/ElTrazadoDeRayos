@@ -38,14 +38,13 @@ SOFTWARE.
 #include "./Scene.h"
 #include "lights/Light.h"
 
-
 // _____________________________________________________________________________
 PhongMaterial::PhongMaterial() : PhongMaterial(Color(0, 0, 0)) {
   // Construct a random color.
   // TODO(allofus, Sun May 11 14:12:21 CEST 2014): change to threadsafe alt.
-  m_color.setR((rand() % 255) / 255.0f);  // NOLINT
-  m_color.setG((rand() % 255) / 255.0f);  // NOLINT
-  m_color.setB((rand() % 255) / 255.0f);  // NOLINT
+  m_color.setR((rand() % 255) / 255.0f);
+  m_color.setG((rand() % 255) / 255.0f);
+  m_color.setB((rand() % 255) / 255.0f);
   m_color.setA(1.0f);
 }
 

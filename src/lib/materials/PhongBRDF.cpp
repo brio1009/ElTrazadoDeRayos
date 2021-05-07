@@ -33,8 +33,8 @@ glm::vec2 PhongBRDF::generateHemisphereSample(
     const Ray& incomingRay,
     const IntersectionInfo& intersectionInfo,
     const size_t& num) const {
-  glm::vec2 out(rand() / static_cast<float>(RAND_MAX),   // NOLINT
-                rand() / static_cast<float>(RAND_MAX));  // NOLINT
+  glm::vec2 out(rand() / static_cast<float>(RAND_MAX),
+                rand() / static_cast<float>(RAND_MAX));
   out.x *= 2.0f * constants::PI;
   out.y = acos(1.0f - out.y);
   return out;

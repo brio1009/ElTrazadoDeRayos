@@ -34,7 +34,6 @@ SOFTWARE.
 #include <utility>
 #include "../Constants.h"
 
-
 #include "../IntersectionInfo.h"
 /// Forward declaration.
 class Ray;
@@ -61,7 +60,7 @@ class AreaShape : public T, public ImportantShape {
  public:
   /// Constructor calls the constructor of the base class.
   template <typename... Args>
-  AreaShape(Args... args) : T(std::forward<Args>(args)...) {}  // NOLINT
+  AreaShape(Args... args) : T(std::forward<Args>(args)...) {}
 
   explicit AreaShape(const T& other) : T(other) {}
   /// We override this here, so we can set the boolean

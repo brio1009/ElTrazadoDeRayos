@@ -32,14 +32,13 @@ SOFTWARE.
 #include <cstdio>
 
 // _____________________________________________________________________________
-void Spatial::transform(
-    const glm::mat4& matrix) {  // NOLINT misstaken for std::tr
+void Spatial::transform(const glm::mat4& matrix) {
   _transformation = matrix;
   _inverseTransform = glm::inverse(_transformation);
 }
 
 void Spatial::rotate(const glm::vec3& axis, const float rad) {
-  transform(glm::rotate(_transformation, rad, axis));  // NOLINT
+  transform(glm::rotate(_transformation, rad, axis));
 }
 
 void Spatial::rotate(const glm::vec4 value) {

@@ -33,7 +33,6 @@ SOFTWARE.
 #include "./Scene.h"
 #include "materials/Material.h"
 
-
 // _____________________________________________________________________________
 Ray OrthogonalCamera::createPixelCornerRay(const size_t& px,
                                            const size_t& py) const {
@@ -44,8 +43,7 @@ Ray OrthogonalCamera::createPixelCornerRay(const size_t& px,
 // _____________________________________________________________________________
 void OrthogonalCamera::transform(const glm::mat4& matrix) {
   // transform as Object does.
-  Spatial::transform(
-      matrix);  // NOLINT linter gets confused with std::transform
+  Spatial::transform(matrix);
   // recalculate the Image plane directions.
   _imagePlaneX = glm::vec4(_unitsPerPixel, 0, 0, 0);
   _imagePlaneY = glm::vec4(0, -_unitsPerPixel, 0, 0);
