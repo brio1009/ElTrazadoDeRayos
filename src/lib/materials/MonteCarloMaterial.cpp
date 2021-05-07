@@ -82,7 +82,7 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
   bool sampleImportantShapes(true);
 
   // Number of samples in the hemisphere.
-  size_t hemisphereSamples = m_BRDF->getSampleCount();
+  size_t numHemisphereSamples = m_BRDF->getSampleCount();
 
   // Normal of the object at the position.
   glm::vec3 normal = glm::vec3(glm::normalize(intersectionInfo.normal));
@@ -159,7 +159,7 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
   // Color of the random hemisphere.
   Color hemisphereColor(0, 0, 0);
 
-  if (hemisphereSamples != 0) {
+  if (numHemisphereSamples != 0) {
     // Normal of the object at the position.
     glm::vec3 normal = glm::vec3(glm::normalize(intersectionInfo.normal));
 
@@ -173,13 +173,25 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
       tangent = glm::cross(normal, up);
     }
 
-    // Shoot sample rays into the hemisphere.
-    for (size_t i = 0; i < hemisphereSamples; ++i) {
+    // glm::vec2 contains omega (phi and theta) and invpdf
+    std::vector<std::tuple<glm::vec2, float>> hemisphereSamples(
+        numHemisphereSamples);
+
+    // Create the hemisphere samples.
+    for (size_t i = 0; i < numHemisphereSamples; ++i) {
       // Get a sample on a circle around the hitpoint.
       // omega.x = phi
       // omega.y = theta
       glm::vec2 omega =
           m_BRDF->generateHemisphereSample(incomingRay, intersectionInfo, i);
+      float invPDFValue = 1.0 / m_BRDF->getPDFOfX(omega);
+      hemisphereSamples[i] = {omega, invPDFValue};
+    }
+
+    // Shoot the rays.
+    for (const auto& sample : hemisphereSamples) {
+      glm::vec2 omega = std::get<0>(sample);
+      float invPDFValue = std::get<1>(sample);
 
       // Get the direction from phi and theta.
       glm::vec3 rotatedTangent =
@@ -214,15 +226,14 @@ Color MonteCarloMaterial::getColor(const IntersectionInfo& intersectionInfo,
       } else {
         lightColor = scene.backgroundColor(newRay);
       }
+      // Add the color to the return intensity.
       float brdfValue =
           m_BRDF->evaluateBRDF(intersectionInfo,  // Position on the surface.
                                incomingRay.direction(),  // incoming direction.
                                newRay.direction());      // outgoing direction.
-      float invPDFValue = 1.0f / m_BRDF->getPDFOfX(omega);  // outgoing.
-      // Add the color to the return intensity.
       hemisphereColor += lightColor * cos(omega.y) * brdfValue * invPDFValue;
     }
-    hemisphereColor *= (1.0f / hemisphereSamples);
+    hemisphereColor *= (1.0f / numHemisphereSamples);
   }
 
   // Combine and return the color.
